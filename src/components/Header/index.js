@@ -22,7 +22,6 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { sideList } from '../MenuList';
 
 const styles = theme => ({
 	root: {
@@ -52,27 +51,20 @@ const styles = theme => ({
 			display: 'none',
 		},
 	},
+	profilemenu : {
+		top: '50px'
+	}
 });
 
 class Header extends React.Component {
-
-
 	constructor(props) {
 		super(props);
 		this.state = {
-			menuOpen: false,
 			anchorEl: null,
 			mobileMoreAnchorEl: null,
 			isLoggedIn: false
 		}
 	}
-
-	toggleDrawer = () => {
-		console.log('toggle drawer is clicked')
-		this.setState((prevState) => ({
-			menuOpen: !prevState.menuOpen
-		}));
-	};
 
 	handleProfileMenuOpen = event => {
 		this.setState({ anchorEl: event.currentTarget });
@@ -109,6 +101,7 @@ class Header extends React.Component {
 
 		const renderMenu = (
 			<Menu
+				className = {classes.profilemenu}
 				anchorEl={anchorEl}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
 				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -191,9 +184,6 @@ class Header extends React.Component {
 			<div className={classes.root}>
 				<AppBar position="static" className={classes.appbarstyle}>
 					<Toolbar>
-						<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={this.toggleDrawer}>
-							<MenuIcon />
-						</IconButton>
 						<Typography variant="h6" color="inherit" className={classes.grow}>
 							Logo
                   		</Typography>
@@ -201,18 +191,6 @@ class Header extends React.Component {
 						{rightApp}
 					</Toolbar>
 				</AppBar>
-
-				<Drawer open={this.state.menuOpen} onClose={this.toggleDrawer}>
-					<div
-						tabIndex={0}
-						role="button"
-						onClick={this.toggleDrawer}
-						onKeyDown={this.toggleDrawer}
-					>
-						{sideList}
-					</div>
-				</Drawer>
-
 				{renderMenu}
 				{renderMobileMenu}
 			</div>

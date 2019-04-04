@@ -7,53 +7,66 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import MessageIcon from '@material-ui/icons/Message';
 
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+
 import ServiceIcon from '@material-ui/icons/GroupWork';
 import HelpIcon from '@material-ui/icons/Help';
 import { Link } from 'react-router-dom';
 
-const classes = {
+const styles = {
 	list: {
-		width: '50%',
+		width: '15%',
+		float: 'left'
 	},
-	fullList: {
-		width: '50%',
-	}
 }
 
-export const sideList = (
-	<div className={classes.list}>
-		<List>
+class MenuList extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+	render() {
+		const { classes } = this.props;
+		return (<div className={classes.list}>
+			<List>
+	
+				<ListItem button component={Link} to='/'>
+					<ListItemIcon>
+						<HomeIcon />
+					</ListItemIcon>
+					<ListItemText primary="Home" />
+				</ListItem>
+	
+				<ListItem button component={Link} to='/gen_cont_view'>
+					<ListItemIcon>
+						<MessageIcon />
+					</ListItemIcon>
+					<ListItemText primary="GeneralContractorView" />
+				</ListItem>
+	
+				<ListItem button component={Link} to='/sub_cont_view'>
+					<ListItemIcon>
+						<ServiceIcon />
+					</ListItemIcon>
+					<ListItemText primary="SubContractorView" />
+				</ListItem>
+	
+				<ListItem button component={Link} to='/bid_list_view'>
+					<ListItemIcon>
+						<HelpIcon />
+					</ListItemIcon>
+					<ListItemText primary="BidListingView" />
+				</ListItem>
+	
+			</List>
+			<Divider />
+	
+		</div>);
+	}
+};
 
-			<ListItem button component={Link} to='/'>
-				<ListItemIcon>
-					<HomeIcon />
-				</ListItemIcon>
-				<ListItemText primary="Home" />
-			</ListItem>
+MenuList.propTypes = {
+	classes: PropTypes.object.isRequired,
+};
 
-			<ListItem button component={Link} to='/gen_cont_view'>
-				<ListItemIcon>
-					<MessageIcon />
-				</ListItemIcon>
-				<ListItemText primary="GeneralContractorView" />
-			</ListItem>
-
-			<ListItem button component={Link} to='/sub_cont_view'>
-				<ListItemIcon>
-					<ServiceIcon />
-				</ListItemIcon>
-				<ListItemText primary="SubContractorView" />
-			</ListItem>
-
-			<ListItem button component={Link} to='/bid_list_view'>
-				<ListItemIcon>
-					<HelpIcon />
-				</ListItemIcon>
-				<ListItemText primary="BidListingView" />
-			</ListItem>
-
-		</List>
-		<Divider />
-
-	</div>
-);
+export default withStyles(styles)(MenuList);
