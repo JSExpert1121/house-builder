@@ -9,6 +9,7 @@ import GeneralContractorView from 'components/GeneralContractorView';
 import NotFoundPage from 'components/NotFoundPage';
 
 import MenuList from 'components/MenuList';
+import Card from '@material-ui/core/Card';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,7 +17,9 @@ const styles = {
 	viewarea: {
 		width: '83%',
 		float: 'left', 
-		padding: "1% 1% 1% 1%"
+		borderRadius: "0",
+		padding: "0 1% 0 1%",
+		height: 'calc(100vh - 64px - 20px)'
 	}
 }
 
@@ -29,7 +32,7 @@ class AppRouter extends React.Component {
 				<div>
 					<Header />
 					<MenuList />
-					<div className = {classes.viewarea}>
+					<Card className = {classes.viewarea}>
 						<Switch>
 							<Route path="/" component={HomePage} exact={true} />
 							<Route path="/bid_list_view" component={BidderListingView} />
@@ -37,7 +40,7 @@ class AppRouter extends React.Component {
 							<Route path="/gen_cont_view" component={GeneralContractorView} />
 							<Route component={NotFoundPage} />
 						</Switch>
-					</div>
+					</Card>
 				</div>
 			</BrowserRouter>
 		);
