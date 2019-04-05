@@ -33,7 +33,7 @@ const styles = theme => ({
 	},
 	pos: {
 		marginBottom: 12,
-	},
+	}
 });
 
 class ConnectedPDetailBidders extends React.Component {
@@ -57,14 +57,14 @@ class ConnectedPDetailBidders extends React.Component {
 									<CardContent>
 										<Typography className={classes.title} color="textSecondary" gutterBottom>
 											Bidder
-       										</Typography>
+												</Typography>
 										<Typography variant="h5" component="h2" className={classes.cardProjectTitle}>
 											{el.name}
 										</Typography>
 										<Typography component="p">
 											${el.price} {"in "}
 											{el.duration}days
-											</Typography>
+												</Typography>
 									</CardContent>
 								</Card>
 							</Grid>

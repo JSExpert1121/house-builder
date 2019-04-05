@@ -18,7 +18,7 @@ import AppsIcon from '@material-ui/icons/Apps';
 import BallotIcon from '@material-ui/icons/Ballot';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import ProposalDetailView from '../../components/ProposalDetailView';
-import { redBright } from 'ansi-colors';
+import CreateProjectView from '../../components/CreateProjectView';
 
 const styles = theme => ({
 	root: {
@@ -28,7 +28,7 @@ const styles = theme => ({
 		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.primary.dark
 	},
-	grow: {
+	buttonAdditional: {
 		position: "absolute",
 		float: "right",
 		right: "0"
@@ -63,7 +63,7 @@ class ConnectedGenContView extends React.Component {
 						</Tabs>
 
 						<Toolbar
-							className={classes.grow}>
+							className={classes.buttonAdditional}>
 							<Button color="inherit" onClick={() => {
 								this.props.setCurTabPos(3);
 							}}>Add Project</Button>
@@ -73,7 +73,7 @@ class ConnectedGenContView extends React.Component {
 					{curTabPos === 0 && <CurrentProjectView />}
 					{curTabPos === 1 && <ProjectDetailView />}
 					{curTabPos === 2 && <ProposalDetailView />}
-					{curTabPos === 3 && <div />}
+					{curTabPos === 3 && <CreateProjectView />}
 				</div>
 			</NoSsr>
 		);
