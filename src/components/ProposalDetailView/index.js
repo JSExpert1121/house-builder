@@ -10,15 +10,9 @@ import NoSsr from '@material-ui/core/NoSsr';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import LoyaltyIcon from '@material-ui/icons/Loyalty';
-import DescriptionIcon from '@material-ui/icons/Description';
-import MessageIcon from '@material-ui/icons/Message';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
-import PDetailOverView from '../PDetailOverview';
-import PDetailBidders from '../PDetailBidders';
-import PDetailFiles from '../PDetailFiles';
-import PDetailMessages from '../PDetailMessages';
-import PDetailProposals from '../PDetailProposals';
+import ProposalDetailFiles from '../ProposalDetailFiles';
+import ProposalDetailOverview from '../ProposalDetailOverview';
 
 const styles = theme => ({
 	root: {
@@ -31,7 +25,7 @@ const styles = theme => ({
 	}
 });
 
-class ConnectedProDetailView extends React.Component {
+class ConnectedProposalDetailView extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -47,12 +41,12 @@ class ConnectedProDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, selectedProject } = this.props;
+		const { classes, selectedProposal } = this.props;
 		const curDetailTab = this.state.curDetailTab;
 
-		if (selectedProject === null)
+		if (selectedProposal === null)
 			return (
-				<div> No Project is Selected </div>
+				<div> No Proposal is Selected </div>
 			);
 
 		return (
@@ -71,16 +65,10 @@ class ConnectedProDetailView extends React.Component {
 						>
 							<Tab icon={<DashboardIcon />} />
 							<Tab icon={<LoyaltyIcon />} />
-							<Tab icon={<DescriptionIcon />} />
-							<Tab icon={<MessageIcon />} />
-							<Tab icon={<AssignmentIndIcon />} />
 						</Tabs>
 
-						{curDetailTab === 0 && <PDetailOverView />}
-						{curDetailTab === 1 && <PDetailBidders />}
-						{curDetailTab === 2 && <PDetailFiles />}
-						{curDetailTab === 3 && <PDetailMessages />}
-						{curDetailTab === 4 && <PDetailProposals />}
+						{curDetailTab === 0 && <ProposalDetailOverview />}
+						{curDetailTab === 1 && <ProposalDetailFiles />}
 					</Paper>
 				</div></NoSsr>
 		);
@@ -89,14 +77,14 @@ class ConnectedProDetailView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		selectedProject: state.genContViewData.selectedProject
+		selectedProposal: state.genContViewData.selectedProposal
 	};
 };
 
-const ProjectDetailView = connect(mapStateToProps)(ConnectedProDetailView);
+const ProposalDetailView = connect(mapStateToProps)(ConnectedProposalDetailView);
 
-ProjectDetailView.propTypes = {
+ProposalDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProjectDetailView);
+export default withStyles(styles)(ProposalDetailView);

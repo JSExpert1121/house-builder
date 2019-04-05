@@ -56,13 +56,10 @@ class ConnectedPDetailBidders extends React.Component {
 								<Card className={classes.card}>
 									<CardContent>
 										<Typography className={classes.title} color="textSecondary" gutterBottom>
-											Sent Proposal
+											Bidder
        										</Typography>
 										<Typography variant="h5" component="h2" className={classes.cardProjectTitle}>
 											{el.name}
-										</Typography>
-										<Typography className={classes.pos} color="textSecondary">
-											{el.proposal}
 										</Typography>
 										<Typography component="p">
 											${el.price} {"in "}

@@ -1,8 +1,9 @@
-import { ADD_PROJECT, SET_SELECTED_PROJECT, SET_CUR_TAB_POS } from "../constants/action-types";
+import { ADD_PROJECT, SET_SELECTED_PROJECT, SET_CUR_TAB_POS, SET_SELECTED_PROPOSAL } from "../constants/action-types";
 import uuidv1 from "uuid";
 
 const initialState = {
 	selectedProject: null,
+	selectedProposal: null,
 	curTabPos: 0,
 	projects: [
 		{
@@ -17,14 +18,24 @@ const initialState = {
 					name: "Ivan",
 					price: 100,
 					duration: 3,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				},
 				{
 					id: uuidv1(),
 					name: "Windi",
 					price: 200,
 					duration: 5,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				}
 			],
 			files: [
@@ -44,7 +55,32 @@ const initialState = {
 					url: "XXX"
 				}
 			],
-			messages: []
+			messages: [
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Windi",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+			]
 		},
 		{
 			id: uuidv1(),
@@ -58,14 +94,24 @@ const initialState = {
 					name: "Ivan",
 					price: 100,
 					duration: 3,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				},
 				{
 					id: uuidv1(),
 					name: "Windi",
 					price: 200,
 					duration: 5,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				}
 			],
 			files: [
@@ -85,7 +131,32 @@ const initialState = {
 					url: "XXX"
 				}
 			],
-			messages: []
+			messages: [
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Windi",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+			]
 		},
 		{
 			id: uuidv1(),
@@ -99,14 +170,24 @@ const initialState = {
 					name: "Ivan",
 					price: 100,
 					duration: 3,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				},
 				{
 					id: uuidv1(),
 					name: "Windi",
 					price: 200,
 					duration: 5,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				}
 			],
 			files: [
@@ -126,7 +207,32 @@ const initialState = {
 					url: "XXX"
 				}
 			],
-			messages: []
+			messages: [
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Windi",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+			]
 		},
 		{
 			id: uuidv1(),
@@ -140,14 +246,24 @@ const initialState = {
 					name: "Ivan",
 					price: 100,
 					duration: 3,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				},
 				{
 					id: uuidv1(),
 					name: "Windi",
 					price: 200,
 					duration: 5,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				}
 			],
 			files: [
@@ -167,7 +283,32 @@ const initialState = {
 					url: "XXX"
 				}
 			],
-			messages: []
+			messages: [
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Windi",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+			]
 		},
 		{
 			id: uuidv1(),
@@ -181,14 +322,24 @@ const initialState = {
 					name: "Ivan",
 					price: 100,
 					duration: 3,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				},
 				{
 					id: uuidv1(),
 					name: "Windi",
 					price: 200,
 					duration: 5,
-					proposal: "I hate Generic Bid"
+					proposal: "I hate Generic Bid",
+					subfiles: [
+						"Screenshot1.jpg",
+						"Screenshot2.jpg",
+						"Screenshot3.jpg"
+					]
 				}
 			],
 			files: [
@@ -208,7 +359,32 @@ const initialState = {
 					url: "XXX"
 				}
 			],
-			messages: []
+			messages: [
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Ivan",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+				{
+					from: "Windi",
+					subject: "Subject1",
+					date: new Date(),
+					detail: "HAHAHA"
+				},
+			]
 		}
 	]
 };
@@ -226,6 +402,10 @@ function genContViewReducer(state = initialState, action) {
 		case SET_CUR_TAB_POS:
 			return Object.assign({}, state, {
 				curTabPos: action.payload
+			});
+		case SET_SELECTED_PROPOSAL:
+			return Object.assign({}, state, {
+				selectedProposal: action.payload
 			});
 		default:
 			return state;

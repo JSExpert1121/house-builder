@@ -12,9 +12,13 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
 import AppsIcon from '@material-ui/icons/Apps';
 import BallotIcon from '@material-ui/icons/Ballot';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
+import ProposalDetailView from '../../components/ProposalDetailView';
+import { redBright } from 'ansi-colors';
 
 const styles = theme => ({
 	root: {
@@ -23,6 +27,11 @@ const styles = theme => ({
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.primary.dark
+	},
+	grow: {
+		position: "absolute",
+		float: "right",
+		right: "0"
 	}
 });
 
@@ -52,10 +61,19 @@ class ConnectedGenContView extends React.Component {
 							<Tab label="Project Detail" icon={<BallotIcon />} />
 							<Tab label="Proposal Detail" icon={<DoneAllIcon />} />
 						</Tabs>
+
+						<Toolbar
+							className={classes.grow}>
+							<Button color="inherit" onClick={() => {
+								this.props.setCurTabPos(3);
+							}}>Add Project</Button>
+						</Toolbar>
 					</AppBar>
+
 					{curTabPos === 0 && <CurrentProjectView />}
 					{curTabPos === 1 && <ProjectDetailView />}
-					{curTabPos === 2 && <CurrentProjectView />}
+					{curTabPos === 2 && <ProposalDetailView />}
+					{curTabPos === 3 && <div />}
 				</div>
 			</NoSsr>
 		);

@@ -49,9 +49,6 @@ class connectedCurProView extends React.Component {
 
 	}
 
-	handleProjectDetail = (el) => {
-	}
-
 	render() {
 		const { classes, projects } = this.props;
 
@@ -61,7 +58,7 @@ class connectedCurProView extends React.Component {
 					{
 						projects.map(el => (
 							<Grid item xs={12} md={6} lg={3} key={el.id}>
-								<CardActionArea onClick={this.handleProjectDetail = () => {
+								<CardActionArea onClick={() => {
 									this.props.setSelectedProject(el);
 									this.props.setCurTabPos(1);
 								}} >
