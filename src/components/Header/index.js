@@ -37,7 +37,7 @@ const styles = theme => ({
 		marginRight: 20,
 	},
 	appbarstyle: {
-		backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 30%)'
+		backgroundColor: theme.palette.primary.main
 	},
 	sectionDesktop: {
 		display: 'none',
@@ -51,7 +51,7 @@ const styles = theme => ({
 			display: 'none',
 		},
 	},
-	profilemenu : {
+	profilemenu: {
 		top: '50px'
 	}
 });
@@ -101,7 +101,7 @@ class Header extends React.Component {
 
 		const renderMenu = (
 			<Menu
-				className = {classes.profilemenu}
+				className={classes.profilemenu}
 				anchorEl={anchorEl}
 				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
 				transformOrigin={{ vertical: 'top', horizontal: 'right' }}

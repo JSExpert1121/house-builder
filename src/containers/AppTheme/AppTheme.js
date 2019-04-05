@@ -3,19 +3,19 @@ import React, { Component } from 'react'
 
 export default class AppTheme extends Component {
 
-constructor(props){
-    super(props);
+	constructor(props) {
+		super(props);
 
-}
+	}
 
-  render() {
+	render() {
 
-    const { theme,children } = this.props;
-    return (
-      <MuiThemeProvider theme={theme}>
-        {children}
-      </MuiThemeProvider>
-    )
-  }
+		const { theme, children } = this.props;
+		return (
+			<MuiThemeProvider theme={theme}>
+				{children}
+			</MuiThemeProvider>
+		)
+	}
 }
 

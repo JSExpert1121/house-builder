@@ -6,7 +6,10 @@ import Header from './components/Header'
 import './styles/main.scss';
 import AppTheme from 'containers/AppTheme/AppTheme';
 import theme from 'config/theme'
-import AppRouter from 'routers/AppRouter'
+import AppRouter from 'routers/AppRouter';
+
+import { Provider } from 'react-redux';
+import store from './store';
 
 WebFont.load({
 	google: {
@@ -17,8 +20,7 @@ WebFont.load({
 export default class App extends Component {
 	render() {
 		return (
-			<div>
-
+			<div className="RootDiv">
 				<AppTheme theme={theme}>
 					<AppRouter />
 				</AppTheme>
@@ -28,4 +30,9 @@ export default class App extends Component {
 }
 
 
-render(<App />, document.getElementById('app'));
+render(
+	<Provider store={store}>
+		<App />
+	</Provider>,
+	document.getElementById('app')
+);
