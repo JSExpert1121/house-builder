@@ -57,7 +57,7 @@ class ConnectedGenContView extends React.Component {
 							variant="scrollable"
 							scrollButtons="on">
 
-							<Tab label="Project View" icon={<AppsIcon />} />
+							<Tab label="Current Projects" icon={<AppsIcon />} />
 							<Tab label="Project Detail" icon={<BallotIcon />} />
 							<Tab label="Proposal Detail" icon={<DoneAllIcon />} />
 						</Tabs>

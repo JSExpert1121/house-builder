@@ -18,7 +18,7 @@ const initialState = {
 					name: "Ivan",
 					price: 100,
 					duration: 3,
-					proposal: "I hate Generic Bid",
+					proposal: "I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid",
 					subfiles: [
 						"Screenshot1.jpg",
 						"Screenshot2.jpg",

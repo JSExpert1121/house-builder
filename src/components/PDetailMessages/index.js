@@ -20,16 +20,22 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { blue } from '@material-ui/core/colors';
 import { Divider } from '@material-ui/core';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: "10px 10px 10px 10px",
 		height: "calc(100vh - 56px - 90px - 48px - 40px)",
 		overflow: "auto",
-		overflowX: "hidden"
 	},
 	card: {
-		minWidth: "200px"
+		minWidth: "200px",
+		padding: "10px 10px 10px 10px"
 	},
 	cardProjectTitle: {
 		color: theme.palette.primary.dark
@@ -51,7 +57,26 @@ const styles = theme => ({
 	avatar: {
 		backgroundColor: blue[500],
 	},
+	row: {
+		'&:nth-of-type(odd)': {
+			backgroundColor: theme.palette.background.default,
+		},
+	},
+	rowactionarea: {
+		width: "100%"
+	}
 });
+
+const CustomTableCell = withStyles(theme => ({
+	head: {
+		backgroundColor: theme.palette.primary.light,
+		color: theme.palette.common.white,
+	},
+	body: {
+		fontSize: 14,
+		color: theme.palette.primary.light
+	},
+}))(TableCell);
 
 class ConnectedPDetailOverview extends React.Component {
 	constructor(props) {
@@ -67,38 +92,33 @@ class ConnectedPDetailOverview extends React.Component {
 		console.log(selectedProject.messages);
 
 		return (
-			<Grid container spacing={24}>
-				{
-					selectedProject.messages.map(el => (
-						<Grid item xs={12} md={6} lg={3} key={uuidv1()}>
-							<CardActionArea onClick={() => {
-								this.setState({
-									selectedMessage: el
-								});
-							}} >
-								<Card className={classes.card}>
-									<CardContent>
-										<Typography className={classes.title} color="textSecondary" gutterBottom>
-											Message
-       									</Typography>
-										<Typography variant="h5" component="h2" className={classes.cardProjectTitle}>
-											{el.from}
-										</Typography>
-										<Typography className={classes.pos} color="textSecondary">
-											{el.subject}
-										</Typography>
-										<Typography component="p">
-											Received message at {
-												el.date.getYear() + 1990 + "." + (el.date.getMonth() + 1) + "." + el.date.getDay() + " " +
-												el.date.getHours() + ":" + el.date.getMinutes() + ":" + el.date.getSeconds()}
-										</Typography>
-									</CardContent>
-								</Card>
-							</CardActionArea>
-						</Grid>
-					))
-				}
-			</Grid>
+			<Card className={classes.root}>
+				<Table className={classes.table}>
+					<TableHead>
+						<TableRow>
+							<CustomTableCell align="center"> From </CustomTableCell>
+							<CustomTableCell align="center">Subject</CustomTableCell>
+							<CustomTableCell align="center">Date</CustomTableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{selectedProject.messages.map(row => (
+							<TableRow className={classes.row} key={row.id} hover
+								onClick={() => {
+									this.setState({
+										selectedMessage: row
+									});
+								}}>
+								<CustomTableCell component="th" scope="row" align="center">{row.from}</CustomTableCell>
+								<CustomTableCell align="center">{row.subject}</CustomTableCell>
+								<CustomTableCell align="center">{
+									row.date.getYear() + 1900 + "." + (row.date.getMonth() + 1) + "." + row.date.getDay() + " " +
+									row.date.getHours() + ":" + row.date.getMinutes() + ":" + row.date.getSeconds()}</CustomTableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</Card >
 		);
 	}
 
@@ -125,7 +145,7 @@ class ConnectedPDetailOverview extends React.Component {
 					}
 					title={selectedMessage.from}
 					subheader={
-						selectedMessage.date.getYear() + 1990 + "." + (selectedMessage.date.getMonth() + 1) + "." + selectedMessage.date.getDay() + " " +
+						selectedMessage.date.getYear() + 1900 + "." + (selectedMessage.date.getMonth() + 1) + "." + selectedMessage.date.getDay() + " " +
 						selectedMessage.date.getHours() + ":" + selectedMessage.date.getMinutes() + ":" + selectedMessage.date.getSeconds()}
 				/>
 				<Divider />
@@ -156,7 +176,7 @@ class ConnectedPDetailOverview extends React.Component {
 		const showEl = (selectedMessage === null) ? this.getMessageGridView() : this.getMessageDetailView();
 
 		return (
-			<div className={classes.root}>
+			<div >
 				{showEl}
 			</div>
 		);

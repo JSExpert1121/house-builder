@@ -4,11 +4,12 @@ import { addProject, setSelectedProject, setCurTabPos } from '../../actions';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const styles = theme => ({
 	root: {
@@ -16,7 +17,6 @@ const styles = theme => ({
 		height: "calc(100vh - 56px - 90px - 20px)",
 		margin: "10px 10px 10px 10px",
 		overflow: "auto",
-		overflowX: "hidden"
 	},
 	card: {
 		minWidth: "200px"
@@ -35,7 +35,26 @@ const styles = theme => ({
 	pos: {
 		marginBottom: 12,
 	},
+	row: {
+		'&:nth-of-type(odd)': {
+			backgroundColor: theme.palette.background.default,
+		},
+	},
+	rowactionarea: {
+		width: "100%"
+	}
 });
+
+const CustomTableCell = withStyles(theme => ({
+	head: {
+		backgroundColor: theme.palette.primary.light,
+		color: theme.palette.common.white,
+	},
+	body: {
+		fontSize: 14,
+		color: theme.palette.primary.light
+	},
+}))(TableCell);
 
 class connectedCurProView extends React.Component {
 	constructor(props) {
@@ -53,39 +72,34 @@ class connectedCurProView extends React.Component {
 		const { classes, projects } = this.props;
 
 		return (
-			<div className={classes.root}>
-				<Grid container spacing={24}>
-					{
-						projects.map(el => (
-							<Grid item xs={12} md={6} lg={3} key={el.id}>
-								<CardActionArea onClick={() => {
-									this.props.setSelectedProject(el);
+			<Card className={classes.root}>
+				<Table className={classes.table}>
+					<TableHead>
+						<TableRow>
+							<CustomTableCell> Project Title </CustomTableCell>
+							<CustomTableCell align="center">Status</CustomTableCell>
+							<CustomTableCell align="center">PlaceHolder1</CustomTableCell>
+							<CustomTableCell align="center">PlaceHolder2</CustomTableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{projects.map(row => (
+							<TableRow className={classes.row} key={row.id} hover
+								onClick={() => {
+									this.props.setSelectedProject(row);
 									this.props.setCurTabPos(1);
-								}} >
-									<Card className={classes.card}>
-										<CardContent>
-											<Typography className={classes.title} color="textSecondary" gutterBottom>
-												Project
-       										</Typography>
-											<Typography variant="h5" component="h2" className={classes.cardProjectTitle}>
-												{el.name}
-											</Typography>
-											<Typography className={classes.pos} color="textSecondary">
-												{el.status}
-											</Typography>
-											<Typography component="p">
-												{el.PH1}
-												<br />
-												{el.PH2}
-											</Typography>
-										</CardContent>
-									</Card>
-								</CardActionArea>
-							</Grid>
-						))
-					}
-				</Grid>
-			</div>
+								}}>
+								<CustomTableCell component="th" scope="row">
+									{row.name}
+								</CustomTableCell>
+								<CustomTableCell align="center">{row.status}</CustomTableCell>
+								<CustomTableCell align="center">{row.PH1}</CustomTableCell>
+								<CustomTableCell align="center">{row.PH2}</CustomTableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</Card >
 		);
 	}
 }
@@ -106,5 +120,9 @@ const mapStateToProps = state => {
 };
 
 const CurrentProjectView = connect(mapStateToProps, mapDispatchToProps)(connectedCurProView);
+
+CurrentProjectView.propTypes = {
+	classes: PropTypes.object.isRequired,
+};
 
 export default withStyles(styles)(CurrentProjectView);

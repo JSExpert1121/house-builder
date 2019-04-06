@@ -5,11 +5,13 @@ import { setSelectedProposal, setCurTabPos } from '../../actions';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const styles = theme => ({
 	root: {
@@ -36,7 +38,26 @@ const styles = theme => ({
 	pos: {
 		marginBottom: 12,
 	},
+	row: {
+		'&:nth-of-type(odd)': {
+			backgroundColor: theme.palette.background.default,
+		},
+	},
+	rowactionarea: {
+		width: "100%"
+	}
 });
+
+const CustomTableCell = withStyles(theme => ({
+	head: {
+		backgroundColor: theme.palette.primary.light,
+		color: theme.palette.common.white,
+	},
+	body: {
+		fontSize: 14,
+		color: theme.palette.primary.light
+	},
+}))(TableCell);
 
 class ConnectedPDetailProposals extends React.Component {
 	constructor(props) {
@@ -50,38 +71,32 @@ class ConnectedPDetailProposals extends React.Component {
 		const { classes, selectedProject } = this.props;
 
 		return (
-			<div className={classes.root}>
-				<Grid container spacing={24}>
-					{
-						selectedProject.bidders.map(el => (
-							<Grid item xs={12} md={6} lg={3} key={el.id}>
-								<CardActionArea onClick={() => {
-									this.props.setSelectedProposal(el);
+			<Card className={classes.root}>
+				<Table className={classes.table}>
+					<TableHead>
+						<TableRow>
+							<CustomTableCell align="center">Bidder Name</CustomTableCell>
+							<CustomTableCell align="center">Price($)</CustomTableCell>
+							<CustomTableCell align="center">Duration(D)</CustomTableCell>
+							<CustomTableCell align="center">Proposal</CustomTableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{selectedProject.bidders.map(row => (
+							<TableRow className={classes.row} key={row.id} hover
+								onClick={() => {
+									this.props.setSelectedProposal(row);
 									this.props.setCurTabPos(2);
-								}} >
-									<Card className={classes.card}>
-										<CardContent>
-											<Typography className={classes.title} color="textSecondary" gutterBottom>
-												Proposal
-       										</Typography>
-											<Typography variant="h5" component="h2" className={classes.cardProjectTitle}>
-												{el.name}
-											</Typography>
-											<Typography className={classes.pos} color="textSecondary">
-												{el.proposal}
-											</Typography>
-											<Typography component="p">
-												${el.price} {"in "}
-												{el.duration}days
-											</Typography>
-										</CardContent>
-									</Card>
-								</CardActionArea>
-							</Grid>
-						))
-					}
-				</Grid>
-			</div>
+								}}>
+								<CustomTableCell component="th" scope="row" align="center">{row.name}</CustomTableCell>
+								<CustomTableCell align="center">{row.price}</CustomTableCell>
+								<CustomTableCell align="center">{row.duration}</CustomTableCell>
+								<CustomTableCell align="center">{row.proposal.length > 40 ? row.proposal.slice(0, 40) + "..." : row.proposal}</CustomTableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</Card >
 		);
 	}
 }

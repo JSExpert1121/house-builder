@@ -63,8 +63,8 @@ class ConnectedProposalDetailView extends React.Component {
 							scrollButtons="on"
 							className={classes.toolbarstyle}
 						>
-							<Tab icon={<DashboardIcon />} />
-							<Tab icon={<LoyaltyIcon />} />
+							<Tab label="Detail" icon={<DashboardIcon />} />
+							<Tab label="Files" icon={<LoyaltyIcon />} />
 						</Tabs>
 
 						{curDetailTab === 0 && <ProposalDetailOverview />}
