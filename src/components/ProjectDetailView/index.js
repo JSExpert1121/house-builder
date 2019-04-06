@@ -70,10 +70,10 @@ class ConnectedProDetailView extends React.Component {
 							className={classes.toolbarstyle}
 						>
 							<Tab icon={<DashboardIcon />} />
-							<Tab icon={<LoyaltyIcon />} />
+							<Tab icon={<AssignmentIndIcon />} />
 							<Tab icon={<DescriptionIcon />} />
 							<Tab icon={<MessageIcon />} />
-							<Tab icon={<AssignmentIndIcon />} />
+							<Tab icon={<LoyaltyIcon />} />
 						</Tabs>
 
 						{curDetailTab === 0 && <PDetailOverView />}

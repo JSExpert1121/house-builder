@@ -19,7 +19,6 @@ const styles = theme => ({
 		padding: "10px 10px 10px 10px",
 		height: "calc(100vh - 56px - 90px - 48px - 40px)",
 		overflow: "auto",
-		overflowX: "hidden"
 	},
 	card: {
 		minWidth: "200px"

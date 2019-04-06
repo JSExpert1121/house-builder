@@ -9,10 +9,10 @@ import Tab from '@material-ui/core/Tab';
 import NoSsr from '@material-ui/core/NoSsr';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import LoyaltyIcon from '@material-ui/icons/Loyalty';
-
-import ProposalDetailFiles from '../ProposalDetailFiles';
-import ProposalDetailOverview from '../ProposalDetailOverview';
+import ArchiveIcon from '@material-ui/icons/Archive';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+import DoneIcon from '@material-ui/icons/Done';
+import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
 const styles = theme => ({
 	root: {
@@ -25,7 +25,7 @@ const styles = theme => ({
 	}
 });
 
-class ConnectedProposalDetailView extends React.Component {
+class ConnectedSCVPipelineView extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -41,13 +41,8 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, selectedProposal } = this.props;
+		const { classes } = this.props;
 		const curDetailTab = this.state.curDetailTab;
-
-		if (selectedProposal === null)
-			return (
-				<div> No Proposal is Selected </div>
-			);
 
 		return (
 
@@ -63,12 +58,18 @@ class ConnectedProposalDetailView extends React.Component {
 							scrollButtons="on"
 							className={classes.toolbarstyle}
 						>
-							<Tab label="Detail" icon={<DashboardIcon />} />
-							<Tab label="Files" icon={<LoyaltyIcon />} />
+							<Tab icon={<DashboardIcon />} />
+							<Tab icon={<ControlCameraIcon />} />
+							<Tab icon={<DoneIcon />} />
+							<Tab icon={<DoneAllIcon />} />
+							<Tab icon={<ArchiveIcon />} />
 						</Tabs>
 
-						{curDetailTab === 0 && <ProposalDetailOverview />}
-						{curDetailTab === 1 && <ProposalDetailFiles />}
+						{curDetailTab === 0 && <div>Undecided </div>}
+						{curDetailTab === 1 && <div>Accepted</div>}
+						{curDetailTab === 2 && <div>Submitted</div>}
+						{curDetailTab === 3 && <div>Won</div>}
+						{curDetailTab === 4 && <div>Archived</div>}
 					</Paper>
 				</div>
 			</NoSsr>
@@ -78,14 +79,13 @@ class ConnectedProposalDetailView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		selectedProposal: state.genContViewData.selectedProposal
 	};
 };
 
-const ProposalDetailView = connect(mapStateToProps)(ConnectedProposalDetailView);
+const SCVPipelineView = connect(mapStateToProps)(ConnectedSCVPipelineView);
 
-ProposalDetailView.propTypes = {
+SCVPipelineView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProposalDetailView);
+export default withStyles(styles)(SCVPipelineView);
