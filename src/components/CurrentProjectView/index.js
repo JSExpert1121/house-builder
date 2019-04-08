@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addProject, setSelectedProject, setCurTabPos } from '../../actions';
+import { addProject, getProjectDetailById, setCurTabPos, getAllProjects } from '../../actions';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
 	root: {
@@ -40,8 +41,10 @@ const styles = theme => ({
 			backgroundColor: theme.palette.background.default,
 		},
 	},
-	rowactionarea: {
-		width: "100%"
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(50% - 10px)",
 	}
 });
 
@@ -64,8 +67,11 @@ class connectedCurProView extends React.Component {
 		};
 	}
 
-	handleAddProject = () => {
+	componentDidMount() {
+		this.props.getAllProjects();
+	}
 
+	handleAddProject = () => {
 	}
 
 	render() {
@@ -73,32 +79,38 @@ class connectedCurProView extends React.Component {
 
 		return (
 			<Card className={classes.root}>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell> Project Title </CustomTableCell>
-							<CustomTableCell align="center">Status</CustomTableCell>
-							<CustomTableCell align="center">PlaceHolder1</CustomTableCell>
-							<CustomTableCell align="center">PlaceHolder2</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{projects.map(row => (
-							<TableRow className={classes.row} key={row.id} hover
-								onClick={() => {
-									this.props.setSelectedProject(row);
-									this.props.setCurTabPos(1);
-								}}>
-								<CustomTableCell component="th" scope="row">
-									{row.name}
-								</CustomTableCell>
-								<CustomTableCell align="center">{row.status}</CustomTableCell>
-								<CustomTableCell align="center">{row.PH1}</CustomTableCell>
-								<CustomTableCell align="center">{row.PH2}</CustomTableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+				{
+					projects.length != 0 ?
+						<Table className={classes.table}>
+							<TableHead>
+								<TableRow>
+									<CustomTableCell> Project Title </CustomTableCell>
+									<CustomTableCell align="center">Status</CustomTableCell>
+									<CustomTableCell align="center">Discription</CustomTableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{
+									projects.map(
+										row => (
+											<TableRow className={classes.row} key={row.id} hover
+												onClick={() => {
+													this.props.getProjectDetailById(row.id);
+													this.props.setCurTabPos(1);
+												}}>
+												<CustomTableCell component="th" scope="row">
+													Project {row.id}
+												</CustomTableCell>
+												<CustomTableCell align="center">{row.status}</CustomTableCell>
+												<CustomTableCell align="center">{row.description}</CustomTableCell>
+											</TableRow>
+										)
+									)
+								}
+							</TableBody>
+						</Table>
+						: <CircularProgress className={classes.waitingSpin} />
+				}
 			</Card >
 		);
 	}
@@ -107,9 +119,10 @@ class connectedCurProView extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setSelectedProject: proEl => dispatch(setSelectedProject(proEl)),
+		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
 		setCurTabPos: tabPos => dispatch(setCurTabPos(tabPos)),
 		addProject: proEl => dispatch(addProject(proEl)),
+		getAllProjects: () => dispatch(getAllProjects())
 	};
 };
 

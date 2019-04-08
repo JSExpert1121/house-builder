@@ -36,14 +36,14 @@ class ConnectedProposalDetailFiles extends React.Component {
 			<div className={classes.root}>
 				< List component="nav" >
 					{
-						selectedProposal.subfiles.map(el => (
+						/*selectedProposal.subfiles.map(el => (
 							<ListItem button key={uuidv1()}>
 								<ListItemIcon>
 									<DescriptionIcon />
 								</ListItemIcon>
 								<ListItemText primary={el} />
 							</ListItem>
-						))
+						))*/
 					}
 				</List>
 			</div>

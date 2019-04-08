@@ -12,7 +12,11 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import TuneIcon from '@material-ui/icons/Tune';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SettingsIcon from '@material-ui/icons/Settings';
+
 import SCVPipelineView from '../../components/SCVPipelineView';
+import SCVCalendarView from '../../components/SCVCalendarView';
+import SCVReportsView from '../../components/SCVReportsView';
+import SCVAnalyticsView from '../../components/SCVAnalyticsView';
 
 const styles = theme => ({
 	root: {
@@ -67,9 +71,9 @@ class ConnectedSubContView extends React.Component {
 					</AppBar>
 
 					{curTabPos === 0 && <SCVPipelineView />}
-					{curTabPos === 1 && <div />}
-					{curTabPos === 2 && <div />}
-					{curTabPos === 3 && <div />}
+					{curTabPos === 1 && <SCVCalendarView />}
+					{curTabPos === 2 && <SCVAnalyticsView />}
+					{curTabPos === 3 && <SCVReportsView />}
 					{curTabPos === 4 && <div />}
 				</div>
 			</NoSsr>

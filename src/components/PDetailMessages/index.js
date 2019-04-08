@@ -25,12 +25,15 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { getProjectMessage } from '../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 56px - 90px - 48px - 40px)",
+		height: "calc(100vh - 56px - 90px - 48px - 20px)",
 		overflow: "auto",
 	},
 	card: {
@@ -64,6 +67,11 @@ const styles = theme => ({
 	},
 	rowactionarea: {
 		width: "100%"
+	},
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(50% - 10px)",
 	}
 });
 
@@ -75,7 +83,7 @@ const CustomTableCell = withStyles(theme => ({
 	body: {
 		fontSize: 14,
 		color: theme.palette.primary.light
-	},
+	}
 }))(TableCell);
 
 class ConnectedPDetailOverview extends React.Component {
@@ -87,37 +95,42 @@ class ConnectedPDetailOverview extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		this.props.getProjectMessage(this.props.selectedProject.id);
+	}
+
 	getMessageGridView = () => {
-		const { classes, selectedProject } = this.props;
-		console.log(selectedProject.messages);
+		const { classes, messages } = this.props;
 
 		return (
 			<Card className={classes.root}>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell align="center"> From </CustomTableCell>
-							<CustomTableCell align="center">Subject</CustomTableCell>
-							<CustomTableCell align="center">Date</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{selectedProject.messages.map(row => (
-							<TableRow className={classes.row} key={row.id} hover
-								onClick={() => {
-									this.setState({
-										selectedMessage: row
-									});
-								}}>
-								<CustomTableCell component="th" scope="row" align="center">{row.from}</CustomTableCell>
-								<CustomTableCell align="center">{row.subject}</CustomTableCell>
-								<CustomTableCell align="center">{
-									row.date.getYear() + 1900 + "." + (row.date.getMonth() + 1) + "." + row.date.getDay() + " " +
-									row.date.getHours() + ":" + row.date.getMinutes() + ":" + row.date.getSeconds()}</CustomTableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+				{
+					messages.length != 0 ?
+						<Table className={classes.table}>
+							<TableHead>
+								<TableRow>
+									<CustomTableCell align="center"> From </CustomTableCell>
+									<CustomTableCell align="center">Subject</CustomTableCell>
+									<CustomTableCell align="center">Date</CustomTableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{messages.map(row => (
+									<TableRow className={classes.row} key={row.id} hover
+										onClick={() => {
+											this.setState({
+												selectedMessage: row
+											});
+										}}>
+										<CustomTableCell component="th" scope="row" align="center">{row.from}</CustomTableCell>
+										<CustomTableCell align="center">{row.subject}</CustomTableCell>
+										<CustomTableCell align="center">{row.date}</CustomTableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+						: <CircularProgress className={classes.waitingSpin} />
+				}
 			</Card >
 		);
 	}
@@ -144,9 +157,10 @@ class ConnectedPDetailOverview extends React.Component {
 						</IconButton>
 					}
 					title={selectedMessage.from}
-					subheader={
+					/*subheader={
 						selectedMessage.date.getYear() + 1900 + "." + (selectedMessage.date.getMonth() + 1) + "." + selectedMessage.date.getDay() + " " +
-						selectedMessage.date.getHours() + ":" + selectedMessage.date.getMinutes() + ":" + selectedMessage.date.getSeconds()}
+						selectedMessage.date.getHours() + ":" + selectedMessage.date.getMinutes() + ":" + selectedMessage.date.getSeconds()}*/
+					subheader={selectedMessage.date}
 				/>
 				<Divider />
 				<CardMedia
@@ -156,7 +170,7 @@ class ConnectedPDetailOverview extends React.Component {
 				/>
 				<CardContent>
 					<Typography component="p">
-						{selectedMessage.detail}
+						{selectedMessage.body}
 					</Typography>
 				</CardContent>
 				<Divider />
@@ -185,11 +199,18 @@ class ConnectedPDetailOverview extends React.Component {
 
 const mapStateToProps = state => {
 	return {
+		messages: state.genContViewData.messages,
 		selectedProject: state.genContViewData.selectedProject
 	};
 };
 
-const PDetailOverview = connect(mapStateToProps)(ConnectedPDetailOverview);
+const mapDispatchToProps = dispatch => {
+	return {
+		getProjectMessage: (id) => dispatch(getProjectMessage(id))
+	}
+}
+
+const PDetailOverview = connect(mapStateToProps, mapDispatchToProps)(ConnectedPDetailOverview);
 
 PDetailOverview.propTypes = {
 	classes: PropTypes.object.isRequired,

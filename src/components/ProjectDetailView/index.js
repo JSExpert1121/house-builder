@@ -52,7 +52,7 @@ class ConnectedProDetailView extends React.Component {
 
 		if (selectedProject === null)
 			return (
-				<div> No Project is Selected </div>
+				<div>  </div>
 			);
 
 		return (

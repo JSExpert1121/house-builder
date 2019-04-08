@@ -3,22 +3,35 @@ import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import DescriptionIcon from '@material-ui/icons/Description';
-import Divider from '@material-ui/core/Divider';
+import Card from '@material-ui/core/Card';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+import { getProjectFiles } from '../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 56px - 90px - 48px - 40px)",
+		height: "calc(100vh - 56px - 90px - 48px - 20px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
 });
+
+const CustomTableCell = withStyles(theme => ({
+	head: {
+		backgroundColor: theme.palette.primary.light,
+		color: theme.palette.common.white,
+	},
+	body: {
+		fontSize: 14,
+		color: theme.palette.primary.light
+	},
+}))(TableCell);
 
 class ConnectedPDetailFiles extends React.Component {
 	constructor(props) {
@@ -28,35 +41,60 @@ class ConnectedPDetailFiles extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		this.props.getProjectFiles(this.props.selectedProject.id);
+	}
+
 	render() {
-		const { classes, selectedProject } = this.props;
+		const { classes, projectFiles } = this.props;
 
 		return (
-			<div className={classes.root}>
-				< List component="nav" >
-					{
-						selectedProject.files.map(el => (
-							<ListItem button key={el.id}>
-								<ListItemIcon>
-									<DescriptionIcon />
-								</ListItemIcon>
-								<ListItemText primary={el.name} />
-							</ListItem>
-						))
-					}
-				</List>
-			</div>
+			< Card className={classes.root} >
+				{
+					projectFiles.length != 0 ?
+						(
+							<Table className={classes.table}>
+								<TableHead>
+									<TableRow>
+										<CustomTableCell align="center">Name</CustomTableCell>
+										<CustomTableCell align="center">Date</CustomTableCell>
+										<CustomTableCell align="center">Location</CustomTableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{projectFiles.map(row => (
+										<TableRow className={classes.row} key={row.id} hover
+											onClick={() => { }}>
+											<CustomTableCell component="th" scope="row" align="center">{row.name}</CustomTableCell>
+											<CustomTableCell align="center">{row.date}</CustomTableCell>
+											<CustomTableCell align="center">{row.location}</CustomTableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						) : ""
+
+				}
+			</Card>
 		);
 	}
 }
 
 const mapStateToProps = state => {
+	console.log(state);
 	return {
-		selectedProject: state.genContViewData.selectedProject
+		selectedProject: state.genContViewData.selectedProject,
+		projectFiles: state.genContViewData.projectFiles,
 	};
 };
 
-const PDetailFiles = connect(mapStateToProps)(ConnectedPDetailFiles);
+const mapDispatchToProps = dispatch => {
+	return {
+		getProjectFiles: (id) => dispatch(getProjectFiles(id)),
+	}
+}
+
+const PDetailFiles = connect(mapStateToProps, mapDispatchToProps)(ConnectedPDetailFiles);
 
 PDetailFiles.propTypes = {
 	classes: PropTypes.object.isRequired,

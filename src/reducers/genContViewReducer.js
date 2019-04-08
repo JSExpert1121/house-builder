@@ -1,392 +1,24 @@
-import { ADD_PROJECT, SET_SELECTED_PROJECT, SET_CUR_TAB_POS, SET_SELECTED_PROPOSAL } from "../constants/action-types";
+import {
+	ADD_PROJECT,
+	SET_CUR_TAB_POS,
+	SET_SELECTED_PROPOSAL,
+	ALL_PROJECT_LOADED,
+	PROJECT_DETAIL_LOADED,
+	BIDDERS_LOADED,
+	PROJECT_FILES_LOADED,
+	MESSAGE_LOADED
+} from "../constants/action-types";
+
 import uuidv1 from "uuid";
 
 const initialState = {
 	selectedProject: null,
+	projectFiles: [],
 	selectedProposal: null,
+	messages: [],
 	curTabPos: 0,
-	projects: [
-		{
-			id: uuidv1(),
-			name: "Project1",
-			status: "Active",
-			PH1: "Hello Project1",
-			PH2: "Hello Project1",
-			bidders: [
-				{
-					id: uuidv1(),
-					name: "Ivan",
-					price: 100,
-					duration: 3,
-					proposal: "I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				},
-				{
-					id: uuidv1(),
-					name: "Windi",
-					price: 200,
-					duration: 5,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				}
-			],
-			files: [
-				{
-					id: uuidv1(),
-					name: "File1.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File2.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File3.XXX",
-					url: "XXX"
-				}
-			],
-			messages: [
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Windi",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-			]
-		},
-		{
-			id: uuidv1(),
-			name: "Project2",
-			status: "Active",
-			PH1: "Hello Project2",
-			PH2: "Hello Project2",
-			bidders: [
-				{
-					id: uuidv1(),
-					name: "Ivan",
-					price: 100,
-					duration: 3,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				},
-				{
-					id: uuidv1(),
-					name: "Windi",
-					price: 200,
-					duration: 5,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				}
-			],
-			files: [
-				{
-					id: uuidv1(),
-					name: "File1.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File2.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File3.XXX",
-					url: "XXX"
-				}
-			],
-			messages: [
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Windi",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-			]
-		},
-		{
-			id: uuidv1(),
-			name: "Project3",
-			status: "Active",
-			PH1: "Hello Project3",
-			PH2: "Hello Project3",
-			bidders: [
-				{
-					id: uuidv1(),
-					name: "Ivan",
-					price: 100,
-					duration: 3,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				},
-				{
-					id: uuidv1(),
-					name: "Windi",
-					price: 200,
-					duration: 5,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				}
-			],
-			files: [
-				{
-					id: uuidv1(),
-					name: "File1.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File2.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File3.XXX",
-					url: "XXX"
-				}
-			],
-			messages: [
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Windi",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-			]
-		},
-		{
-			id: uuidv1(),
-			name: "Project4",
-			status: "Paused",
-			PH1: "Hello Project4",
-			PH2: "Hello Project4",
-			bidders: [
-				{
-					id: uuidv1(),
-					name: "Ivan",
-					price: 100,
-					duration: 3,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				},
-				{
-					id: uuidv1(),
-					name: "Windi",
-					price: 200,
-					duration: 5,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				}
-			],
-			files: [
-				{
-					id: uuidv1(),
-					name: "File1.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File2.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File3.XXX",
-					url: "XXX"
-				}
-			],
-			messages: [
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Windi",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-			]
-		},
-		{
-			id: uuidv1(),
-			name: "Project5",
-			status: "Ended",
-			PH1: "Hello Project5",
-			PH2: "Hello Project5",
-			bidders: [
-				{
-					id: uuidv1(),
-					name: "Ivan",
-					price: 100,
-					duration: 3,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				},
-				{
-					id: uuidv1(),
-					name: "Windi",
-					price: 200,
-					duration: 5,
-					proposal: "I hate Generic Bid",
-					subfiles: [
-						"Screenshot1.jpg",
-						"Screenshot2.jpg",
-						"Screenshot3.jpg"
-					]
-				}
-			],
-			files: [
-				{
-					id: uuidv1(),
-					name: "File1.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File2.XXX",
-					url: "XXX"
-				},
-				{
-					id: uuidv1(),
-					name: "File3.XXX",
-					url: "XXX"
-				}
-			],
-			messages: [
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Ivan",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-				{
-					from: "Windi",
-					subject: "Subject1",
-					date: new Date(),
-					detail: "HAHAHA"
-				},
-			]
-		}
-	],
+	projects: [],
+	bidders: [],
 	createProjectTemp: {
 		id: uuidv1(),
 		name: "Project",
@@ -446,10 +78,6 @@ function genContViewReducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				projects: state.projects.concat(action.payload)
 			});
-		case SET_SELECTED_PROJECT:
-			return Object.assign({}, state, {
-				selectedProject: action.payload
-			});
 		case SET_CUR_TAB_POS:
 			return Object.assign({}, state, {
 				curTabPos: action.payload
@@ -457,6 +85,45 @@ function genContViewReducer(state = initialState, action) {
 		case SET_SELECTED_PROPOSAL:
 			return Object.assign({}, state, {
 				selectedProposal: action.payload
+			});
+		case BIDDERS_LOADED:
+			return Object.assign({}, state, {
+				//projects: state.projects.concat(action.payload)
+				bidders: action.payload
+			});
+		case ALL_PROJECT_LOADED:
+			return Object.assign({}, state, {
+				//projects: state.projects.concat(action.payload)
+				projects: action.payload
+			});
+		case PROJECT_DETAIL_LOADED:
+			return Object.assign({}, state, {
+				//projects: state.projects.concat(action.payload)
+				selectedProject: action.payload
+			});
+		case PROJECT_FILES_LOADED:
+			return Object.assign({}, state, {
+				projectFiles: action.payload
+			});
+		case MESSAGE_LOADED:
+			return Object.assign({}, state, {
+				messages: action.payload
+			});
+		case "CLEAR_PROJECTS":
+			return Object.assign({}, state, {
+				projects: [],
+			});
+		case "CLEAR_BIDDERS":
+			return Object.assign({}, state, {
+				bidders: [],
+			});
+		case "CLEAR_FILES":
+			return Object.assign({}, state, {
+				projectFiles: [],
+			});
+		case "CLEAR_MESSAGES":
+			return Object.assign({}, state, {
+				messages: [],
 			});
 		default:
 			return state;
