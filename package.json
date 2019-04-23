@@ -5,8 +5,8 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "webpack",
-    "start": "webpack-dev-server  --open",
-    "deploy": "aws --profile bc s3 sync public/ s3://bcfe"
+		"start": "webpack-dev-server  --open",
+		"deploy": "aws --profile bc s3 sync public/ s3://bcfe"
 	},
 	"keywords": [
 		"react",
