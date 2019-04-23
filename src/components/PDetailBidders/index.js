@@ -45,7 +45,7 @@ const styles = theme => ({
 	waitingSpin: {
 		position: "relative",
 		left: "calc(50% - 10px)",
-		top: "calc(50% - 10px)",
+		top: "calc(40vh)",
 	}
 });
 
