@@ -17,6 +17,8 @@ import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import ServiceIcon from '@material-ui/icons/GroupWork';
 import HelpIcon from '@material-ui/icons/Help';
 
+import auth0Client from '../../Auth';
+
 const styles = theme => ({
 	list: {
 		width: "60px",
@@ -51,35 +53,37 @@ class MenuList extends React.Component {
 						</ListItemIcon>
 						<ListItemText primary="Home" className={classes.listItemText} />
 					</ListItem>
+					{
+						auth0Client.isAuthenticated() ?
+							<div><ListItem button component={Link} to='/gen_cont_view'>
+								<ListItemIcon>
+									<MessageIcon />
+								</ListItemIcon>
+								<ListItemText primary="General Contractor" className={classes.listItemText} />
+							</ListItem>
 
-					<ListItem button component={Link} to='/gen_cont_view'>
-						<ListItemIcon>
-							<MessageIcon />
-						</ListItemIcon>
-						<ListItemText primary="General Contractor" className={classes.listItemText} />
-					</ListItem>
+								<ListItem button component={Link} to='/sub_cont_view'>
+									<ListItemIcon>
+										<ServiceIcon />
+									</ListItemIcon>
+									<ListItemText primary="Sub Contractor" className={classes.listItemText} />
+								</ListItem>
 
-					<ListItem button component={Link} to='/sub_cont_view'>
-						<ListItemIcon>
-							<ServiceIcon />
-						</ListItemIcon>
-						<ListItemText primary="Sub Contractor" className={classes.listItemText} />
-					</ListItem>
+								<ListItem button component={Link} to='/bid_list_view'>
+									<ListItemIcon>
+										<HelpIcon />
+									</ListItemIcon>
+									<ListItemText primary="Bidder Listing" className={classes.listItemText} />
+								</ListItem>
 
-					<ListItem button component={Link} to='/bid_list_view'>
-						<ListItemIcon>
-							<HelpIcon />
-						</ListItemIcon>
-						<ListItemText primary="Bidder Listing" className={classes.listItemText} />
-					</ListItem>
-
-					<ListItem button component={Link} to='/man_temp_view'>
-						<ListItemIcon>
-							<PagesIcon />
-						</ListItemIcon>
-						<ListItemText primary="Manage Templates" className={classes.listItemText} />
-					</ListItem>
-
+								<ListItem button component={Link} to='/man_temp_view'>
+									<ListItemIcon>
+										<PagesIcon />
+									</ListItemIcon>
+									<ListItemText primary="Manage Templates" className={classes.listItemText} />
+								</ListItem>
+							</div> : <div></div>
+					}
 				</List>
 				<Divider />
 
