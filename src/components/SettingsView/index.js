@@ -26,17 +26,24 @@ const styles = (theme) => ({
 		margin: "10px 10px 10px 10px",
 		height: "calc(100vh - 64px - 20px)",
 		overflow: "auto",
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	total: {
+		width: "500px",
+		left: "calc(50% - 250px)",
 	},
 	saveBtn: {
 		border: "1px solid #4a148c",
 		backgroundColor: theme.palette.primary.light,
 		borderRadius: 0,
-		marginBottom: 2
+		marginTop: 2
 	},
 	cancelBtn: {
 		border: "1px solid #c7a4ff",
 		borderRadius: 0,
-		marginBottom: 2
+		marginTop: 2
 	},
 	formControl: {
 		color: theme.palette.primary.light,
@@ -97,124 +104,126 @@ class SettingsView extends React.Component {
 
 		return (
 			<Card className={classes.root}>
-				<Button className={classes.saveBtn} onClick={
-					() => {
-						const newSet = {
-							user_metadata: {
-								settings: {
-									setting1: this.state.setting1,
-									setting2: this.state.setting2,
-									checkedA: this.state.checkedA,
-									checkedB: this.state.checkedB,
-									checkedC: this.state.checkedC,
-								}
-							}
-						}
-						console.log(newSet);
-						auth0Client.updateSet(newSet);
-					}
-				}> Save </Button>
-				<Button className={classes.cancelBtn} onClick={
-					() => this.props.history.replace("/")
-				}> Cancel</Button>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell align="center">Setting</CustomTableCell>
-							<CustomTableCell align="center">Value</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						<TableRow className={classes.row} hover>
-							<CustomTableCell align="center">Setting1</CustomTableCell>
-							<CustomTableCell align="center">
-								<FormControl className={classes.formControl}>
-									<Select
-										value={this.state.setting1}
+				<Card className={classes.total}>
+					<Table className={classes.table}>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell align="center">Setting</CustomTableCell>
+								<CustomTableCell align="center">Value</CustomTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							<TableRow className={classes.row} hover>
+								<CustomTableCell align="center">Setting1</CustomTableCell>
+								<CustomTableCell align="center">
+									<FormControl className={classes.formControl}>
+										<Select
+											value={this.state.setting1}
+											onChange={
+												(event) => {
+													this.setState({ setting1: event.target.value });
+												}
+											}
+											inputProps={{
+												name: 'age',
+												id: 'age-simple',
+											}}
+										>
+											<MenuItem value={10}>s1v1</MenuItem>
+											<MenuItem value={20}>s1v2</MenuItem>
+											<MenuItem value={30}>s1v3</MenuItem>
+										</Select>
+									</FormControl>
+								</CustomTableCell>
+							</TableRow>
+							<TableRow className={classes.row} hover>
+								<CustomTableCell align="center">Setting2</CustomTableCell>
+								<CustomTableCell align="center">
+									<Radio
+										checked={this.state.setting2 === 'a'}
 										onChange={
 											(event) => {
-												this.setState({ setting1: event.target.value });
+												this.setState({
+													setting2: event.target.value
+												});
 											}
 										}
-										inputProps={{
-											name: 'age',
-											id: 'age-simple',
-										}}
-									>
-										<MenuItem value={10}>s1v1</MenuItem>
-										<MenuItem value={20}>s1v2</MenuItem>
-										<MenuItem value={30}>s1v3</MenuItem>
-									</Select>
-								</FormControl>
-							</CustomTableCell>
-						</TableRow>
-						<TableRow className={classes.row} hover>
-							<CustomTableCell align="center">Setting2</CustomTableCell>
-							<CustomTableCell align="center">
-								<Radio
-									checked={this.state.setting2 === 'a'}
-									onChange={
-										(event) => {
-											this.setState({
-												setting2: event.target.value
-											});
+										value="a"
+										name="radio-button-demo"
+										aria-label="A"
+									/>
+									<Radio
+										checked={this.state.setting2 === 'b'}
+										onChange={
+											(event) => {
+												this.setState({
+													setting2: event.target.value
+												});
+											}
 										}
-									}
-									value="a"
-									name="radio-button-demo"
-									aria-label="A"
-								/>
-								<Radio
-									checked={this.state.setting2 === 'b'}
-									onChange={
-										(event) => {
-											this.setState({
-												setting2: event.target.value
-											});
+										value="b"
+										name="radio-button-demo"
+										aria-label="B"
+									/>
+									<Radio
+										checked={this.state.setting2 === 'c'}
+										onChange={
+											(event) => {
+												this.setState({
+													setting2: event.target.value
+												});
+											}
 										}
+										value="c"
+										name="radio-button-demo"
+										aria-label="C"
+									/>
+								</CustomTableCell>
+							</TableRow>
+							<TableRow className={classes.row} hover>
+								<CustomTableCell align="center">Setting3</CustomTableCell>
+								<CustomTableCell align="center">
+									<Checkbox
+										checked={this.state.checkedA}
+										onChange={this.handleChange('checkedA')}
+										value="checkedA"
+									/>
+									<Checkbox
+										checked={this.state.checkedB}
+										onChange={this.handleChange('checkedB')}
+										value="checkedB"
+									/>
+									<Checkbox
+										checked={this.state.checkedC}
+										onChange={this.handleChange('checkedC')}
+										value="checkedC"
+									/>
+								</CustomTableCell>
+							</TableRow>
+						</TableBody>
+					</Table>
+					<Button className={classes.saveBtn} onClick={
+						() => {
+							const newSet = {
+								user_metadata: {
+									settings: {
+										setting1: this.state.setting1,
+										setting2: this.state.setting2,
+										checkedA: this.state.checkedA,
+										checkedB: this.state.checkedB,
+										checkedC: this.state.checkedC,
 									}
-									value="b"
-									name="radio-button-demo"
-									aria-label="B"
-								/>
-								<Radio
-									checked={this.state.setting2 === 'c'}
-									onChange={
-										(event) => {
-											this.setState({
-												setting2: event.target.value
-											});
-										}
-									}
-									value="c"
-									name="radio-button-demo"
-									aria-label="C"
-								/>
-							</CustomTableCell>
-						</TableRow>
-						<TableRow className={classes.row} hover>
-							<CustomTableCell align="center">Setting3</CustomTableCell>
-							<CustomTableCell align="center">
-								<Checkbox
-									checked={this.state.checkedA}
-									onChange={this.handleChange('checkedA')}
-									value="checkedA"
-								/>
-								<Checkbox
-									checked={this.state.checkedB}
-									onChange={this.handleChange('checkedB')}
-									value="checkedB"
-								/>
-								<Checkbox
-									checked={this.state.checkedC}
-									onChange={this.handleChange('checkedC')}
-									value="checkedC"
-								/>
-							</CustomTableCell>
-						</TableRow>
-					</TableBody>
-				</Table>
-			</Card >
+								}
+							}
+							console.log(newSet);
+							auth0Client.updateSet(newSet);
+						}
+					}> Save </Button>
+					<Button className={classes.cancelBtn} onClick={
+						() => this.props.history.replace("/")
+					}> Cancel</Button>
+				</Card >
+			</Card>
 		);
 	}
 }
