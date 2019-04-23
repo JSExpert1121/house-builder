@@ -14,8 +14,11 @@
 	"author": "jishnu koottala",
 	"license": "ISC",
 	"dependencies": {
+		"@babel/runtime": "^7.4.3",
 		"@material-ui/core": "^3.5.1",
 		"@material-ui/icons": "^3.0.1",
+		"auth0-js": "^9.10.2",
+		"axios": "^0.18.0",
 		"date-fns": "^1.30.1",
 		"dotenv": "^6.1.0",
 		"mdbreact": "^4.12.0",
@@ -31,6 +34,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.1.5",
 		"@babel/plugin-proposal-class-properties": "^7.1.0",
+		"@babel/plugin-transform-runtime": "^7.4.3",
 		"@babel/preset-env": "^7.1.5",
 		"@babel/preset-react": "^7.0.0",
 		"babel-eslint": "^10.0.1",

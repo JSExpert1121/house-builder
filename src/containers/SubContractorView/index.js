@@ -17,6 +17,8 @@ import SCVPipelineView from '../../components/SCVPipelineView';
 import SCVCalendarView from '../../components/SCVCalendarView';
 import SCVReportsView from '../../components/SCVReportsView';
 import SCVAnalyticsView from '../../components/SCVAnalyticsView';
+import { CircularProgress } from '@material-ui/core';
+import auth0Client from '../../Auth';
 
 const styles = theme => ({
 	root: {
@@ -38,8 +40,24 @@ class ConnectedSubContView extends React.Component {
 		super(props);
 
 		this.state = {
-			curTabPos: 0
+			curTabPos: 0,
+			profile: null
 		};
+	}
+
+	async componentWillMount() {
+		const userProfile = auth0Client.userProfile;
+		if (!userProfile) {
+			await auth0Client.getProfile((profile) => {
+				this.setState({
+					profile: profile
+				});
+			});
+		} else {
+			this.setState({
+				profile: userProfile
+			});
+		}
 	}
 
 	handleTabChange = (event, value) => {
@@ -51,6 +69,13 @@ class ConnectedSubContView extends React.Component {
 	render() {
 		const { classes } = this.props;
 		const { curTabPos } = this.state;
+		const profile = this.state.profile;
+
+		if (profile === null)
+			return (<div> <CircularProgress /></div>);
+
+		if (profile.app_metadata.role !== "SuperAdmin" && profile.app_metadata.role !== "Sub")
+			return (<div> Access Forbidden </div>);
 
 		return (
 			<NoSsr>

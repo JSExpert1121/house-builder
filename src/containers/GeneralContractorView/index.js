@@ -19,6 +19,8 @@ import BallotIcon from '@material-ui/icons/Ballot';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import ProposalDetailView from '../../components/ProposalDetailView';
 import CreateProjectView from '../../components/CreateProjectView';
+import { CircularProgress } from '@material-ui/core';
+import auth0Client from '../../Auth';
 
 const styles = theme => ({
 	root: {
@@ -38,6 +40,25 @@ const styles = theme => ({
 class ConnectedGenContView extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			profile: null
+		}
+	}
+
+	async componentWillMount() {
+		const userProfile = auth0Client.userProfile;
+		if (!userProfile) {
+			await auth0Client.getProfile((profile) => {
+				this.setState({
+					profile: profile
+				});
+			});
+		} else {
+			this.setState({
+				profile: userProfile
+			});
+		}
 	}
 
 	handleTabChange = (event, value) => {
@@ -46,6 +67,13 @@ class ConnectedGenContView extends React.Component {
 
 	render() {
 		const { classes, curTabPos } = this.props;
+		const profile = this.state.profile;
+
+		if (profile === null)
+			return (<div> <CircularProgress /></div>);
+
+		if (profile.app_metadata.role !== "SuperAdmin" && profile.app_metadata.role !== "Gen")
+			return (<div> Access Forbidden </div>);
 
 		return (
 			<NoSsr>

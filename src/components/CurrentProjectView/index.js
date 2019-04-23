@@ -4,7 +4,7 @@ import { addProject, getProjectDetailById, setCurTabPos, getAllProjects } from '
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
+import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -15,7 +15,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 56px - 90px - 20px)",
+		height: "calc(100vh - 64px - 72px - 20px)",
 		margin: "10px 10px 10px 10px",
 		overflow: "auto",
 	},
@@ -78,7 +78,7 @@ class connectedCurProView extends React.Component {
 		const { classes, projects } = this.props;
 
 		return (
-			<Card className={classes.root}>
+			<Paper className={classes.root}>
 				{
 					projects.length != 0 ?
 						<Table className={classes.table}>
@@ -111,7 +111,7 @@ class connectedCurProView extends React.Component {
 						</Table>
 						: <CircularProgress className={classes.waitingSpin} />
 				}
-			</Card >
+			</Paper >
 		);
 	}
 }

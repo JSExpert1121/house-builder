@@ -33,7 +33,8 @@ import { setCurTabPos, addProject } from '../../actions';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px"
+		padding: "10px 10px 10px 10px",
+		height: "calc(100vh - 64px - 72px - 20px)",
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
@@ -57,7 +58,7 @@ const styles = theme => ({
 		marginBottom: 12,
 	},
 	contentView: {
-		height: "calc(100vh - 56px - 90px - 48px - 40px)",
+		height: "calc(100vh - 64px - 72px - 48px - 20px)",
 		padding: "10px 10px 10px 10px",
 		overflow: "auto",
 		overflowX: "hidden"

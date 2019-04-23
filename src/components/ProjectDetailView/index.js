@@ -23,7 +23,8 @@ import PDetailProposals from '../PDetailProposals';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px"
+		padding: "10px 10px 10px 10px",
+		height: "100vh - 64px - 72px"
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,

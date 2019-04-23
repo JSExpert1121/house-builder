@@ -8,6 +8,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import MessageIcon from '@material-ui/icons/Message';
+import PagesIcon from '@material-ui/icons/Pages';
 import Card from '@material-ui/core/Card';
 
 import PropTypes from 'prop-types';
@@ -21,7 +22,7 @@ const styles = theme => ({
 		width: "60px",
 		float: 'left',
 		borderRadius: "0",
-		height: 'calc(100vh - 56px - 20px)',
+		height: 'calc(100vh - 64px)',
 		[theme.breakpoints.up('md')]: {
 			width: '15%',
 		}
@@ -55,21 +56,28 @@ class MenuList extends React.Component {
 						<ListItemIcon>
 							<MessageIcon />
 						</ListItemIcon>
-						<ListItemText primary="GeneralContractor" className={classes.listItemText} />
+						<ListItemText primary="General Contractor" className={classes.listItemText} />
 					</ListItem>
 
 					<ListItem button component={Link} to='/sub_cont_view'>
 						<ListItemIcon>
 							<ServiceIcon />
 						</ListItemIcon>
-						<ListItemText primary="SubContractor" className={classes.listItemText} />
+						<ListItemText primary="Sub Contractor" className={classes.listItemText} />
 					</ListItem>
 
 					<ListItem button component={Link} to='/bid_list_view'>
 						<ListItemIcon>
 							<HelpIcon />
 						</ListItemIcon>
-						<ListItemText primary="BidderListing" className={classes.listItemText} />
+						<ListItemText primary="Bidder Listing" className={classes.listItemText} />
+					</ListItem>
+
+					<ListItem button component={Link} to='/man_temp_view'>
+						<ListItemIcon>
+							<PagesIcon />
+						</ListItemIcon>
+						<ListItemText primary="Manage Templates" className={classes.listItemText} />
 					</ListItem>
 
 				</List>

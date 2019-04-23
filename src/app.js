@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import WebFont from 'webfontloader';
-import Header from './components/Header'
 
 import './styles/main.scss';
 import AppTheme from 'containers/AppTheme/AppTheme';
@@ -32,7 +32,9 @@ export default class App extends Component {
 
 render(
 	<Provider store={store}>
-		<App />
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
 	</Provider>,
 	document.getElementById('app')
 );

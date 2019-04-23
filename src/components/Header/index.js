@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import auth0Client from '../../Auth';
+
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -10,9 +12,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
-import MenuList from '@material-ui/core/MenuList';
-import ListItem from '@material-ui/core/ListItem';
-import Paper from '@material-ui/core/Paper';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
@@ -62,7 +61,6 @@ class Header extends React.Component {
 		this.state = {
 			anchorEl: null,
 			mobileMoreAnchorEl: null,
-			isLoggedIn: false
 		}
 	}
 
@@ -84,12 +82,13 @@ class Header extends React.Component {
 	};
 
 	handleUserLogIn = () => {
-		this.setState({ isLoggedIn: true });
+		auth0Client.signIn();
 	}
 
 	handleUserLogOut = () => {
-		this.setState({ isLoggedIn: false });
+		auth0Client.signOut();
 		this.handleMenuClose();
+		this.props.history.replace('/');
 	}
 
 	render() {
@@ -97,7 +96,6 @@ class Header extends React.Component {
 		const { classes } = this.props;
 		const isMenuOpen = Boolean(anchorEl);
 		const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-		const isLoggedIn = this.state.isLoggedIn;
 
 		const renderMenu = (
 			<Menu
@@ -108,13 +106,13 @@ class Header extends React.Component {
 				open={isMenuOpen}
 				onClose={this.handleMenuClose}>
 
-				<MenuItem className={classes.menuItem} onClick={this.handleMenuClose}>
+				<MenuItem className={classes.menuItem} component={Link} to='/profile' onClick={this.handleMenuClose}>
 					<ListItemIcon className={classes.icon}>
 						<AccountCircle />
 					</ListItemIcon>
 					<ListItemText inset primary="Profile" />
 				</MenuItem>
-				<MenuItem className={classes.menuItem} onClick={this.handleMenuClose}>
+				<MenuItem className={classes.menuItem} component={Link} to='/settings' onClick={this.handleMenuClose}>
 					<ListItemIcon className={classes.icon}>
 						<SettingsIcon />
 					</ListItemIcon>
@@ -154,7 +152,7 @@ class Header extends React.Component {
 			</Menu>
 		);
 
-		const rightApp = (isLoggedIn) ? (
+		const rightApp = auth0Client.isAuthenticated() ? (
 			<div>
 				<div className={classes.sectionDesktop}>
 					<IconButton color="inherit">
@@ -203,4 +201,4 @@ Header.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+export default withRouter(withStyles(styles)(Header));

@@ -9,55 +9,42 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+
+import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { Button } from '@material-ui/core';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import auth0Client from '../../Auth';
+import { CircularProgress } from '@material-ui/core';
 
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
 		margin: "10px 10px 10px 10px",
-		height: "calc(100vh - 56px - 40px)",
+		height: "calc(100vh - 64px - 20px)",
 		overflow: "auto",
 	},
 	search: {
-		position: 'relative',
-		borderRadius: theme.shape.borderRadius,
-		backgroundColor: fade(theme.palette.common.white, 1),
-		marginLeft: 0,
-		margin: "10px 10px 10px 10px",
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
-			marginLeft: theme.spacing.unit,
-			width: 'auto',
-		},
-	},
-	searchIcon: {
-		width: theme.spacing.unit * 9,
-		height: '100%',
-		position: 'absolute',
+		padding: '2px 4px',
 		display: 'flex',
 		alignItems: 'center',
-		justifyContent: 'center',
+		justifyContent: 'flex-end',
+		width: 400,
 	},
-	inputRoot: {
-		color: 'inherit',
-		width: '100%',
+
+	input: {
+		marginLeft: 8,
+		flex: 1,
 	},
-	inputInput: {
-		paddingTop: theme.spacing.unit,
-		paddingRight: theme.spacing.unit,
-		paddingBottom: theme.spacing.unit,
-		paddingLeft: theme.spacing.unit * 10,
-		transition: theme.transitions.create('width'),
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
-			width: 120,
-			'&:focus': {
-				width: 200,
-			},
-		},
+	iconButton: {
+		padding: 10,
+	},
+	divider: {
+		width: 1,
+		height: 28,
+		margin: 4,
 	},
 });
 
@@ -75,24 +62,47 @@ const CustomTableCell = withStyles(theme => ({
 class ConnectedBidderListingView extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			profile: null
+		}
+	}
+
+	async componentWillMount() {
+		const userProfile = auth0Client.userProfile;
+		if (!userProfile) {
+			await auth0Client.getProfile((profile) => {
+				this.setState({
+					profile: profile
+				});
+			});
+		} else {
+			this.setState({
+				profile: userProfile
+			});
+		}
 	}
 
 	render() {
 		const { classes } = this.props;
+		const profile = this.state.profile;
+
+		if (profile === null)
+			return (<div> <CircularProgress /></div>);
+
+		if (profile.app_metadata.role !== "SuperAdmin" && profile.app_metadata.role !== "Gen")
+			return (<div> Access Forbidden </div>);
 
 		return (
 			<Card className={classes.root}>
-				<div className={classes.search}>
-					<Button className={classes.searchIcon}>
+				<div className={classes.search} elevation={1}>
+					<IconButton className={classes.iconButton} aria-label="Menu">
+						<MenuIcon />
+					</IconButton>
+					<InputBase className={classes.input} placeholder="Search Fields" />
+					<Divider className={classes.divider} />
+					<IconButton className={classes.iconButton} aria-label="Search">
 						<SearchIcon />
-					</Button>
-					<InputBase
-						placeholder="Search…"
-						classes={{
-							root: classes.inputRoot,
-							input: classes.inputInput,
-						}}
-					/>
+					</IconButton>
 				</div>
 				<Table className={classes.table}>
 					<TableHead>

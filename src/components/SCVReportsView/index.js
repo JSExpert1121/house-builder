@@ -14,7 +14,7 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		margin: "10px 10px 10px 10px",
-		height: "calc(100vh - 56px - 90px - 20px)",
+		height: "calc(100vh - 64px - 72px - 20px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
