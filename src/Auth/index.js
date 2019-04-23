@@ -8,7 +8,7 @@ class Auth {
 			domain: 'tungcb.auth0.com',
 			clientID: 'Q3WdOgiwATl3idTKhB1R1AazJ7YAJFnK',
 			responseType: 'token id_token',
-			redirectUri: 'http://localhost:8000/callback',
+			redirectUri: 'http://bcfe.s3-website.us-east-2.amazonaws.com/callback',
 			audience: 'https://tungcb.auth0.com/api/v2/',
 			scope: 'openid profile email update:current_user_metadata read:users update:users_app_metadata update:users read:current_user read:user_idp_tokens'
 		});
