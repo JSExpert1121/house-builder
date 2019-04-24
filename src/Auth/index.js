@@ -4,12 +4,13 @@ import axios from 'axios';
 class Auth {
 	constructor() {
 
+		const redirectUri = process.env.NODE_ENV === 'development' ? process.env.AUTH_REDIRECT_DEV : process.env.AUTH_REDIRECT_PRO;
 		this.auth0 = new auth0.WebAuth({
-			domain: 'tungcb.auth0.com',
-			clientID: 'Q3WdOgiwATl3idTKhB1R1AazJ7YAJFnK',
+			domain: process.env.AUTH_DOMAIN,
+			clientID: process.env.AUTH_CLIENTID,
 			responseType: 'token id_token',
-			redirectUri: 'http://bcfe.s3-website.us-east-2.amazonaws.com/callback',
-			audience: 'https://tungcb.auth0.com/api/v2/',
+			redirectUri: redirectUri + "/callback",
+			audience: process.env.AUTH_AUDIENCE,
 			scope: 'openid profile email update:current_user_metadata read:users update:users_app_metadata update:users read:current_user read:user_idp_tokens'
 		});
 
@@ -37,7 +38,7 @@ class Auth {
 		const user_id = this.userProfile.user_id;
 		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
 		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
-			.then(response => { alert("Success!") })
+			.then(response => { })
 			.catch(error => console.log(error.message));
 	}
 
@@ -45,7 +46,7 @@ class Auth {
 		const user_id = this.userProfile.user_id;
 		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
 		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
-			.then(response => { alert("Success!") })
+			.then(response => { })
 			.catch(error => console.log(error.message));
 	}
 
@@ -69,7 +70,7 @@ class Auth {
 
 	signOut = () => {
 		this.auth0.logout({
-			returnTo: "http://localhost:8000",
+			returnTo: process.env.NODE_ENV === 'development' ? process.env.AUTH_REDIRECT_DEV : process.env.AUTH_REDIRECT_PRO,
 			clientID: "Q3WdOgiwATl3idTKhB1R1AazJ7YAJFnK"
 		});
 	}

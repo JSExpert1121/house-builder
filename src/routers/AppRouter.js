@@ -9,7 +9,7 @@ import GeneralContractorView from 'containers/GeneralContractorView';
 import ProfileView from 'components/ProfileView';
 import SettingsView from 'components/SettingsView';
 import NotFoundPage from 'components/NotFoundPage';
-import Callback from '../Callback';
+import Callback from '../callback';
 
 import MenuList from 'components/MenuList';
 import Card from '@material-ui/core/Card';

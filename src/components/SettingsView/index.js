@@ -30,20 +30,21 @@ const styles = (theme) => ({
 		justifyContent: "center",
 		alignItems: "center"
 	},
-	total: {
-		width: "500px",
-		left: "calc(50% - 250px)",
+	settingView: {
+		width: 500,
 	},
 	saveBtn: {
 		border: "1px solid #4a148c",
 		backgroundColor: theme.palette.primary.light,
 		borderRadius: 0,
-		marginTop: 2
+		marginTop: 2,
+		float: "right"
 	},
 	cancelBtn: {
 		border: "1px solid #c7a4ff",
 		borderRadius: 0,
-		marginTop: 2
+		marginTop: 2,
+		float: "right"
 	},
 	formControl: {
 		color: theme.palette.primary.light,
@@ -53,6 +54,12 @@ const styles = (theme) => ({
 			minWidth: 240,
 		},
 	},
+
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(40vh)",
+	}
 });
 
 const CustomTableCell = withStyles(theme => ({
@@ -100,11 +107,12 @@ class SettingsView extends React.Component {
 		const profile = this.state.profile;
 
 		if (profile === null)
-			return (<div> <CircularProgress /></div>);
+			return (<div> <CircularProgress className={classes.waitingSpin} /></div>);
 
 		return (
-			<Card className={classes.root}>
-				<Card className={classes.total}>
+			<div className={classes.root}>
+				<Card className={classes.settingView}>
+
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
@@ -217,13 +225,15 @@ class SettingsView extends React.Component {
 							}
 							console.log(newSet);
 							auth0Client.updateSet(newSet);
-						}
-					}> Save </Button>
+						}}>
+						Save
+					</Button>
 					<Button className={classes.cancelBtn} onClick={
-						() => this.props.history.replace("/")
-					}> Cancel</Button>
+						() => this.props.history.replace("/")}>
+						Cancel
+					</Button>
 				</Card >
-			</Card>
+			</div>
 		);
 	}
 }

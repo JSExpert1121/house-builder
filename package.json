@@ -4,9 +4,9 @@
 	"description": "react boilerplate with material-ui",
 	"main": "index.js",
 	"scripts": {
-		"build": "webpack",
-		"start": "webpack-dev-server  --open",
-		"deploy": "aws --profile bc s3 sync public/ s3://bcfe"
+		"start": "cross-env NODE_ENV=development webpack-dev-server --port 4000 --hot --host 0.0.0.0",
+		"build": "cross-env NODE_ENV=production webpack",
+		"deploy": "aws s3 sync dist/ s3://bcfe"
 	},
 	"keywords": [
 		"react",
@@ -15,22 +15,35 @@
 	"author": "jishnu koottala",
 	"license": "ISC",
 	"dependencies": {
+		"@babel/plugin-proposal-decorators": "^7.4.0",
+		"@babel/plugin-syntax-dynamic-import": "^7.2.0",
 		"@babel/runtime": "^7.4.3",
 		"@material-ui/core": "^3.5.1",
 		"@material-ui/icons": "^3.0.1",
 		"auth0-js": "^9.10.2",
+		"autoprefixer": "^9.5.1",
 		"axios": "^0.18.0",
+		"clean-webpack-plugin": "^2.0.1",
+		"cross-env": "^5.2.0",
 		"date-fns": "^1.30.1",
 		"dotenv": "^6.1.0",
+		"html-loader": "^0.5.5",
+		"html-webpack-plugin": "^3.2.0",
+		"koa-connect": "^2.0.1",
 		"mdbreact": "^4.12.0",
+		"mini-css-extract-plugin": "^0.6.0",
+		"postcss-loader": "^3.0.0",
 		"react": "^16.6.3",
 		"react-chartjs-2": "^2.7.6",
 		"react-dom": "^16.6.3",
 		"react-google-charts": "^3.0.11",
+		"react-hot-loader": "^4.8.4",
 		"react-router-dom": "^4.3.1",
+		"script-ext-html-webpack-plugin": "^2.1.3",
 		"webfontloader": "^1.6.28",
 		"webpack": "^4.25.1",
-		"webpack-dev-server": "^3.2.1"
+		"webpack-dev-server": "^3.2.1",
+		"webpack-merge": "^4.2.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.1.5",

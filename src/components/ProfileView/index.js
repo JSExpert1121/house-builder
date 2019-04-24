@@ -52,21 +52,12 @@ const styles = theme => ({
 	},
 	submitButton: {
 		margin: "50px 10px 10px 10px",
-		width: 120,
+		width: 260,
 		[theme.breakpoints.up('sm')]: {
-			width: 170,
+			width: 360,
 		},
 		color: "white",
 		backgroundColor: theme.palette.primary.light,
-		border: "1px solid " + theme.palette.primary.light
-	},
-	cancelButton: {
-		margin: "50px 10px 10px 10px",
-		width: 120,
-		[theme.breakpoints.up('sm')]: {
-			width: 170,
-		},
-		border: "1px solid " + theme.palette.primary.light
 	},
 
 	waitingSpin: {
@@ -160,12 +151,6 @@ class ProfileView extends Component {
 								margin="normal"
 							/>*/
 						}
-						<Button className={classes.cancelButton} onClick={
-							() => {
-								this.props.history.replace("/");
-							}}>
-							Cancel
-						</Button>
 						<Button className={classes.submitButton} onClick={
 							async () => {
 								const new_prof = {
@@ -183,7 +168,7 @@ class ProfileView extends Component {
 						</Button>
 					</Card>
 				</form>
-			</div >
+			</div>
 		);
 	}
 }
