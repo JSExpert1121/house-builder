@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import auth0Client from '../../Auth';
+import auth0Client from '../../auth0/auth';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';

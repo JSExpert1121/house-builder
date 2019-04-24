@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { Card, Avatar, Button, CircularProgress } from '@material-ui/core';
+import auth0Client from '../../auth0/auth';
 
-import auth0Client from '../../Auth';
-import Axios from 'axios';
+import TSnackbarContent from '../SnackBarContent';
 
 const styles = theme => ({
 	root: {
@@ -51,13 +51,22 @@ const styles = theme => ({
 		}
 	},
 	submitButton: {
+		border: "1px solid #4a148c",
 		margin: "50px 10px 10px 10px",
-		width: 260,
+		width: 120,
 		[theme.breakpoints.up('sm')]: {
-			width: 360,
+			width: 170,
 		},
 		color: "white",
 		backgroundColor: theme.palette.primary.light,
+	},
+	cancelButton: {
+		border: "1px solid #c7a4ff",
+		margin: "50px 10px 10px 10px",
+		width: 120,
+		[theme.breakpoints.up('sm')]: {
+			width: 170,
+		},
 	},
 
 	waitingSpin: {
@@ -80,6 +89,7 @@ class ProfileView extends Component {
 			password: "",
 			passwordc: "",
 			profile: null,
+			isSuccess: false,
 		}
 	}
 
@@ -98,6 +108,14 @@ class ProfileView extends Component {
 
 	}
 
+	handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		this.setState({ isSuccess: false });
+	};
+
 	render() {
 		const { classes } = this.props;
 
@@ -109,6 +127,15 @@ class ProfileView extends Component {
 			<div className={classes.root}>
 				<form noValidate autoComplete="off">
 					<Card className={classes.container}>
+						{
+							this.state.isSuccess ?
+								<TSnackbarContent
+									onClose={this.handleClose}
+									variant="success"
+									message="Your profile has been saved!"
+								/> : <div></div>
+						}
+
 						<Avatar alt="Ivan" src={this.state.picture} className={classes.avatar} />
 						<TextField
 							label="first name"
@@ -134,25 +161,15 @@ class ProfileView extends Component {
 							onChange={(val) => this.setState({ email: val.target.value })}
 							margin="normal"
 						/>
-						{/*
-							<TextField
-								label="password"
-								type="password"
-								className={classes.textFieldHalf}
-								onChange={(val) => this.setState({ password: val.value })}
-								margin="normal"
-							/>
-
-							<TextField
-								label="confirm"
-								type="password"
-								className={classes.textFieldHalf}
-								onChange={(val) => this.setState({ passwordc: val.value })}
-								margin="normal"
-							/>*/
-						}
+						<Button className={classes.cancelButton} onClick={
+							() => this.props.history.replace("/")
+						}> Cancel</Button>
 						<Button className={classes.submitButton} onClick={
+
 							async () => {
+								this.setState({
+									isSuccess: false,
+								})
 								const new_prof = {
 									user_metadata: {
 										firstname: "",
@@ -161,14 +178,18 @@ class ProfileView extends Component {
 								};
 								new_prof.user_metadata.firstname = this.state.firstname;
 								new_prof.user_metadata.lastname = this.state.lastname;
-								await auth0Client.updateProfile(new_prof);
+								await auth0Client.updateProfile(new_prof, () => {
+									this.setState({
+										isSuccess: true
+									})
+								});
 							}
 						}>
 							Confirm
 						</Button>
 					</Card>
 				</form>
-			</div>
+			</div >
 		);
 	}
 }

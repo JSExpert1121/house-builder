@@ -18,7 +18,7 @@ import SCVCalendarView from '../../components/SCVCalendarView';
 import SCVReportsView from '../../components/SCVReportsView';
 import SCVAnalyticsView from '../../components/SCVAnalyticsView';
 import { CircularProgress } from '@material-ui/core';
-import auth0Client from '../../Auth';
+import auth0Client from '../../auth0/auth';
 
 const styles = theme => ({
 	root: {

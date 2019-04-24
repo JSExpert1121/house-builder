@@ -34,19 +34,21 @@ class Auth {
 		});
 	}
 
-	updateProfile(data) {
+	updateProfile(data, cb) {
 		const user_id = this.userProfile.user_id;
 		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
 		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
-			.then(response => { })
+			.then(response => { cb(); })
 			.catch(error => console.log(error.message));
 	}
 
-	updateSet(data) {
+	updateSet(data, cb) {
 		const user_id = this.userProfile.user_id;
 		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
 		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
-			.then(response => { })
+			.then(response => {
+				cb();
+			})
 			.catch(error => console.log(error.message));
 	}
 

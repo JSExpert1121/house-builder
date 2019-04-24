@@ -2,23 +2,17 @@ import React from 'react'
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import auth0Client from '../../Auth';
+import auth0Client from '../../auth0/auth';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import { CircularProgress, Button, MenuItem, Radio } from '@material-ui/core';
+import { CircularProgress, Button, MenuItem, Radio, Divider } from '@material-ui/core';
 import { FormControl, InputLabel, Select, Checkbox } from '@material-ui/core/es';
-import { green } from '@material-ui/core/es/colors';
+import TSnackbarContent from '../SnackBarContent';
 
 const styles = (theme) => ({
 	root: {
@@ -101,6 +95,13 @@ class SettingsView extends React.Component {
 			});
 		});
 	}
+	handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		this.setState({ isSuccess: false });
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -112,7 +113,14 @@ class SettingsView extends React.Component {
 		return (
 			<div className={classes.root}>
 				<Card className={classes.settingView}>
-
+					{
+						this.state.isSuccess ?
+							<div><TSnackbarContent
+								onClose={this.handleClose}
+								variant="success"
+								message="Your settings has been saved!"
+							/> <Divider /></div> : <div></div>
+					}
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
@@ -224,7 +232,12 @@ class SettingsView extends React.Component {
 								}
 							}
 							console.log(newSet);
-							auth0Client.updateSet(newSet);
+							auth0Client.updateSet(newSet,
+								() => {
+									this.setState({
+										isSuccess: true
+									})
+								});
 						}}>
 						Save
 					</Button>

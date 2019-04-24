@@ -20,7 +20,7 @@ import DoneAllIcon from '@material-ui/icons/DoneAll';
 import ProposalDetailView from '../../components/ProposalDetailView';
 import CreateProjectView from '../../components/CreateProjectView';
 import { CircularProgress } from '@material-ui/core';
-import auth0Client from '../../Auth';
+import auth0Client from '../../auth0/auth';
 
 const styles = theme => ({
 	root: {

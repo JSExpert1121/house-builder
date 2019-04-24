@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import auth0Client from '../Auth';
+import auth0Client from '../auth0/auth';
 
 function SecuredRoute(props) {
 	const { component: Component, path, checkingSession } = props;

@@ -16,7 +16,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import auth0Client from '../../Auth';
+import auth0Client from '../../auth0/auth';
 import { CircularProgress } from '@material-ui/core';
 
 const styles = (theme) => ({

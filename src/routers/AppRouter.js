@@ -9,14 +9,14 @@ import GeneralContractorView from 'containers/GeneralContractorView';
 import ProfileView from 'components/ProfileView';
 import SettingsView from 'components/SettingsView';
 import NotFoundPage from 'components/NotFoundPage';
-import Callback from '../callback';
+import Callback from '../auth0/callback';
 
 import MenuList from 'components/MenuList';
 import Card from '@material-ui/core/Card';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import SecuredRoute from './SecuredRoute';
-import auth0Client from '../Auth';
+import auth0Client from '../auth0/auth';
 import ManageTemplateView from '../containers/ManageTemplateView';
 
 const styles = theme => ({
