@@ -17,7 +17,7 @@ import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import ServiceIcon from '@material-ui/icons/GroupWork';
 import HelpIcon from '@material-ui/icons/Help';
 
-import auth0Client from '../../Auth';
+import auth0Client from '../../auth0/auth';
 
 const styles = theme => ({
 	list: {
