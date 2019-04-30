@@ -18,6 +18,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SecuredRoute from './SecuredRoute';
 import auth0Client from '../auth0/auth';
 import ManageTemplateView from '../containers/ManageTemplateView';
+import ProjectsView from '../containers/ProjectsView';
 
 const styles = theme => ({
 	viewarea: {
@@ -65,6 +66,7 @@ class AppRouter extends React.Component {
 						<SecuredRoute path="/sub_cont_view" component={SubContractorView} checkingSession={this.state.checkingSession} />
 						<SecuredRoute path="/gen_cont_view" component={GeneralContractorView} checkingSession={this.state.checkingSession} />
 						<SecuredRoute path="/man_temp_view" component={ManageTemplateView} checkingSession={this.state.checkingSession} />
+						<SecuredRoute path="/all_projects" component={ProjectsView} checkingSession={this.state.checkingSession} />
 						<SecuredRoute path="/profile" component={ProfileView} checkingSession={this.state.checkingSession} />
 						<SecuredRoute path="/settings" component={SettingsView} checkingSession={this.state.checkingSession} />
 						<Route exact path='/callback' component={Callback} />

@@ -27,6 +27,7 @@ export function getAllProjects() {
 		return fetch("https://bcbemock.getsandbox.com/projects")
 			.then(response => response.json())
 			.then(json => {
+				console.log(json);
 				dispatch({ type: ALL_PROJECT_LOADED, payload: json });
 			})
 	}

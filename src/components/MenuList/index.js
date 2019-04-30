@@ -10,6 +10,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import MessageIcon from '@material-ui/icons/Message';
 import PagesIcon from '@material-ui/icons/Pages';
 import Card from '@material-ui/core/Card';
+import WidgetsIcon from '@material-ui/icons/widgets';
 
 import PropTypes from 'prop-types';
 import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
@@ -74,6 +75,12 @@ class MenuList extends React.Component {
 										<HelpIcon />
 									</ListItemIcon>
 									<ListItemText primary="Bidder Listing" className={classes.listItemText} />
+								</ListItem>
+								<ListItem button component={Link} to='/all_projects'>
+									<ListItemIcon>
+										<WidgetsIcon />
+									</ListItemIcon>
+									<ListItemText primary="Projects" className={classes.listItemText} />
 								</ListItem>
 
 								<ListItem button component={Link} to='/man_temp_view'>
