@@ -6,7 +6,9 @@ import {
 	PROJECT_DETAIL_LOADED,
 	BIDDERS_LOADED,
 	PROJECT_FILES_LOADED,
-	MESSAGE_LOADED
+	MESSAGE_LOADED,
+	SET_TEMP_VIEW_TAB,
+	ALL_TEMPLATES_LOADED
 } from "../constants/action-types";
 
 export function addProject(payload) {
@@ -72,6 +74,26 @@ export function getProjectMessage(id) {
 			.then(response => response.json())
 			.then(json => {
 				dispatch({ type: MESSAGE_LOADED, payload: json });
+			})
+	}
+}
+
+export function setTempViewTab(payload) {
+	return { type: SET_TEMP_VIEW_TAB, payload }
+}
+
+export function getAllTemplates() {
+	return function (dispatch) {
+		dispatch({ type: "CLEAR_TEMPLATES" });
+		return fetch("https://bcbe-service.herokuapp.com/templates", {
+			headers: {
+				"Content-Type": "application/hal+json"
+			}
+		})
+			.then(response => response.json())
+			.then(json => {
+				console.log(json);
+				dispatch({ type: ALL_TEMPLATES_LOADED, payload: json });
 			})
 	}
 }

@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import genContViewReducer from './genContViewReducer';
 import subContViewReducer from './subContViewReducer';
-
+import tempViewReducer from './tempViewReducer';
 /*const appReducer = asyncReducers =>
 	combineReducers({
 		genContViewData: genContViewReducer,
@@ -17,5 +17,6 @@ export default rootReducer;*/
 
 export default combineReducers({
 	genContViewData: genContViewReducer,
-	subContViewData: subContViewReducer
+	subContViewData: subContViewReducer,
+	tempViewData: tempViewReducer
 });

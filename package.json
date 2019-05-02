@@ -1,10 +1,10 @@
 {
-	"name": "react-boilerplate",
+	"name": "react-mat-ui",
 	"version": "1.0.0",
-	"description": "react boilerplate with material-ui",
+	"description": "React Project using MaterialUI, Auth0",
 	"main": "index.js",
 	"scripts": {
-		"start": "cross-env NODE_ENV=development webpack-dev-server --port 4000 --hot --host 0.0.0.0",
+		"start": "cross-env NODE_ENV=development webpack-dev-server --port 4000 --hot --host localhost",
 		"build": "cross-env NODE_ENV=production webpack",
 		"deploy": "aws s3 sync dist/ s3://bcfe"
 	},
@@ -12,7 +12,7 @@
 		"react",
 		"material-ui"
 	],
-	"author": "jishnu koottala",
+	"author": "Ivan Katugin",
 	"license": "ISC",
 	"dependencies": {
 		"@babel/plugin-proposal-decorators": "^7.4.0",
