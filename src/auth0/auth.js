@@ -29,6 +29,7 @@ class Auth {
 				.then(response => {
 					this.userProfile = response.data;
 					if (this.userProfile.user_metadata.id === "") {
+						console.log(this.userProfile);
 						cb(this.userProfile, {
 							'name': "",
 							'street': "",
@@ -37,11 +38,11 @@ class Auth {
 						});
 						return;
 					}
+					console.log(this.userProfile);
 
 					axios.get("https://bcbe-service.herokuapp.com/gencontractors/" + this.userProfile.user_metadata.id).
 						then((response1) => {
 							const address = response1.data.address;
-							console.log(address);
 							cb(this.userProfile, address);
 						}).catch((err) => {
 							console.log(err.message);

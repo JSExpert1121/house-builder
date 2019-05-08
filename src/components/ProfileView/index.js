@@ -177,7 +177,16 @@ class ProfileView extends Component {
 					.then(response => {
 						console.log(response);
 					})
-					.catch(error => console.log(error.message));
+					.catch(error => {
+						if (error.response.status === 404) {
+							if (this.state.isSubChecked)
+								axios.post("https://bcbe-service.herokuapp.com/subcontractors", addressData)
+									.then(response => {
+										console.log(response);
+									})
+									.catch(error => console.log(error.message));
+						}
+					});
 		}
 		else {
 			if (this.state.isGenChecked)
@@ -214,9 +223,10 @@ class ProfileView extends Component {
 
 		new_prof.user_metadata.firstname = this.state.firstname;
 		new_prof.user_metadata.lastname = this.state.lastname;
-		await auth0Client.updateProfile(new_prof, () => {
+		await auth0Client.updateProfile(new_prof, (profile, address) => {
 			this.setState({
-				isSuccess: true
+				isSuccess: true,
+				profile: profile
 			})
 		});
 	}
