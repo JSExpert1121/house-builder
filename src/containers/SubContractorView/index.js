@@ -74,7 +74,7 @@ class ConnectedSubContView extends React.Component {
 		if (profile === null)
 			return (<div> <CircularProgress /></div>);
 
-		if (profile.app_metadata.role !== "SuperAdmin" && profile.app_metadata.role !== "Sub")
+		if (!profile.user_metadata.roles.includes("Sub") && !profile.user_metadata.roles.includes("GenSub") && !profile.user_metadata.roles.includes("SuperAdmin"))
 			return (<div> Access Forbidden </div>);
 
 		return (

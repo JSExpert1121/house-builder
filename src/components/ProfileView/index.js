@@ -3,10 +3,14 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Card, Avatar, Button, CircularProgress } from '@material-ui/core';
 import auth0Client from '../../auth0/auth';
 
 import TSnackbarContent from '../SnackBarContent';
+import axios from 'axios';
+import uuidv1 from 'uuid';
 
 const styles = theme => ({
 	root: {
@@ -14,11 +18,12 @@ const styles = theme => ({
 		justifyContent: "center",
 		alignItems: "center",
 		height: "calc(100vh - 64px)",
-		overflow: "auto"
+		overflow: "auto",
+		flexDirection: "column"
 	},
 	container: {
 		width: "300px",
-		height: "500px",
+		height: "700px",
 		padding: "10px 10px 10px 10px",
 		borderRadius: "0",
 		[theme.breakpoints.up('sm')]: {
@@ -73,6 +78,11 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
+	},
+
+	successAlert: {
+		width: "400px",
+		marginBottom: "10px"
 	}
 });
 
@@ -90,17 +100,31 @@ class ProfileView extends Component {
 			passwordc: "",
 			profile: null,
 			isSuccess: false,
+			company: "",
+			street: "",
+			city: "",
+			phone: "",
+			isGenChecked: false,
+			isSubChecked: false,
+			address: null
 		}
 	}
 
 	componentDidMount() {
 		{
-			auth0Client.getProfile((profile) => {
+			auth0Client.getProfile((profile, address) => {
 				this.setState({
+					address: address,
+					company: address.name,
+					street: address.street,
+					city: address.city,
+					phone: address.phone,
 					firstname: profile.user_metadata.firstname,
 					lastname: profile.user_metadata.lastname,
 					email: profile.email,
 					picture: profile.picture,
+					isGenChecked: profile.user_metadata.roles.includes("Gen") || profile.user_metadata.roles.includes("GenSub") ? true : false,
+					isSubChecked: profile.user_metadata.roles.includes("Sub") || profile.user_metadata.roles.includes("GenSub") ? true : false,
 					profile: profile
 				});
 			});
@@ -116,25 +140,88 @@ class ProfileView extends Component {
 		this.setState({ isSuccess: false });
 	};
 
+	handleRoleChange = name => event => {
+		this.setState({ [name]: event.target.checked });
+	};
+
+	handleConfirm = async () => {
+		this.setState({
+			isSuccess: false,
+		})
+
+		let addressData = {
+			"email": this.state.profile.email,
+			"updatedBy": this.state.profile.email,
+			"address": {
+				"updatedBy": this.state.profile.email,
+				"name": this.state.company,
+				"street": this.state.street,
+				"city": this.state.city,
+				"phone": this.state.phone
+			}
+		};
+
+		let userId;
+		if (this.state.isGenChecked)
+			await axios.post("https://bcbe-service.herokuapp.com/gencontractors", addressData)
+				.then(response => {
+					userId = response.data.id;
+					console.log(response);
+				})
+				.catch(error => console.log(error.message));
+
+		addressData.id = userId;
+		if (this.state.isSubChecked)
+			await axios.post("https://bcbe-service.herokuapp.com/subcontractors", addressData)
+				.then(response => {
+					console.log(response);
+				})
+				.catch(error => console.log(error.message));
+
+		let userRole = [];
+		if (this.state.isGenChecked)
+			userRole.push("Gen");
+		if (this.state.isSubChecked)
+			userRole.push("Sub");
+
+		const new_prof = {
+			user_metadata: {
+				firstname: "",
+				lastname: "",
+				id: userId,
+				roles: userRole
+			}
+		};
+
+		new_prof.user_metadata.firstname = this.state.firstname;
+		new_prof.user_metadata.lastname = this.state.lastname;
+		await auth0Client.updateProfile(new_prof, () => {
+			this.setState({
+				isSuccess: true
+			})
+		});
+	}
+
 	render() {
 		const { classes } = this.props;
 
-		if (this.state.profile === null) {
+		if (this.state.profile === null || this.state.address === null) {
 			return (<div> <CircularProgress className={classes.waitingSpin} /></div>);
 		}
 
 		return (
-			<div className={classes.root}>
+			<div className={classes.root}>{
+				this.state.isSuccess ?
+					<TSnackbarContent
+						className={classes.successAlert}
+						onClose={this.handleClose}
+						variant="success"
+						message="Your profile has been saved!"
+					/> : <div></div>
+			}
 				<form noValidate autoComplete="off">
 					<Card className={classes.container}>
-						{
-							this.state.isSuccess ?
-								<TSnackbarContent
-									onClose={this.handleClose}
-									variant="success"
-									message="Your profile has been saved!"
-								/> : <div></div>
-						}
+
 
 						<Avatar alt="Ivan" src={this.state.picture} className={classes.avatar} />
 						<TextField
@@ -161,30 +248,66 @@ class ProfileView extends Component {
 							onChange={(val) => this.setState({ email: val.target.value })}
 							margin="normal"
 						/>
+						<TextField
+							label="company"
+							className={classes.textFieldFull}
+							value={this.state.company}
+							onChange={(val) => this.setState({ company: val.target.value })}
+							margin="normal"
+						/>
+
+						<TextField
+							label="street"
+							className={classes.textFieldHalf}
+							value={this.state.street}
+							onChange={(val) => this.setState({ street: val.target.value })}
+							margin="normal"
+						/>
+
+						<TextField
+							label="city"
+							className={classes.textFieldHalf}
+							value={this.state.city}
+							onChange={(val) => this.setState({ city: val.target.value })}
+							margin="normal"
+						/>
+
+						<TextField
+							label="phone"
+							className={classes.textFieldFull}
+							value={this.state.phone}
+							onChange={(val) => this.setState({ phone: val.target.value })}
+							margin="normal"
+						/>
+
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={this.state.isGenChecked}
+									onChange={this.handleRoleChange('isGenChecked')}
+									value="isGenChecked"
+								/>
+							}
+							label="Gen Contractor"
+							className={classes.textFieldHalf}
+						/>
+
+						<FormControlLabel
+							control={
+								<Checkbox
+									checked={this.state.isSubChecked}
+									onChange={this.handleRoleChange('isSubChecked')}
+									value="isSubChecked"
+								/>
+							}
+							label="Sub Contractor"
+							className={classes.textFieldHalf}
+						/>
+
 						<Button className={classes.cancelButton} onClick={
 							() => this.props.history.replace("/")
 						}> Cancel</Button>
-						<Button className={classes.submitButton} onClick={
-
-							async () => {
-								this.setState({
-									isSuccess: false,
-								})
-								const new_prof = {
-									user_metadata: {
-										firstname: "",
-										lastname: ""
-									},
-								};
-								new_prof.user_metadata.firstname = this.state.firstname;
-								new_prof.user_metadata.lastname = this.state.lastname;
-								await auth0Client.updateProfile(new_prof, () => {
-									this.setState({
-										isSuccess: true
-									})
-								});
-							}
-						}>
+						<Button className={classes.submitButton} onClick={this.handleConfirm}>
 							Confirm
 						</Button>
 					</Card>

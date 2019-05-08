@@ -11,7 +11,7 @@ class Auth {
 			responseType: 'token id_token',
 			redirectUri: redirectUri + "/callback",
 			audience: process.env.AUTH_AUDIENCE,
-			scope: 'openid profile email update:current_user_metadata read:users update:users_app_metadata update:users read:current_user read:user_idp_tokens'
+			scope: 'openid profile email read:current_user read:user_idp_tokens read:users read:roles update:users update:roles update:users_app_metadata update:current_user_metadata'
 		});
 
 		this.getProfile = this.getProfile.bind(this);
@@ -19,6 +19,7 @@ class Auth {
 
 	getProfile(cb) {
 		this.auth0.client.userInfo(this.accessToken, (err, profile) => {
+			console.log(profile);
 			const user_id = profile["https://tungcb:auth0:com/user_id"];
 			const headers = {
 				'Authorization': `Bearer ${this.accessToken}`,
@@ -28,9 +29,27 @@ class Auth {
 			axios.get("https://tungcb.auth0.com/api/v2/users/" + user_id, { headers })
 				.then(response => {
 					this.userProfile = response.data;
-					cb(this.userProfile);
+					if (this.userProfile.user_metadata.id === "") {
+						cb(this.userProfile, {
+							'name': "",
+							'street': "",
+							'city': "",
+							'phone': ""
+						});
+						return;
+					}
+					axios.get("https://bcbe-service.herokuapp.com/gencontractors/" + this.userProfile.user_metadata.id).
+						then((response1) => {
+							const address = response1.data.address;
+							console.log(address);
+							cb(this.userProfile, address);
+						}).catch((err) => {
+							console.log(err.message);
+						})
 				})
 				.catch(error => console.log(error.message));
+
+			//axios.post("https://tungcb.auth0.com/api/v2/users/" + user_id + "/roles", { "roles": ["SuperAdmin"] }, { headers })
 		});
 	}
 
@@ -38,7 +57,7 @@ class Auth {
 		const user_id = this.userProfile.user_id;
 		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
 		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
-			.then(response => { cb(); })
+			.then(response => { this.getProfile(cb) })
 			.catch(error => console.log(error.message));
 	}
 

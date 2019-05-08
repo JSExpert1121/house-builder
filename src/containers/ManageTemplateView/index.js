@@ -70,7 +70,7 @@ class ConnectedManageTemplateView extends React.Component {
 		if (profile === null)
 			return (<div> <CircularProgress className={classes.waitingSpin} /></div>);
 
-		if (profile.app_metadata.role !== "SuperAdmin" && profile.app_metadata.role !== "Admin")
+		if (!profile.user_metadata.roles.includes("Admin") && !profile.user_metadata.roles.includes("SuperAdmin"))
 			return (<div> Access Forbidden </div>);
 
 		return (
