@@ -165,29 +165,38 @@ class ProfileView extends Component {
 		console.log(userId);
 		if (userId !== "") {
 			addressData.id = userId;
-			if (this.state.isGenChecked)
+			if (this.state.isGenChecked) {
 				await axios.put("https://bcbe-service.herokuapp.com/gencontractors/" + userId, addressData)
 					.then(response => {
 						console.log(response);
 					})
-					.catch(error => console.log(error.message));
-
-			if (this.state.isSubChecked)
+					.catch(error => {
+						if (error.response.status === 404) {
+							axios.post("https://bcbe-service.herokuapp.com/gencontractors/", addressData)
+								.then(response => {
+									console.log(response);
+								})
+								.catch(error => console.log(error.message));
+						}
+					});
+			}
+			if (this.state.isSubChecked) {
 				await axios.put("https://bcbe-service.herokuapp.com/subcontractors/" + userId, addressData)
 					.then(response => {
 						console.log(response);
 					})
 					.catch(error => {
 						if (error.response.status === 404) {
-							if (this.state.isSubChecked)
-								axios.post("https://bcbe-service.herokuapp.com/subcontractors", addressData)
-									.then(response => {
-										console.log(response);
-									})
-									.catch(error => console.log(error.message));
+							axios.post("https://bcbe-service.herokuapp.com/subcontractors/", addressData)
+								.then(response => {
+									console.log(response);
+								})
+								.catch(error => console.log(error.message));
 						}
 					});
+			}
 		}
+
 		else {
 			if (this.state.isGenChecked)
 				await axios.post("https://bcbe-service.herokuapp.com/gencontractors", addressData)
@@ -198,12 +207,15 @@ class ProfileView extends Component {
 					.catch(error => console.log(error.message));
 
 			addressData.id = userId;
-			if (this.state.isSubChecked)
+			if (this.state.isSubChecked) {
 				await axios.post("https://bcbe-service.herokuapp.com/subcontractors", addressData)
 					.then(response => {
+						if (userId === '')
+							userId = response.data.id;
 						console.log(response);
 					})
 					.catch(error => console.log(error.message));
+			}
 		}
 
 		let userRole = [];

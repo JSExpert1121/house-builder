@@ -45,7 +45,14 @@ class Auth {
 							const address = response1.data.address;
 							cb(this.userProfile, address);
 						}).catch((err) => {
-							console.log(err.message);
+							if (err.response.status === 404) {
+								axios.get("https://bcbe-service.herokuapp.com/subcontractors/" + this.userProfile.user_metadata.id).
+									then((response1) => {
+										const address = response1.data.address;
+										cb(this.userProfile, address);
+									}).catch((err) => {
+									})
+							}
 						})
 				})
 				.catch(error => console.log(error.message));
