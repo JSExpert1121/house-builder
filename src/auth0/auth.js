@@ -19,7 +19,6 @@ class Auth {
 
 	getProfile(cb) {
 		this.auth0.client.userInfo(this.accessToken, (err, profile) => {
-			console.log(profile);
 			const user_id = profile["https://tungcb:auth0:com/user_id"];
 			const headers = {
 				'Authorization': `Bearer ${this.accessToken}`,
@@ -38,6 +37,7 @@ class Auth {
 						});
 						return;
 					}
+
 					axios.get("https://bcbe-service.herokuapp.com/gencontractors/" + this.userProfile.user_metadata.id).
 						then((response1) => {
 							const address = response1.data.address;
