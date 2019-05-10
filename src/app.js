@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
-import { hot } from "react-hot-loader";
-import AppTheme from 'containers/AppTheme/AppTheme';
-import theme from 'config/theme';
-import AppRouter from 'routers/AppRouter';
+import { hot } from 'react-hot-loader';
 
 class App extends Component {
 	render() {
 		return (
-			<div className="RootDiv">
-				<AppTheme theme={theme}>
-					<AppRouter />
-				</AppTheme>
-			</div>
-		)
+			<div>
+				React Starter Project by Windi
+			</div >
+		);
 	}
 }
 
