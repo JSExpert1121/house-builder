@@ -101,6 +101,7 @@ class connectedCurProView extends React.Component {
 				this.setState({
 					isSaving: false
 				});
+				this.props.history.push("/g_cont");
 			}).catch(err => {
 				console.log(err.message);
 
