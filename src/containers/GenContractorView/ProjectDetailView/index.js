@@ -59,7 +59,7 @@ class ConnectedProjectDetailView extends React.Component {
 		const curDetailTab = this.state.curDetailTab;
 
 		if (selectedProject === null)
-			return <CircularProgress className={classes.waitingSpin} />;
+			return <div />;
 
 		return (
 

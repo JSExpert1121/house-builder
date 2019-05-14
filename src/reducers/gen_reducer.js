@@ -130,6 +130,14 @@ function gen_reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				messages: [],
 			});
+		case "SET_SELECTED_NULL":
+			return Object.assign({}, state, {
+				selectedProject: {
+					budget: "",
+					description: "",
+					title: ""
+				}
+			});
 		default:
 			return state;
 	}

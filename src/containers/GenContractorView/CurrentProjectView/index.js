@@ -102,8 +102,8 @@ class connectedCurProView extends React.Component {
 								projects.content.map(
 									row => (
 										<TableRow className={classes.row} key={row.id} hover
-											onClick={() => {
-												this.props.getProjectDetailById(row.id);
+											onClick={async () => {
+												await this.props.getProjectDetailById(row.id);
 												this.props.history.push("/g_cont/project_detail");
 											}}>
 											<CustomTableCell component="th" scope="row">
