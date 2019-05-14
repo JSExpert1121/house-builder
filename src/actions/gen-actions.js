@@ -1,6 +1,4 @@
 import {
-	ADD_PROJECT,
-	SET_CUR_TAB_POS,
 	SET_SELECTED_PROPOSAL,
 	ALL_PROJECT_LOADED,
 	PROJECT_DETAIL_LOADED,
@@ -10,19 +8,27 @@ import {
 	SET_TEMP_VIEW_TAB,
 	ALL_TEMPLATES_LOADED
 } from "../constants/gen-action-types";
-
-export function addProject(payload) {
-	return { type: ADD_PROJECT, payload }
-};
+import Axios from "axios";
 
 export function setSelectedProposal(payload) {
 	return { type: SET_SELECTED_PROPOSAL, payload }
 }
 
-export function getAllProjects() {
+export function getProjectsByGenId(id) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_PROJECTS" });
-		return fetch("https://bcbemock.getsandbox.com/projects")
+		return fetch("https://bcbe-service.herokuapp.com/contractors/" + id + "/projects")
+			.then(response => response.json())
+			.then(json => {
+				dispatch({ type: "PROJECT_LOADED", payload: json });
+			})
+	}
+}
+
+export function getAllProjects() {
+	return function (dispatch) {
+		dispatch({ type: "CLEAR_ALL_PROJECTS" });
+		return fetch("https://bcbe-service.herokuapp.com/projects")
 			.then(response => response.json())
 			.then(json => {
 				dispatch({ type: ALL_PROJECT_LOADED, payload: json });
@@ -32,11 +38,12 @@ export function getAllProjects() {
 
 export function getProjectDetailById(id) {
 	return function (dispatch) {
-		return fetch("https://bcbemock.getsandbox.com/projects/p" + id)
-			.then(response => response.json())
-			.then(json => {
-				dispatch({ type: PROJECT_DETAIL_LOADED, payload: json });
+		return Axios.get("https://bcbe-service.herokuapp.com/projects/" + id)
+			.then(response => {
+				console.log(response.data);
+				dispatch({ type: PROJECT_DETAIL_LOADED, payload: response.data })
 			})
+			.catch(err => console.log(err.message));
 	}
 }
 

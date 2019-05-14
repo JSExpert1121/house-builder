@@ -12,17 +12,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
-import Toolbar from '@material-ui/core/Toolbar';
 import { CircularProgress } from '@material-ui/core';
 import AppsIcon from '@material-ui/icons/Apps';
 import BallotIcon from '@material-ui/icons/Ballot';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 // local components
-import CurrentProjectView from './CurrentProjectView/index';
-import ProjectDetailView from './ProjectDetailView/index';
-import ProposalDetailView from './ProposalDetailView/index';
+import CurrentProjectView from './CurrentProjectView';
+import ProjectDetailView from './ProjectDetailView';
+import ProposalDetailView from './ProposalDetailView';
+import AddProjectView from './AddProjectView'
 
 const styles = theme => ({
 	root: {
@@ -31,11 +31,6 @@ const styles = theme => ({
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.primary.dark
-	},
-	buttonAdditional: {
-		position: "absolute",
-		float: "right",
-		right: "0"
 	},
 	waitingSpin: {
 		position: "relative",
@@ -51,12 +46,13 @@ class ConnectedGenContView extends React.Component {
 
 	render() {
 		const { classes, userProfile, location } = this.props;
-		
+
 		const tabNo = {
 			'/g_cont': 0,
 			'/g_cont/current_pros': 0,
 			'/g_cont/project_detail': 1,
-			'/g_cont/propose_detail': 2
+			'/g_cont/propose_detail': 2,
+			'/g_cont/add_project': 3
 		};
 
 		const curTabPos = tabNo[location.pathname];
@@ -78,6 +74,7 @@ class ConnectedGenContView extends React.Component {
 							<Tab component={Link} to={`/g_cont/current_pros`} label="Current Projects" icon={<AppsIcon />} />
 							<Tab component={Link} to={`/g_cont/project_detail`} label="Project Detail" icon={<BallotIcon />} />
 							<Tab component={Link} to={`/g_cont/propose_detail`} label="Proposal Detail" icon={<DoneAllIcon />} />
+							<Tab component={Link} to={`/g_cont/add_project`} label="Add Project" icon={<PlaylistAddIcon />} />
 						</Tabs>
 					</AppBar>
 
@@ -85,6 +82,7 @@ class ConnectedGenContView extends React.Component {
 						<SecuredRoute path='/g_cont/current_pros' component={CurrentProjectView} />
 						<SecuredRoute path='/g_cont/project_detail' component={ProjectDetailView} />
 						<SecuredRoute path='/g_cont/propose_detail' component={ProposalDetailView} />
+						<SecuredRoute path='/g_cont/add_project' component={AddProjectView} />
 						<Redirect path='/g_cont' to={`/g_cont/current_pros`} />
 					</Switch>
 				</div>

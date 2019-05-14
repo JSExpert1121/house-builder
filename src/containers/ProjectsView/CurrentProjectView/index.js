@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
-import { addProject, getProjectDetailById, getAllProjects } from '../../../actions/gen-actions';
+import { getProjectDetailById, getAllProjects } from '../../../actions/gen-actions';
 
 import PropTypes from 'prop-types';
 
@@ -21,7 +21,6 @@ const styles = theme => ({
 		flexGrow: 1,
 		height: "calc(100vh - 64px - 72px - 20px)",
 		margin: "10px 10px 10px 10px",
-		overflow: "auto",
 	},
 	card: {
 		minWidth: "200px"
@@ -80,22 +79,23 @@ class connectedCurProView extends React.Component {
 
 	render() {
 		const { classes, projects } = this.props;
+		console.log(projects);
 
 		return (
 			<Paper className={classes.root}>
 				{
-					projects.length != 0 ?
+					projects !== null ?
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
 									<CustomTableCell> Project Title </CustomTableCell>
-									<CustomTableCell align="center">Status</CustomTableCell>
+									<CustomTableCell align="center">Budget</CustomTableCell>
 									<CustomTableCell align="center">Discription</CustomTableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
 								{
-									projects.map(
+									projects._embedded.projects.map(
 										row => (
 											<TableRow className={classes.row} key={row.id} hover
 												onClick={() => {
@@ -103,9 +103,9 @@ class connectedCurProView extends React.Component {
 													this.props.history.push("/a_pros/project_detail");
 												}}>
 												<CustomTableCell component="th" scope="row">
-													Project {row.id}
+													{row.title}
 												</CustomTableCell>
-												<CustomTableCell align="center">{row.status}</CustomTableCell>
+												<CustomTableCell align="center">{row.budget}</CustomTableCell>
 												<CustomTableCell align="center">{row.description}</CustomTableCell>
 											</TableRow>
 										)
@@ -131,7 +131,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
 	return {
-		projects: state.gen_data.projects,
+		projects: state.gen_data.allprojects,
 	};
 };
 

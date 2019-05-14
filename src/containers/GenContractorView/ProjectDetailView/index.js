@@ -19,6 +19,7 @@ import ProjectBidders from './ProjectBidders';
 import ProjectFiles from './ProjectFiles';
 import ProjectMessages from './ProjectMessages';
 import ProjectProposals from './ProjectProposals';
+import { CircularProgress } from '@material-ui/core';
 
 const styles = theme => ({
 	root: {
@@ -29,7 +30,13 @@ const styles = theme => ({
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.primary.dark
-	}
+	},
+
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(40vh)",
+	},
 });
 
 class ConnectedProjectDetailView extends React.Component {
@@ -52,9 +59,7 @@ class ConnectedProjectDetailView extends React.Component {
 		const curDetailTab = this.state.curDetailTab;
 
 		if (selectedProject === null)
-			return (
-				<div> no project is selected </div>
-			);
+			return <CircularProgress className={classes.waitingSpin} />;
 
 		return (
 
@@ -71,10 +76,10 @@ class ConnectedProjectDetailView extends React.Component {
 							className={classes.toolbarstyle}
 						>
 							<Tab icon={<DashboardIcon />} />
-							<Tab icon={<AssignmentIndIcon />} />
+							{/*<Tab icon={<AssignmentIndIcon />} />
 							<Tab icon={<DescriptionIcon />} />
 							<Tab icon={<MessageIcon />} />
-							<Tab icon={<LoyaltyIcon />} />
+		<Tab icon={<LoyaltyIcon />} /> */}
 						</Tabs>
 
 						{curDetailTab === 0 && <ProjectOverView />}

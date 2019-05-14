@@ -16,7 +16,8 @@ const initialState = {
 	projectFiles: [],
 	selectedProposal: null,
 	messages: [],
-	projects: [],
+	projects: null,
+	allprojects: null,
 	bidders: [],
 	createProjectTemp: {
 		id: uuidv1(),
@@ -73,10 +74,6 @@ const initialState = {
 
 function gen_reducer(state = initialState, action) {
 	switch (action.type) {
-		case ADD_PROJECT:
-			return Object.assign({}, state, {
-				projects: state.projects.concat(action.payload)
-			});
 		case SET_CUR_TAB_POS:
 			return Object.assign({}, state, {
 				curTabPos: action.payload
@@ -90,10 +87,15 @@ function gen_reducer(state = initialState, action) {
 				//projects: state.projects.concat(action.payload)
 				bidders: action.payload
 			});
-		case ALL_PROJECT_LOADED:
+		case "PROJECT_LOADED":
 			return Object.assign({}, state, {
 				//projects: state.projects.concat(action.payload)
 				projects: action.payload
+			});
+		case ALL_PROJECT_LOADED:
+			return Object.assign({}, state, {
+				//projects: state.projects.concat(action.payload)
+				allprojects: action.payload
 			});
 		case PROJECT_DETAIL_LOADED:
 			return Object.assign({}, state, {
@@ -110,7 +112,11 @@ function gen_reducer(state = initialState, action) {
 			});
 		case "CLEAR_PROJECTS":
 			return Object.assign({}, state, {
-				projects: [],
+				projects: null,
+			});
+		case "CLEAR_ALL_PROJECTS":
+			return Object.assign({}, state, {
+				allprojects: null,
 			});
 		case "CLEAR_BIDDERS":
 			return Object.assign({}, state, {

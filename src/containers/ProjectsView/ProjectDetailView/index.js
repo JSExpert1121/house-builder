@@ -71,10 +71,10 @@ class ConnectedProjectDetailView extends React.Component {
 							className={classes.toolbarstyle}
 						>
 							<Tab icon={<DashboardIcon />} />
-							<Tab icon={<AssignmentIndIcon />} />
+							{ /*<Tab icon={<AssignmentIndIcon />} />
 							<Tab icon={<DescriptionIcon />} />
 							<Tab icon={<MessageIcon />} />
-							<Tab icon={<LoyaltyIcon />} />
+		<Tab icon={<LoyaltyIcon />} />*/}
 						</Tabs>
 
 						{curDetailTab === 0 && <ProjectOverView />}

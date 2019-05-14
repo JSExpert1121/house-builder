@@ -15,6 +15,7 @@ import axios from 'axios';
 
 import { connect } from 'react-redux';
 import { setUserProfile } from '../../actions';
+import { white } from 'ansi-colors';
 
 const styles = theme => ({
 	root: {
@@ -68,6 +69,12 @@ const styles = theme => ({
 		},
 		color: "white",
 		backgroundColor: theme.palette.primary.light,
+		'&:hover': {
+			backgroundColor: theme.palette.primary.dark
+		},
+		'&:disabled': {
+			backgroundColor: "#FFFFFF"
+		}
 	},
 	cancelButton: {
 		border: "1px solid #c7a4ff",
@@ -111,6 +118,7 @@ class connectedProfileView extends Component {
 			isGenChecked: false,
 			isSubChecked: false,
 			isSaving: false,
+			isDataLoaded: false
 		}
 	}
 
@@ -124,20 +132,11 @@ class connectedProfileView extends Component {
 			phone: ""
 		}
 
-		console.log(userProfile);
-		if (userProfile.user_metadata.address_id !== '') {
-			await axios.get("https://bcbe-service.herokuapp.com/addresses/" + userProfile.user_metadata.address_id)
-				.then(response => {
-					console.log(response);
-					address.name = response.data.name;
-					address.city = response.data.city;
-					address.street = response.data.street;
-					address.phone = response.data.phone;
-				})
-				.catch(err => {
-					console.log(err);
-				});
-		}
+		await axios.get("https://bcbe-service.herokuapp.com/contractors/" + userProfile.user_metadata.contractor_id)
+			.then(async response => {
+				if (response.data.address !== null)
+					address = response.data.address;
+			}).catch(err => console.log(err.message));
 
 		this.setState({
 			company: address.name,
@@ -150,6 +149,7 @@ class connectedProfileView extends Component {
 			picture: userProfile.picture,
 			isGenChecked: userProfile.user_metadata.roles.includes("Gen") || userProfile.user_metadata.roles.includes("GenSub") ? true : false,
 			isSubChecked: userProfile.user_metadata.roles.includes("Sub") || userProfile.user_metadata.roles.includes("GenSub") ? true : false,
+			isDataLoaded: true
 		});
 
 	}
@@ -174,12 +174,13 @@ class connectedProfileView extends Component {
 			isSaving: true
 		})
 
+		let cont_id = userProfile.user_metadata.contractor_id;
+
+		/*
 		let contractorData = {
 			"email": userProfile.email,
 			"updatedBy": userProfile.email,
 		};
-
-		let cont_id = userProfile.user_metadata.contractor_id;
 
 		if (cont_id !== "") {
 			contractorData.userId = cont_id;
@@ -234,51 +235,44 @@ class connectedProfileView extends Component {
 					})
 					.catch(error => console.log(error.message));
 			}
-		}
+		} */
 
-		let addr_id = userProfile.user_metadata.address_id;
+		let addr;
+		await axios.get("https://bcbe-service.herokuapp.com/contractors/" + cont_id)
+			.then(response => {
+				addr = response.data.address;
+			})
+			.catch(error => {
+				console.log(error.message);
+			});
+
 		let addressData = {
 			"name": this.state.company,
 			"street": this.state.street,
 			"city": this.state.city,
-			"phone": this.state.phone
+			"phone": this.state.phone,
 		};
 
-		if (addr_id === '') {
-			await axios.post("https://bcbe-service.herokuapp.com/addresses", addressData)
-				.then(response => {
-					addr_id = response.data.id;
-				})
-				.catch(err => {
-					console.log(err.message);
-				});
-		} else {
-			await axios.put("https://bcbe-service.herokuapp.com/addresses/" + addr_id, addressData)
-				.then(response => {
-				})
-				.catch(err => {
-					console.log(err.message);
-				});
-		}
+		await axios.post("https://bcbe-service.herokuapp.com/contractors/" + cont_id, {
+			"email": userProfile.user_metadata.email,
+			"address": addressData
+		})
 
-		let userRole = [];
+		/*let userRole = [];
 		if (this.state.isGenChecked)
 			userRole.push("Gen");
 		if (this.state.isSubChecked)
-			userRole.push("Sub");
+			userRole.push("Sub");*/
 
 		const new_prof = {
 			user_metadata: {
-				firstname: "",
-				lastname: "",
-				contractor_id: cont_id,
-				address_id: addr_id,
-				roles: userRole
+				firstname: this.state.firstname,
+				lastname: this.state.lastname,
+				// contractor_id: cont_id,
+				// roles: userRole
 			}
 		};
 
-		new_prof.user_metadata.firstname = this.state.firstname;
-		new_prof.user_metadata.lastname = this.state.lastname;
 		await auth0Client.updateProfile(new_prof, (profile) => {
 			this.props.setUserProfile(profile);
 			this.setState({
@@ -290,6 +284,11 @@ class connectedProfileView extends Component {
 
 	render() {
 		const { classes, userProfile } = this.props;
+
+		if (this.state.isDataLoaded === false)
+			return (
+				<CircularProgress className={classes.waitingSpin} />
+			);
 
 		return (
 			<div className={classes.root}>{
@@ -361,36 +360,38 @@ class connectedProfileView extends Component {
 							onChange={(val) => this.setState({ phone: val.target.value })}
 							margin="normal"
 						/>
-
-						<FormControlLabel
-							control={
-								<Checkbox
-									checked={this.state.isGenChecked}
-									onChange={this.handleRoleChange('isGenChecked')}
-									value="isGenChecked"
-								/>
-							}
-							label="Gen Contractor"
-							className={classes.textFieldHalf}
-						/>
-
-						<FormControlLabel
-							control={
-								<Checkbox
-									checked={this.state.isSubChecked}
-									onChange={this.handleRoleChange('isSubChecked')}
-									value="isSubChecked"
-								/>
-							}
-							label="Sub Contractor"
-							className={classes.textFieldHalf}
-						/>
+						{
+							/*
+							<FormControlLabel
+								control={
+									<Checkbox
+										checked={this.state.isGenChecked}
+										onChange={this.handleRoleChange('isGenChecked')}
+										value="isGenChecked"
+									/>
+								}
+								label="Gen Contractor"
+								className={classes.textFieldHalf}
+							/>
+	
+							<FormControlLabel
+								control={
+									<Checkbox
+										checked={this.state.isSubChecked}
+										onChange={this.handleRoleChange('isSubChecked')}
+										value="isSubChecked"
+									/>
+								}
+								label="Sub Contractor"
+								className={classes.textFieldHalf}
+							/> */
+						}
 
 						<Button className={classes.cancelButton} onClick={
 							() => this.props.history.replace("/")
 						}> Cancel </Button>
 						<Button disabled={this.state.isSaving} className={classes.submitButton} onClick={this.handleConfirm}>
-							Confirm &nbsp;
+							Confirm
 							{
 								this.state.isSaving &&
 								<CircularProgress

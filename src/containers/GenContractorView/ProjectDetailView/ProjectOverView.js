@@ -26,8 +26,8 @@ class ConnectedProjectOverView extends React.Component {
 		return (
 			<div className={classes.root}>
 				<ul>
-					<li>Project {selectedProject.id}</li>
-					<li>{selectedProject.status}</li>
+					<li>{selectedProject.title}</li>
+					<li>{selectedProject.budget}</li>
 					<li>{selectedProject.description}</li>
 				</ul>
 			</div>

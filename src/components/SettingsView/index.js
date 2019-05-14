@@ -29,18 +29,24 @@ const styles = (theme) => ({
 	},
 	settingView: {
 		width: 500,
+		padding: "5px",
 	},
 	saveBtn: {
 		border: "1px solid #4a148c",
 		backgroundColor: theme.palette.primary.light,
-		borderRadius: 0,
-		marginTop: 2,
-		float: "right"
+		color: "#FFFFFF",
+		margin: 5,
+		float: "right",
+		'&:hover': {
+			backgroundColor: theme.palette.primary.dark
+		},
+		'&:disabled': {
+			backgroundColor: "#FFFFFF"
+		}
 	},
 	cancelBtn: {
 		border: "1px solid #c7a4ff",
-		borderRadius: 0,
-		marginTop: 2,
+		margin: 5,
 		float: "right"
 	},
 	formControl: {

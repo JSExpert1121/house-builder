@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
-import { addProject, getProjectDetailById, getAllProjects } from '../../../actions/gen-actions';
+import { getProjectDetailById, getAllProjects, getProjectsByGenId } from '../../../actions/gen-actions';
 
 import PropTypes from 'prop-types';
 
@@ -72,7 +72,8 @@ class connectedCurProView extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.getAllProjects();
+		const { userProfile } = this.props;
+		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id);
 	}
 
 	handleAddProject = () => {
@@ -80,40 +81,42 @@ class connectedCurProView extends React.Component {
 
 	render() {
 		const { classes, projects } = this.props;
+		console.log(projects);
+		if (projects === null) {
+			return <CircularProgress className={classes.waitingSpin} />;
+		}
 
 		return (
 			<Paper className={classes.root}>
 				{
-					projects.length != 0 ?
-						<Table className={classes.table}>
-							<TableHead>
-								<TableRow>
-									<CustomTableCell> Project Title </CustomTableCell>
-									<CustomTableCell align="center">Status</CustomTableCell>
-									<CustomTableCell align="center">Discription</CustomTableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{
-									projects.map(
-										row => (
-											<TableRow className={classes.row} key={row.id} hover
-												onClick={() => {
-													this.props.getProjectDetailById(row.id);
-													this.props.history.push("/g_cont/project_detail");
-												}}>
-												<CustomTableCell component="th" scope="row">
-													Project {row.id}
-												</CustomTableCell>
-												<CustomTableCell align="center">{row.status}</CustomTableCell>
-												<CustomTableCell align="center">{row.description}</CustomTableCell>
-											</TableRow>
-										)
+					<Table className={classes.table}>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell> Project Title </CustomTableCell>
+								<CustomTableCell align="center">Budget</CustomTableCell>
+								<CustomTableCell align="center">Discription</CustomTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{
+								projects.content.map(
+									row => (
+										<TableRow className={classes.row} key={row.id} hover
+											onClick={() => {
+												this.props.getProjectDetailById(row.id);
+												this.props.history.push("/g_cont/project_detail");
+											}}>
+											<CustomTableCell component="th" scope="row">
+												{row.title}
+											</CustomTableCell>
+											<CustomTableCell align="center">{row.budget}</CustomTableCell>
+											<CustomTableCell align="center">{row.description}</CustomTableCell>
+										</TableRow>
 									)
-								}
-							</TableBody>
-						</Table>
-						: <CircularProgress className={classes.waitingSpin} />
+								)
+							}
+						</TableBody>
+					</Table>
 				}
 			</Paper >
 		);
@@ -124,14 +127,14 @@ class connectedCurProView extends React.Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
-		addProject: proEl => dispatch(addProject(proEl)),
-		getAllProjects: () => dispatch(getAllProjects())
+		getProjectsByGenId: (id) => dispatch(getProjectsByGenId(id))
 	};
 };
 
 const mapStateToProps = state => {
 	return {
 		projects: state.gen_data.projects,
+		userProfile: state.global_data.userProfile
 	};
 };
 
