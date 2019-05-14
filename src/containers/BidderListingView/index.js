@@ -62,34 +62,14 @@ const CustomTableCell = withStyles(theme => ({
 class ConnectedBidderListingView extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			profile: null
-		}
-	}
-
-	async componentWillMount() {
-		const userProfile = auth0Client.userProfile;
-		if (!userProfile) {
-			await auth0Client.getProfile((profile) => {
-				this.setState({
-					profile: profile
-				});
-			});
-		} else {
-			this.setState({
-				profile: userProfile
-			});
-		}
 	}
 
 	render() {
-		const { classes } = this.props;
-		const profile = this.state.profile;
+		const { classes, userProfile } = this.props;
 
-		if (profile === null)
-			return (<div> <CircularProgress /></div>);
-
-		if (!profile.user_metadata.roles.includes("Gen") && !profile.user_metadata.roles.includes("GenSub") && !profile.user_metadata.roles.includes("SuperAdmin"))
+		if (!userProfile.user_metadata.roles.includes("Gen") &&
+			!userProfile.user_metadata.roles.includes("GenSub") &&
+			!userProfile.user_metadata.roles.includes("SuperAdmin"))
 			return (<div> Access Forbidden </div>);
 
 		return (
@@ -136,6 +116,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
 	return {
+		userProfile: state.global_data.userProfile
 	};
 };
 

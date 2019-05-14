@@ -1,24 +1,30 @@
 import React from 'react';
-import { Route, Switch, withRouter, } from 'react-router-dom';
-
-import Header from 'components/Header';
-import HomePage from 'components/HomePage';
-import BidderListingView from 'containers/BidderListingView';
-import SubContractorView from 'containers/SubContractorView';
-import GeneralContractorView from 'containers/GeneralContractorView';
-import ProfileView from 'components/ProfileView';
-import SettingsView from 'components/SettingsView';
-import NotFoundPage from 'components/NotFoundPage';
-import Callback from '../auth0/callback';
-
-import MenuList from 'components/MenuList';
-import Card from '@material-ui/core/Card';
 import PropTypes from 'prop-types';
+import { Switch, Route, Link, Redirect, withRouter } from 'react-router-dom';
+
+// Material import 
 import { withStyles } from '@material-ui/core/styles';
-import SecuredRoute from './SecuredRoute';
-import auth0Client from '../auth0/auth';
-import ManageTemplateView from '../containers/ManageTemplateView';
+import Card from '@material-ui/core/Card';
+
+// local import
+import GenContractorView from '../containers/GenContractorView';
+import SubContractorView from '../containers/SubContractorView';
+import BidderListingView from '../containers/BidderListingView';
 import ProjectsView from '../containers/ProjectsView';
+import ProfileEditView from '../components/ProfileEditView';
+import SettingsView from '../components/SettingsView';
+import HomeView from '../containers/HomeView';
+import MenuList from '../components/MenuList';
+import Header from '../components/Header';
+import Callback from '../auth0/callback';
+import auth0Client from '../auth0/auth';
+
+// Redux 
+import { connect } from 'react-redux';
+import { setUserProfile } from '../actions';
+import { CircularProgress } from '@material-ui/core/es';
+
+import SecuredRoute from './SecuredRoute';
 
 const styles = theme => ({
 	viewarea: {
@@ -29,15 +35,20 @@ const styles = theme => ({
 		[theme.breakpoints.up('md')]: {
 			width: '85%',
 		}
+	},
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50vw - 10px)",
+		top: "calc(50vh - 10px)",
 	}
 });
 
-class AppRouter extends React.Component {
+class AppRouterConnect extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			checkingSession: true,
+			checkingSession: true
 		}
 	}
 	async componentDidMount() {
@@ -51,32 +62,56 @@ class AppRouter extends React.Component {
 		} catch (err) {
 			if (err.error !== 'login_required') console.log(err.error);
 		}
+
+		if (auth0Client.isAuthenticated()) {
+			try {
+				await auth0Client.getProfile((profile) => this.props.setUserProfile(profile));
+			} catch (err) {
+				console.log(err.error);
+			}
+		}
+
 		this.setState({ checkingSession: false });
 	}
 	render() {
-		const { classes } = this.props;
+		const { classes, userProfile } = this.props;
+		if (this.state.checkingSession || (auth0Client.isAuthenticated() && userProfile === null)) return <CircularProgress className={classes.waitingSpin} />;
+
 		return (
 			<div>
 				<Header />
 				<MenuList />
 				<Card className={classes.viewarea}>
 					<Switch>
-						<Route path="/" component={HomePage} exact={true} />
-						<SecuredRoute path="/bid_list_view" component={BidderListingView} checkingSession={this.state.checkingSession} />
-						<SecuredRoute path="/sub_cont_view" component={SubContractorView} checkingSession={this.state.checkingSession} />
-						<SecuredRoute path="/gen_cont_view" component={GeneralContractorView} checkingSession={this.state.checkingSession} />
-						<SecuredRoute path="/man_temp_view" component={ManageTemplateView} checkingSession={this.state.checkingSession} />
-						<SecuredRoute path="/all_projects" component={ProjectsView} checkingSession={this.state.checkingSession} />
-						<SecuredRoute path="/profile" component={ProfileView} checkingSession={this.state.checkingSession} />
-						<SecuredRoute path="/settings" component={SettingsView} checkingSession={this.state.checkingSession} />
+						<Route exact path='/' component={HomeView} />
+						<SecuredRoute path='/g_cont' component={GenContractorView} />
+						<SecuredRoute path='/s_cont' component={SubContractorView} />
+						<SecuredRoute path='/b_list' component={BidderListingView} />
+						<SecuredRoute path='/a_pros' component={ProjectsView} />
+						<SecuredRoute path="/profile" component={ProfileEditView} />
+						<SecuredRoute path="/settings" component={SettingsView} />
 						<Route exact path='/callback' component={Callback} />
-						<Route component={NotFoundPage} />
+						<Redirect to="/" />
 					</Switch>
 				</Card>
 			</div>
 		);
 	}
 };
+
+const mapDispatchToProps = dispatch => {
+	return {
+		setUserProfile: profile => dispatch(setUserProfile(profile))
+	};
+};
+
+const mapStateToProps = state => {
+	return {
+		userProfile: state.global_data.userProfile
+	};
+};
+
+const AppRouter = connect(mapStateToProps, mapDispatchToProps)(AppRouterConnect);
 
 AppRouter.propTypes = {
 	classes: PropTypes.object.isRequired,

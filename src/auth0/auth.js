@@ -13,8 +13,6 @@ class Auth {
 			audience: process.env.AUTH_AUDIENCE,
 			scope: 'openid profile email read:current_user read:user_idp_tokens read:users read:roles update:users update:roles update:users_app_metadata update:current_user_metadata'
 		});
-
-		this.getProfile = this.getProfile.bind(this);
 	}
 
 	getProfile(cb) {
@@ -28,45 +26,10 @@ class Auth {
 			axios.get("https://tungcb.auth0.com/api/v2/users/" + user_id, { headers })
 				.then(response => {
 					this.userProfile = response.data;
-					if (this.userProfile.user_metadata.id === "") {
-						console.log(this.userProfile);
-						cb(this.userProfile, {
-							'name': "",
-							'street': "",
-							'city': "",
-							'phone': ""
-						});
-						return;
-					}
-					console.log(this.userProfile);
-
-					axios.get("https://bcbe-service.herokuapp.com/gencontractors/" + this.userProfile.user_metadata.id).
-						then((response1) => {
-							const address = response1.data.address;
-							cb(this.userProfile, address);
-						}).catch((err) => {
-							if (err.response.status === 404) {
-								axios.get("https://bcbe-service.herokuapp.com/subcontractors/" + this.userProfile.user_metadata.id).
-									then((response1) => {
-										const address = response1.data.address;
-										cb(this.userProfile, address);
-									}).catch((err) => {
-									})
-							}
-						})
+					cb(this.userProfile);
 				})
-				.catch(error => console.log(error.message));
-
-			//axios.post("https://tungcb.auth0.com/api/v2/users/" + user_id + "/roles", { "roles": ["SuperAdmin"] }, { headers })
+				.catch((err) => console.log(err.message));
 		});
-	}
-
-	updateProfile(data, cb) {
-		const user_id = this.userProfile.user_id;
-		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
-		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
-			.then(response => { this.getProfile(cb) })
-			.catch(error => console.log(error.message));
 	}
 
 	updateSet(data, cb) {
@@ -75,6 +38,16 @@ class Auth {
 		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
 			.then(response => {
 				cb();
+			})
+			.catch(error => console.log(error.message));
+	}
+
+	updateProfile(data, cb) {
+		const user_id = this.userProfile.user_id;
+		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
+		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
+			.then(response => {
+				this.getProfile(cb);
 			})
 			.catch(error => console.log(error.message));
 	}

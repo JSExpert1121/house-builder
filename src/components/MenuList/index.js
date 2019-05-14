@@ -1,5 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+
+import { connect } from 'react-redux';
 
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -35,63 +37,95 @@ const styles = theme => ({
 		[theme.breakpoints.up('md')]: {
 			display: 'flex',
 		},
+	},
+	selectedStyle: {
+		borderLeft: "5px solid " + theme.palette.primary.light,
+		color: theme.palette.primary.light
 	}
 });
 
-class MenuList extends React.Component {
+class ConnectedMenuList extends React.Component {
 	constructor(props) {
 		super(props);
+
 	}
 	render() {
-		const { classes } = this.props;
+		const { classes, userProfile, location } = this.props;
+		const pathname = location.pathname;
+
+		if (!auth0Client.isAuthenticated())
+			return (
+				<Card className={classes.list}>
+					<List>
+						<ListItem button component={Link} to='/' className={pathname === '/' ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<HomeIcon />
+							</ListItemIcon>
+							<ListItemText primary="Home" className={classes.listItemText} />
+						</ListItem>
+					</List>
+				</Card>
+			);
+
+		const roles = userProfile.user_metadata.roles;
+
 		return (
 			<Card className={classes.list}>
 				<List>
-
-					<ListItem button component={Link} to='/'>
+					<ListItem button component={Link} to='/' className={pathname === '/' ? classes.selectedStyle : ""}>
 						<ListItemIcon>
 							<HomeIcon />
 						</ListItemIcon>
 						<ListItemText primary="Home" className={classes.listItemText} />
 					</ListItem>
+
 					{
-						auth0Client.isAuthenticated() ?
-							<div><ListItem button component={Link} to='/gen_cont_view'>
-								<ListItemIcon>
-									<MessageIcon />
-								</ListItemIcon>
-								<ListItemText primary="General Contractor" className={classes.listItemText} />
-							</ListItem>
-
-								<ListItem button component={Link} to='/sub_cont_view'>
-									<ListItemIcon>
-										<ServiceIcon />
-									</ListItemIcon>
-									<ListItemText primary="Sub Contractor" className={classes.listItemText} />
-								</ListItem>
-
-								<ListItem button component={Link} to='/bid_list_view'>
-									<ListItemIcon>
-										<HelpIcon />
-									</ListItemIcon>
-									<ListItemText primary="Bidder Listing" className={classes.listItemText} />
-								</ListItem>
-								<ListItem button component={Link} to='/all_projects'>
-									<ListItemIcon>
-										<WidgetsIcon />
-									</ListItemIcon>
-									<ListItemText primary="Projects" className={classes.listItemText} />
-								</ListItem>
-
-								<ListItem button component={Link} to='/man_temp_view'>
-									<ListItemIcon>
-										<PagesIcon />
-									</ListItemIcon>
-									<ListItemText primary="Manage Templates" className={classes.listItemText} />
-								</ListItem>
-							</div> : <div></div>
+						(roles.includes("Gen") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
+						<ListItem button component={Link} to='/g_cont' className={pathname.includes('/g_cont') ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<MessageIcon />
+							</ListItemIcon>
+							<ListItemText primary="General Contractor" className={classes.listItemText} />
+						</ListItem>
+					}
+					{
+						(roles.includes("Sub") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
+						<ListItem button component={Link} to='/s_cont' className={pathname.includes('/s_cont') ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<ServiceIcon />
+							</ListItemIcon>
+							<ListItemText primary="Sub Contractor" className={classes.listItemText} />
+						</ListItem>
+					}
+					{
+						(roles.includes("Gen") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
+						<ListItem button component={Link} to='/b_list' className={pathname.includes('/b_list') ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<HelpIcon />
+							</ListItemIcon>
+							<ListItemText primary="Bidder Listing" className={classes.listItemText} />
+						</ListItem>
+					}
+					{
+						(roles.includes("Sub") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
+						<ListItem button component={Link} to='/a_pros' className={pathname.includes('/a_pros') ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<WidgetsIcon />
+							</ListItemIcon>
+							<ListItemText primary="Projects" className={classes.listItemText} />
+						</ListItem>
+					}
+					{
+						(roles.includes("Admin") || roles.includes("SuperAdmin")) &&
+						<ListItem button component={Link} to='/m_temp' className={pathname.includes('/m_temp') ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<PagesIcon />
+							</ListItemIcon>
+							<ListItemText primary="Manage Templates" className={classes.listItemText} />
+						</ListItem>
 					}
 				</List>
+
 				<Divider />
 
 			</Card>
@@ -99,8 +133,21 @@ class MenuList extends React.Component {
 	}
 };
 
+const mapStateToProps = state => {
+	return {
+		userProfile: state.global_data.userProfile,
+	};
+};
+
+const mapDispatchToProps = dispatch => {
+	return {
+	};
+};
+
+const MenuList = connect(mapStateToProps, mapDispatchToProps)(ConnectedMenuList);
+
 MenuList.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MenuList);
+export default withRouter(withStyles(styles)(MenuList));

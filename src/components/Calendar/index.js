@@ -1,5 +1,6 @@
 import React from "react";
 import dateFns from "date-fns";
+import './style.scss';
 
 class Calendar extends React.Component {
 	state = {

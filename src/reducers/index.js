@@ -1,22 +1,8 @@
 import { combineReducers } from 'redux';
-import genContViewReducer from './genContViewReducer';
-import subContViewReducer from './subContViewReducer';
-import tempViewReducer from './tempViewReducer';
-/*const appReducer = asyncReducers =>
-	combineReducers({
-		genContViewData: genContViewReducer,
-		subContViewData: subContViewReducer,
-		...asyncReducers,
-	});
-
-function rootReducer(asyncReducers) {
-	return appReducer(asyncReducers);
-}
-
-export default rootReducer;*/
+import global_reducer from './global_reducer';
+import gen_reducer from './gen_reducer';
 
 export default combineReducers({
-	genContViewData: genContViewReducer,
-	subContViewData: subContViewReducer,
-	tempViewData: tempViewReducer
+	global_data: global_reducer,
+	gen_data: gen_reducer
 });

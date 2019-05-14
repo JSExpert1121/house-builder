@@ -14,6 +14,9 @@ import { CircularProgress, Button, MenuItem, Radio, Divider } from '@material-ui
 import { FormControl, InputLabel, Select, Checkbox } from '@material-ui/core/es';
 import TSnackbarContent from '../SnackBarContent';
 
+import { connect } from 'react-redux';
+import { setUserProfile } from '../../actions';
+
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
@@ -26,18 +29,24 @@ const styles = (theme) => ({
 	},
 	settingView: {
 		width: 500,
+		padding: "5px",
 	},
 	saveBtn: {
 		border: "1px solid #4a148c",
 		backgroundColor: theme.palette.primary.light,
-		borderRadius: 0,
-		marginTop: 2,
-		float: "right"
+		color: "#FFFFFF",
+		margin: 5,
+		float: "right",
+		'&:hover': {
+			backgroundColor: theme.palette.primary.dark
+		},
+		'&:disabled': {
+			backgroundColor: "#FFFFFF"
+		}
 	},
 	cancelBtn: {
 		border: "1px solid #c7a4ff",
-		borderRadius: 0,
-		marginTop: 2,
+		margin: 5,
 		float: "right"
 	},
 	formControl: {
@@ -67,34 +76,37 @@ const CustomTableCell = withStyles(theme => ({
 	},
 }))(TableCell);
 
-class SettingsView extends React.Component {
+class connectedSettingsView extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			setting1: 10,
 			setting2: "a",
 			checkedA: false,
 			checkedB: false,
 			checkedC: false,
-			profile: null,
+			isSaving: false,
+			isSuccess: false
 		}
 	}
 	handleChange = name => event => {
 		this.setState({ [name]: event.target.checked });
 	};
-	async componentWillMount() {
-		await auth0Client.getProfile((profile) => {
-			console.log(profile);
-			this.setState({
-				setting1: profile.user_metadata.settings.setting1,
-				setting2: profile.user_metadata.settings.setting2,
-				checkedA: profile.user_metadata.settings.checkedA,
-				checkedB: profile.user_metadata.settings.checkedB,
-				checkedC: profile.user_metadata.settings.checkedC,
-				profile: profile
-			});
+
+	componentWillMount() {
+		const { userProfile } = this.props;
+
+		this.setState({
+			setting1: userProfile.user_metadata.settings.setting1,
+			setting2: userProfile.user_metadata.settings.setting2,
+			checkedA: userProfile.user_metadata.settings.checkedA,
+			checkedB: userProfile.user_metadata.settings.checkedB,
+			checkedC: userProfile.user_metadata.settings.checkedC,
+
 		});
 	}
+
 	handleClose = (event, reason) => {
 		if (reason === 'clickaway') {
 			return;
@@ -105,10 +117,6 @@ class SettingsView extends React.Component {
 
 	render() {
 		const { classes } = this.props;
-		const profile = this.state.profile;
-
-		if (profile === null)
-			return (<div> <CircularProgress className={classes.waitingSpin} /></div>);
 
 		return (
 			<div className={classes.root}>
@@ -218,8 +226,12 @@ class SettingsView extends React.Component {
 							</TableRow>
 						</TableBody>
 					</Table>
-					<Button className={classes.saveBtn} onClick={
+					<Button disabled={this.state.isSaving} className={classes.saveBtn} onClick={
 						() => {
+							this.setState({
+								isSaving: true
+							});
+
 							const newSet = {
 								user_metadata: {
 									settings: {
@@ -231,15 +243,30 @@ class SettingsView extends React.Component {
 									}
 								}
 							}
-							console.log(newSet);
+
 							auth0Client.updateSet(newSet,
 								() => {
+									auth0Client.getProfile(
+										profile => {
+											console.log(profile);
+											this.props.setUserProfile(profile);
+										}
+									);
 									this.setState({
-										isSuccess: true
-									})
+										isSuccess: true,
+										isSaving: false
+									});
 								});
 						}}>
-						Save
+						Save &nbsp;
+						{
+							this.state.isSaving &&
+							<CircularProgress
+								disableShrink
+								size={24}
+								thickness={4}
+							/>
+						}
 					</Button>
 					<Button className={classes.cancelBtn} onClick={
 						() => this.props.history.replace("/")}>
@@ -250,6 +277,19 @@ class SettingsView extends React.Component {
 		);
 	}
 }
+const mapDispatchToProps = dispatch => {
+	return {
+		setUserProfile: profile => dispatch(setUserProfile(profile))
+	};
+};
+
+const mapStateToProps = state => {
+	return {
+		userProfile: state.global_data.userProfile
+	};
+};
+
+const SettingsView = connect(mapStateToProps, mapDispatchToProps)(connectedSettingsView);
 
 SettingsView.propTypes = {
 	classes: PropTypes.object.isRequired,

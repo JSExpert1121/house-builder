@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
+import SecuredRoute from '../../routers/SecuredRoute';
+
+// Redux
 import { connect } from 'react-redux';
 
-import { setCurTabPos } from '../../actions';
-
-import AllProjectView from '../../components/AllProjectView';
-import ProjectDetailView from '../../components/ProjectDetailView';
-
+// material ui
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
+import Toolbar from '@material-ui/core/Toolbar';
+import { CircularProgress } from '@material-ui/core';
 import AppsIcon from '@material-ui/icons/Apps';
 import BallotIcon from '@material-ui/icons/Ballot';
-import { CircularProgress } from '@material-ui/core';
-import auth0Client from '../../auth0/auth';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
+
+// local components
+import CurrentProjectView from './CurrentProjectView/index';
+import ProjectDetailView from './ProjectDetailView/index';
 
 const styles = theme => ({
 	root: {
@@ -29,45 +35,32 @@ const styles = theme => ({
 		position: "absolute",
 		float: "right",
 		right: "0"
+	},
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(40vh)",
 	}
 });
 
-class ConnectedProjectsView extends React.Component {
+class ConnectedGenContView extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			profile: null
-		}
-	}
-
-	async componentWillMount() {
-		const userProfile = auth0Client.userProfile;
-		if (!userProfile) {
-			await auth0Client.getProfile((profile) => {
-				this.setState({
-					profile: profile
-				});
-			});
-		} else {
-			this.setState({
-				profile: userProfile
-			});
-		}
-	}
-
-	handleTabChange = (event, value) => {
-		this.props.setCurTabPos(value);
 	}
 
 	render() {
-		const { classes, curTabPos } = this.props;
-		const profile = this.state.profile;
+		const { classes, userProfile, location } = this.props;
+		const tabNo = {
+			'/a_pros': 0,
+			'/a_pros/current_pros': 0,
+			'/a_pros/project_detail': 1,
+		};
 
-		if (profile === null)
-			return (<div> <CircularProgress /></div>);
+		const curTabPos = tabNo[location.pathname];
 
-		if (!profile.user_metadata.roles.includes("Sub") && !profile.user_metadata.roles.includes("GenSub") && !profile.user_metadata.roles.includes("SuperAdmin"))
+		if (!userProfile.user_metadata.roles.includes("Gen") &&
+			!userProfile.user_metadata.roles.includes("GenSub") &&
+			!userProfile.user_metadata.roles.includes("SuperAdmin"))
 			return (<div> Access Forbidden </div>);
 
 		return (
@@ -76,17 +69,19 @@ class ConnectedProjectsView extends React.Component {
 					<AppBar position="static" className={classes.toolbarstyle}>
 						<Tabs
 							value={curTabPos}
-							onChange={this.handleTabChange}
 							variant="scrollable"
 							scrollButtons="on">
 
-							<Tab label="Projects" icon={<AppsIcon />} />
-							<Tab label="Project Detail" icon={<BallotIcon />} />
+							<Tab component={Link} to={`/a_pros/current_pros`} label="Current Projects" icon={<AppsIcon />} />
+							<Tab component={Link} to={`/a_pros/project_detail`} label="Project Detail" icon={<BallotIcon />} />
 						</Tabs>
 					</AppBar>
 
-					{curTabPos === 0 && <AllProjectView />}
-					{curTabPos === 1 && <ProjectDetailView />}
+					<Switch>
+						<SecuredRoute path='/a_pros/current_pros' component={CurrentProjectView} />
+						<SecuredRoute path='/a_pros/project_detail' component={ProjectDetailView} />
+						<Redirect path='/a_pros' to={`/a_pros/current_pros`} />
+					</Switch>
 				</div>
 			</NoSsr>
 		);
@@ -95,21 +90,14 @@ class ConnectedProjectsView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		projects: state.genContViewData.projects,
-		curTabPos: state.genContViewData.curTabPos,
+		userProfile: state.global_data.userProfile,
 	};
 };
 
-const mapDispatchToProps = dispatch => {
-	return {
-		setCurTabPos: tabPos => dispatch(setCurTabPos(tabPos)),
-	};
-};
+const GeneralContractorView = connect(mapStateToProps, null)(ConnectedGenContView);
 
-const ProjectsView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProjectsView);
-
-ProjectsView.propTypes = {
+GeneralContractorView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProjectsView);
+export default withRouter(withStyles(styles)(GeneralContractorView));
