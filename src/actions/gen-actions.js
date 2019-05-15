@@ -17,7 +17,7 @@ export function setSelectedProposal(payload) {
 export function getProjectsByGenId(id) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_PROJECTS" });
-		return fetch("https://bcbe-service.herokuapp.com/contractors/" + id + "/projects")
+		return fetch(process.env.PROJECT_API + "contractors/" + id + "/projects")
 			.then(response => response.json())
 			.then(json => {
 				dispatch({ type: "PROJECT_LOADED", payload: json });
@@ -28,7 +28,7 @@ export function getProjectsByGenId(id) {
 export function getAllProjects() {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_ALL_PROJECTS" });
-		return fetch("https://bcbe-service.herokuapp.com/projects")
+		return fetch(process.env.PROJECT_API + "projects")
 			.then(response => response.json())
 			.then(json => {
 				dispatch({ type: ALL_PROJECT_LOADED, payload: json });
@@ -38,7 +38,7 @@ export function getAllProjects() {
 
 export function getProjectDetailById(id) {
 	return function (dispatch) {
-		return Axios.get("https://bcbe-service.herokuapp.com/projects/" + id)
+		return Axios.get(process.env.PROJECT_API + "projects/" + id)
 			.then(response => {
 				console.log(response.data);
 				dispatch({ type: PROJECT_DETAIL_LOADED, payload: response.data })
@@ -87,7 +87,7 @@ export function setTempViewTab(payload) {
 export function getAllTemplates() {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_TEMPLATES" });
-		return fetch("https://bcbe-service.herokuapp.com/templates", {
+		return fetch(process.env.PROJECT_API + "templates", {
 			headers: {
 				"Content-Type": "application/hal+json"
 			}

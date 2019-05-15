@@ -23,7 +23,7 @@ class Auth {
 				'Content-type': 'application/json'
 			};
 
-			axios.get("https://tungcb.auth0.com/api/v2/users/" + user_id, { headers })
+			axios.get(process.env.AUTH_AUDIENCE + "users/" + user_id, { headers })
 				.then(response => {
 					this.userProfile = response.data;
 					cb(this.userProfile);
@@ -35,7 +35,7 @@ class Auth {
 	updateSet(data, cb) {
 		const user_id = this.userProfile.user_id;
 		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
-		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
+		axios.patch(process.env.AUTH_AUDIENCE + "users/" + user_id, data, { headers: headers })
 			.then(response => {
 				cb();
 			})
@@ -45,7 +45,7 @@ class Auth {
 	updateProfile(data, cb) {
 		const user_id = this.userProfile.user_id;
 		const headers = { 'Authorization': `Bearer ${this.getAccessToken()}` };
-		axios.patch("https://tungcb.auth0.com/api/v2/users/" + user_id, data, { headers: headers })
+		axios.patch(process.env.AUTH_AUDIENCE + "users/" + user_id, data, { headers: headers })
 			.then(response => {
 				this.getProfile(cb);
 			})

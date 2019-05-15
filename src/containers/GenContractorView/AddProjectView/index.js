@@ -95,7 +95,7 @@ class connectedCurProView extends React.Component {
 			isSaving: true
 		});
 
-		axios.post("https://bcbe-service.herokuapp.com/contractors/" + userProfile.user_metadata.contractor_id + "/projects",
+		axios.post(process.env.PROJECT_API + "contractors/" + userProfile.user_metadata.contractor_id + "/projects",
 			projectData)
 			.then((response) => {
 				console.log(response);

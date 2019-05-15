@@ -132,7 +132,7 @@ class connectedProfileView extends Component {
 			phone: ""
 		}
 
-		await axios.get("https://bcbe-service.herokuapp.com/contractors/" + userProfile.user_metadata.contractor_id)
+		await axios.get(process.env.PROJECT_API + "contractors/" + userProfile.user_metadata.contractor_id)
 			.then(async response => {
 				if (response.data.address !== null)
 					address = response.data.address;
@@ -186,13 +186,13 @@ class connectedProfileView extends Component {
 			contractorData.userId = cont_id;
 
 			if (this.state.isGenChecked) {
-				await axios.put("https://bcbe-service.herokuapp.com/gencontractors/" + cont_id, contractorData)
+				await axios.put(process.env.PROJECT_API + "gencontractors/" + cont_id, contractorData)
 					.then(response => {
 						console.log(response);
 					})
 					.catch(error => {
 						if (error.response.status === 404) {
-							axios.post("https://bcbe-service.herokuapp.com/gencontractors/", contractorData)
+							axios.post(process.env.PROJECT_API + "gencontractors/", contractorData)
 								.then(response => {
 									console.log(response);
 								})
@@ -201,13 +201,13 @@ class connectedProfileView extends Component {
 					});
 			}
 			if (this.state.isSubChecked) {
-				await axios.put("https://bcbe-service.herokuapp.com/subcontractors/" + cont_id, contractorData)
+				await axios.put(process.env.PROJECT_API + "subcontractors/" + cont_id, contractorData)
 					.then(response => {
 						console.log(response);
 					})
 					.catch(error => {
 						if (error.response.status === 404) {
-							axios.post("https://bcbe-service.herokuapp.com/subcontractors/", contractorData)
+							axios.post(process.env.PROJECT_API + "subcontractors/", contractorData)
 								.then(response => {
 									console.log(response);
 								})
@@ -219,7 +219,7 @@ class connectedProfileView extends Component {
 
 		else {
 			if (this.state.isGenChecked)
-				await axios.post("https://bcbe-service.herokuapp.com/gencontractors", contractorData)
+				await axios.post(process.env.PROJECT_API + "gencontractors", contractorData)
 					.then(response => {
 						cont_id = response.data.id;
 						console.log(response);
@@ -227,7 +227,7 @@ class connectedProfileView extends Component {
 					.catch(error => console.log(error.message));
 
 			if (this.state.isSubChecked) {
-				await axios.post("https://bcbe-service.herokuapp.com/subcontractors", contractorData)
+				await axios.post(process.env.PROJECT_API + "subcontractors", contractorData)
 					.then(response => {
 						if (cont_id === '')
 							cont_id = response.data.id;
@@ -238,7 +238,7 @@ class connectedProfileView extends Component {
 		} */
 
 		let addr;
-		await axios.get("https://bcbe-service.herokuapp.com/contractors/" + cont_id)
+		await axios.get(process.env.PROJECT_API + "contractors/" + cont_id)
 			.then(response => {
 				addr = response.data.address;
 			})
@@ -253,7 +253,7 @@ class connectedProfileView extends Component {
 			"phone": this.state.phone,
 		};
 
-		await axios.post("https://bcbe-service.herokuapp.com/contractors/" + cont_id, {
+		await axios.post(process.env.PROJECT_API + "contractors/" + cont_id, {
 			"email": userProfile.user_metadata.email,
 			"updatedBy" : userProfile.user_metadata.email,
 			"address": addressData
