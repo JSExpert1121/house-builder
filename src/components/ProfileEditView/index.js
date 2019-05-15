@@ -255,6 +255,7 @@ class connectedProfileView extends Component {
 
 		await axios.post("https://bcbe-service.herokuapp.com/contractors/" + cont_id, {
 			"email": userProfile.user_metadata.email,
+			"updatedBy" : userProfile.user_metadata.email,
 			"address": addressData
 		})
 

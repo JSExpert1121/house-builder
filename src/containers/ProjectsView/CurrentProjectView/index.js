@@ -21,6 +21,7 @@ const styles = theme => ({
 		flexGrow: 1,
 		height: "calc(100vh - 64px - 72px - 20px)",
 		margin: "10px 10px 10px 10px",
+		overflow: "scroll"
 	},
 	card: {
 		minWidth: "200px"
@@ -93,7 +94,7 @@ class connectedCurProView extends React.Component {
 									<CustomTableCell align="center">Discription</CustomTableCell>
 								</TableRow>
 							</TableHead>
-							<TableBody>
+							<TableBody >
 								{
 									projects._embedded.projects.map(
 										row => (

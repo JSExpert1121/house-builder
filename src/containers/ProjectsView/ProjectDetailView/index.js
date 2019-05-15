@@ -70,18 +70,18 @@ class ConnectedProjectDetailView extends React.Component {
 							scrollButtons="on"
 							className={classes.toolbarstyle}
 						>
-							<Tab icon={<DashboardIcon />} />
-							{ /*<Tab icon={<AssignmentIndIcon />} />
-							<Tab icon={<DescriptionIcon />} />
-							<Tab icon={<MessageIcon />} />
-		<Tab icon={<LoyaltyIcon />} />*/}
+							<Tab label="Overview" />
+							<Tab label="Bidders" />
+							<Tab label="Files" />
+							<Tab label="Messages" />
+							<Tab label="Proposals" />
 						</Tabs>
 
 						{curDetailTab === 0 && <ProjectOverView />}
-						{curDetailTab === 1 && <ProjectBidders />}
-						{curDetailTab === 2 && <ProjectFiles />}
-						{curDetailTab === 3 && <ProjectMessages />}
-						{curDetailTab === 4 && <ProjectProposals />}
+						{curDetailTab === 1 && /*<ProjectBidders />*/ <div />}
+						{curDetailTab === 2 && /*<ProjectFiles />*/ <div />}
+						{curDetailTab === 3 && /*<ProjectMessages />*/ <div />}
+						{curDetailTab === 4 && /*<ProjectProposals />*/ <div />}
 					</Paper>
 				</div></NoSsr>
 		);

@@ -88,6 +88,7 @@ class connectedCurProView extends React.Component {
 			"title": this.state.title,
 			"description": this.state.description,
 			"budget": this.state.price,
+			"updatedBy": userProfile.email
 		};
 
 		this.setState({
