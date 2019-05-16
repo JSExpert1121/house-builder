@@ -123,11 +123,11 @@ class ConnCategoryDetailView extends Component {
 			<Grid container spacing={0}>
 				<Grid item xs={12} md={3}>
 					<Paper className={classes.descTag}>
-						<Link onClick={async () => {
+						<div><Link style={{ float: "left" }} onClick={async () => {
 							await this.props.selectTemplate(category.tem_name.id);
 							this.props.history.push("/m_temp/template_detail");
 						}
-						}>{category.tem_name.name}</Link>
+						}>{category.tem_name.name}</Link></div>
 						<TextField
 							label="category name"
 							margin="normal"
