@@ -9,8 +9,6 @@ import {
 	MESSAGE_LOADED
 } from "../constants/gen-action-types";
 
-import uuidv1 from "uuid";
-
 const initialState = {
 	selectedProject: null,
 	projectFiles: [],
@@ -19,57 +17,6 @@ const initialState = {
 	projects: null,
 	allprojects: null,
 	bidders: [],
-	createProjectTemp: {
-		id: uuidv1(),
-		name: "Project",
-		status: "Active",
-		PH1: "Hello Project",
-		PH2: "Hello Project",
-		bidders: [
-			{
-				id: uuidv1(),
-				name: "Ivan",
-				price: 100,
-				duration: 3,
-				proposal: "I hate Generic Bid",
-				subfiles: [
-					"Screenshot1.jpg",
-					"Screenshot2.jpg",
-					"Screenshot3.jpg"
-				]
-			},
-			{
-				id: uuidv1(),
-				name: "Windi",
-				price: 200,
-				duration: 5,
-				proposal: "I hate Generic Bid",
-				subfiles: [
-					"Screenshot1.jpg",
-					"Screenshot2.jpg",
-					"Screenshot3.jpg"
-				]
-			}
-		],
-		files: [
-			{
-				id: uuidv1(),
-				name: "File1.XXX",
-				url: "XXX"
-			},
-			{
-				id: uuidv1(),
-				name: "File2.XXX",
-				url: "XXX"
-			},
-			{
-				id: uuidv1(),
-				name: "File3.XXX",
-				url: "XXX"
-			}
-		],
-		messages: []
-	}
 };
 
 function gen_reducer(state = initialState, action) {
