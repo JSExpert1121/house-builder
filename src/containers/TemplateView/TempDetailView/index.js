@@ -24,7 +24,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectCategory, addCategory, selectTemplate, deleteCategory } from '../../../actions/tem-actions';
+import { selectCategory, addCategory, selectTemplate, deleteCategory, editTemplate } from '../../../actions/tem-actions';
 
 const styles = theme => ({
 	descTag: {
@@ -90,10 +90,13 @@ class ConnTempDetailView extends Component {
 		}
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		const { template } = this.props;
 		if (!template)
 			return;
+
+		if (template['isLoading'] !== true)
+			await this.props.selectTemplate(template.id);
 
 		this.setState({
 			name: template.name,
@@ -133,6 +136,30 @@ class ConnTempDetailView extends Component {
 							value={this.state.description}
 							onChange={(val) => this.setState({ description: val.target.value })}
 						/>
+						<Button disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp")} color="primary">
+							Cancel
+						</Button>
+						<Button disabled={this.state.isSaving} onClick={async () => {
+							this.setState({ isSaving: true });
+							const { userProfile } = this.props;
+							const data = {
+								"name": this.state.name,
+								"description": this.state.description,
+								"updatedBy": userProfile.email
+							};
+
+							await this.props.editTemplate(template.id, data);
+							await this.props.selectTemplate(template.id);
+
+							this.setState({ isSaving: false });
+						}} color="primary">
+							Save {
+								this.state.isSaving && <CircularProgress
+									disableShrink
+									size={24}
+									thickness={4} />
+							}
+						</Button>
 					</Paper>
 				</Grid>
 
@@ -256,7 +283,7 @@ class ConnTempDetailView extends Component {
 
 							this.setState({ openCategoryForm: false, isSaving: false });
 						}} color="primary">
-							Subscribe {
+							Add {
 								this.state.isSaving && <CircularProgress
 									disableShrink
 									size={24}
@@ -282,7 +309,8 @@ const mapDispatchToProps = dispatch => {
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
 		selectCategory: (id) => dispatch(selectCategory(id)),
 		deleteCategory: (id) => dispatch(deleteCategory(id)),
-		addCategory: (id, data) => dispatch(addCategory(id, data))
+		addCategory: (id, data) => dispatch(addCategory(id, data)),
+		editTemplate: (id, data) => dispatch(editTemplate(id, data))
 	};
 }
 

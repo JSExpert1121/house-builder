@@ -104,3 +104,30 @@ export function addOption(id, data) {
 			}).catch(err => console.log(err.message))
 	}
 }
+
+export function editOption(id, data) {
+	return function (dispatch) {
+		return Axios.put(process.env.PROJECT_API + "options/" + id, data)
+			.then(response => {
+
+			}).catch(err => console.log(err.message))
+	}
+}
+
+export function editCategory(id, data) {
+	return function (dispatch) {
+		return Axios.put(process.env.PROJECT_API + "categories/" + id, data)
+			.then(response => {
+
+			}).catch(err => console.log(err.message))
+	}
+}
+
+export function editTemplate(id, data) {
+	return function (dispatch) {
+		return Axios.put(process.env.PROJECT_API + "templates/" + id, data)
+			.then(response => {
+
+			}).catch(err => console.log(err.message))
+	}
+}
