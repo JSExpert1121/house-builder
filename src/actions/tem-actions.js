@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-import { ALL_TEMPLATES_LOADED, SET_SELECTED_TEMPLATE, SET_SELECTED_CATEGORY } from '../constants/tem-action-types';
+import { ALL_TEMPLATES_LOADED, SET_SELECTED_TEMPLATE, SET_SELECTED_CATEGORY, SET_SELECTED_OPTION } from '../constants/tem-action-types';
 
 export function createTemplate(template) {
 	return function (dispatch) {
@@ -21,6 +21,21 @@ export function selectTemplate(id) {
 			.then(response => {
 				dispatch({
 					type: SET_SELECTED_TEMPLATE,
+					payload: response.data
+				})
+			})
+			.catch(err => console.log(err.message))
+	}
+}
+
+export function selectOption(id) {
+	return function (dispatch) {
+		dispatch({ type: "CLEAR_SELECTED_OPTION" });
+
+		return Axios.get(process.env.PROJECT_API + "options/" + id)
+			.then(response => {
+				dispatch({
+					type: SET_SELECTED_OPTION,
 					payload: response.data
 				})
 			})
@@ -65,7 +80,9 @@ export function deleteTemplate(id) {
 		return Axios.delete(process.env.PROJECT_API + "templates/" + id)
 			.then(response => {
 			})
-			.catch(err => console.log(err.message))
+			.catch(err => {
+				console.log(err.message) 
+			})
 	}
 }
 

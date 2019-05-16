@@ -23,7 +23,7 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import AllTemplatesView from './AllTemplatesView';
 import TempDetailView from './TempDetailView';
 import CategoryDetailView from './CategoryDetailView';
-import CreateTempView from './CreateTempView';
+import OptionDetailView from './OptionDetailView';
 
 // local components
 
@@ -55,7 +55,7 @@ class ConnectedTemplatesView extends React.Component {
 			'/m_temp/all_templates': 0,
 			'/m_temp/template_detail': 1,
 			'/m_temp/category_detail': 2,
-			'/m_temp/create_template': 3,
+			'/m_temp/option_detail': 3,
 		};
 
 		const curTabPos = tabNo[location.pathname];
@@ -75,7 +75,7 @@ class ConnectedTemplatesView extends React.Component {
 							<Tab component={Link} to={`/m_temp/all_templates`} label="All Templates" icon={<AppsIcon />} />
 							<Tab component={Link} to={`/m_temp/template_detail`} label="Template Detail" icon={<BallotIcon />} />
 							<Tab component={Link} to={`/m_temp/category_detail`} label="Category Detail" icon={<ViewHeadlineIcon />} />
-							<Tab component={Link} to={`/m_temp/create_template`} label="Create Template" icon={<NoteAddIcon />} />
+							<Tab component={Link} to={`/m_temp/option_detail`} label="Option Detail" icon={<ViewHeadlineIcon />} />
 						</Tabs>
 					</AppBar>
 
@@ -83,7 +83,7 @@ class ConnectedTemplatesView extends React.Component {
 						<SecuredRoute path='/m_temp/all_templates' component={AllTemplatesView} />
 						<SecuredRoute path='/m_temp/template_detail' component={TempDetailView} />
 						<SecuredRoute path='/m_temp/category_detail' component={CategoryDetailView} />
-						<SecuredRoute path='/m_temp/create_template' component={CreateTempView} />
+						<SecuredRoute path='/m_temp/option_detail' component={OptionDetailView} />
 						<Redirect path='/m_temp' to={`/m_temp/all_templates`} />
 					</Switch>
 				</div>

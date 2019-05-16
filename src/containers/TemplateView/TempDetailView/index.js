@@ -42,6 +42,9 @@ const styles = theme => ({
 		flexDirection: "column",
 		overflow: "scroll"
 	},
+	halfWidth: {
+		width: "calc(50% - 20px)"
+	},
 	cateList: {
 		textAlign: 'center',
 		color: theme.palette.text.secondary,
@@ -136,30 +139,32 @@ class ConnTempDetailView extends Component {
 							value={this.state.description}
 							onChange={(val) => this.setState({ description: val.target.value })}
 						/>
-						<Button disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp")} color="primary">
-							Cancel
+						<div>
+							<Button disabled={this.state.isSaving} className={classes.halfWidth} onClick={() => this.props.history.push("/m_temp")} color="primary">
+								Cancel
 						</Button>
-						<Button disabled={this.state.isSaving} onClick={async () => {
-							this.setState({ isSaving: true });
-							const { userProfile } = this.props;
-							const data = {
-								"name": this.state.name,
-								"description": this.state.description,
-								"updatedBy": userProfile.email
-							};
+							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={async () => {
+								this.setState({ isSaving: true });
+								const { userProfile } = this.props;
+								const data = {
+									"name": this.state.name,
+									"description": this.state.description,
+									"updatedBy": userProfile.email
+								};
 
-							await this.props.editTemplate(template.id, data);
-							await this.props.selectTemplate(template.id);
+								await this.props.editTemplate(template.id, data);
+								await this.props.selectTemplate(template.id);
 
-							this.setState({ isSaving: false });
-						}} color="primary">
-							Save {
-								this.state.isSaving && <CircularProgress
-									disableShrink
-									size={24}
-									thickness={4} />
-							}
-						</Button>
+								this.setState({ isSaving: false });
+							}} color="primary">
+								Save {
+									this.state.isSaving && <CircularProgress
+										disableShrink
+										size={24}
+										thickness={4} />
+								}
+							</Button>
+						</div>
 					</Paper>
 				</Grid>
 

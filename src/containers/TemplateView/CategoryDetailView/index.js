@@ -24,7 +24,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectCategory, addOption, deleteOption, editOption, editCategory } from '../../../actions/tem-actions';
+import { selectCategory, addOption, deleteOption, editOption, editCategory, selectOption } from '../../../actions/tem-actions';
 
 const styles = theme => ({
 	descTag: {
@@ -41,6 +41,9 @@ const styles = theme => ({
 		display: 'flex',
 		flexDirection: "column",
 		overflow: "scroll"
+	},
+	halfWidth: {
+		width: "calc(50% - 20px)"
 	},
 	optList: {
 		textAlign: 'center',
@@ -89,21 +92,23 @@ class ConnCategoryDetailView extends Component {
 			odescription: "",
 			openCategoryForm: false,
 			isSaving: false,
-			isEditing: false,
+			template: null,
 		}
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		const { category } = this.props;
 		if (!category)
 			return;
+
+		console.log(category);
 
 		this.setState({
 			name: category.name,
 			type: category.type,
 			value: category.value,
-			description: category.description
-		})
+			description: category.description,
+		});
 	}
 
 	render() {
@@ -119,6 +124,7 @@ class ConnCategoryDetailView extends Component {
 			<Grid container spacing={0}>
 				<Grid item xs={12} md={3}>
 					<Paper className={classes.descTag}>
+						template: {category.tem_name}
 						<TextField
 							label="category name"
 							margin="normal"
@@ -157,32 +163,34 @@ class ConnCategoryDetailView extends Component {
 							value={this.state.description}
 							onChange={(val) => this.setState({ description: val.target.value })}
 						/>
-						<Button disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp/template_detail")} color="primary">
-							Cancel
+						<div>
+							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp/template_detail")} color="primary">
+								Cancel
 							</Button>
-						<Button disabled={this.state.isSaving} onClick={async () => {
-							this.setState({ isSaving: true });
-							const { userProfile } = this.props;
-							const data = {
-								"name": this.state.name,
-								"type": this.state.type,
-								"value": this.state.value,
-								"description": this.state.description,
-								"updatedBy": userProfile.email
-							};
+							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={async () => {
+								this.setState({ isSaving: true });
+								const { userProfile } = this.props;
+								const data = {
+									"name": this.state.name,
+									"type": this.state.type,
+									"value": this.state.value,
+									"description": this.state.description,
+									"updatedBy": userProfile.email
+								};
 
-							await this.props.editCategory(category.id, data);
-							await this.props.selectCategory(category.id);
+								await this.props.editCategory(category.id, data);
+								await this.props.selectCategory(category.id);
 
-							this.setState({ openCategoryForm: false, isSaving: false });
-						}} color="primary">
-							Save {
-								this.state.isSaving && <CircularProgress
-									disableShrink
-									size={24}
-									thickness={4} />
-							}
-						</Button>
+								this.setState({ openCategoryForm: false, isSaving: false });
+							}} color="primary">
+								Save {
+									this.state.isSaving && <CircularProgress
+										disableShrink
+										size={24}
+										thickness={4} />
+								}
+							</Button>
+						</div>
 					</Paper>
 				</Grid>
 
@@ -196,7 +204,6 @@ class ConnCategoryDetailView extends Component {
 									<CustomTableCell align="center" >
 										<IconButton style={{ color: "#FFFFFF" }} onClick={
 											() => this.setState({
-												isEditing: false,
 												oname: "",
 												ovalue: "",
 												odescription: "",
@@ -214,27 +221,15 @@ class ConnCategoryDetailView extends Component {
 									category.optionList.map(
 										row => (
 											<TableRow className={classes.row} key={row.id} hover>
-												<CustomTableCell component="th" scope="row" onClick={() => {
-													this.setState({
-														isEditing: true,
-														oname: row.name,
-														ovalue: row.value,
-														oid: row.id,
-														odescription: row.description,
-														openCategoryForm: true
-													});
+												<CustomTableCell component="th" scope="row" onClick={async () => {
+													await this.props.selectOption(row.id);
+													this.props.history.push("/m_temp/option_detail");
 												}}>
 													{row.name}
 												</CustomTableCell>
-												<CustomTableCell align="center" onClick={() => {
-													this.setState({
-														isEditing: true,
-														oname: row.name,
-														ovalue: row.value,
-														oid: row.id,
-														odescription: row.description,
-														openCategoryForm: true
-													});
+												<CustomTableCell align="center" onClick={async () => {
+													await this.props.selectOption(row.id);
+													this.props.history.push("/m_temp/option_detail");
 												}}>{row.value}</CustomTableCell>
 
 												<CustomTableCell align="center">
@@ -260,7 +255,7 @@ class ConnCategoryDetailView extends Component {
 					onClose={() => this.setState({ openCategoryForm: false })}
 					aria-labelledby="form-dialog-title"
 				>
-					<DialogTitle id="form-dialog-title"> {this.state.isEditing ? "edit option" : "create option"}</DialogTitle>
+					<DialogTitle id="form-dialog-title"> create option</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
 							please input the correct option information
@@ -306,15 +301,12 @@ class ConnCategoryDetailView extends Component {
 								"updatedBy": userProfile.email
 							};
 
-							if (this.state.isEditing)
-								await this.props.editOption(this.state.oid, data);
-							else
-								await this.props.addOption(category.id, data);
+							await this.props.addOption(category.id, data);
 							await this.props.selectCategory(category.id);
 
 							this.setState({ openCategoryForm: false, isSaving: false });
 						}} color="primary">
-							{this.state.isEditing ? "Save" : "Add"} {
+							Add {
 								this.state.isSaving && <CircularProgress
 									disableShrink
 									size={24}
@@ -341,7 +333,9 @@ const mapDispatchToProps = dispatch => {
 		selectCategory: (id) => dispatch(selectCategory(id)),
 		addOption: (id, data) => dispatch(addOption(id, data)),
 		editOption: (id, data) => dispatch(editOption(id, data)),
-		editCategory: (id, data) => dispatch(editCategory(id, data))
+		editCategory: (id, data) => dispatch(editCategory(id, data)),
+		selectOption: (id) => dispatch(selectOption(id)),
+		getTemplateById: (id, cb) => dispatch(getTemplateById(id, cb))
 	};
 }
 

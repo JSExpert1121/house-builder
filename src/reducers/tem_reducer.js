@@ -1,10 +1,11 @@
-import { ALL_TEMPLATES_LOADED, SET_SELECTED_TEMPLATE, SET_SELECTED_CATEGORY } from "../constants/tem-action-types";
+import { ALL_TEMPLATES_LOADED, SET_SELECTED_TEMPLATE, SET_SELECTED_CATEGORY, SET_SELECTED_OPTION } from "../constants/tem-action-types";
 
 const initialState = {
 	templates: null,
 	selectedTemplate: null,
 	categories: null,
-	selectedCategory: null
+	selectedCategory: null,
+	selectedOption: null
 }
 
 function tem_reducer(state = initialState, action) {
@@ -19,7 +20,16 @@ function tem_reducer(state = initialState, action) {
 			});
 		case SET_SELECTED_CATEGORY:
 			return Object.assign({}, state, {
-				selectedCategory: action.payload
+				selectedCategory: Object.assign({}, action.payload, {
+					tem_name: state.selectedTemplate.name
+				})
+			});
+		case SET_SELECTED_OPTION:
+			return Object.assign({}, state, {
+				selectedOption: Object.assign({}, action.payload, {
+					tem_name: state.selectedCategory.tem_name, 
+					cat_name: state.selectedCategory.name
+				})
 			});
 		case "CLEAR_ALL_TEMPLATES":
 			return Object.assign({}, state, {
@@ -28,6 +38,12 @@ function tem_reducer(state = initialState, action) {
 		case "CLEAR_SELECTED_CATEGORY":
 			return Object.assign({}, state, {
 				selectedCategory: {
+					isLoading: true
+				}
+			});
+		case "CLEAR_SELECTED_OPTION":
+			return Object.assign({}, state, {
+				selectedOption: {
 					isLoading: true
 				}
 			});

@@ -9,16 +9,22 @@ import {
 	CircularProgress,
 	Paper,
 	Table, TableHead, TableCell, TableRow, TableBody,
-	IconButton, TablePagination
+	IconButton, TablePagination, TextField,
+	Button
 } from '@material-ui/core';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Redux
 import { connect } from 'react-redux';
 
 // actions
-import { getTemplatesO, selectTemplate, deleteTemplate } from '../../../actions/tem-actions';
+import { getTemplatesO, selectTemplate, deleteTemplate, createTemplate } from '../../../actions/tem-actions';
 
 const styles = theme => ({
 	root: {
@@ -77,6 +83,10 @@ class ConnAllTemplateView extends Component {
 		this.state = {
 			rowsPerPage: 20,
 			currentPage: 0,
+			isSaving: false,
+			openCategoryForm: false,
+			name: "",
+			description: "",
 		}
 	}
 
@@ -120,7 +130,7 @@ class ConnAllTemplateView extends Component {
 								<CustomTableCell align="center">Template Description</CustomTableCell>
 								<CustomTableCell align="center" >
 									<IconButton style={{ color: "#FFFFFF" }} onClick={
-										() => this.props.history.push("/m_temp/create_template")
+										() => this.setState({ openCategoryForm: true })
 									}>
 										<NoteAddIcon />
 									</IconButton>
@@ -190,6 +200,63 @@ class ConnAllTemplateView extends Component {
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>
+
+				<Dialog
+					open={this.state.openCategoryForm}
+					onClose={() => this.setState({ openCategoryForm: false })}
+					aria-labelledby="form-dialog-title"
+				>
+					<DialogTitle id="form-dialog-title">create template</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							please input the correct template information
+						</DialogContentText>
+						<TextField
+							autoFocus
+							margin="dense"
+							label="name"
+							type="email"
+							fullWidth
+							value={this.state.name}
+							onChange={(val) => this.setState({ name: val.target.value })}
+						/>
+						<TextField
+							label="detail"
+							margin="dense"
+							multiline
+							rows="10"
+							fullWidth
+							value={this.state.description}
+							onChange={(val) => this.setState({ description: val.target.value })}
+						/>
+					</DialogContent>
+					<DialogActions>
+						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
+							Cancel
+						</Button>
+						<Button disabled={this.state.isSaving} onClick={async () => {
+							this.setState({ isSaving: true });
+							const { userProfile } = this.props;
+							const data = {
+								"name": this.state.name,
+								"description": this.state.description,
+								"updatedBy": userProfile.email
+							};
+
+							await this.props.createTemplate(data);
+							await this.props.getTemplatesO(0, this.state.rowsPerPage);
+
+							this.setState({ openCategoryForm: false, isSaving: false, name: "", description: "" });
+						}} color="primary">
+							Add {
+								this.state.isSaving && <CircularProgress
+									disableShrink
+									size={24}
+									thickness={4} />
+							}
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</Paper >
 		);
 	}
@@ -197,7 +264,8 @@ class ConnAllTemplateView extends Component {
 
 const mapStateToProps = state => {
 	return {
-		templates: state.tem_data.templates
+		templates: state.tem_data.templates,
+		userProfile: state.global_data.userProfile
 	};
 };
 
@@ -205,7 +273,8 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getTemplatesO: (page, size) => dispatch(getTemplatesO(page, size)),
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
-		deleteTemplate: (id) => dispatch(deleteTemplate(id))
+		deleteTemplate: (id) => dispatch(deleteTemplate(id)),
+		createTemplate: ( data) => dispatch(createTemplate(data))
 	};
 }
 
