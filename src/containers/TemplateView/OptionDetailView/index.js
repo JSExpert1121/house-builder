@@ -115,7 +115,7 @@ class ConnOptionDetailView extends Component {
 
 		return (
 			<Grid container spacing={0}>
-				<Grid item xs={12} md={5}>
+				<Grid item xs={12} md={4}>
 					<Paper className={classes.descTag}>
 						<div>
 							<Link style={{ float: "left" }} onClick={async () => {
