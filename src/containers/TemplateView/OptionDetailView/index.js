@@ -115,13 +115,13 @@ class ConnOptionDetailView extends Component {
 
 		return (
 			<Grid container spacing={0}>
-				<Grid item xs={12} md={3}>
+				<Grid item xs={12} md={5}>
 					<Paper className={classes.descTag}>
 						<div>
-							<Link style = {{float: "left"}} onClick={async () => {
+							<Link style={{ float: "left" }} onClick={async () => {
 								await this.props.selectTemplate(option.tem_name.id);
 								this.props.history.push("/m_temp/template_detail");
-							}}>{option.tem_name.name} </Link> <br></br><Link style = {{float: "left"}} onClick={async () => {
+							}}>{option.tem_name.name} </Link> <Link style={{ float: "left" }} onClick={async () => {
 								await this.props.selectCategory(option.cat_name.id);
 								this.props.history.push("/m_temp/category_detail");
 							}}>{option.cat_name.name}</Link>
@@ -186,7 +186,7 @@ class ConnOptionDetailView extends Component {
 					</Paper>
 				</Grid>
 
-				<Grid item xs={12} md={9}>
+				<Grid item xs={12} md={8}>
 					<Paper className={classes.optList}>
 
 					</Paper>

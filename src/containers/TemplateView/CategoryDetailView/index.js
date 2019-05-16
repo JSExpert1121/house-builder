@@ -121,7 +121,7 @@ class ConnCategoryDetailView extends Component {
 
 		return (
 			<Grid container spacing={0}>
-				<Grid item xs={12} md={3}>
+				<Grid item xs={12} md={4}>
 					<Paper className={classes.descTag}>
 						<div><Link style={{ float: "left" }} onClick={async () => {
 							await this.props.selectTemplate(category.tem_name.id);
@@ -197,7 +197,7 @@ class ConnCategoryDetailView extends Component {
 					</Paper>
 				</Grid>
 
-				<Grid item xs={12} md={9}>
+				<Grid item xs={12} md={8}>
 					<Paper className={classes.optList}>
 						<Table >
 							<TableHead>
