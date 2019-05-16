@@ -121,7 +121,7 @@ class ConnOptionDetailView extends Component {
 							<Link style={{ float: "left" }} onClick={async () => {
 								await this.props.selectTemplate(option.tem_name.id);
 								this.props.history.push("/m_temp/template_detail");
-							}}>{option.tem_name.name} </Link> <Link style={{ float: "left" }} onClick={async () => {
+							}}>{option.tem_name.name} </Link> <br></br><Link style={{ float: "left" }} onClick={async () => {
 								await this.props.selectCategory(option.cat_name.id);
 								this.props.history.push("/m_temp/category_detail");
 							}}>{option.cat_name.name}</Link>
