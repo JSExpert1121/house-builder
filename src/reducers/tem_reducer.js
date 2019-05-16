@@ -21,14 +21,14 @@ function tem_reducer(state = initialState, action) {
 		case SET_SELECTED_CATEGORY:
 			return Object.assign({}, state, {
 				selectedCategory: Object.assign({}, action.payload, {
-					tem_name: state.selectedTemplate.name
+					tem_name: state.selectedTemplate
 				})
 			});
 		case SET_SELECTED_OPTION:
 			return Object.assign({}, state, {
 				selectedOption: Object.assign({}, action.payload, {
 					tem_name: state.selectedCategory.tem_name, 
-					cat_name: state.selectedCategory.name
+					cat_name: state.selectedCategory
 				})
 			});
 		case "CLEAR_ALL_TEMPLATES":

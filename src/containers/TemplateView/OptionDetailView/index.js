@@ -9,7 +9,8 @@ import {
 	CircularProgress,
 	Table, TableHead, TableCell, TableRow, TableBody,
 	IconButton,
-	Button
+	Button,
+	Link
 } from '@material-ui/core';
 import { Paper, TextField } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -24,7 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectOption, editOption } from '../../../actions/tem-actions';
+import { selectOption, editOption, selectTemplate, selectCategory } from '../../../actions/tem-actions';
 
 const styles = theme => ({
 	descTag: {
@@ -116,7 +117,15 @@ class ConnOptionDetailView extends Component {
 			<Grid container spacing={0}>
 				<Grid item xs={12} md={3}>
 					<Paper className={classes.descTag}>
-						template: {option.tem_name} -> category: {option.cat_name}
+						<div>
+							<Link onClick={async () => {
+								await this.props.selectTemplate(option.tem_name.id);
+								this.props.history.push("/m_temp/template_detail");
+							}}>{option.tem_name.name} </Link> -> <Link onClick={async () => {
+								await this.props.selectCategory(option.cat_name.id);
+								this.props.history.push("/m_temp/category_detail");
+							}}>{option.cat_name.name}</Link>
+						</div>
 						<TextField
 							label="option name"
 							margin="normal"
@@ -197,6 +206,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		selectOption: (id) => dispatch(selectOption(id)),
+		selectTemplate: (id) => dispatch(selectTemplate(id)),
+		selectCategory: (id) => dispatch(selectCategory(id)),
 		editOption: (id, data) => dispatch(editOption(id, data)),
 	};
 }

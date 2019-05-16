@@ -9,7 +9,8 @@ import {
 	CircularProgress,
 	Table, TableHead, TableCell, TableRow, TableBody,
 	IconButton,
-	Button
+	Button,
+	Link
 } from '@material-ui/core';
 import { Paper, TextField } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -24,7 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectCategory, addOption, deleteOption, editOption, editCategory, selectOption } from '../../../actions/tem-actions';
+import { selectCategory, addOption, deleteOption, editOption, editCategory, selectOption, selectTemplate } from '../../../actions/tem-actions';
 
 const styles = theme => ({
 	descTag: {
@@ -101,8 +102,6 @@ class ConnCategoryDetailView extends Component {
 		if (!category)
 			return;
 
-		console.log(category);
-
 		this.setState({
 			name: category.name,
 			type: category.type,
@@ -124,7 +123,11 @@ class ConnCategoryDetailView extends Component {
 			<Grid container spacing={0}>
 				<Grid item xs={12} md={3}>
 					<Paper className={classes.descTag}>
-						template: {category.tem_name}
+						<Link onClick={async () => {
+							await this.props.selectTemplate(category.tem_name.id);
+							this.props.history.push("/m_temp/template_detail");
+						}
+						}>{category.tem_name.name}</Link>
 						<TextField
 							label="category name"
 							margin="normal"
@@ -329,6 +332,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
+		selectTemplate: (id) => dispatch(selectTemplate(id)),
 		deleteOption: (id) => dispatch(deleteOption(id)),
 		selectCategory: (id) => dispatch(selectCategory(id)),
 		addOption: (id, data) => dispatch(addOption(id, data)),
