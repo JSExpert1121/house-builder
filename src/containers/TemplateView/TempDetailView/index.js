@@ -26,6 +26,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { connect } from 'react-redux';
 import { selectCategory, addCategory, selectTemplate, deleteCategory, editTemplate } from '../../../actions/tem-actions';
 
+import SplitPane from 'react-split-pane';
+
 const styles = theme => ({
 	descTag: {
 		padding: theme.spacing.unit,
@@ -57,7 +59,7 @@ const styles = theme => ({
 		},
 		display: 'flex',
 		flexDirection: "column",
-		overflow: "scroll"
+		overflow: "scroll",
 	},
 	waitingSpin: {
 		position: "relative",
@@ -73,7 +75,7 @@ const CustomTableCell = withStyles(theme => ({
 	},
 	body: {
 		fontSize: 14,
-		color: theme.palette.primary.light
+		color: theme.palette.primary.light,
 	},
 }))(TableCell);
 
@@ -116,8 +118,8 @@ class ConnTempDetailView extends Component {
 			return <CircularProgress className={classes.waitingSpin} />;
 
 		return (
-			<Grid container spacing={0}>
-				<Grid item xs={12} md={4}>
+			<div>
+				<SplitPane split="vertical" minSize={50} defaultSize={400} style={{ position: 'relative' }}>
 					<Paper className={classes.descTag}>
 						<TextField
 							label="template title"
@@ -166,9 +168,6 @@ class ConnTempDetailView extends Component {
 							</Button>
 						</div>
 					</Paper>
-				</Grid>
-
-				<Grid item xs={12} md={8}>
 					<Paper className={classes.cateList}>
 						<Table >
 							<TableHead>
@@ -222,7 +221,7 @@ class ConnTempDetailView extends Component {
 							</TableBody>
 						</Table>
 					</Paper>
-				</Grid>
+				</SplitPane>
 				<Dialog
 					open={this.state.openCategoryForm}
 					onClose={() => this.setState({ openCategoryForm: false })}
@@ -297,7 +296,7 @@ class ConnTempDetailView extends Component {
 						</Button>
 					</DialogActions>
 				</Dialog>
-			</Grid>
+			</div>
 		);
 	}
 }

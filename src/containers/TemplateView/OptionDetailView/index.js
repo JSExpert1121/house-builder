@@ -26,6 +26,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 // Redux
 import { connect } from 'react-redux';
 import { selectOption, editOption, selectTemplate, selectCategory } from '../../../actions/tem-actions';
+import SplitPane from 'react-split-pane';
 
 const styles = theme => ({
 	descTag: {
@@ -114,8 +115,8 @@ class ConnOptionDetailView extends Component {
 			return <CircularProgress className={classes.waitingSpin} />;
 
 		return (
-			<Grid container spacing={0}>
-				<Grid item xs={12} md={4}>
+			<div>
+				<SplitPane minSize={50} defaultSize={400} style={{ position: 'relative' }} >
 					<Paper className={classes.descTag}>
 						<div>
 							<Link style={{ float: "left" }} onClick={async () => {
@@ -184,14 +185,11 @@ class ConnOptionDetailView extends Component {
 							</Button>
 						</div>
 					</Paper>
-				</Grid>
-
-				<Grid item xs={12} md={8}>
 					<Paper className={classes.optList}>
 
 					</Paper>
-				</Grid>
-			</Grid>
+				</SplitPane>
+			</div>
 		);
 	}
 }

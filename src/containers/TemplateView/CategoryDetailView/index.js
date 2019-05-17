@@ -26,6 +26,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 // Redux
 import { connect } from 'react-redux';
 import { selectCategory, addOption, deleteOption, editOption, editCategory, selectOption, selectTemplate } from '../../../actions/tem-actions';
+import SplitPane from 'react-split-pane';
 
 const styles = theme => ({
 	descTag: {
@@ -120,8 +121,8 @@ class ConnCategoryDetailView extends Component {
 			return <CircularProgress className={classes.waitingSpin} />;
 
 		return (
-			<Grid container spacing={0}>
-				<Grid item xs={12} md={4}>
+			<div>
+				<SplitPane minSize={50} defaultSize={400} style={{ position: 'relative' }}>
 					<Paper className={classes.descTag}>
 						<div><Link style={{ float: "left" }} onClick={async () => {
 							await this.props.selectTemplate(category.tem_name.id);
@@ -195,9 +196,7 @@ class ConnCategoryDetailView extends Component {
 							</Button>
 						</div>
 					</Paper>
-				</Grid>
 
-				<Grid item xs={12} md={8}>
 					<Paper className={classes.optList}>
 						<Table >
 							<TableHead>
@@ -252,7 +251,7 @@ class ConnCategoryDetailView extends Component {
 							</TableBody>
 						</Table>
 					</Paper>
-				</Grid>
+				</SplitPane>
 				<Dialog
 					open={this.state.openCategoryForm}
 					onClose={() => this.setState({ openCategoryForm: false })}
@@ -318,7 +317,7 @@ class ConnCategoryDetailView extends Component {
 						</Button>
 					</DialogActions>
 				</Dialog>
-			</Grid>
+			</div>
 		);
 	}
 }
