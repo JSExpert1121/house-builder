@@ -75,23 +75,29 @@ export function getTemplatesO(page, size) {
 	}
 }
 
-export function deleteTemplate(id) {
+export function deleteTemplate(id, cb) {
 	return function (dispatch) {
 		return Axios.delete(process.env.PROJECT_API + "templates/" + id)
 			.then(response => {
+				cb(false);
 			})
 			.catch(err => {
-				console.log(err.message) 
+				cb(true);
+				console.log(err.message)
 			})
 	}
 }
 
-export function deleteCategory(id) {
+export function deleteCategory(id, cb) {
 	return function (dispatch) {
 		return Axios.delete(process.env.PROJECT_API + "categories/" + id)
 			.then(response => {
+				cb(false);
 			})
-			.catch(err => console.log(err.message))
+			.catch(err => {
+				console.log(err.message)
+				cb(true);
+			})
 	}
 }
 

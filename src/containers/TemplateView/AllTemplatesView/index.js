@@ -25,6 +25,7 @@ import { connect } from 'react-redux';
 
 // actions
 import { getTemplatesO, selectTemplate, deleteTemplate, createTemplate } from '../../../actions/tem-actions';
+import TSnackbarContent from '../../../components/SnackBarContent';
 
 const styles = theme => ({
 	root: {
@@ -62,6 +63,9 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
+	},
+	successAlert: {
+		marginBottom: "10px"
 	}
 });
 
@@ -87,6 +91,7 @@ class ConnAllTemplateView extends Component {
 			openCategoryForm: false,
 			name: "",
 			description: "",
+			isDeleteFail: false
 		}
 	}
 
@@ -123,6 +128,15 @@ class ConnAllTemplateView extends Component {
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
+					{
+						this.state.isDeleteFail ?
+							<TSnackbarContent
+								className={classes.successAlert}
+								onClose={() => this.setState({ isDeleteFail: false })}
+								variant="success"
+								message="Cannot be deleted. Please delete categories"
+							/> : <div></div>
+					}
 					<Table >
 						<TableHead>
 							<TableRow>
@@ -158,7 +172,10 @@ class ConnAllTemplateView extends Component {
 											<CustomTableCell align="center">
 												<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
 													async () => {
-														await this.props.deleteTemplate(row.id);
+														await this.props.deleteTemplate(row.id, (result) => {
+															this.setState({ isDeleteFail: result });
+
+														});
 
 														if (this.state.rowsPerPage * (this.state.currentPage) < templates.page.totalElements - 1) {
 															await this.props.getTemplatesO(this.state.currentPage, this.state.rowsPerPage);
@@ -273,8 +290,8 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getTemplatesO: (page, size) => dispatch(getTemplatesO(page, size)),
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
-		deleteTemplate: (id) => dispatch(deleteTemplate(id)),
-		createTemplate: ( data) => dispatch(createTemplate(data))
+		deleteTemplate: (id, cb) => dispatch(deleteTemplate(id, cb)),
+		createTemplate: (data) => dispatch(createTemplate(data))
 	};
 }
 

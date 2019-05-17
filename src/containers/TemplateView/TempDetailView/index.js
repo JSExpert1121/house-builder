@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { withRouter } from 'react-router-dom';
+import TSnackbarContent from '../../../components/SnackBarContent';
 
 // material ui
 import PropTypes from 'prop-types';
@@ -24,7 +25,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectCategory, addCategory, selectTemplate, deleteCategory, editTemplate } from '../../../actions/tem-actions';
+import { selectCategory, addCategory, selectTemplate, deleteCategory, editTemplate, deleteTemplate } from '../../../actions/tem-actions';
 
 import SplitPane from 'react-split-pane';
 
@@ -45,7 +46,7 @@ const styles = theme => ({
 		overflow: "scroll"
 	},
 	halfWidth: {
-		width: "calc(50% - 20px)"
+		width: "calc(33% - 20px)"
 	},
 	cateList: {
 		textAlign: 'center',
@@ -65,6 +66,9 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50vw - 10px)",
 		top: "calc(50vh - 10px)",
+	},
+	successAlert: {
+		margin: "10px"
 	}
 });
 
@@ -91,7 +95,11 @@ class ConnTempDetailView extends Component {
 			cvalue: "",
 			cdescription: "",
 			openCategoryForm: false,
-			isSaving: false
+			isSaving: false,
+			isDeleting: false,
+			isDeleteFail: false,
+			isDeleteFail2: false,
+			isAdding: false
 		}
 	}
 
@@ -121,6 +129,15 @@ class ConnTempDetailView extends Component {
 			<div>
 				<SplitPane split="vertical" minSize={50} defaultSize={400} style={{ position: 'relative' }}>
 					<Paper className={classes.descTag}>
+						{
+							this.state.isDeleteFail ?
+								<TSnackbarContent
+									className={classes.successAlert}
+									onClose={() => this.setState({ isDeleteFail: false })}
+									variant="success"
+									message="Cannot be deleted. Please delete categories"
+								/> : <div></div>
+						}
 						<TextField
 							label="template title"
 							margin="normal"
@@ -144,7 +161,7 @@ class ConnTempDetailView extends Component {
 						<div>
 							<Button disabled={this.state.isSaving} className={classes.halfWidth} onClick={() => this.props.history.push("/m_temp")} color="primary">
 								Cancel
-						</Button>
+							</Button>
 							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={async () => {
 								this.setState({ isSaving: true });
 								const { userProfile } = this.props;
@@ -166,9 +183,35 @@ class ConnTempDetailView extends Component {
 										thickness={4} />
 								}
 							</Button>
+							<Button disabled={this.state.isDeleting} className={classes.halfWidth} onClick={async () => {
+								this.setState({ isDeleting: true });
+								await this.props.deleteTemplate(template.id, (result) => {
+									this.setState({ isDeleteFail: result })
+
+									if (!result)
+										this.props.history.push("/m_temp");
+								});
+								this.setState({ isDeleting: false });
+							}} color="primary">
+								Delete{
+									this.state.isDeleting && <CircularProgress
+										disableShrink
+										size={24}
+										thickness={4} />
+								}
+							</Button>
 						</div>
 					</Paper>
 					<Paper className={classes.cateList}>
+						{
+							this.state.isDeleteFail2 ?
+								<TSnackbarContent
+									className={classes.successAlert}
+									onClose={() => this.setState({ isDeleteFail2: false })}
+									variant="success"
+									message="Cannot be deleted. Please delete options"
+								/> : <div></div>
+						}
 						<Table >
 							<TableHead>
 								<TableRow>
@@ -207,8 +250,11 @@ class ConnTempDetailView extends Component {
 												<CustomTableCell align="center">
 													<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
 														async () => {
-															await this.props.deleteCategory(row.id);
-															await this.props.selectTemplate(template.id);
+															await this.props.deleteCategory(row.id, (res) => {
+																this.setState({ isDeleteFail2: res });
+																if (res === false)
+																	this.props.selectTemplate(template.id);
+															});
 														}
 													}>
 														<DeleteIcon />
@@ -268,11 +314,11 @@ class ConnTempDetailView extends Component {
 						/>
 					</DialogContent>
 					<DialogActions>
-						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
+						<Button disabled={this.state.isAdding} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
 							Cancel
 						</Button>
-						<Button disabled={this.state.isSaving} onClick={async () => {
-							this.setState({ isSaving: true });
+						<Button disabled={this.state.isAdding} onClick={async () => {
+							this.setState({ isAdding: true });
 							const { userProfile } = this.props;
 							const data = {
 								"name": this.state.cname,
@@ -285,10 +331,10 @@ class ConnTempDetailView extends Component {
 							await this.props.addCategory(template.id, data);
 							await this.props.selectTemplate(template.id);
 
-							this.setState({ openCategoryForm: false, isSaving: false });
+							this.setState({ openCategoryForm: false, isAdding: false });
 						}} color="primary">
 							Add {
-								this.state.isSaving && <CircularProgress
+								this.state.isAdding && <CircularProgress
 									disableShrink
 									size={24}
 									thickness={4} />
@@ -312,9 +358,10 @@ const mapDispatchToProps = dispatch => {
 	return {
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
 		selectCategory: (id) => dispatch(selectCategory(id)),
-		deleteCategory: (id) => dispatch(deleteCategory(id)),
+		deleteCategory: (id, cb) => dispatch(deleteCategory(id, cb)),
 		addCategory: (id, data) => dispatch(addCategory(id, data)),
-		editTemplate: (id, data) => dispatch(editTemplate(id, data))
+		editTemplate: (id, data) => dispatch(editTemplate(id, data)),
+		deleteTemplate: (id, cb) => dispatch(deleteTemplate(id, cb))
 	};
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { withRouter } from 'react-router-dom';
-
+import TSnackbarContent from '../../../components/SnackBarContent';
 // material ui
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -25,7 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectCategory, addOption, deleteOption, editOption, editCategory, selectOption, selectTemplate } from '../../../actions/tem-actions';
+import { selectCategory, addOption, deleteOption, editOption, editCategory, selectOption, selectTemplate, deleteCategory } from '../../../actions/tem-actions';
 import SplitPane from 'react-split-pane';
 
 const styles = theme => ({
@@ -45,7 +45,7 @@ const styles = theme => ({
 		overflow: "scroll"
 	},
 	halfWidth: {
-		width: "calc(50% - 20px)"
+		width: "calc(33% - 20px)"
 	},
 	optList: {
 		textAlign: 'center',
@@ -95,6 +95,9 @@ class ConnCategoryDetailView extends Component {
 			openCategoryForm: false,
 			isSaving: false,
 			template: null,
+			isDeleting: false,
+			isDeleteFail: false,
+			isAdding: false
 		}
 	}
 
@@ -124,11 +127,21 @@ class ConnCategoryDetailView extends Component {
 			<div>
 				<SplitPane minSize={50} defaultSize={400} style={{ position: 'relative' }}>
 					<Paper className={classes.descTag}>
+						{
+							this.state.isDeleteFail ?
+								<TSnackbarContent
+									className={classes.successAlert}
+									onClose={() => this.setState({ isDeleteFail: false })}
+									variant="success"
+									message="Cannot be deleted. Please delete options"
+								/> : <div></div>
+						}
 						<div><Link style={{ float: "left" }} onClick={async () => {
 							await this.props.selectTemplate(category.tem_name.id);
 							this.props.history.push("/m_temp/template_detail");
 						}
 						}>{category.tem_name.name}</Link></div>
+
 						<TextField
 							label="category name"
 							margin="normal"
@@ -189,6 +202,23 @@ class ConnCategoryDetailView extends Component {
 							}} color="primary">
 								Save {
 									this.state.isSaving && <CircularProgress
+										disableShrink
+										size={24}
+										thickness={4} />
+								}
+							</Button>
+							<Button disabled={this.state.isDeleting} className={classes.halfWidth} onClick={async () => {
+								this.setState({ isDeleting: true });
+								await this.props.deleteCategory(category.id, (result) => {
+									this.setState({ isDeleteFail: result })
+
+									if (!result)
+										this.props.history.push("/m_temp/template_detail");
+								});
+								this.setState({ isDeleting: false });
+							}} color="primary">
+								Delete{
+									this.state.isDeleting && <CircularProgress
 										disableShrink
 										size={24}
 										thickness={4} />
@@ -293,8 +323,8 @@ class ConnCategoryDetailView extends Component {
 						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
 							Cancel
 						</Button>
-						<Button disabled={this.state.isSaving} onClick={async () => {
-							this.setState({ isSaving: true });
+						<Button disabled={this.state.isAdding} onClick={async () => {
+							this.setState({ isAdding: true });
 							const { userProfile } = this.props;
 							const data = {
 								"name": this.state.oname,
@@ -306,10 +336,10 @@ class ConnCategoryDetailView extends Component {
 							await this.props.addOption(category.id, data);
 							await this.props.selectCategory(category.id);
 
-							this.setState({ openCategoryForm: false, isSaving: false });
+							this.setState({ openCategoryForm: false, isAdding: false });
 						}} color="primary">
 							Add {
-								this.state.isSaving && <CircularProgress
+								this.state.isAdding && <CircularProgress
 									disableShrink
 									size={24}
 									thickness={4} />
@@ -338,7 +368,8 @@ const mapDispatchToProps = dispatch => {
 		editOption: (id, data) => dispatch(editOption(id, data)),
 		editCategory: (id, data) => dispatch(editCategory(id, data)),
 		selectOption: (id) => dispatch(selectOption(id)),
-		getTemplateById: (id, cb) => dispatch(getTemplateById(id, cb))
+		getTemplateById: (id, cb) => dispatch(getTemplateById(id, cb)),
+		deleteCategory: (id, cb) => dispatch(deleteCategory(id, cb))
 	};
 }
 
