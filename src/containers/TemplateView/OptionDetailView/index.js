@@ -25,7 +25,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectOption, editOption, selectTemplate, selectCategory } from '../../../actions/tem-actions';
+import { selectOption, editOption, selectTemplate, selectCategory, deleteOption } from '../../../actions/tem-actions';
 import SplitPane from 'react-split-pane';
 
 const styles = theme => ({
@@ -45,7 +45,7 @@ const styles = theme => ({
 		overflow: "scroll"
 	},
 	halfWidth: {
-		width: "calc(50% - 20px)"
+		width: "calc(33% - 20px)"
 	},
 	optList: {
 		textAlign: 'center',
@@ -157,7 +157,7 @@ class ConnOptionDetailView extends Component {
 							onChange={(val) => this.setState({ description: val.target.value })}
 						/>
 						<div>
-							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp/template_detail")} color="primary">
+							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp/category_detail")} color="primary">
 								Cancel
 							</Button>
 							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={async () => {
@@ -178,6 +178,21 @@ class ConnOptionDetailView extends Component {
 							}} color="primary">
 								Save {
 									this.state.isSaving && <CircularProgress
+										disableShrink
+										size={24}
+										thickness={4} />
+								}
+							</Button>
+							<Button className={classes.halfWidth} disabled={this.state.isDeleting}
+								onClick={async () => {
+									this.setState({ isDeleting: true });
+									await this.props.deleteOption(option.id);
+									await this.props.selectCategory(option.cat_name.id);
+									this.props.history.push("/m_temp/category_detail")
+									this.setState({ isDeleting: false });
+								}} color="primary">
+								Delete{
+									this.state.isDeleting && <CircularProgress
 										disableShrink
 										size={24}
 										thickness={4} />
@@ -207,6 +222,7 @@ const mapDispatchToProps = dispatch => {
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
 		selectCategory: (id) => dispatch(selectCategory(id)),
 		editOption: (id, data) => dispatch(editOption(id, data)),
+		deleteOption: (id) => dispatch(deleteOption(id))
 	};
 }
 
