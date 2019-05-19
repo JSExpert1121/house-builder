@@ -96,7 +96,7 @@ class connectedCurProView extends React.Component {
 							</TableHead>
 							<TableBody >
 								{
-									projects._embedded.projects.map(
+									projects.content.map(
 										row => (
 											<TableRow className={classes.row} key={row.id} hover
 												onClick={async () => {
