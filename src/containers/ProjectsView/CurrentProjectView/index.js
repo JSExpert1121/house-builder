@@ -80,7 +80,6 @@ class connectedCurProView extends React.Component {
 
 	render() {
 		const { classes, projects } = this.props;
-		console.log(projects);
 
 		return (
 			<Paper className={classes.root}>
@@ -96,7 +95,7 @@ class connectedCurProView extends React.Component {
 							</TableHead>
 							<TableBody >
 								{
-									projects._embedded.projects.map(
+									projects.content.map(
 										row => (
 											<TableRow className={classes.row} key={row.id} hover
 												onClick={async () => {

@@ -108,7 +108,7 @@ class ConnAllTemplateView extends Component {
 	handleChangeRowsPerPage = event => {
 		const { templates } = this.props;
 		const rowsPerPage = event.target.value;
-		const currentPage = rowsPerPage >= templates.page.totalElements ? 0 : this.state.currentPage;
+		const currentPage = rowsPerPage >= templates.totalElements ? 0 : this.state.currentPage;
 
 		this.setState({
 			rowsPerPage: rowsPerPage,
@@ -120,6 +120,7 @@ class ConnAllTemplateView extends Component {
 
 	render() {
 		const { classes, templates } = this.props;
+		console.log(templates);
 
 		if (templates === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
@@ -153,7 +154,7 @@ class ConnAllTemplateView extends Component {
 						</TableHead>
 						<TableBody >
 							{
-								templates._embedded.templates.map(
+								templates.content.map(
 									row => (
 										<TableRow className={classes.row} key={row.id} hover>
 											<CustomTableCell component="th" scope="row"
@@ -177,7 +178,7 @@ class ConnAllTemplateView extends Component {
 
 														});
 
-														if (this.state.rowsPerPage * (this.state.currentPage) < templates.page.totalElements - 1) {
+														if (this.state.rowsPerPage * (this.state.currentPage) < templates.totalElements - 1) {
 															await this.props.getTemplatesO(this.state.currentPage, this.state.rowsPerPage);
 														}
 														else {
@@ -205,7 +206,7 @@ class ConnAllTemplateView extends Component {
 					style={{ overflow: "scroll" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
-					count={templates.page.totalElements}
+					count={templates.totalElements}
 					rowsPerPage={this.state.rowsPerPage}
 					page={this.state.currentPage}
 					backIconButtonProps={{

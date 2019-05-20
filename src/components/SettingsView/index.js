@@ -248,7 +248,6 @@ class connectedSettingsView extends React.Component {
 								() => {
 									auth0Client.getProfile(
 										profile => {
-											console.log(profile);
 											this.props.setUserProfile(profile);
 										}
 									);

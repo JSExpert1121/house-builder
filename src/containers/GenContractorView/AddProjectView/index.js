@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
@@ -9,9 +9,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Card, TextField, InputAdornment, Input, Button, Divider } from '@material-ui/core';
-import { hover } from 'glamor';
+import { Card, TextField, Button } from '@material-ui/core';
+import { DropzoneArea } from 'material-ui-dropzone';
 import axios from 'axios';
+import { addProject, addFiles } from '../../../actions/gen-actions';
 
 const styles = theme => ({
 	root: {
@@ -25,13 +26,14 @@ const styles = theme => ({
 	mainBoard: {
 		width: "90%",
 		borderBottom: "5px solid " + theme.palette.primary.light,
+		height: "90%",
 		padding: "20px",
 		[theme.breakpoints.up('sm')]: {
 			width: 700,
 		},
 		display: 'flex',
 		flexDirection: "column",
-		overflow: "auto",
+		overflow: "scroll",
 	},
 	paper_title_price: {
 		display: 'flex',
@@ -66,7 +68,7 @@ const styles = theme => ({
 	}
 });
 
-class connectedCurProView extends React.Component {
+class connectedAddProjectView extends Component {
 	constructor(props) {
 		super(props);
 
@@ -74,15 +76,17 @@ class connectedCurProView extends React.Component {
 			title: "",
 			price: 0,
 			description: "",
-			isSaving: false
+			isSaving: false,
+			files: [],
 		};
 	}
 
 	componentDidMount() {
 	}
 
-	handleAddProject = () => {
+	handleAddProject = async () => {
 		const { userProfile } = this.props;
+		const files = this.state.files;
 
 		const projectData = {
 			"title": this.state.title,
@@ -95,21 +99,21 @@ class connectedCurProView extends React.Component {
 			isSaving: true
 		});
 
-		axios.post(process.env.PROJECT_API + "contractors/" + userProfile.user_metadata.contractor_id + "/projects",
-			projectData)
-			.then((response) => {
-				console.log(response);
-				this.setState({
-					isSaving: false
-				});
-				this.props.history.push("/g_cont");
-			}).catch(err => {
-				console.log(err.message);
+		let projectId = null;
+		await this.props.addProject(userProfile.user_metadata.contractor_id, projectData, (res) => {
+			if (res === false) {
+				this.setState({ isSaving: false });
+				return;
+			}
+			projectId = res;
+		});
 
-				this.setState({
-					isSaving: false
-				});
-			});
+		await this.props.addFiles(projectId, files);
+
+		this.setState({
+			isSaving: false
+		});
+		this.props.history.push("/g_cont");
 	}
 
 	render() {
@@ -153,6 +157,19 @@ class connectedCurProView extends React.Component {
 						value={this.state.description}
 						onChange={(val) => this.setState({ description: val.target.value })}
 					/>
+					<div
+						style={{ overflow: 'scroll', minHeight: '250px' }}>
+						<DropzoneArea
+							onChange={(files) => {
+								console.log(files);
+								this.setState({ files: files }) }
+							}
+							maxFileSize={52428800}
+							showFileNamesInPreview={true}
+							filesLimit={100}
+							dropzoneText='select files to upload(< 50mb)'
+						/>
+					</div>
 					<Button disabled={this.state.isSaving} className={classes.submitButton} onClick={this.handleAddProject}>
 						Add Project
 							{
@@ -173,6 +190,8 @@ class connectedCurProView extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
+		addProject: (id, data, cb) => dispatch(addProject(id, data, cb)),
+		addFiles: (id, files) => dispatch(addFiles(id, files))
 	};
 };
 
@@ -182,10 +201,10 @@ const mapStateToProps = state => {
 	};
 };
 
-const CurrentProjectView = connect(mapStateToProps, mapDispatchToProps)(connectedCurProView);
+const AddProjectView = connect(mapStateToProps, mapDispatchToProps)(connectedAddProjectView);
 
-CurrentProjectView.propTypes = {
+AddProjectView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(withStyles(styles)(CurrentProjectView));
+export default withRouter(withStyles(styles)(AddProjectView));

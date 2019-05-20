@@ -81,7 +81,7 @@ class connectedCurProView extends React.Component {
 
 	render() {
 		const { classes, projects } = this.props;
-		console.log(projects);
+
 		if (projects === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}

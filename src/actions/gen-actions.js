@@ -38,7 +38,6 @@ export function getProjectDetailById(id) {
 	return function (dispatch) {
 		return Axios.get(process.env.PROJECT_API + "projects/" + id)
 			.then(response => {
-				console.log(response.data);
 				dispatch({ type: PROJECT_DETAIL_LOADED, payload: response.data })
 			})
 			.catch(err => console.log(err.message));
@@ -75,5 +74,39 @@ export function getProjectMessage(id) {
 			.then(json => {
 				dispatch({ type: MESSAGE_LOADED, payload: json });
 			})
+	}
+}
+
+export function addProject(id, data, cb) {
+	return function (dispatch) {
+		return Axios.post(process.env.PROJECT_API + "contractors/" + id + "/projects", data)
+			.then((response) => {
+				cb(response.data.id);
+			}).catch(err => {
+				console.log(err.message);
+				cb(false);
+			});
+	}
+}
+
+export function addFiles(id, files) {
+	return function (dispatch) {
+		const formData = new FormData();
+		files.forEach(async (file) => {
+			await formData.append('file', file);
+		});
+
+		return Axios.post(process.env.PROJECT_API + "projects/" + id + "/files/upload/multiple", 
+			formData, 
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				console.log(response);
+			}).catch(err => {
+				console.log(err.message);
+			});
 	}
 }

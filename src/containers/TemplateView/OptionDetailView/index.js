@@ -7,22 +7,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
 	CircularProgress,
-	Table, TableHead, TableCell, TableRow, TableBody,
-	IconButton,
+	TableCell,
 	Button,
 	Link
 } from '@material-ui/core';
 import { Paper, TextField } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import DeleteIcon from '@material-ui/icons/Delete';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
 // Redux
 import { connect } from 'react-redux';
 import { selectOption, editOption, selectTemplate, selectCategory, deleteOption } from '../../../actions/tem-actions';
