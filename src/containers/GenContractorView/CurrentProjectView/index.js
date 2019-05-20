@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 // material ui
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+	CircularProgress,
+	Table, TableHead, TableCell, TableRow, TableBody,
+	IconButton, TablePagination, TextField,
+	Button
+} from '@material-ui/core';
 
 const styles = theme => ({
 	root: {
@@ -23,22 +23,9 @@ const styles = theme => ({
 		margin: "10px 10px 10px 10px",
 		overflow: "auto",
 	},
-	card: {
-		minWidth: "200px"
-	},
-	cardProjectTitle: {
-		color: theme.palette.primary.dark
-	},
-	bullet: {
-		display: 'inline-block',
-		margin: '0 2px',
-		transform: 'scale(0.8)',
-	},
-	title: {
-		fontSize: 14,
-	},
-	pos: {
-		marginBottom: 12,
+	tableWrap: {
+		overflow: "scroll",
+		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -68,13 +55,36 @@ class connectedCurProView extends React.Component {
 		super(props);
 
 		this.state = {
+			rowsPerPage: 20, 
+			currentPage: 0
 		};
 	}
 
 	componentDidMount() {
 		const { userProfile } = this.props;
-		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id);
+		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
 	}
+	
+	handleChangePage = (event, page) => {
+		const { userProfile } = this.props;
+		this.setState({ currentPage: page });
+
+		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, page, this.state.rowsPerPage);
+	};
+
+	handleChangeRowsPerPage = event => {
+		const { projects, userProfile } = this.props;
+		
+		const rowsPerPage = event.target.value;
+		const currentPage = rowsPerPage >= projects.totalElements ? 0 : this.state.currentPage;
+
+		this.setState({
+			rowsPerPage: rowsPerPage,
+			currentPage: currentPage
+		});
+
+		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, currentPage, rowsPerPage);
+	};
 
 	handleAddProject = () => {
 	}
@@ -88,7 +98,7 @@ class connectedCurProView extends React.Component {
 
 		return (
 			<Paper className={classes.root}>
-				{
+				<div className = {classes.tableWrap} >
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
@@ -117,7 +127,23 @@ class connectedCurProView extends React.Component {
 							}
 						</TableBody>
 					</Table>
-				}
+				</div>
+				<TablePagination
+					style={{ overflow: "scroll" }}
+					rowsPerPageOptions={[5, 10, 20]}
+					component="div"
+					count={projects.totalElements}
+					rowsPerPage={this.state.rowsPerPage}
+					page={this.state.currentPage}
+					backIconButtonProps={{
+						'aria-label': 'Previous Page',
+					}}
+					nextIconButtonProps={{
+						'aria-label': 'Next Page',
+					}}
+					onChangePage={this.handleChangePage}
+					onChangeRowsPerPage={this.handleChangeRowsPerPage}
+				/>
 			</Paper >
 		);
 	}
@@ -127,7 +153,7 @@ class connectedCurProView extends React.Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
-		getProjectsByGenId: (id) => dispatch(getProjectsByGenId(id))
+		getProjectsByGenId: (id, page, rowSize) => dispatch(getProjectsByGenId(id, page, rowSize))
 	};
 };
 

@@ -331,7 +331,13 @@ class ConnTempDetailView extends Component {
 							await this.props.addCategory(template.id, data);
 							await this.props.selectTemplate(template.id);
 
-							this.setState({ openCategoryForm: false, isAdding: false });
+							this.setState({
+								openCategoryForm: false, isAdding: false,
+								cname: "",
+								ctype: "",
+								cvalue: "",
+								cdescription: ""
+							});
 						}} color="primary">
 							Add {
 								this.state.isAdding && <CircularProgress

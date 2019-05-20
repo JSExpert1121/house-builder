@@ -37,23 +37,6 @@ const styles = theme => ({
 		overflow: "scroll",
 		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
 	},
-	card: {
-		minWidth: "200px"
-	},
-	cardProjectTitle: {
-		color: theme.palette.primary.dark
-	},
-	bullet: {
-		display: 'inline-block',
-		margin: '0 2px',
-		transform: 'scale(0.8)',
-	},
-	title: {
-		fontSize: 14,
-	},
-	pos: {
-		marginBottom: 12,
-	},
 	row: {
 		'&:nth-of-type(odd)': {
 			backgroundColor: theme.palette.background.default,

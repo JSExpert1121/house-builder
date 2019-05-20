@@ -12,25 +12,33 @@ export function setSelectedProposal(payload) {
 	return { type: SET_SELECTED_PROPOSAL, payload }
 }
 
-export function getProjectsByGenId(id) {
+export function getProjectsByGenId(id, page, rowSize) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_PROJECTS" });
-		return fetch(process.env.PROJECT_API + "contractors/" + id + "/projects")
-			.then(response => response.json())
-			.then(json => {
-				dispatch({ type: "PROJECT_LOADED", payload: json });
-			})
+		return Axios.get(process.env.PROJECT_API + "contractors/" + id + "/projects", {
+			params: {
+				"page": page,
+				"size": rowSize
+			}
+		})
+			.then(response => dispatch({ type: "PROJECT_LOADED", payload: response.data }))
+			.catch(err => console.log(err.message))
 	}
 }
 
-export function getAllProjects() {
+export function getAllProjects(page, size) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_ALL_PROJECTS" });
-		return fetch(process.env.PROJECT_API + "projects")
-			.then(response => response.json())
-			.then(json => {
-				dispatch({ type: ALL_PROJECT_LOADED, payload: json });
+		return Axios.get(process.env.PROJECT_API + "projects", {
+			params: {
+				'page': page, 
+				'size': size
+			}
+		})
+			.then(response => {
+				dispatch({ type: ALL_PROJECT_LOADED, payload: response.data });
 			})
+			.catch(err => console.log(err))
 	}
 }
 
@@ -51,17 +59,6 @@ export function getProjectBidders(id) {
 			.then(response => response.json())
 			.then(json => {
 				dispatch({ type: BIDDERS_LOADED, payload: json });
-			})
-	}
-}
-
-export function getProjectFiles(id) {
-	return function (dispatch) {
-		dispatch({ type: "CLEAR_FILES" });
-		return fetch("https://bcbemock.getsandbox.com/" + id + "/files")
-			.then(response => response.json())
-			.then(json => {
-				dispatch({ type: PROJECT_FILES_LOADED, payload: json });
 			})
 	}
 }
@@ -89,23 +86,25 @@ export function addProject(id, data, cb) {
 	}
 }
 
-export function addFiles(id, files) {
+export function addFiles(id, files, cb) {
 	return function (dispatch) {
 		const formData = new FormData();
 		files.forEach(async (file) => {
 			await formData.append('file', file);
 		});
 
-		return Axios.post(process.env.PROJECT_API + "projects/" + id + "/files/upload/multiple", 
-			formData, 
+		return Axios.post(process.env.PROJECT_API + "projects/" + id + "/files/upload/multiple",
+			formData,
 			{
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
 			})
 			.then((response) => {
+				cb(true);
 				console.log(response);
 			}).catch(err => {
+				cb(false);
 				console.log(err.message);
 			});
 	}

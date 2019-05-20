@@ -11,7 +11,6 @@ import {
 
 const initialState = {
 	selectedProject: null,
-	projectFiles: [],
 	selectedProposal: null,
 	messages: [],
 	projects: null,
@@ -49,10 +48,6 @@ function gen_reducer(state = initialState, action) {
 				//projects: state.projects.concat(action.payload)
 				selectedProject: action.payload
 			});
-		case PROJECT_FILES_LOADED:
-			return Object.assign({}, state, {
-				projectFiles: action.payload
-			});
 		case MESSAGE_LOADED:
 			return Object.assign({}, state, {
 				messages: action.payload
@@ -68,10 +63,6 @@ function gen_reducer(state = initialState, action) {
 		case "CLEAR_BIDDERS":
 			return Object.assign({}, state, {
 				bidders: [],
-			});
-		case "CLEAR_FILES":
-			return Object.assign({}, state, {
-				projectFiles: [],
 			});
 		case "CLEAR_MESSAGES":
 			return Object.assign({}, state, {

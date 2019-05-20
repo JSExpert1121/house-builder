@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 // material ui
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+	CircularProgress,
+	Table, TableHead, TableCell, TableRow, TableBody,
+	IconButton, TablePagination, TextField,
+	Button
+} from '@material-ui/core';
 
 const styles = theme => ({
 	root: {
@@ -23,22 +23,9 @@ const styles = theme => ({
 		margin: "10px 10px 10px 10px",
 		overflow: "scroll"
 	},
-	card: {
-		minWidth: "200px"
-	},
-	cardProjectTitle: {
-		color: theme.palette.primary.dark
-	},
-	bullet: {
-		display: 'inline-block',
-		margin: '0 2px',
-		transform: 'scale(0.8)',
-	},
-	title: {
-		fontSize: 14,
-	},
-	pos: {
-		marginBottom: 12,
+	tableWrap: {
+		overflow: "scroll",
+		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -68,12 +55,36 @@ class connectedCurProView extends React.Component {
 		super(props);
 
 		this.state = {
+			rowsPerPage: 20,
+			currentPage: 0
 		};
 	}
 
 	componentDidMount() {
-		this.props.getAllProjects();
+		this.props.getAllProjects(0, 0);
 	}
+
+	handleChangePage = (event, page) => {
+		const { userProfile } = this.props;
+		this.setState({ currentPage: page });
+
+		this.props.getAllProjects(page, this.state.rowsPerPage);
+	};
+
+	handleChangeRowsPerPage = event => {
+		const { projects, userProfile } = this.props;
+
+		const rowsPerPage = event.target.value;
+		const currentPage = rowsPerPage >= projects.totalElements ? 0 : this.state.currentPage;
+
+		this.setState({
+			rowsPerPage: rowsPerPage,
+			currentPage: currentPage
+		});
+
+		this.props.getAllProjects(currentPage, rowsPerPage);
+	};
+
 
 	handleAddProject = () => {
 	}
@@ -81,51 +92,68 @@ class connectedCurProView extends React.Component {
 	render() {
 		const { classes, projects } = this.props;
 
+		if (projects === null) {
+			return <CircularProgress className={classes.waitingSpin} />;
+		}
+
 		return (
 			<Paper className={classes.root}>
-				{
-					projects !== null ?
-						<Table className={classes.table}>
-							<TableHead>
-								<TableRow>
-									<CustomTableCell> Project Title </CustomTableCell>
-									<CustomTableCell align="center">Budget</CustomTableCell>
-									<CustomTableCell align="center">Discription</CustomTableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody >
-								{
-									projects.content.map(
-										row => (
-											<TableRow className={classes.row} key={row.id} hover
-												onClick={async () => {
-													await this.props.getProjectDetailById(row.id);
-													this.props.history.push("/a_pros/project_detail");
-												}}>
-												<CustomTableCell component="th" scope="row">
-													{row.title}
-												</CustomTableCell>
-												<CustomTableCell align="center">{row.budget}</CustomTableCell>
-												<CustomTableCell align="center">{row.description}</CustomTableCell>
-											</TableRow>
-										)
+				<div className={classes.tableWrap} >
+					<Table className={classes.table}>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell> Project Title </CustomTableCell>
+								<CustomTableCell align="center">Budget</CustomTableCell>
+								<CustomTableCell align="center">Discription</CustomTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody >
+							{
+								projects.content.map(
+									row => (
+										<TableRow className={classes.row} key={row.id} hover
+											onClick={async () => {
+												await this.props.getProjectDetailById(row.id);
+												this.props.history.push("/a_pros/project_detail");
+											}}>
+											<CustomTableCell component="th" scope="row">
+												{row.title}
+											</CustomTableCell>
+											<CustomTableCell align="center">{row.budget}</CustomTableCell>
+											<CustomTableCell align="center">{row.description}</CustomTableCell>
+										</TableRow>
 									)
-								}
-							</TableBody>
-						</Table>
-						: <CircularProgress className={classes.waitingSpin} />
-				}
+								)
+							}
+						</TableBody>
+					</Table>
+				</div>
+				<TablePagination
+					style={{ overflow: "scroll" }}
+					rowsPerPageOptions={[5, 10, 20]}
+					component="div"
+					count={projects.totalElements}
+					rowsPerPage={this.state.rowsPerPage}
+					page={this.state.currentPage}
+					backIconButtonProps={{
+						'aria-label': 'Previous Page',
+					}}
+					nextIconButtonProps={{
+						'aria-label': 'Next Page',
+					}}
+					onChangePage={this.handleChangePage}
+					onChangeRowsPerPage={this.handleChangeRowsPerPage}
+				/>
 			</Paper >
 		);
 	}
 }
 
-
 const mapDispatchToProps = dispatch => {
 	return {
 		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
 		addProject: proEl => dispatch(addProject(proEl)),
-		getAllProjects: () => dispatch(getAllProjects())
+		getAllProjects: (page, size) => dispatch(getAllProjects(page, size))
 	};
 };
 

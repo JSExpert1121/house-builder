@@ -161,9 +161,8 @@ class connectedAddProjectView extends Component {
 						style={{ overflow: 'scroll', minHeight: '250px' }}>
 						<DropzoneArea
 							onChange={(files) => {
-								console.log(files);
-								this.setState({ files: files }) }
-							}
+								this.setState({ files: files })
+							}}
 							maxFileSize={52428800}
 							showFileNamesInPreview={true}
 							filesLimit={100}

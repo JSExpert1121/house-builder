@@ -8,18 +8,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import NoSsr from '@material-ui/core/NoSsr';
 
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import LoyaltyIcon from '@material-ui/icons/Loyalty';
-import DescriptionIcon from '@material-ui/icons/Description';
-import MessageIcon from '@material-ui/icons/Message';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-
 import ProjectOverView from './ProjectOverView';
 import ProjectBidders from './ProjectBidders';
 import ProjectFiles from './ProjectFiles';
 import ProjectMessages from './ProjectMessages';
 import ProjectProposals from './ProjectProposals';
-import { CircularProgress } from '@material-ui/core';
 
 const styles = theme => ({
 	root: {
@@ -84,7 +77,7 @@ class ConnectedProjectDetailView extends React.Component {
 
 						{curDetailTab === 0 && <ProjectOverView />}
 						{curDetailTab === 1 && /*<ProjectBidders />*/ <div />}
-						{curDetailTab === 2 && /*<ProjectFiles />*/ <div />}
+						{curDetailTab === 2 && <ProjectFiles />}
 						{curDetailTab === 3 && /*<ProjectMessages />*/ <div />}
 						{curDetailTab === 4 && /*<ProjectProposals />*/ <div />}
 					</Paper>
