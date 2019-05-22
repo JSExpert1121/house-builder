@@ -15,7 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
-import { addFiles, getProjectDetailById } from '../../../actions/gen-actions';
+import { addFiles, getProjectDetailById, deleteFile } from '../../../actions/gen-actions';
 
 const styles = theme => ({
 	root: {
@@ -50,8 +50,8 @@ class ConnectedProjectFiles extends React.Component {
 		this.state = {
 			openUploadForm: false,
 			snackBar: false,
-			isSuccess: false,
-			isUploadingFile: false
+			isProcessing: false,
+			snackBarContent: ''
 		}
 	}
 
@@ -60,25 +60,46 @@ class ConnectedProjectFiles extends React.Component {
 
 	handleUploadFiles = async (files) => {
 		const { selectedProject } = this.props;
-		this.setState({ isUploadingFile: true });
+		this.setState({ isProcessing: true });
 
 		await this.props.addFiles(selectedProject.id, files, (res) => this.setState({
-			isSuccess: res,
-			snackBar: true
+			snackBar: true,
+			snackBarContent: res ? 'File Upload Success' : 'File Upload Failed'
 		}));
 		await this.props.getProjectDetailById(selectedProject.id);
 
 		this.setState({
 			openUploadForm: false,
-			isUploadingFile: false
+			isProcessing: false
 		})
+	}
+
+	handleDeleteFile = async (name) => {
+		const { selectedProject } = this.props;
+
+		this.setState({
+			isProcessing: true
+		});
+
+		await this.props.deleteFile(selectedProject.id, name, (res) => {
+			this.setState({
+				snackBar: true,
+				snackBarContent: res ? 'delete file success' : 'delete file failed'
+			});
+		});
+
+		await this.props.getProjectDetailById(selectedProject.id);
+
+		this.setState({
+			isProcessing: false
+		});
 	}
 
 	render() {
 		const { classes, selectedProject } = this.props;
 		const projectFiles = selectedProject.projectFiles;
 
-		if (this.state.isUploadingFile)
+		if (this.state.isProcessing)
 			return <div className={classes.root} >
 				<CircularProgress className={classes.waitingSpin} /> </div>;
 
@@ -102,7 +123,8 @@ class ConnectedProjectFiles extends React.Component {
 									<a href={process.env.PROJECT_API + "/projects/" + selectedProject.id + "/files/" + row.name}>{row.name}</a>
 								</CustomTableCell>
 								<CustomTableCell align="center">
-									<IconButton className={classes.button} aria-label="Delete" color="primary">
+									<IconButton className={classes.button} aria-label="Delete" color="primary"
+										onClick={() => this.handleDeleteFile(row.name)}>
 										<DeleteIcon />
 									</IconButton>
 								</CustomTableCell>
@@ -131,7 +153,7 @@ class ConnectedProjectFiles extends React.Component {
 					}}
 					message={
 						<span id="message-id"> {
-							this.state.isSuccess ? 'file upload success!' : 'file upload failed!'
+							this.state.snackBarContent
 						}</span>
 					}
 				/>
@@ -149,7 +171,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		addFiles: (id, files, cb) => dispatch(addFiles(id, files, cb)),
-		getProjectDetailById: (id) => dispatch(getProjectDetailById(id))
+		getProjectDetailById: (id) => dispatch(getProjectDetailById(id)),
+		deleteFile: (id, name, cb) => dispatch(deleteFile(id, name, cb))
 	}
 }
 

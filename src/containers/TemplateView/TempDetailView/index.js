@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import { withRouter } from 'react-router-dom';
-import TSnackbarContent from '../../../components/SnackBarContent';
 
 // material ui
 import PropTypes from 'prop-types';
@@ -10,7 +9,8 @@ import {
 	CircularProgress,
 	Table, TableHead, TableCell, TableRow, TableBody,
 	IconButton,
-	Button
+	Button,
+	Snackbar
 } from '@material-ui/core';
 import { Paper, TextField } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
@@ -97,9 +97,9 @@ class ConnTempDetailView extends Component {
 			openCategoryForm: false,
 			isSaving: false,
 			isDeleting: false,
-			isDeleteFail: false,
-			isDeleteFail2: false,
-			isAdding: false
+			isAdding: false,
+			snackBar: false,
+			snackBarContent: ''
 		}
 	}
 
@@ -129,15 +129,6 @@ class ConnTempDetailView extends Component {
 			<div>
 				<SplitPane split="vertical" minSize={50} defaultSize={400} style={{ position: 'relative' }}>
 					<Paper className={classes.descTag}>
-						{
-							this.state.isDeleteFail ?
-								<TSnackbarContent
-									className={classes.successAlert}
-									onClose={() => this.setState({ isDeleteFail: false })}
-									variant="success"
-									message="Cannot be deleted. Please delete categories"
-								/> : <div></div>
-						}
 						<TextField
 							label="template title"
 							margin="normal"
@@ -171,7 +162,12 @@ class ConnTempDetailView extends Component {
 									"updatedBy": userProfile.email
 								};
 
-								await this.props.editTemplate(template.id, data);
+								await this.props.editTemplate(template.id, data, (res) => {
+									this.setState({
+										snackBar: true,
+										snackBarContent: res ? 'edit template success' : 'edit template failed'
+									})
+								});
 								await this.props.selectTemplate(template.id);
 
 								this.setState({ isSaving: false });
@@ -186,10 +182,15 @@ class ConnTempDetailView extends Component {
 							<Button disabled={this.state.isDeleting} className={classes.halfWidth} onClick={async () => {
 								this.setState({ isDeleting: true });
 								await this.props.deleteTemplate(template.id, (result) => {
-									this.setState({ isDeleteFail: result })
-
-									if (!result)
+									if (result) {
 										this.props.history.push("/m_temp");
+										return;
+									}
+
+									this.setState({
+										snackBar: true,
+										snackBarContent: 'please delete categories and options first'
+									}) 
 								});
 								this.setState({ isDeleting: false });
 							}} color="primary">
@@ -203,15 +204,6 @@ class ConnTempDetailView extends Component {
 						</div>
 					</Paper>
 					<Paper className={classes.cateList}>
-						{
-							this.state.isDeleteFail2 ?
-								<TSnackbarContent
-									className={classes.successAlert}
-									onClose={() => this.setState({ isDeleteFail2: false })}
-									variant="success"
-									message="Cannot be deleted. Please delete options"
-								/> : <div></div>
-						}
 						<Table >
 							<TableHead>
 								<TableRow>
@@ -251,8 +243,12 @@ class ConnTempDetailView extends Component {
 													<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
 														async () => {
 															await this.props.deleteCategory(row.id, (res) => {
-																this.setState({ isDeleteFail2: res });
-																if (res === false)
+																this.setState({
+																	snackBar: true,
+																	snackBarContent: res ? 'delete category success' : 'please delete options'
+																});
+
+																if (res === true)
 																	this.props.selectTemplate(template.id);
 															});
 														}
@@ -328,7 +324,12 @@ class ConnTempDetailView extends Component {
 								"updatedBy": userProfile.email
 							};
 
-							await this.props.addCategory(template.id, data);
+							await this.props.addCategory(template.id, data, (res) => {
+								this.setState({
+									snackBar: true,
+									snackBarContent: res ? 'add category success' : 'add category failed'
+								})
+							});
 							await this.props.selectTemplate(template.id);
 
 							this.setState({
@@ -348,6 +349,21 @@ class ConnTempDetailView extends Component {
 						</Button>
 					</DialogActions>
 				</Dialog>
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
 			</div>
 		);
 	}
@@ -365,8 +381,8 @@ const mapDispatchToProps = dispatch => {
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
 		selectCategory: (id) => dispatch(selectCategory(id)),
 		deleteCategory: (id, cb) => dispatch(deleteCategory(id, cb)),
-		addCategory: (id, data) => dispatch(addCategory(id, data)),
-		editTemplate: (id, data) => dispatch(editTemplate(id, data)),
+		addCategory: (id, data, cb) => dispatch(addCategory(id, data, cb)),
+		editTemplate: (id, data, cb) => dispatch(editTemplate(id, data, cb)),
 		deleteTemplate: (id, cb) => dispatch(deleteTemplate(id, cb))
 	};
 }

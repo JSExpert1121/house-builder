@@ -10,7 +10,8 @@ import {
 	Paper,
 	Table, TableHead, TableCell, TableRow, TableBody,
 	IconButton, TablePagination, TextField,
-	Button
+	Button,
+	Snackbar
 } from '@material-ui/core';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -74,7 +75,8 @@ class ConnAllTemplateView extends Component {
 			openCategoryForm: false,
 			name: "",
 			description: "",
-			isDeleteFail: false
+			snackBar: false,
+			SnackBarContent: ''
 		}
 	}
 
@@ -103,7 +105,6 @@ class ConnAllTemplateView extends Component {
 
 	render() {
 		const { classes, templates } = this.props;
-		console.log(templates);
 
 		if (templates === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
@@ -112,15 +113,6 @@ class ConnAllTemplateView extends Component {
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
-					{
-						this.state.isDeleteFail ?
-							<TSnackbarContent
-								className={classes.successAlert}
-								onClose={() => this.setState({ isDeleteFail: false })}
-								variant="success"
-								message="Cannot be deleted. Please delete categories"
-							/> : <div></div>
-					}
 					<Table >
 						<TableHead>
 							<TableRow>
@@ -157,7 +149,10 @@ class ConnAllTemplateView extends Component {
 												<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
 													async () => {
 														await this.props.deleteTemplate(row.id, (result) => {
-															this.setState({ isDeleteFail: result });
+															this.setState({
+																snackBar: true,
+																snackBarContent: result ? 'delete template success' : 'please delete categories'
+															});
 
 														});
 
@@ -214,7 +209,7 @@ class ConnAllTemplateView extends Component {
 						</DialogContentText>
 						<TextField
 							autoFocus
-							margin="dense"
+							margin="normal"
 							label="name"
 							type="email"
 							fullWidth
@@ -244,7 +239,12 @@ class ConnAllTemplateView extends Component {
 								"updatedBy": userProfile.email
 							};
 
-							await this.props.createTemplate(data);
+							await this.props.createTemplate(data, (res) => {
+								this.setState({
+									snackBar: true,
+									snackBarContent: res ? 'create template success' : 'create template failed'
+								})
+							});
 							await this.props.getTemplatesO(0, this.state.rowsPerPage);
 
 							this.setState({ openCategoryForm: false, isSaving: false, name: "", description: "" });
@@ -258,6 +258,21 @@ class ConnAllTemplateView extends Component {
 						</Button>
 					</DialogActions>
 				</Dialog>
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
 			</Paper >
 		);
 	}
@@ -275,7 +290,7 @@ const mapDispatchToProps = dispatch => {
 		getTemplatesO: (page, size) => dispatch(getTemplatesO(page, size)),
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
 		deleteTemplate: (id, cb) => dispatch(deleteTemplate(id, cb)),
-		createTemplate: (data) => dispatch(createTemplate(data))
+		createTemplate: (data, cb) => dispatch(createTemplate(data, cb))
 	};
 }
 

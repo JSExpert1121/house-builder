@@ -2,14 +2,18 @@ import Axios from 'axios';
 
 import { ALL_TEMPLATES_LOADED, SET_SELECTED_TEMPLATE, SET_SELECTED_CATEGORY, SET_SELECTED_OPTION } from '../constants/tem-action-types';
 
-export function createTemplate(template) {
+export function createTemplate(template, cb) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_ALL_TEMPLATES" });
 
 		return Axios.post(process.env.PROJECT_API + "templates", template)
 			.then(response => {
+				cb(true);
 			})
-			.catch(err => console.log(err.message))
+			.catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
 	}
 }
 
@@ -79,10 +83,10 @@ export function deleteTemplate(id, cb) {
 	return function (dispatch) {
 		return Axios.delete(process.env.PROJECT_API + "templates/" + id)
 			.then(response => {
-				cb(false);
+				cb(true);
 			})
 			.catch(err => {
-				cb(true);
+				cb(false);
 				console.log(err.message)
 			})
 	}
@@ -92,65 +96,84 @@ export function deleteCategory(id, cb) {
 	return function (dispatch) {
 		return Axios.delete(process.env.PROJECT_API + "categories/" + id)
 			.then(response => {
-				cb(false);
+				cb(true);
 			})
 			.catch(err => {
 				console.log(err.message)
-				cb(true);
+				cb(false);
 			})
 	}
 }
 
-export function deleteOption(id) {
+export function deleteOption(id, cb) {
 	return function (dispatch) {
 		return Axios.delete(process.env.PROJECT_API + "options/" + id)
 			.then(response => {
+				cb(true);
 			})
-			.catch(err => console.log(err.message))
+			.catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
 	}
 }
 
-export function addCategory(id, data) {
+export function addCategory(id, data, cb) {
 	return function (dispatch) {
 		return Axios.post(process.env.PROJECT_API + "templates/" + id + "/categories", data)
 			.then(response => {
-
-			}).catch(err => console.log(err.message))
+				cb(true);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
 	}
 }
 
-export function addOption(id, data) {
+export function addOption(id, data, cb) {
 	return function (dispatch) {
 		return Axios.post(process.env.PROJECT_API + "categories/" + id + "/options", data)
 			.then(response => {
-
-			}).catch(err => console.log(err.message))
+				cb(true);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
 	}
 }
 
-export function editOption(id, data) {
+export function editOption(id, data, cb) {
 	return function (dispatch) {
 		return Axios.put(process.env.PROJECT_API + "options/" + id, data)
 			.then(response => {
-
-			}).catch(err => console.log(err.message))
+				cb(true);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message)
+			})
 	}
 }
 
-export function editCategory(id, data) {
+export function editCategory(id, data, cb) {
 	return function (dispatch) {
 		return Axios.put(process.env.PROJECT_API + "categories/" + id, data)
 			.then(response => {
-
-			}).catch(err => console.log(err.message))
+				cb(true);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message)
+			})
 	}
 }
 
-export function editTemplate(id, data) {
+export function editTemplate(id, data, cb) {
 	return function (dispatch) {
 		return Axios.put(process.env.PROJECT_API + "templates/" + id, data)
 			.then(response => {
-
-			}).catch(err => console.log(err.message))
+				cb(true);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message)
+			})
 	}
 }

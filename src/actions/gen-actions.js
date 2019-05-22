@@ -31,7 +31,7 @@ export function getAllProjects(page, size) {
 		dispatch({ type: "CLEAR_ALL_PROJECTS" });
 		return Axios.get(process.env.PROJECT_API + "projects", {
 			params: {
-				'page': page, 
+				'page': page,
 				'size': size
 			}
 		})
@@ -107,5 +107,18 @@ export function addFiles(id, files, cb) {
 				cb(false);
 				console.log(err.message);
 			});
+	}
+}
+
+export function deleteFile(id, name, cb) {
+	return function (dispatch) {
+		return Axios.delete(process.env.PROJECT_API + "projects/" + id + "/files/" + name)
+			.then((response) => {
+				cb(true);
+			})
+			.catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
 	}
 }

@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import {
 	CircularProgress,
 	Table, TableHead, TableCell, TableRow, TableBody,
-	IconButton, TablePagination, TextField,
+	IconButton, TablePagination,
 	Button
 } from '@material-ui/core';
 

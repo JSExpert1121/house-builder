@@ -9,7 +9,8 @@ import {
 	CircularProgress,
 	TableCell,
 	Button,
-	Link
+	Link,
+	Snackbar
 } from '@material-ui/core';
 import { Paper, TextField } from '@material-ui/core';
 // Redux
@@ -79,6 +80,8 @@ class ConnOptionDetailView extends Component {
 			openCategoryForm: false,
 			isSaving: false,
 			isEditing: false,
+			snackBar: false,
+			snackBarContent: ''
 		}
 	}
 
@@ -146,7 +149,7 @@ class ConnOptionDetailView extends Component {
 							onChange={(val) => this.setState({ description: val.target.value })}
 						/>
 						<div>
-							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp/category_detail")} color="primary">
+							<Button className={classes.halfWidth} onClick={() => this.props.history.push("/m_temp/category_detail")} color="primary">
 								Cancel
 							</Button>
 							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={async () => {
@@ -160,7 +163,12 @@ class ConnOptionDetailView extends Component {
 									"updatedBy": userProfile.email
 								};
 
-								await this.props.editOption(option.id, data);
+								await this.props.editOption(option.id, data, (res) => {
+									this.setState({
+										snackBar: true,
+										snackBarContent: res ? 'edit option success' : 'edit option failed'
+									})
+								});
 								await this.props.selectOption(option.id);
 
 								this.setState({ openCategoryForm: false, isSaving: false });
@@ -175,7 +183,9 @@ class ConnOptionDetailView extends Component {
 							<Button className={classes.halfWidth} disabled={this.state.isDeleting}
 								onClick={async () => {
 									this.setState({ isDeleting: true });
-									await this.props.deleteOption(option.id);
+									await this.props.deleteOption(option.id, (res) => {
+									});
+
 									await this.props.selectCategory(option.cat_name.id);
 									this.props.history.push("/m_temp/category_detail")
 									this.setState({ isDeleting: false });
@@ -193,6 +203,21 @@ class ConnOptionDetailView extends Component {
 
 					</Paper>
 				</SplitPane>
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
 			</div>
 		);
 	}
@@ -210,8 +235,8 @@ const mapDispatchToProps = dispatch => {
 		selectOption: (id) => dispatch(selectOption(id)),
 		selectTemplate: (id) => dispatch(selectTemplate(id)),
 		selectCategory: (id) => dispatch(selectCategory(id)),
-		editOption: (id, data) => dispatch(editOption(id, data)),
-		deleteOption: (id) => dispatch(deleteOption(id))
+		editOption: (id, data, cb) => dispatch(editOption(id, data, cb)),
+		deleteOption: (id, cb) => dispatch(deleteOption(id, cb))
 	};
 }
 
