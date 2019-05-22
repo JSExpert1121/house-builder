@@ -55,6 +55,9 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50vw - 10px)",
 		top: "calc(50vh - 10px)",
+	}, 
+	editField : {
+		lineHeight: '1.5rem'
 	}
 });
 
@@ -127,6 +130,7 @@ class ConnOptionDetailView extends Component {
 							}}
 							value={this.state.name}
 							onChange={(val) => this.setState({ name: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="option value"
@@ -136,6 +140,7 @@ class ConnOptionDetailView extends Component {
 							}}
 							value={this.state.value}
 							onChange={(val) => this.setState({ value: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="detail"

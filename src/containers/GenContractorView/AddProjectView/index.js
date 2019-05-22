@@ -65,6 +65,9 @@ const styles = theme => ({
 		'&:hover': {
 			backgroundColor: theme.palette.primary.dark
 		}
+	},
+	editField: {
+		lineHeight: "1.5rem"
 	}
 });
 
@@ -132,6 +135,7 @@ class connectedAddProjectView extends Component {
 							className={classes.paper_title}
 							value={this.state.title}
 							onChange={(val) => this.setState({ title: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							type="number"
@@ -143,6 +147,7 @@ class connectedAddProjectView extends Component {
 							className={classes.paper_price}
 							value={this.state.price}
 							onChange={(val) => this.setState({ price: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 					</div>
 					<TextField

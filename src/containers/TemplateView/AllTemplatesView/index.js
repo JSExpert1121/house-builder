@@ -50,6 +50,9 @@ const styles = theme => ({
 	},
 	successAlert: {
 		marginBottom: "10px"
+	},
+	editField: {
+		lineHeight: '1.5rem',
 	}
 });
 
@@ -215,6 +218,7 @@ class ConnAllTemplateView extends Component {
 							fullWidth
 							value={this.state.name}
 							onChange={(val) => this.setState({ name: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="detail"

@@ -69,6 +69,9 @@ const styles = theme => ({
 	},
 	successAlert: {
 		margin: "10px"
+	},
+	editField: {
+		lineHeight: '1.5rem'
 	}
 });
 
@@ -137,6 +140,7 @@ class ConnTempDetailView extends Component {
 							}}
 							value={this.state.name}
 							onChange={(val) => this.setState({ name: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="detail"
@@ -190,7 +194,7 @@ class ConnTempDetailView extends Component {
 									this.setState({
 										snackBar: true,
 										snackBarContent: 'please delete categories and options first'
-									}) 
+									})
 								});
 								this.setState({ isDeleting: false });
 							}} color="primary">
@@ -282,6 +286,7 @@ class ConnTempDetailView extends Component {
 							fullWidth
 							value={this.state.cname}
 							onChange={(val) => this.setState({ cname: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							margin="dense"
@@ -290,6 +295,7 @@ class ConnTempDetailView extends Component {
 							fullWidth
 							value={this.state.ctype}
 							onChange={(val) => this.setState({ ctype: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							margin="dense"
@@ -298,6 +304,7 @@ class ConnTempDetailView extends Component {
 							fullWidth
 							value={this.state.cvalue}
 							onChange={(val) => this.setState({ cvalue: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="detail"

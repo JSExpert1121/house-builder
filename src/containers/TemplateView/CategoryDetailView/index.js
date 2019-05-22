@@ -66,6 +66,9 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50vw - 10px)",
 		top: "calc(50vh - 10px)",
+	}, 
+	editField: {
+		lineHeight: '1.5rem'
 	}
 });
 
@@ -143,6 +146,7 @@ class ConnCategoryDetailView extends Component {
 							}}
 							value={this.state.name}
 							onChange={(val) => this.setState({ name: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="category type"
@@ -152,6 +156,7 @@ class ConnCategoryDetailView extends Component {
 							}}
 							value={this.state.type}
 							onChange={(val) => this.setState({ type: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="category value"
@@ -161,6 +166,7 @@ class ConnCategoryDetailView extends Component {
 							}}
 							value={this.state.value}
 							onChange={(val) => this.setState({ value: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="detail"
@@ -309,6 +315,7 @@ class ConnCategoryDetailView extends Component {
 							fullWidth
 							value={this.state.oname}
 							onChange={(val) => this.setState({ oname: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							margin="dense"
@@ -317,6 +324,7 @@ class ConnCategoryDetailView extends Component {
 							fullWidth
 							value={this.state.ovalue}
 							onChange={(val) => this.setState({ ovalue: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<TextField
 							label="detail"
