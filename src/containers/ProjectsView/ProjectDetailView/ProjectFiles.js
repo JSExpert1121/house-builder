@@ -120,7 +120,7 @@ class ConnectedProjectFiles extends React.Component {
 						{projectFiles.map(row => (
 							<TableRow className={classes.row} key={row.id} hover>
 								<CustomTableCell component="th" scope="row" align="center">
-									<a href={process.env.PROJECT_API + "/projects/" + selectedProject.id + "/files/" + row.name}>{row.name}</a>
+									<a download={row.name} href={process.env.PROJECT_API + "/projects/" + selectedProject.id + "/files/" + row.name}>{row.name}</a>
 								</CustomTableCell>
 								<CustomTableCell align="center">
 									<IconButton className={classes.button} aria-label="Delete" color="primary"
