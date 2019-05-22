@@ -67,7 +67,8 @@ const styles = theme => ({
 		}
 	},
 	editField: {
-		lineHeight: "1.5rem"
+		lineHeight: "1.5rem",
+		height: '1.5rem'
 	}
 });
 
@@ -111,7 +112,7 @@ class connectedAddProjectView extends Component {
 			projectId = res;
 		});
 
-		await this.props.addFiles(projectId, files);
+		await this.props.addFiles(projectId, files, (res) => { });
 
 		this.setState({
 			isSaving: false
@@ -168,6 +169,7 @@ class connectedAddProjectView extends Component {
 							onChange={(files) => {
 								this.setState({ files: files })
 							}}
+							acceptedFiles={['text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*']}
 							maxFileSize={52428800}
 							showFileNamesInPreview={true}
 							filesLimit={100}
@@ -195,7 +197,7 @@ class connectedAddProjectView extends Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		addProject: (id, data, cb) => dispatch(addProject(id, data, cb)),
-		addFiles: (id, files) => dispatch(addFiles(id, files))
+		addFiles: (id, files, cb) => dispatch(addFiles(id, files, cb))
 	};
 };
 

@@ -137,7 +137,7 @@ class ConnectedProjectFiles extends React.Component {
 					onSave={this.handleUploadFiles}
 					maxFileSize={52428800}
 					showFileNamesInPreview={true}
-					/*acceptedFiles = {['asterisk']}*/
+					acceptedFiles={['text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*']}
 					filesLimit={100}
 					dropzoneText='select files to upload(< 50mb)'
 					onClose={() => this.setState({ openUploadForm: false })}
