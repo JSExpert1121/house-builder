@@ -27,7 +27,6 @@ class ConnectedContractorInfoView extends React.Component {
 
 	render() {
 		const { classes, selectedContractor } = this.props;
-console.log('selectedContractor', selectedContractor)
 		return (
 			<div className={classes.root}>
 				<ul>

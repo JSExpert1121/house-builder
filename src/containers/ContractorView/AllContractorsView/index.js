@@ -121,8 +121,7 @@ class ConnAllContractorView extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { contractors } = this.state;
-		console.log('contractors',contractors);
+		const { contractors } = this.state;		
 		if (contractors === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}	

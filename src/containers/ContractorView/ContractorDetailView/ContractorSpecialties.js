@@ -333,11 +333,9 @@ class ConnectedContractorInfoView extends React.Component {
 					):
 					null
 				}
-				<Button onClick={() => this.props.addSpecialty(selectedContractor.id, specialty, (result) => {
-					console.log('result',result)
+				<Button onClick={() => this.props.addSpecialty(selectedContractor.id, specialty, (result) => {					
 					if(result)
-						this.props.updateContractor(selectedContractor.id);	
-					// this.forceUpdate();
+						this.props.updateContractor(selectedContractor.id);						
 				})}>Add Specialty</Button>
 			</Paper >					
 			</div>
