@@ -32,6 +32,20 @@ export function selectContractor(id) {
 	}
 }
 
+export function updateContractor(id) {
+	return function (dispatch) {
+
+		return Axios.get(process.env.PROJECT_API + "contractors/" + id)
+			.then(response => {
+				dispatch({
+					type: SET_SELECTED_CONTRACTOR,
+					payload: response.data
+				})
+			})
+			.catch(err => console.log(err.message))
+	}
+}
+
 export function selectOption(id) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_SELECTED_OPTION" });
@@ -266,9 +280,9 @@ export function getSpecialties(page, size) {
 	}
 }
 
-export function addSpecialty(contractorId, specialtyId) {
+export function addSpecialty(contractorId, specialtyId, cb) {
 	return function (dispatch) {
-		return Axios.post(process.env.PROJECT_API + "contractors/" + contractorId + "specialties/" + specialtyId)
+		return Axios.post(process.env.PROJECT_API + "contractors/" + contractorId + "/specialties/" + specialtyId)
 			.then(response => {
 				cb(true);
 			}).catch(err => {
@@ -278,9 +292,9 @@ export function addSpecialty(contractorId, specialtyId) {
 	}
 }
 
-export function deleteSpecialty(contractorId, specialtyId) {
+export function deleteSpecialty(contractorId, specialtyId, cb) {
 	return function (dispatch) {
-		return Axios.delete(process.env.PROJECT_API +"contractors/" + contractorId + "specialties/" + specialtyId)
+		return Axios.delete(process.env.PROJECT_API +"contractors/" + contractorId + "/specialties/" + specialtyId)
 			.then(response => {
 				cb(true);
 			})

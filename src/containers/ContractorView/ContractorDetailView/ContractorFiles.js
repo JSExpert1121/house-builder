@@ -15,7 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
-import { addFiles, getContractorDetailById, deleteFile } from '../../../actions/cont-actions';
+import { addFiles, getContractorDetailById, deleteFile, updateContractor } from '../../../actions/cont-actions';
 
 const styles = theme => ({
 	root: {
@@ -62,10 +62,14 @@ class ConnectedContractorFiles extends React.Component {
 		const { selectedContractor } = this.props;
 		this.setState({ isProcessing: true });
 
-		await this.props.addFiles(selectedContractor.id, files, (res) => this.setState({
+		await this.props.addFiles(selectedContractor.id, files, (res) => {
+			this.setState({
 			snackBar: true,
 			snackBarContent: res ? 'File Upload Success' : 'File Upload Failed'
-		}));
+		});
+		if(res)
+			this.props.updateContractor(selectedContractor.id);	
+	})
 		await this.props.getContractorDetailById(selectedContractor.id);
 
 		this.setState({
@@ -86,6 +90,8 @@ class ConnectedContractorFiles extends React.Component {
 				snackBar: true,
 				snackBarContent: res ? 'delete file success' : 'delete file failed'
 			});
+			if(res)
+				this.props.updateContractor(selectedContractor.id);	
 		});
 
 		await this.props.getContractorDetailById(selectedContractor.id);
@@ -172,7 +178,8 @@ const mapDispatchToProps = dispatch => {
 	return {
 		addFiles: (id, files, cb) => dispatch(addFiles(id, files, cb)),
 		getContractorDetailById: (id) => dispatch(getContractorDetailById(id)),
-		deleteFile: (id, name, cb) => dispatch(deleteFile(id, name, cb))
+		deleteFile: (id, name, cb) => dispatch(deleteFile(id, name, cb)),
+		updateContractor: (id) => dispatch(updateContractor(id))
 	}
 }
 

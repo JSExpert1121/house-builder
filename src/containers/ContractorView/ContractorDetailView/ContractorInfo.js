@@ -12,6 +12,9 @@ const styles = theme => ({
 		padding: "10px 10px 10px 10px",
 		height: "calc(100vh - 64px - 72px - 48px - 20px)",
 	},
+	textField: {
+		boxShadow: "0 0 5px #999999",
+    },
 });
 
 class ConnectedContractorInfoView extends React.Component {
@@ -37,7 +40,8 @@ console.log('selectedContractor', selectedContractor)
 						<TextField
 						placeholder=""
 						multiline={true}
-						rows={4}						
+						rows={4}
+						className={classes.textField}
 						/> 						
 					</li>
 					<li>

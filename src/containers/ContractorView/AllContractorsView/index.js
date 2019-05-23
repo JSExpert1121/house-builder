@@ -80,22 +80,25 @@ class ConnAllContractorView extends Component {
 			description: "",
 			snackBar: false,
 			SnackBarContent: '',
-			order: 'desc'
+			order: 'desc',
+			contractors: null,
 		}
 	}
 
 	componentDidMount() {
-		this.props.getContrators0(0, 20);
+		this.props.getContrators0(0, 20);		
+	}
+	componentWillReceiveProps({contractors}) {
+		this.setState({contractors: contractors});
 	}
 
 	handleChangePage = (event, page) => {
 		this.setState({ currentPage: page });
-
 		this.props.getContrators0(page, this.state.rowsPerPage);
 	};
 
 	handleChangeRowsPerPage = event => {
-		const { contractors } = this.props;
+		const { contractors } = this.state;
 		const rowsPerPage = event.target.value;
 		const currentPage = rowsPerPage >= contractors.totalElements ? 0 : this.state.currentPage;
 
@@ -112,16 +115,17 @@ class ConnAllContractorView extends Component {
 		if (this.state.order === 'desc') {
 		  order = 'asc';
 		}
-	
+		this.state.contractors.content.sort((a,b) => (a.status > b.status) ? 1 : -1);
 		this.setState({ order, });
 	  };	
 
 	render() {
-		const { classes, contractors } = this.props;
+		const { classes } = this.props;
+		const { contractors } = this.state;
+		console.log('contractors',contractors);
 		if (contractors === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
-		}
-
+		}	
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
@@ -142,13 +146,7 @@ class ConnAllContractorView extends Component {
 										Contractor Status
 									</TableSortLabel>
 								</CustomTableCell>
-								<CustomTableCell align="center" >
-									<IconButton style={{ color: "#FFFFFF" }} onClick={
-										() => this.setState({ openCategoryForm: true })
-									}>
-										<NoteAddIcon />
-									</IconButton>
-								</CustomTableCell>
+								<CustomTableCell align="center">Action</CustomTableCell>								
 							</TableRow>
 						</TableHead>
 						<TableBody >
@@ -194,9 +192,10 @@ class ConnAllContractorView extends Component {
 														await this.props.deleteContractor(row.id, (result) => {
 															this.setState({
 																snackBar: true,
-																snackBarContent: result ? 'delete template success' : 'please delete categories'
+																snackBarContent: result ? 'delete contractor success' : 'please delete categories'
 															});
-
+															if(result)
+																this.props.getContrators0(this.state.currentPage, this.state.rowsPerPage)
 														});
 
 														if (this.state.rowsPerPage * (this.state.currentPage) < contractors.totalElements - 1) {

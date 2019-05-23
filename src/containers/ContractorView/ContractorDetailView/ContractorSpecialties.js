@@ -19,7 +19,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { getSpecialties, addSpecialty, deleteSpecialty } from '../../../actions/cont-actions';
+import { getSpecialties, addSpecialty, deleteSpecialty, updateContractor } from '../../../actions/cont-actions';
 
 const styles = theme => ({
 	root: {
@@ -174,7 +174,7 @@ class ConnectedContractorInfoView extends React.Component {
 																snackBar: true,
 																snackBarContent: result ? 'delete specialty success' : 'please specialty categories'
 															});
-
+															this.props.updateContractor(selectedContractor.id);
 														});
 
 														if (this.state.rowsPerPage * (this.state.currentPage) < selectedContractor.contractorSpecialties.length - 1) {
@@ -333,7 +333,12 @@ class ConnectedContractorInfoView extends React.Component {
 					):
 					null
 				}
-				<Button onClick={() => this.props.addSpecialty(selectedContractor.id, specialty)}>Add Specialty</Button>
+				<Button onClick={() => this.props.addSpecialty(selectedContractor.id, specialty, (result) => {
+					console.log('result',result)
+					if(result)
+						this.props.updateContractor(selectedContractor.id);	
+					// this.forceUpdate();
+				})}>Add Specialty</Button>
 			</Paper >					
 			</div>
 		);
@@ -350,8 +355,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		getSpecialties: (page, size) => dispatch(getSpecialties(page, size)),	
-		addSpecialty: (contractor, specialty) => dispatch(addSpecialty(contractor, specialty)),		
-		deleteSpecialty: (contractor, specialty) => dispatch(deleteSpecialty(contractor, specialty)),		
+		addSpecialty: (contractor, specialty, cb) => dispatch(addSpecialty(contractor, specialty, cb)),		
+		deleteSpecialty: (contractor, specialty, cb) => dispatch(deleteSpecialty(contractor, specialty, cb)),	
+		updateContractor: (id) => dispatch(updateContractor(id)),	
 	}
 }
 const ContractorInfoView = connect(mapStateToProps, mapDispatchToProps)(ConnectedContractorInfoView);
