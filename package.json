@@ -46,8 +46,8 @@
 	},
 	"scripts": {
 		"start": "cross-env NODE_ENV=development webpack-dev-server --port 4000 --hot --host localhost",
-    "build": "cross-env NODE_ENV=production webpack",
-    "deploy": "aws --profile bc s3 sync dist/ s3://bcfe"
+		"build": "cross-env NODE_ENV=production webpack",
+		"deploy": "aws --profile bc s3 sync dist/ s3://bcfe"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
