@@ -184,14 +184,7 @@ class ConnectedProjectTemplateView extends React.Component {
 							<TableRow>
 								<CustomTableCell> Template Name </CustomTableCell>
 								<CustomTableCell align="center">Template Desc</CustomTableCell>
-								<CustomTableCell align="center">Template Value</CustomTableCell>
-								<CustomTableCell align="center" >
-									<IconButton style={{ color: "#FFFFFF" }} onClick={
-										() => this.setState({ openCategoryForm: true })
-									}>
-										<NoteAddIcon />
-									</IconButton>
-								</CustomTableCell>
+								<CustomTableCell align="center">Template Value</CustomTableCell>								
 							</TableRow>
 						</TableHead>
 						<TableBody >
@@ -220,34 +213,6 @@ class ConnectedProjectTemplateView extends React.Component {
 												}}>
 												{row.template.value? row.template.value: "N/A"}												
 												</CustomTableCell>
-											<CustomTableCell align="center">
-												<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
-													async () => {
-														await this.props.deleteTemplate(selectedProject.id, row.template.id, (result) => {
-															this.setState({
-																snackBar: true,
-																snackBarContent: result ? 'delete template success' : 'please template categories'
-															});
-															this.props.updateProject(selectedProject.id);
-														});
-
-														if (this.state.rowsPerPage * (this.state.currentPage) < selectedProject.projectTemplates.length - 1) {
-															await this.props.getTemplates(this.state.currentPage, this.state.rowsPerPage);
-														}
-														else {
-															const currentPage = this.state.currentPage - 1;
-
-															this.setState({
-																currentPage: currentPage
-															});
-
-															await this.props.getTemplates(currentPage, this.state.rowsPerPage);
-														}
-													}
-												}>
-													<DeleteIcon />
-												</IconButton>
-											</CustomTableCell>
 										</TableRow>
 									)
 								)
