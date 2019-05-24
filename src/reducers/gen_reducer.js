@@ -6,7 +6,8 @@ import {
 	PROJECT_DETAIL_LOADED,
 	BIDDERS_LOADED,
 	PROJECT_FILES_LOADED,
-	MESSAGE_LOADED
+	MESSAGE_LOADED,
+	TEMPLATES_LOADED
 } from "../constants/gen-action-types";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
 	projects: null,
 	allprojects: null,
 	bidders: [],
+	templates: null
 };
 
 function gen_reducer(state = initialState, action) {
@@ -60,6 +62,10 @@ function gen_reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				allprojects: null,
 			});
+		case "CLEAR_TEMPLATES":
+			return Object.assign({}, state, {
+				templates: null,
+			});
 		case "CLEAR_BIDDERS":
 			return Object.assign({}, state, {
 				bidders: [],
@@ -76,6 +82,11 @@ function gen_reducer(state = initialState, action) {
 					title: ""
 				}
 			});
+		case TEMPLATES_LOADED:
+			return Object.assign({}, state, {
+				//projects: state.projects.concat(action.payload)
+				templates: action.payload
+			});	
 		default:
 			return state;
 	}

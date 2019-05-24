@@ -13,6 +13,7 @@ import ProjectBidders from './ProjectBidders';
 import ProjectFiles from './ProjectFiles';
 import ProjectMessages from './ProjectMessages';
 import ProjectProposals from './ProjectProposals';
+import ProjectTemplates from './ProjectTemplates';
 
 const styles = theme => ({
 	root: {
@@ -69,6 +70,7 @@ class ConnectedProjectDetailView extends React.Component {
 							<Tab label="Files" />
 							<Tab label="Messages" />
 							<Tab label="Proposals" />
+							<Tab label="Templates" />
 						</Tabs>
 
 						{curDetailTab === 0 && <ProjectOverView />}
@@ -76,6 +78,7 @@ class ConnectedProjectDetailView extends React.Component {
 						{curDetailTab === 2 && <ProjectFiles />}
 						{curDetailTab === 3 && /*<ProjectMessages />*/ <div />}
 						{curDetailTab === 4 && /*<ProjectProposals />*/ <div />}
+						{curDetailTab === 5 && <ProjectTemplates />}
 					</Paper>
 				</div></NoSsr>
 		);
