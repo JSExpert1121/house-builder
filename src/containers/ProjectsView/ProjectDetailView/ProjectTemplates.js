@@ -133,51 +133,7 @@ class ConnectedProjectTemplateView extends React.Component {
 		}
 		return (
 			<div className={classes.root}>
-				<Paper className={classes.root}>
-				<div className={classes.template}>
-					<Select
-						value={template}
-						onChange={this.handleChange}
-						name="templates"
-						>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
-						{
-							templates? templates.content.map(
-							row => (
-								<MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>					
-							)
-							):
-							null
-						}
-					</Select>	 
-					<Fab color="primary" aria-label="Add" className={classes.fab} onClick={() => this.props.addTemplate(selectedProject.id, template, (result) => {	
-								this.setState({template: ''})
-								if(result)
-									this.props.updateProject(selectedProject.id);						
-							})}>
-							<AddIcon />
-					</Fab>			
-					{
-						templates? templates.content.map(
-							row => (
-								row.id == template ?
-							<ul key={row.id}>
-								<li>
-									Name: {row.name}
-								</li>
-								<li>
-									Description: {row.description}
-								</li>
-							</ul>
-							:
-							null
-							)
-						):
-						null
-					}															
-				</div>
+				<Paper className={classes.root}>				
 				<div className={classes.tableWrap}>
 					<Table >
 						<TableHead>
