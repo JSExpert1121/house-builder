@@ -19,6 +19,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 import { getSpecialties, addSpecialty, deleteSpecialty, updateContractor } from '../../../actions/cont-actions';
 
 const styles = theme => ({
@@ -46,6 +48,14 @@ const styles = theme => ({
 	},
 	editField: {
 		lineHeight: '1.5rem',
+	},
+	specialty: {
+		margin: "10px",
+	},
+	fab: {
+		width: "40px",
+		height: "40px",
+		marginLeft: "20px",
 	}
 });
 
@@ -124,6 +134,49 @@ class ConnectedContractorInfoView extends React.Component {
 		return (
 			<div className={classes.root}>
 				<Paper className={classes.root}>
+				<div className={classes.specialty}>
+					<Select
+						value={specialty}
+						onChange={this.handleChange}
+						name="specialties"
+						>
+						<MenuItem value="">
+							<em>None</em>
+						</MenuItem>
+						{
+							specialties? specialties.content.map(
+							row => (
+								<MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>					
+							)
+							):
+							null
+						}
+					</Select>	 		
+					{
+						specialties? specialties.content.map(
+							row => (
+								row.id == specialty ?
+							<ul key={row.id}>
+								<li>
+									Name: {row.name}
+								</li>
+								<li>
+									Description: {row.description}
+								</li>
+							</ul>
+							:
+							null
+							)
+						):
+						null
+					}					
+						<Fab color="primary" aria-label="Add" className={classes.fab} onClick={() => this.props.addSpecialty(selectedContractor.id, specialty, (result) => {					
+								if(result)
+									this.props.updateContractor(selectedContractor.id);						
+							})}>
+							<AddIcon />
+						</Fab>					
+				</div>
 				<div className={classes.tableWrap}>
 					<Table >
 						<TableHead>
@@ -294,49 +347,7 @@ class ConnectedContractorInfoView extends React.Component {
 							this.state.snackBarContent
 						}</span>
 					}
-				/>
-				 <Select
-					value={specialty}
-					onChange={this.handleChange}
-					name="specialties"
-					>
-					<MenuItem value="">
-						<em>None</em>
-					</MenuItem>
-					{
-						specialties? specialties.content.map(
-						row => (
-							<MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>					
-						)
-						):
-						null
-					}
-				 </Select>	 		
-				{
-					specialties? specialties.content.map(
-						row => (
-							row.id == specialty ?
-						<ul key={row.id}>
-							<li>
-								Name: {row.name}
-							</li>
-							<li>
-								Description: {row.description}
-							</li>
-							<li>
-								Value: {row.value}
-							</li>
-						</ul>
-						:
-						null
-						)
-					):
-					null
-				}
-				<Button onClick={() => this.props.addSpecialty(selectedContractor.id, specialty, (result) => {					
-					if(result)
-						this.props.updateContractor(selectedContractor.id);						
-				})}>Add Specialty</Button>
+				/>				
 			</Paper >					
 			</div>
 		);

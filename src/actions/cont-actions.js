@@ -239,7 +239,7 @@ export function deleteFile(id, name, cb) {
 	}
 }
 
-export function approveContractor(id, data) {
+export function approveContractor(id, data, cb) {
 	return function (dispatch) {
 		return Axios.post(process.env.PROJECT_API + "contractors/" + id, data)
 			.then(response => {
@@ -251,7 +251,7 @@ export function approveContractor(id, data) {
 	}
 }
 
-export function rejectContractor(id, data) {
+export function rejectContractor(id, data, cb) {
 	return function (dispatch) {
 		return Axios.post(process.env.PROJECT_API + "contractors/" + id, data)
 			.then(response => {
