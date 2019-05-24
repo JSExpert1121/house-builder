@@ -4,7 +4,8 @@ import {
 	PROJECT_DETAIL_LOADED,
 	BIDDERS_LOADED,
 	PROJECT_FILES_LOADED,
-	MESSAGE_LOADED
+	MESSAGE_LOADED,
+	TEMPLATES_LOADED
 } from "../constants/gen-action-types";
 import Axios from "axios";
 
@@ -120,5 +121,61 @@ export function deleteFile(id, name, cb) {
 				cb(false);
 				console.log(err.message);
 			})
+	}
+}
+
+export function getTemplates(page, size) {
+	return function (dispatch) {
+		dispatch({ type: "CLEAR_TEMPLATES" });
+
+			return Axios.get(process.env.PROJECT_API + "templates", {
+				params: {
+					"page": page,
+					"size": size
+				}
+			})
+			.then(response => {
+				dispatch({ type: TEMPLATES_LOADED, payload: response.data })
+			})
+			.catch(err => console.log(err.message))
+	}
+}
+
+export function addTemplate(projectId, templateId, cb) {
+	return function (dispatch) {
+		return Axios.post(process.env.PROJECT_API + "projects/" + projectId + "/templates/" + templateId)
+			.then(response => {
+				cb(true);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
+	}
+}
+
+export function deleteTemplate(projectId, templateId, cb) {
+	return function (dispatch) {
+		return Axios.delete(process.env.PROJECT_API +"projects/" + projectId + "/templates/" + templateId)
+			.then(response => {
+				cb(true);
+			})
+			.catch(err => {
+				cb(false);
+				console.log(err.message)
+			})
+	}
+}
+
+export function updateProject(id) {
+	return function (dispatch) {
+
+		return Axios.get(process.env.PROJECT_API + "projects/" + id)
+			.then(response => {
+				dispatch({
+					type: PROJECT_DETAIL_LOADED,
+					payload: response.data
+				})
+			})
+			.catch(err => console.log(err.message))
 	}
 }

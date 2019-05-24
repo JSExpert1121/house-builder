@@ -8,12 +8,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import NoSsr from '@material-ui/core/NoSsr';
 
-import ProjectOverView from './ProjectOverView';
-import ProjectBidders from './ProjectBidders';
-import ProjectFiles from './ProjectFiles';
-import ProjectMessages from './ProjectMessages';
-import ProjectProposals from './ProjectProposals';
-import ProjectTemplates from './ProjectTemplates';
+import ContractorInfo from './ContractorInfo';
+import ContractorSpecialties from './ContractorSpecialties';
+import ContractorFiles from './ContractorFiles';
+// import ContractorMessages from './ContractorMessages';
+// import ContractorProposals from './ContractorProposals';
 
 const styles = theme => ({
 	root: {
@@ -27,7 +26,7 @@ const styles = theme => ({
 	}
 });
 
-class ConnectedProjectDetailView extends React.Component {
+class ConnectedContractorDetailView extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -43,10 +42,10 @@ class ConnectedProjectDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, selectedProject } = this.props;
+		const { classes, selectedContractor } = this.props;
 		const curDetailTab = this.state.curDetailTab;
 
-		if (selectedProject === null)
+		if (selectedContractor === null)
 			return (
 				<div> no project is selected </div>
 			);
@@ -65,20 +64,14 @@ class ConnectedProjectDetailView extends React.Component {
 							scrollButtons="on"
 							className={classes.toolbarstyle}
 						>
-							<Tab label="Overview" />
-							<Tab label="Bidders" />
+							<Tab label="Info" />
 							<Tab label="Files" />
-							<Tab label="Messages" />
-							<Tab label="Proposals" />
-							<Tab label="Templates" />
+							<Tab label="Specialties" />
 						</Tabs>
 
-						{curDetailTab === 0 && <ProjectOverView />}
-						{curDetailTab === 1 && /*<ProjectBidders />*/ <div />}
-						{curDetailTab === 2 && <ProjectFiles />}
-						{curDetailTab === 3 && /*<ProjectMessages />*/ <div />}
-						{curDetailTab === 4 && /*<ProjectProposals />*/ <div />}
-						{curDetailTab === 5 && <ProjectTemplates />}
+						{curDetailTab === 0 && <ContractorInfo />}						
+						{curDetailTab === 1 && <ContractorFiles />}
+						{curDetailTab === 2 && <ContractorSpecialties />}
 					</Paper>
 				</div></NoSsr>
 		);
@@ -87,14 +80,14 @@ class ConnectedProjectDetailView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		selectedProject: state.gen_data.selectedProject
+		selectedContractor: state.cont_data.selectedContractor
 	};
 };
 
-const ProjectDetailView = connect(mapStateToProps)(ConnectedProjectDetailView);
+const ContractorDetailView = connect(mapStateToProps)(ConnectedContractorDetailView);
 
-ProjectDetailView.propTypes = {
+ContractorDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProjectDetailView);
+export default withStyles(styles)(ContractorDetailView);

@@ -19,6 +19,7 @@ import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
 
 import ServiceIcon from '@material-ui/icons/GroupWork';
 import HelpIcon from '@material-ui/icons/Help';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import auth0Client from '../../auth0/auth';
 
@@ -122,6 +123,15 @@ class ConnectedMenuList extends React.Component {
 								<PagesIcon />
 							</ListItemIcon>
 							<ListItemText primary="Manage Templates" className={classes.listItemText} />
+						</ListItem>
+					}
+					{
+						(roles.includes("Admin") || roles.includes("SuperAdmin")) &&
+						<ListItem button component={Link} to='/m_cont' className={pathname.includes('/m_cont') ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<SettingsIcon />
+							</ListItemIcon>
+							<ListItemText primary="Manage Contractor" className={classes.listItemText} />
 						</ListItem>
 					}
 				</List>
