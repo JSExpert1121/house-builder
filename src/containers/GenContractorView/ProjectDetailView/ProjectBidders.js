@@ -11,7 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { getProjectBidders } from '../../../actions/gen-actions';
+import { getProposals } from '../../../actions/gen-actions';
 
 const styles = theme => ({
 	root: {
@@ -69,16 +69,16 @@ class ConnectedProjectBidders extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.getProjectBidders(this.props.selectedProject.id);
+		this.props.getProposals(this.props.selectedProject.id);
 	}
 
 	render() {
-		const { classes, bidders } = this.props;
+		const { classes, proposals } = this.props;
 
 		return (
 			<Card className={classes.root}>
 				{
-					bidders.length != 0 ? <Table className={classes.table}>
+					proposals.length != 0 ? <Table className={classes.table}>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell align="center">Name</CustomTableCell>
@@ -87,7 +87,7 @@ class ConnectedProjectBidders extends React.Component {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{bidders.map(row => (
+							{proposals.map(row => (
 								<TableRow className={classes.row} key={row.id} hover
 									onClick={() => { }}>
 									<CustomTableCell component="th" scope="row" align="center">{row.name}</CustomTableCell>
@@ -107,14 +107,14 @@ class ConnectedProjectBidders extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		bidders: state.gen_data.bidders,
+		proposals: state.gen_data.proposals,
 		selectedProject: state.gen_data.selectedProject
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProjectBidders: (id) => dispatch(getProjectBidders(id)),
+		getProposals: (id) => dispatch(getProposals(id)),
 	};
 };
 

@@ -85,7 +85,6 @@ class connectedCurProView extends React.Component {
 		this.props.getAllProjects(currentPage, rowsPerPage);
 	};
 
-
 	handleAddProject = () => {
 	}
 

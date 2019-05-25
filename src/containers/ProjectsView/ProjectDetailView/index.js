@@ -77,7 +77,7 @@ class ConnectedProjectDetailView extends React.Component {
 						{curDetailTab === 1 && /*<ProjectBidders />*/ <div />}
 						{curDetailTab === 2 && <ProjectFiles />}
 						{curDetailTab === 3 && /*<ProjectMessages />*/ <div />}
-						{curDetailTab === 4 && /*<ProjectProposals />*/ <div />}
+						{curDetailTab === 4 && <ProjectProposals />}
 						{curDetailTab === 5 && <ProjectTemplates />}
 					</Paper>
 				</div></NoSsr>

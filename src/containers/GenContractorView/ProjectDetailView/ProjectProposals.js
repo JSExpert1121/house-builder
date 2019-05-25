@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { setSelectedProposal, getProjectBidders } from '../../../actions/gen-actions';
+import { setSelectedProposal, getProposals } from '../../../actions/gen-actions';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -73,16 +73,16 @@ class ConnectedProjectProposals extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.getProjectBidders(this.props.selectedProject.id);
+		this.props.getProposals(this.props.selectedProject.id);
 	}
 
 	render() {
-		const { classes, bidders } = this.props;
+		const { classes, proposals } = this.props;
 
 		return (
 			<Card className={classes.root}>
 				{
-					bidders.length != 0 ?
+					proposals.length != 0 ?
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
@@ -93,7 +93,7 @@ class ConnectedProjectProposals extends React.Component {
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{bidders.map(row => (
+								{proposals.map(row => (
 									<TableRow className={classes.row} key={row.id} hover
 										onClick={() => {
 											this.props.setSelectedProposal(row);
@@ -118,13 +118,13 @@ class ConnectedProjectProposals extends React.Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		setSelectedProposal: propose => dispatch(setSelectedProposal(propose)),
-		getProjectBidders: id => dispatch(getProjectBidders(id))
+		getProposals: id => dispatch(getProposals(id))
 	};
 }
 
 const mapStateToProps = state => {
 	return {
-		bidders: state.gen_data.bidders,
+		proposals: state.gen_data.proposals,
 		selectedProject: state.gen_data.selectedProject,
 	};
 };

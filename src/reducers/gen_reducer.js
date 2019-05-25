@@ -4,7 +4,7 @@ import {
 	SET_SELECTED_PROPOSAL,
 	ALL_PROJECT_LOADED,
 	PROJECT_DETAIL_LOADED,
-	BIDDERS_LOADED,
+	PROPOSALS_LOADED,
 	PROJECT_FILES_LOADED,
 	MESSAGE_LOADED,
 	TEMPLATES_LOADED
@@ -16,7 +16,7 @@ const initialState = {
 	messages: [],
 	projects: null,
 	allprojects: null,
-	bidders: [],
+	proposals: null,
 	templates: null
 };
 
@@ -30,10 +30,10 @@ function gen_reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				selectedProposal: action.payload
 			});
-		case BIDDERS_LOADED:
+		case PROPOSALS_LOADED:
 			return Object.assign({}, state, {
 				//projects: state.projects.concat(action.payload)
-				bidders: action.payload
+				proposals: action.payload
 			});
 		case "PROJECT_LOADED":
 			return Object.assign({}, state, {
@@ -62,13 +62,13 @@ function gen_reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				allprojects: null,
 			});
-		case "CLEAR_TEMPLATES":
+		case "CLEAR_PROPOSALS":
+			return Object.assign({}, state, {
+				proposals: null,
+			});
+      case "CLEAR_TEMPLATES":
 			return Object.assign({}, state, {
 				templates: null,
-			});
-		case "CLEAR_BIDDERS":
-			return Object.assign({}, state, {
-				bidders: [],
 			});
 		case "CLEAR_MESSAGES":
 			return Object.assign({}, state, {

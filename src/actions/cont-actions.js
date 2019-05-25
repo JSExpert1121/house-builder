@@ -2,7 +2,7 @@ import Axios from 'axios';
 
 import { ALL_CONTRACTORS_LOADED, SET_SELECTED_CONTRACTOR, SET_SELECTED_CATEGORY, SET_SELECTED_OPTION, SPECIALTIES_LOADED } from '../constants/cont-action-types';
 
-export function createCONTRACTOR(contractor, cb) {
+export function createContractor(contractor, cb) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_ALL_CONTRACTORS" });
 
