@@ -12,6 +12,8 @@ import { CircularProgress, IconButton, Snackbar } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import List from '@material-ui/core/List';
+import { DropzoneDialog } from 'material-ui-dropzone';
+import { setSelectedProposal, addFilesToProposal, deleteProposalFile } from '../../../actions/gen-actions';
 
 const styles = theme => ({
 	root: {
@@ -21,6 +23,11 @@ const styles = theme => ({
 		overflow: "auto",
 		overflowX: "hidden"
 	},
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(40vh)",
+	}
 });
 
 const CustomTableCell = withStyles(theme => ({
@@ -39,7 +46,38 @@ class ConnectedProposalDetailFiles extends React.Component {
 		super(props);
 
 		this.state = {
+			openUploadForm: false,
+			snackBar: false,
+			snackBarContent: ''
 		}
+	}
+
+	handleUploadFiles = async (files) => {
+		const { selectedProposal } = this.props;
+
+		await this.props.addFilesToProposal(selectedProposal.id, files, (res) => {
+			this.setState({
+				snackBar: true,
+				snackBarContent: res ? 'File Upload Success' : 'File Upload Failed',
+				openUploadForm: false
+			});
+
+			if (res)
+				this.props.setSelectedProposal(selectedProposal.id);
+		});
+	}
+
+	handleDeletefile = async (name) => {
+		const { selectedProposal } = this.props;
+
+		await this.props.deleteProposalFile(selectedProposal.id, name, (res) => {
+			this.setState({
+				snackBar: true,
+				snackBarContent: res ? 'File Delete Success' : 'File Delete Failed'
+			});
+			if (res)
+				this.props.setSelectedProposal(selectedProposal.id);
+		});
 	}
 
 	render() {
@@ -59,18 +97,61 @@ class ConnectedProposalDetailFiles extends React.Component {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						<TableRow>
-							<CustomTableCell align="center">File1(not exist)</CustomTableCell>
-							<CustomTableCell align="center">
-								<IconButton className={classes.button} aria-label="Delete" color="primary">
-									<DeleteIcon />
-								</IconButton>
-							</CustomTableCell>
-						</TableRow>
+						{
+							selectedProposal.proposalFiles.map((row) => (
+								<TableRow key={row.id} hover>
+									<CustomTableCell align="center">
+										<a download={row.name} href={process.env.PROJECT_API + "/proposals/" + selectedProposal.id + "/files/" + row.name}>{row.name}</a>
+									</CustomTableCell>
+									<CustomTableCell align="center">
+										<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
+											() => this.handleDeletefile(row.name)
+										}>
+											<DeleteIcon />
+										</IconButton>
+									</CustomTableCell>
+								</TableRow>
+							))
+						}
 					</TableBody>
 				</Table>
+
+				<DropzoneDialog
+					open={this.state.openUploadForm}
+					onSave={this.handleUploadFiles}
+					maxFileSize={52428800}
+					showFileNamesInPreview={true}
+					acceptedFiles={['text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*']}
+					filesLimit={100}
+					dropzoneText='select files to upload(< 50mb)'
+					onClose={() => this.setState({ openUploadForm: false })}
+				/>
+
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
 			</div>
 		);
+	}
+}
+
+const mapDispatchToProps = dispatch => {
+	return {
+		setSelectedProposal: (id) => dispatch(setSelectedProposal(id)),
+		addFilesToProposal: (id, files, cb) => dispatch(addFilesToProposal(id, files, cb)),
+		deleteProposalFile: (id, name, cb) => dispatch(deleteProposalFile(id, name, cb))
 	}
 }
 
@@ -80,7 +161,7 @@ const mapStateToProps = state => {
 	};
 };
 
-const ProposalDetailFiles = connect(mapStateToProps)(ConnectedProposalDetailFiles);
+const ProposalDetailFiles = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailFiles);
 
 ProposalDetailFiles.propTypes = {
 	classes: PropTypes.object.isRequired,

@@ -33,6 +33,19 @@ export function awardProject(id, cb) {
 	}
 }
 
+export function deleteProposalFile(id, name, cb) {
+	return function (dispatch) {
+		return Axios.delete(process.env.PROJECT_API + "proposals/" + id + "/files/" + name)
+			.then(response => {
+				cb(true);
+			})
+			.catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
+	}
+}
+
 export function deleteProject(id, cb) {
 	return function (dispatch) {
 		return Axios.delete(process.env.PROJECT_API + "projects/" + id)
@@ -155,6 +168,29 @@ export function addFiles(id, files, cb) {
 			.then((response) => {
 				cb(true);
 				console.log(response);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message);
+			});
+	}
+}
+
+export function addFilesToProposal(id, files, cb) {
+	return function (dispatch) {
+		const formData = new FormData();
+		files.forEach(async (file) => {
+			await formData.append('file', file);
+		});
+
+		return Axios.post(process.env.PROJECT_API + "proposals/" + id + "/files/upload/multiple",
+			formData,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				cb(true);
 			}).catch(err => {
 				cb(false);
 				console.log(err.message);
