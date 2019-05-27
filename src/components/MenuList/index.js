@@ -134,6 +134,15 @@ class ConnectedMenuList extends React.Component {
 							<ListItemText primary="Manage Contractor" className={classes.listItemText} />
 						</ListItem>
 					}
+					{
+						(roles.includes("Admin") || roles.includes("SuperAdmin")) &&
+						<ListItem button component={Link} to='/m_spec' className={pathname.includes('/m_spec') ? classes.selectedStyle : ""}>
+							<ListItemIcon>
+								<PagesIcon />
+							</ListItemIcon>
+							<ListItemText primary="Manage Specialty" className={classes.listItemText} />
+						</ListItem>
+					}
 				</List>
 
 				<Divider />
