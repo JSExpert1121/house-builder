@@ -11,7 +11,7 @@ import { submitProposal, deleteProposal, setSelectedProposal, getProjectsByGenId
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
+		height: "calc(100vh - 64px - 72px - 48px - 20px)",
 		padding: "10px"
 	},
 	editField: {
@@ -144,9 +144,8 @@ class ConnectedProposalDetailView extends Component {
 						margin="normal"
 						label="project description"
 						type="text"
-						multiline
-						rows="5"
 						fullWidth
+						className={classes.width_300}
 						value={proposal.project.description}
 						readOnly={true}
 					/>

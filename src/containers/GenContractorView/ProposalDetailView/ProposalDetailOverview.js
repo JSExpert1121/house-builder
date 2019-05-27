@@ -113,9 +113,8 @@ class ConnectedProposalDetailView extends Component {
 						margin="normal"
 						label="project description"
 						type="text"
-						multiline
-						rows="5"
 						fullWidth
+						className={classes.width_300}
 						value={proposal.project.description}
 						readOnly={true}
 					/>
