@@ -297,7 +297,7 @@ class connectedProfileView extends Component {
 
 	render() {
 		const { classes, userProfile } = this.props;
-		const status = this.state.status.toUpperCase();
+		const status = "Status: " + this.state.status.toUpperCase();
 		// console.log(this.props.userProfile);
 		if (this.state.isDataLoaded === false)
 			return (
