@@ -54,9 +54,15 @@ class ConnectedProposalDetailFiles extends React.Component {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						<TableRow>
-							<CustomTableCell align="center">File1(not exist)</CustomTableCell>
-						</TableRow>
+						{
+							selectedProposal.proposalFiles.map((row) => (
+								<TableRow key={row.id} hover>
+									<CustomTableCell align="center">
+										<a download={row.name} href={process.env.PROJECT_API + "/proposals/" + selectedProposal.id + "/files/" + row.name}>{row.name} </a>
+									</CustomTableCell>
+								</TableRow>
+							))
+						}
 					</TableBody>
 				</Table>
 			</div>
