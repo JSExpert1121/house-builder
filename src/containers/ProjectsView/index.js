@@ -59,7 +59,9 @@ class ConnectedGenContView extends React.Component {
 			'/a_pros/proposal_detail/c': 2,
 		};
 
-		const curTabPos = tabNo[location.pathname];
+		let curTabPos = tabNo[location.pathname];
+		if(location.pathname.includes("/a_pros/project_detail"))
+			curTabPos = 1;
 
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&

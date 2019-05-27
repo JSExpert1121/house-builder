@@ -45,7 +45,7 @@ class ConnectedGenContView extends React.Component {
 	}
 
 	render() {
-		const { classes, userProfile, location } = this.props;
+		const { classes, userProfile, match, location } = this.props;
 
 		const tabNo = {
 			'/g_cont': 0,
@@ -55,7 +55,10 @@ class ConnectedGenContView extends React.Component {
 			'/g_cont/add_project': 3
 		};
 
-		const curTabPos = tabNo[location.pathname];
+		let curTabPos = tabNo[location.pathname];
+
+		if (location.pathname.includes('/g_cont/project_detail'))
+			curTabPos = 1;
 
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&
@@ -71,19 +74,19 @@ class ConnectedGenContView extends React.Component {
 							variant="scrollable"
 							scrollButtons="on">
 
-							<Tab component={Link} to={`/g_cont/current_pros`} label="Current Projects" icon={<AppsIcon />} />
-							<Tab component={Link} to={`/g_cont/project_detail`} label="Project Detail" icon={<BallotIcon />} />
-							<Tab component={Link} to={`/g_cont/propose_detail`} label="Proposal Detail" icon={<DoneAllIcon />} />
-							<Tab component={Link} to={`/g_cont/add_project`} label="Add Project" icon={<PlaylistAddIcon />} />
+							<Tab component={Link} to={`${match.url}/current_pros`} label="Current Projects" icon={<AppsIcon />} />
+							<Tab component={Link} to={`${match.url}/project_detail`} label="Project Detail" icon={<BallotIcon />} />
+							<Tab component={Link} to={`${match.url}/propose_detail`} label="Proposal Detail" icon={<DoneAllIcon />} />
+							<Tab component={Link} to={`${match.url}/add_project`} label="Add Project" icon={<PlaylistAddIcon />} />
 						</Tabs>
 					</AppBar>
 
 					<Switch>
-						<SecuredRoute path='/g_cont/current_pros' component={CurrentProjectView} />
-						<SecuredRoute path='/g_cont/project_detail' component={ProjectDetailView} />
-						<SecuredRoute path='/g_cont/propose_detail' component={ProposalDetailView} />
-						<SecuredRoute path='/g_cont/add_project' component={AddProjectView} />
-						<Redirect path='/g_cont' to={`/g_cont/current_pros`} />
+						<SecuredRoute path={`${match.url}/current_pros`} component={CurrentProjectView} />
+						<SecuredRoute path={`${match.url}/project_detail`} component={ProjectDetailView} />
+						<SecuredRoute path={`${match.url}/propose_detail`} component={ProposalDetailView} />
+						<SecuredRoute path={`${match.url}/add_project`} component={AddProjectView} />
+						<Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
 					</Switch>
 				</div>
 			</NoSsr>

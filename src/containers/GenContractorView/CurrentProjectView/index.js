@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
-import { getProjectDetailById, getAllProjects, getProjectsByGenId } from '../../../actions/gen-actions';
+import { getProjectDetailById, getAllProjects, getProjectsByGenId, deleteProject } from '../../../actions/gen-actions';
 
 import PropTypes from 'prop-types';
 
@@ -13,8 +13,15 @@ import {
 	CircularProgress,
 	Table, TableHead, TableCell, TableRow, TableBody,
 	IconButton, TablePagination,
-	Button
+	Button,
+	Snackbar,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	DialogActions
 } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const styles = theme => ({
 	root: {
@@ -55,8 +62,13 @@ class connectedCurProView extends React.Component {
 		super(props);
 
 		this.state = {
-			rowsPerPage: 20, 
-			currentPage: 0
+			rowsPerPage: 20,
+			currentPage: 0,
+			isSaving: false,
+			snackBar: false,
+			snackBarContent: '',
+			alertConfirm: false,
+			proId: 0
 		};
 	}
 
@@ -64,7 +76,7 @@ class connectedCurProView extends React.Component {
 		const { userProfile } = this.props;
 		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
 	}
-	
+
 	handleChangePage = (event, page) => {
 		const { userProfile } = this.props;
 		this.setState({ currentPage: page });
@@ -74,7 +86,7 @@ class connectedCurProView extends React.Component {
 
 	handleChangeRowsPerPage = event => {
 		const { projects, userProfile } = this.props;
-		
+
 		const rowsPerPage = event.target.value;
 		const currentPage = rowsPerPage >= projects.totalElements ? 0 : this.state.currentPage;
 
@@ -86,7 +98,43 @@ class connectedCurProView extends React.Component {
 		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, currentPage, rowsPerPage);
 	};
 
-	handleAddProject = () => {
+	handleDeleteProject = async (id) => {
+		this.setState({
+			isSaving: true,
+			alertConfirm: false
+		})
+
+		await this.props.deleteProject(this.state.proId, (res) => {
+			this.setState({
+				isSaving: false,
+				snackBar: true,
+				snackBarContent: res ? 'delete project success' : "delete project failed"
+			});
+
+			if (res) {
+				const { userProfile, projects } = this.props;
+
+				if (this.state.rowsPerPage * (this.state.currentPage) < projects.totalElements - 1) {
+					this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id,
+						this.state.currentPage, this.state.rowsPerPage);
+				}
+				else {
+					const currentPage = this.state.currentPage - 1;
+
+					this.setState({
+						currentPage: currentPage
+					});
+
+					this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id,
+						currentPage, this.state.rowsPerPage);
+				}
+			}
+		})
+	}
+
+	handleSelectProject = async (id) => {
+		await this.props.getProjectDetailById(id);
+		this.props.history.push("/g_cont/project_detail");
 	}
 
 	render() {
@@ -98,29 +146,40 @@ class connectedCurProView extends React.Component {
 
 		return (
 			<Paper className={classes.root}>
-				<div className = {classes.tableWrap} >
+				<div className={classes.tableWrap} >
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell> Project Title </CustomTableCell>
 								<CustomTableCell align="center">Budget</CustomTableCell>
 								<CustomTableCell align="center">Discription</CustomTableCell>
+								<CustomTableCell align="center">Action</CustomTableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{
 								projects.content.map(
 									row => (
-										<TableRow className={classes.row} key={row.id} hover
-											onClick={async () => {
-												await this.props.getProjectDetailById(row.id);
-												this.props.history.push("/g_cont/project_detail");
-											}}>
-											<CustomTableCell component="th" scope="row">
+										<TableRow className={classes.row} key={row.id} hover>
+											<CustomTableCell component="th" scope="row"
+												onClick={() => this.handleSelectProject(row.id)}>
 												{row.title}
 											</CustomTableCell>
-											<CustomTableCell align="center">{row.budget}</CustomTableCell>
-											<CustomTableCell align="center">{row.description}</CustomTableCell>
+											<CustomTableCell align="center"
+												onClick={() => this.handleSelectProject(row.id)}>{row.budget}</CustomTableCell>
+											<CustomTableCell align="center"
+												onClick={() => this.handleSelectProject(row.id)}>{row.description}</CustomTableCell>
+											<CustomTableCell align="center">
+												<IconButton aria-label="Delete" color="primary"
+													onClick={() => {
+														this.setState({
+															alertConfirm: true,
+															proId: row.id
+														})
+													}}>
+													<DeleteIcon />
+												</IconButton>
+											</CustomTableCell>
 										</TableRow>
 									)
 								)
@@ -144,6 +203,42 @@ class connectedCurProView extends React.Component {
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
+				<Dialog
+					open={this.state.alertConfirm}
+					onClose={() => this.setState({ alertConfirm: false })}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">{"Delete Project?"}</DialogTitle>
+					<DialogContent>
+						<DialogContentText id="alert-dialog-description">
+							Do you want to delete this project?
+          				</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={() => this.setState({ alertConfirm: false })} color="primary">
+							No
+          				</Button>
+						<Button onClick={() => this.handleDeleteProject()} color="primary" autoFocus>
+							Yes
+          				</Button>
+					</DialogActions>
+				</Dialog>
 			</Paper >
 		);
 	}
@@ -153,7 +248,8 @@ class connectedCurProView extends React.Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
-		getProjectsByGenId: (id, page, rowSize) => dispatch(getProjectsByGenId(id, page, rowSize))
+		getProjectsByGenId: (id, page, rowSize) => dispatch(getProjectsByGenId(id, page, rowSize)),
+		deleteProject: (id, cb) => dispatch(deleteProject(id, cb))
 	};
 };
 

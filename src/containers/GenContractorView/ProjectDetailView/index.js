@@ -1,4 +1,7 @@
 import React from 'react';
+import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
+import SecuredRoute from '../../../routers/SecuredRoute';
+
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
@@ -19,7 +22,7 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		margin: "10px",
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
@@ -38,19 +41,23 @@ class ConnectedProjectDetailView extends React.Component {
 		super(props);
 
 		this.state = {
-			curDetailTab: 0
 		}
 	}
 
-	handleTabChange = (event, value) => {
-		this.setState({
-			curDetailTab: value
-		});
-	}
-
 	render() {
-		const { classes, selectedProject } = this.props;
-		const curDetailTab = this.state.curDetailTab;
+		const { classes, match, selectedProject, location } = this.props;
+
+		const tabNo = {
+			'/g_cont/project_detail': 0,
+			'/g_cont/project_detail/overview': 0,
+			'/g_cont/project_detail/bidders': 1,
+			'/g_cont/project_detail/files': 2,
+			'/g_cont/project_detail/messages': 3,
+			'/g_cont/project_detail/proposals': 4,
+			'/g_cont/project_detail/templates': 5,
+		};
+
+		const curTabPos = tabNo[location.pathname];
 
 		if (selectedProject === null)
 			return <div />;
@@ -61,28 +68,30 @@ class ConnectedProjectDetailView extends React.Component {
 				<div className={classes.root}>
 					<Paper square >
 						<Tabs
-							value={curDetailTab}
-							onChange={this.handleTabChange}
+							value={curTabPos}
 							variant="scrollable"
 							indicatorColor="primary"
 							textColor="primary"
 							scrollButtons="on"
 							className={classes.toolbarstyle}
 						>
-							<Tab label="Overview" />
-							<Tab label="Bidders" />
-							<Tab label="Files" />
-							<Tab label="Messages" />
-							<Tab label="Proposals" />
-							<Tab label="Templates" />
+							<Tab component={Link} to={`${match.url}/overview`} label="Overview" />
+							<Tab component={Link} to={`${match.url}/bidders`} label="Bidders" />
+							<Tab component={Link} to={`${match.url}/files`} label="Files" />
+							<Tab component={Link} to={`${match.url}/messages`} label="Messages" />
+							<Tab component={Link} to={`${match.url}/proposals`} label="Proposals" />
+							<Tab component={Link} to={`${match.url}/templates`} label="Templates" />
 						</Tabs>
 
-						{curDetailTab === 0 && <ProjectOverView />}
-						{curDetailTab === 1 && /*<ProjectBidders />*/ <div />}
-						{curDetailTab === 2 && <ProjectFiles />}
-						{curDetailTab === 3 && /*<ProjectMessages />*/ <div />}
-						{curDetailTab === 4 && /*<ProjectProposals />*/ <div />}
-						{curDetailTab === 5 && <ProjectTemplates />}
+						<Switch>
+							<SecuredRoute path={`${match.url}/overview`} component={ProjectOverView} />
+							<SecuredRoute path={`${match.url}/bidders`} /* component={ProjectBidders} */ render={<div />} />
+							<SecuredRoute path={`${match.url}/files`} component={ProjectFiles} />
+							<SecuredRoute path={`${match.url}/messages`} /*component={ProjectMessages}*/ render={<div />} />
+							<SecuredRoute path={`${match.url}/proposals`} component={ProjectProposals} />
+							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />
+							<Redirect path={`${match.url}`} to={`${match.url}/overview`} />
+						</Switch>
 					</Paper>
 				</div></NoSsr>
 		);
@@ -101,4 +110,4 @@ ProjectDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProjectDetailView);
+export default withRouter(withStyles(styles)(ProjectDetailView));

@@ -66,7 +66,7 @@ function gen_reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				proposals: null,
 			});
-      case "CLEAR_TEMPLATES":
+		case "CLEAR_TEMPLATES":
 			return Object.assign({}, state, {
 				templates: null,
 			});
@@ -82,11 +82,15 @@ function gen_reducer(state = initialState, action) {
 					title: ""
 				}
 			});
+		case "CLEAR_SELECTED_PROPOSAL":
+			return Object.assign({}, state, {
+				selectedProposal: null
+			});
 		case TEMPLATES_LOADED:
 			return Object.assign({}, state, {
 				//projects: state.projects.concat(action.payload)
 				templates: action.payload
-			});	
+			});
 		default:
 			return state;
 	}
