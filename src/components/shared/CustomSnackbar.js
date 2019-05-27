@@ -21,7 +21,7 @@ import { green, amber } from '@material-ui/core/colors';
 // import green from '@material-ui/core/colors/green';
 // import amber from '@material-ui/core/colors/amber';
 // import WarningIcon from '@material-ui/icons/Warning';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
 const variantIcon = {
     success: CheckCircleIcon,
