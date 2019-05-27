@@ -84,6 +84,7 @@ class ConnectedProposalDetailView extends Component {
 		if (proposal === null)
 			return <Card className={classes.root} ></Card>
 
+		console.log(proposal.project);
 		return (
 			<div className={classes.root}>
 				<Link onClick={this.handleBack}> Back to all proposals</Link>
@@ -91,7 +92,17 @@ class ConnectedProposalDetailView extends Component {
 					<TextField
 						autoFocus
 						margin="normal"
-						label="original budget"
+						label="project name"
+						type="text"
+						fullWidth
+						className={classes.width_300}
+						value={proposal.project.title}
+						readOnly={true}
+					/>
+					<TextField
+						autoFocus
+						margin="normal"
+						label="project budget"
 						type="number"
 						fullWidth
 						className={classes.width_300}
@@ -100,16 +111,7 @@ class ConnectedProposalDetailView extends Component {
 					/>
 					<TextField
 						margin="normal"
-						label="original duration"
-						type="number"
-						fullWidth
-						className={classes.width_300}
-						value={proposal.project.duration}
-						readOnly={true}
-					/>
-					<TextField
-						margin="normal"
-						label="original description"
+						label="project description"
 						type="text"
 						multiline
 						rows="5"
