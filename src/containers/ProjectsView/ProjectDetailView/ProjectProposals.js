@@ -149,27 +149,27 @@ class ConnectedProjectProposals extends React.Component {
 								<CustomTableCell align="center">Duration</CustomTableCell>
 								<CustomTableCell align="center">Status</CustomTableCell>
 								<CustomTableCell align="center">Description</CustomTableCell>
-								<CustomTableCell align="center">Actions</CustomTableCell>
+								{/*<CustomTableCell align="center">Actions</CustomTableCell>*/}
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{proposals.content.map(row => (
 								<TableRow className={classes.row} key={row.id} hover>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)} 
-										component="th" scope="row" align="center">{row.id}</CustomTableCell>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)} 
+									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
+										component="th" scope="row" align="center">{row.subContractor.email}</CustomTableCell>
+									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
 										component="th" scope="row" align="center">{row.budget}</CustomTableCell>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)} 
+									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
 										component="th" scope="row" align="center">{row.duration}</CustomTableCell>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)} 
+									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
 										component="th" scope="row" align="center">{row.status}</CustomTableCell>
 									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)} align="center">{row.description.length > 40 ? row.description.slice(0, 40) + "..." : row.description}</CustomTableCell>
-									<CustomTableCell align="center">
+									{/*<CustomTableCell align="center">
 										<IconButton className={classes.button} aria-label="Delete" color="primary"
 											onClick={() => this.handleDeleteProposal(row.id)}>
 											<DeleteIcon />
 										</IconButton>
-									</CustomTableCell>
+							</CustomTableCell>*/}
 								</TableRow>
 							))}
 						</TableBody>

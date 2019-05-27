@@ -118,7 +118,7 @@ class ConnectedProjectProposals extends React.Component {
 									await this.props.setSelectedProposal(row.id);
 									this.props.history.push("/g_cont/propose_detail");
 								}} >
-									<CustomTableCell component="th" scope="row" align="center">{row.id}</CustomTableCell>
+									<CustomTableCell component="th" scope="row" align="center">{row.subContractor.email}</CustomTableCell>
 									<CustomTableCell align="center">{row.budget}</CustomTableCell>
 									<CustomTableCell align="center">{row.duration}</CustomTableCell>
 									<CustomTableCell align="center">{row.status}</CustomTableCell>

@@ -6,12 +6,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Card, Button, Snackbar, CircularProgress, Link } from '@material-ui/core';
-import { submitProposal, deleteProposal, setSelectedProposal, getProjectDetailById, awardProject } from '../../../actions/gen-actions';
+import { submitProposal, deleteProposal, setSelectedProposal, getProjectsByGenId } from '../../../actions/gen-actions';
 
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		height: "calc(100vh - 64px - 72px - 20px)",
 		padding: "10px"
 	},
 	editField: {
@@ -21,6 +21,10 @@ const styles = (theme) => ({
 		position: "relative",
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
+	},
+	width_300: {
+		width: 300,
+		marginRight: 10,
 	},
 	submitBtn: {
 		border: "1px solid #4a148c",
@@ -35,11 +39,7 @@ const styles = (theme) => ({
 		'&:disabled': {
 			backgroundColor: "#FFFFFF"
 		}
-	},
-	width_300: {
-		width: 300,
-		marginRight: 10,
-	},
+	}
 });
 
 class ConnectedProposalDetailView extends Component {
@@ -47,41 +47,73 @@ class ConnectedProposalDetailView extends Component {
 		super(props);
 
 		this.state = {
-			isSaving: false,
+			budget: 0,
+			duration: 0,
+			description: "",
 			snackBar: false,
-			snackBarContent: false,
+			snackBarContent: "",
+			isSaving: false,
 		}
 	}
 
-	handleAwardProject = async () => {
-		const { proposal } = this.props;
-
+	handleSubmitProposal = async () => {
+		const { userProfile, project } = this.props;
 		this.setState({
-			isSaving: true
+			isSaving: true,
 		});
 
-		await this.props.awardProject(proposal.id, (res) => {
+		const proposalData = {
+			"budget": this.state.budget,
+			"duration": this.state.duration,
+			"description": this.state.description,
+			"updatedBy": userProfile.email
+		};
+
+		await this.props.submitProposal(userProfile.user_metadata.contractor_id, project.id, proposalData, (res) => {
 			this.setState({
 				isSaving: false,
 				snackBar: true,
-				snackBarContent: res ? 'award project success' : 'award project failed'
+				snackBarContent: res !== 'false' ? "submit proposal success" : "submit proposal failed"
 			});
 
-			this.props.setSelectedProposal(proposal.id);
+			if (res) {
+				this.props.setSelectedProposal(res);
+				this.props.history.push("/a_pros/proposal_detail/v");
+			}
 		});
+	}
+
+	handleDeleteProposal = async () => {
+		const { proposal } = this.props;
+		this.setState({
+			isSaving: true
+		})
+
+		await this.props.deleteProposal(proposal.id, (res) => {
+			this.setState({
+				isSaving: false,
+				snackBar: true,
+				snackBarContent: res ? 'delete proposal success' : "delete proposal failed"
+			});
+
+			if (res) {
+				this.props.history.push("/a_pros/project_detail/proposals");
+			}
+		})
 	}
 
 	handleBack = async () => {
 		const { proposal } = this.props;
 
 		await this.props.selectProject(proposal.project.id);
-		this.props.history.push("/g_cont/project_detail/proposals");
+		this.props.history.push("/a_pros/project_detail/proposals");
 	}
 
 	render() {
-		const { classes, proposal } = this.props;
+		const { classes, match, proposal } = this.props;
+		const mode = match.params.mode;
 
-		if (proposal === null)
+		if (proposal === null && mode === 'v')
 			return <Card className={classes.root} ></Card>
 
 		return (
@@ -126,28 +158,31 @@ class ConnectedProposalDetailView extends Component {
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={proposal.budget}
-						readOnly={true}
+						value={mode === 'v' ? proposal.budget : this.state.budget}
+						readOnly={mode === 'v'}
+						onChange={(val) => this.setState({ budget: val.target.value })}
 					/>
 					<TextField
-						autoFocus
 						margin="normal"
 						label="duration"
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={proposal.duration}
-						readOnly={true}
+						value={mode === 'v' ? proposal.duration : this.state.duration}
+						readOnly={mode === 'v'}
+						onChange={(val) => this.setState({ duration: val.target.value })}
 					/>
-					<TextField
-						margin="normal"
-						label="status"
-						type="text"
-						fullWidth
-						className={classes.width_300}
-						value={proposal.status}
-						readOnly={true}
-					/>
+					{
+						mode === 'v' && <TextField
+							margin="normal"
+							label="status"
+							type="text"
+							fullWidth
+							className={classes.width_300}
+							value={proposal.status}
+							readOnly={true}
+						/>
+					}
 					<TextField
 						margin="normal"
 						label="description"
@@ -155,15 +190,23 @@ class ConnectedProposalDetailView extends Component {
 						multiline
 						rows="10"
 						fullWidth
-						value={proposal.description}
-						readOnly={true}
+						value={mode === 'v' ? proposal.description : this.state.description}
+						readOnly={mode === 'v'}
+						onChange={(val) => this.setState({ description: val.target.value })}
 					/>
-					<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={
-						this.handleAwardProject
-					}> Award Project {this.state.isSaving && <CircularProgress
-						disableShrink
-						size={24}
-						thickness={4} />} </Button>
+					{
+						mode === 'c' && <Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={
+							this.handleSubmitProposal
+						}> Submit Proposal {this.state.isSaving && <CircularProgress
+							disableShrink
+							size={24}
+							thickness={4} />} </Button>/* : <Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={
+								this.handleDeleteProposal
+							}> Delete Proposal {this.state.isSaving && <CircularProgress
+								disableShrink
+								size={24}
+								thickness={4} />} </Button>*/
+					}
 				</div>
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -190,8 +233,7 @@ const mapDispatchToProps = dispatch => {
 		submitProposal: (cont_id, pro_id, proposal, cb) => dispatch(submitProposal(cont_id, pro_id, proposal, cb)),
 		setSelectedProposal: (id) => dispatch(setSelectedProposal(id)),
 		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
-		selectProject: (id) => dispatch(getProjectDetailById(id)),
-		awardProject: (id, cb) => dispatch(awardProject(id, cb))
+		selectProject: (id) => dispatch(getProjectsByGenId(id))
 	};
 }
 

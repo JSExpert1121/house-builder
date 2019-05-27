@@ -1,182 +1,91 @@
-import React, { Component } from 'react';
-
-import { withRouter } from 'react-router-dom';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
+import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Card, Button, Snackbar, CircularProgress, Link } from '@material-ui/core';
-import { submitProposal, deleteProposal, setSelectedProposal, getProjectDetailById, awardProject } from '../../../actions/gen-actions';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import NoSsr from '@material-ui/core/NoSsr';
 
-const styles = (theme) => ({
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
+
+import ProposalDetailFiles from './ProposalDetailFiles';
+import ProposalDetailOverview from './ProposalDetailOverview';
+
+const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px",
-		padding: "10px"
+		padding: "10px 10px 10px 10px"
 	},
-	editField: {
-		lineHeight: '1.5rem',
-	},
-	waitingSpin: {
-		position: "relative",
-		left: "calc(50% - 10px)",
-		top: "calc(40vh)",
-	},
-	submitBtn: {
-		border: "1px solid #4a148c",
-		borderRadius: 0,
-		backgroundColor: theme.palette.primary.light,
-		color: "#FFFFFF",
-		margin: 5,
-		float: "right",
-		'&:hover': {
-			backgroundColor: theme.palette.primary.dark
-		},
-		'&:disabled': {
-			backgroundColor: "#FFFFFF"
-		}
-	},
-	width_300: {
-		width: 300,
-		marginRight: 10,
-	},
+	toolbarstyle: {
+		backgroundColor: theme.palette.background.paper,
+		color: theme.palette.primary.dark
+	}
 });
 
-class ConnectedProposalDetailView extends Component {
+class ConnectedProposalDetailView extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			isSaving: false,
-			snackBar: false,
-			snackBarContent: false,
+			curDetailTab: 0
 		}
 	}
 
-	handleAwardProject = async () => {
-		const { proposal } = this.props;
-
+	handleTabChange = (event, value) => {
 		this.setState({
-			isSaving: true
+			curDetailTab: value
 		});
-
-		await this.props.awardProject(proposal.id, (res) => {
-			this.setState({
-				isSaving: false,
-				snackBar: true,
-				snackBarContent: res ? 'award project success' : 'award project failed'
-			});
-
-			this.props.setSelectedProposal(proposal.id);
-		});
-	}
-
-	handleBack = async () => {
-		const { proposal } = this.props;
-
-		await this.props.selectProject(proposal.project.id);
-		this.props.history.push("/g_cont/project_detail/proposals");
 	}
 
 	render() {
-		const { classes, proposal } = this.props;
+		const { classes, selectedProposal } = this.props;
+		const curDetailTab = this.state.curDetailTab;
 
-		if (proposal === null)
-			return <Card className={classes.root} ></Card>
+		if (selectedProposal === null)
+			return (
+				<div> no proposal is selected </div>
+			);
 
 		return (
-			<Card className={classes.root}>
-				<Link onClick={this.handleBack}> Back to all proposals</Link>
-				<div>
-					<TextField
-						autoFocus
-						margin="normal"
-						label="budget"
-						type="number"
-						fullWidth
-						className={classes.width_300}
-						value={proposal.budget}
-						disabled={true}
-					/>
-					<TextField
-						autoFocus
-						margin="normal"
-						label="duration"
-						type="number"
-						fullWidth
-						className={classes.width_300}
-						value={proposal.duration}
-						disabled={true}
-					/>
-					<TextField
-						margin="normal"
-						label="status"
-						type="text"
-						fullWidth
-						className={classes.width_300}
-						value={proposal.status}
-						disabled={true}
-					/>
-					<TextField
-						margin="normal"
-						label="description"
-						type="text"
-						multiline
-						rows="10"
-						fullWidth
-						value={proposal.description}
-						disabled={true}
-					/>
-					<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={
-						this.handleAwardProject
-					}> Award Project {this.state.isSaving && <CircularProgress
-						disableShrink
-						size={24}
-						thickness={4} />} </Button>
+
+			<NoSsr>
+				<div className={classes.root}>
+					<Paper square >
+						<Tabs
+							value={curDetailTab}
+							onChange={this.handleTabChange}
+							variant="scrollable"
+							indicatorColor="primary"
+							textColor="primary"
+							scrollButtons="on"
+							className={classes.toolbarstyle}
+						>
+							<Tab label="Detail" />
+							<Tab label="Files" />
+						</Tabs>
+
+						{curDetailTab === 0 && <ProposalDetailOverview />}
+						{curDetailTab === 1 && <ProposalDetailFiles />}
+					</Paper>
 				</div>
-				<Snackbar
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-					open={this.state.snackBar}
-					onClose={() => this.setState({
-						snackBar: false
-					})}
-					ContentProps={{
-						'aria-describedby': 'message-id',
-					}}
-					message={
-						<span id="message-id"> {
-							this.state.snackBarContent
-						}</span>
-					}
-				/>
-			</Card>
+			</NoSsr>
 		);
 	}
 }
 
-const mapDispatchToProps = dispatch => {
-	return {
-		submitProposal: (cont_id, pro_id, proposal, cb) => dispatch(submitProposal(cont_id, pro_id, proposal, cb)),
-		setSelectedProposal: (id) => dispatch(setSelectedProposal(id)),
-		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
-		selectProject: (id) => dispatch(getProjectDetailById(id)),
-		awardProject: (id, cb) => dispatch(awardProject(id, cb))
-	};
-}
-
 const mapStateToProps = state => {
 	return {
-		project: state.gen_data.selectedProject,
-		userProfile: state.global_data.userProfile,
-		proposal: state.gen_data.selectedProposal
+		selectedProposal: state.gen_data.selectedProposal
 	};
 };
 
-const ProposalDetailView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailView);
+const ProposalDetailView = connect(mapStateToProps)(ConnectedProposalDetailView);
 
 ProposalDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(withStyles(styles)(ProposalDetailView));
+export default withStyles(styles)(ProposalDetailView);
