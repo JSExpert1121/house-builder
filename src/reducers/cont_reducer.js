@@ -1,4 +1,8 @@
-import { ALL_CONTRACTORS_LOADED, SET_SELECTED_CONTRACTOR, SET_SELECTED_CATEGORY, SET_SELECTED_OPTION, CONTRACTOR_DETAIL_LOADED, SPECIALTIES_LOADED } from "../constants/cont-action-types";
+import {
+	ALL_CONTRACTORS_LOADED, SET_SELECTED_CONTRACTOR,
+	SET_SELECTED_CATEGORY, SET_SELECTED_OPTION,
+	CONTRACTOR_DETAIL_LOADED, SPECIALTIES_LOADED
+} from "../constants/cont-action-types";
 
 const initialState = {
 	contractors: null,
@@ -6,7 +10,8 @@ const initialState = {
 	categories: null,
 	selectedCategory: null,
 	selectedOption: null,
-	specialties: null
+	specialties: null,
+	files: []
 }
 
 function tem_reducer(state = initialState, action) {
@@ -61,7 +66,8 @@ function tem_reducer(state = initialState, action) {
 		case CONTRACTOR_DETAIL_LOADED:
 			return Object.assign({}, state, {
 				//projects: state.projects.concat(action.payload)
-				selectedProject: action.payload
+				selectedProject: action.payload,
+				files: action.payload.contractorFiles.slice()
 			});
 		case SPECIALTIES_LOADED:
 			return Object.assign({}, state, {
