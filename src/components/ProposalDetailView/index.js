@@ -14,6 +14,7 @@ import ProposalDetailOverview from './ProposalDetailOverview';
 import { CircularProgress } from '@material-ui/core';
 
 import { getProposalData } from "../../actions/index";
+import ProposalDetailMessages from './ProposalDetailMessages';
 
 const styles = theme => ({
 	root: {
@@ -80,10 +81,19 @@ class ConnectedProposalDetailView extends React.Component {
 							{
 								match.params.id !== '-1' && <Tab label="Files" />
 							}
+							{
+								match.params.id !== '-1' &&
+								(
+									redirectTo === '/g_cont' ||
+									(redirectTo === '/s_cont' && (proposal.status === 'SUBMITTED' || proposal.status === 'AWARDED'))
+								) &&
+								<Tab label="Messages" />
+							}
 						</Tabs>
 
 						{curDetailTab === 0 && <ProposalDetailOverview />}
 						{curDetailTab === 1 && <ProposalDetailFiles />}
+						{curDetailTab === 2 && <ProposalDetailMessages />}
 					</Paper>
 				</div>
 			</NoSsr>

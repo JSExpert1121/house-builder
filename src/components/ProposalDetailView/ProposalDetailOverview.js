@@ -38,7 +38,7 @@ const styles = (theme) => ({
 		'&:hover': {
 			backgroundColor: theme.palette.primary.dark
 		},
-		'&:readOnly': {
+		'&:disabled': {
 			backgroundColor: "#FFFFFF"
 		}
 	}
@@ -143,11 +143,11 @@ class ConnectedProposalDetailView extends Component {
 		let mode = match.params.id === '-1' ? 'c' : 'v';
 		let c_project;
 
-		if(proposal === null && project === null)
-			return <div className = {classes.root} />;
+		if (proposal === null && project === null)
+			return <div className={classes.root} />;
 
 		c_project = mode === 'v' ? proposal.project : project;
-		
+
 		return (
 			<div className={classes.root}>
 				<Link onClick={this.handleBack}> Back to proposals</Link>
@@ -228,7 +228,7 @@ class ConnectedProposalDetailView extends Component {
 					/>
 					{
 						redirectTo === '/s_cont' &&
-						<Button readOnly={this.state.isSaving} className={classes.submitBtn} onClick={this.handleDeleteProposal}>
+						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleDeleteProposal}>
 							Delete Proposal {
 								this.state.isSaving && <CircularProgress
 									size={24}
@@ -238,7 +238,7 @@ class ConnectedProposalDetailView extends Component {
 					}
 					{
 						redirectTo === '/g_cont' &&
-						<Button readOnly={this.state.isSaving} className={classes.submitBtn} onClick={this.handleAwardProject}>
+						<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={this.handleAwardProject}>
 							Award Project {
 								this.state.isSaving && <CircularProgress
 									size={24}
@@ -248,7 +248,7 @@ class ConnectedProposalDetailView extends Component {
 					}
 					{
 						mode === 'c' &&
-						<Button readOnly={this.state.isSaving} className={classes.submitBtn} onClick={this.handleSubmitProposal}>
+						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleSubmitProposal}>
 							Submit Proposal {
 								this.state.isSaving && <CircularProgress
 									size={24}
