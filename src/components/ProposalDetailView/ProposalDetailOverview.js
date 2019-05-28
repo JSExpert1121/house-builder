@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Card, Button, Snackbar, CircularProgress, Link } from '@material-ui/core';
 
-import { getProposalData, deleteProposal } from '../../actions/index';
+import { getProposalData, deleteProposal, submitProposal } from '../../actions/index';
+import { awardProject } from '../../actions/gen-actions';
 
 const styles = (theme) => ({
 	root: {
@@ -37,7 +38,7 @@ const styles = (theme) => ({
 		'&:hover': {
 			backgroundColor: theme.palette.primary.dark
 		},
-		'&:disabled': {
+		'&:readOnly': {
 			backgroundColor: "#FFFFFF"
 		}
 	}
@@ -76,6 +77,50 @@ class ConnectedProposalDetailView extends Component {
 		})
 	}
 
+	handleSubmitProposal = async () => {
+		const { userProfile, project } = this.props;
+		this.setState({
+			isSaving: true,
+		});
+
+		const proposalData = {
+			"budget": this.state.budget,
+			"duration": this.state.duration,
+			"description": this.state.description,
+			"updatedBy": userProfile.email
+		};
+
+		await this.props.submitProposal(userProfile.user_metadata.contractor_id, project.id, proposalData, async (res) => {
+			this.setState({
+				isSaving: false,
+				snackBar: true,
+				snackBarContent: res !== 'false' ? "submit proposal success" : "submit proposal failed"
+			});
+
+			if (res) {
+				await this.props.getProposalData(res);
+				this.props.history.push("/proposal_detail/" + res);
+			}
+		});
+	}
+
+	handleAwardProject = async () => {
+		const { proposal } = this.props;
+		this.setState({
+			isSaving: true
+		})
+
+		await this.props.awardProject(proposal.id, (res) => {
+			this.setState({
+				isSaving: false,
+				snackBar: true,
+				snackBarContent: res ? 'award project success' : "award project failed"
+			});
+
+			this.props.getProposalData(proposal.id);
+		})
+	}
+
 	handleBack = () => {
 		const { proposal } = this.props;
 		switch (this.props.redirectTo) {
@@ -94,12 +139,15 @@ class ConnectedProposalDetailView extends Component {
 	}
 
 	render() {
-		const { classes, proposal } = this.props;
-		const project = proposal.project;
+		const { classes, match, proposal, redirectTo, project } = this.props;
+		let mode = match.params.id === '-1' ? 'c' : 'v';
+		let c_project;
 
-		if (proposal === null)
-			return <Card className={classes.root} ></Card>
+		if(proposal === null && project === null)
+			return <div className = {classes.root} />;
 
+		c_project = mode === 'v' ? proposal.project : project;
+		
 		return (
 			<div className={classes.root}>
 				<Link onClick={this.handleBack}> Back to proposals</Link>
@@ -111,7 +159,7 @@ class ConnectedProposalDetailView extends Component {
 						type="text"
 						fullWidth
 						className={classes.width_300}
-						value={project.title}
+						value={c_project.title}
 						readOnly={true}
 					/>
 					<TextField
@@ -121,7 +169,7 @@ class ConnectedProposalDetailView extends Component {
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={project.budget}
+						value={c_project.budget}
 						readOnly={true}
 					/>
 					<TextField
@@ -130,7 +178,7 @@ class ConnectedProposalDetailView extends Component {
 						type="text"
 						fullWidth
 						className={classes.width_300}
-						value={project.description}
+						value={c_project.description}
 						readOnly={true}
 					/>
 				</div>
@@ -142,8 +190,9 @@ class ConnectedProposalDetailView extends Component {
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={proposal.budget}
-						readOnly
+						value={mode === 'v' ? proposal.budget : this.state.budget}
+						readOnly={mode === 'v'}
+						onChange={(val) => this.setState({ budget: val.target.value })}
 					/>
 					<TextField
 						margin="normal"
@@ -151,18 +200,21 @@ class ConnectedProposalDetailView extends Component {
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={proposal.duration}
-						readOnly
+						value={mode === 'v' ? proposal.duration : this.state.duration}
+						readOnly={mode === 'v'}
+						onChange={(val) => this.setState({ duration: val.target.value })}
 					/>
-					<TextField
-						margin="normal"
-						label="status"
-						type="text"
-						fullWidth
-						className={classes.width_300}
-						value={proposal.status}
-						readOnly={true}
-					/>
+					{
+						mode === 'v' && <TextField
+							margin="normal"
+							label="status"
+							type="text"
+							fullWidth
+							className={classes.width_300}
+							value={proposal.status}
+							readOnly={true}
+						/>
+					}
 					<TextField
 						margin="normal"
 						label="description"
@@ -170,15 +222,40 @@ class ConnectedProposalDetailView extends Component {
 						multiline
 						rows="10"
 						fullWidth
-						value={proposal.description}
-						readOnly
+						value={mode === 'v' ? proposal.description : this.state.description}
+						readOnly={mode === 'v'}
+						onChange={(val) => this.setState({ description: val.target.value })}
 					/>
-					<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={
-						this.handleDeleteProposal
-					}> Delete Proposal {this.state.isSaving && <CircularProgress
-
-						size={24}
-						thickness={4} />} </Button>
+					{
+						redirectTo === '/s_cont' &&
+						<Button readOnly={this.state.isSaving} className={classes.submitBtn} onClick={this.handleDeleteProposal}>
+							Delete Proposal {
+								this.state.isSaving && <CircularProgress
+									size={24}
+									thickness={4} />
+							}
+						</Button>
+					}
+					{
+						redirectTo === '/g_cont' &&
+						<Button readOnly={this.state.isSaving} className={classes.submitBtn} onClick={this.handleAwardProject}>
+							Award Project {
+								this.state.isSaving && <CircularProgress
+									size={24}
+									thickness={4} />
+							}
+						</Button>
+					}
+					{
+						mode === 'c' &&
+						<Button readOnly={this.state.isSaving} className={classes.submitBtn} onClick={this.handleSubmitProposal}>
+							Submit Proposal {
+								this.state.isSaving && <CircularProgress
+									size={24}
+									thickness={4} />
+							}
+						</Button>
+					}
 				</div>
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -204,6 +281,8 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getProposalData: (id) => dispatch(getProposalData(id)),
 		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
+		awardProject: (id, cb) => dispatch(awardProject(id, cb)),
+		submitProposal: (cont_id, pro_id, proposal, cb) => dispatch(submitProposal(cont_id, pro_id, proposal, cb))
 	};
 }
 
@@ -211,6 +290,7 @@ const mapStateToProps = state => {
 	return {
 		userProfile: state.global_data.userProfile,
 		proposal: state.global_data.proposal,
+		project: state.global_data.project,
 		redirectTo: state.global_data.redirectTo
 	};
 };

@@ -42,7 +42,9 @@ class ConnectedProposalDetailView extends React.Component {
 
 	async componentDidMount() {
 		const { match } = this.props;
-		await this.props.getProposalData(match.params.id);
+
+		if (match.params.id !== '-1')
+			await this.props.getProposalData(match.params.id);
 	}
 
 	handleTabChange = (event, value) => {
@@ -52,10 +54,10 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, match, proposal } = this.props;
+		const { classes, match, proposal, redirectTo } = this.props;
 		const curDetailTab = this.state.curDetailTab;
 
-		if (proposal === null)
+		if (proposal === null && match.params.id !== '-1')
 			return (
 				<CircularProgress className={classes.waitingSpin} />
 			);
@@ -75,7 +77,9 @@ class ConnectedProposalDetailView extends React.Component {
 							className={classes.toolbarstyle}
 						>
 							<Tab label="Detail" />
-							<Tab label="Files" />
+							{
+								match.params.id !== '-1' && <Tab label="Files" />
+							}
 						</Tabs>
 
 						{curDetailTab === 0 && <ProposalDetailOverview />}
@@ -95,7 +99,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
 	return {
-		proposal: state.global_data.proposal
+		proposal: state.global_data.proposal,
+		redirectTo: state.global_data.redirectTo
 	};
 };
 
