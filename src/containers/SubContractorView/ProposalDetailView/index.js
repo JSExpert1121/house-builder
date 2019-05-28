@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
@@ -9,10 +10,12 @@ import Tab from '@material-ui/core/Tab';
 import NoSsr from '@material-ui/core/NoSsr';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import DoneAllIcon from '@material-ui/icons/DoneAll';
-import DoneIcon from '@material-ui/icons/Done';
-import ControlCameraIcon from '@material-ui/icons/ControlCamera';
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
+
+import ProposalDetailFiles from './ProposalDetailFiles';
+import ProposalDetailOverview from './ProposalDetailOverview';
+import { getProposalData } from '../../../actions/sub-actions';
+import { CircularProgress } from '@material-ui/core';
 
 const styles = theme => ({
 	root: {
@@ -22,16 +25,26 @@ const styles = theme => ({
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.primary.dark
+	},
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(40vh)",
 	}
 });
 
-class ConnectedSCVPipelineView extends React.Component {
+class ConnectedProposalDetailView extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			curDetailTab: 0
 		}
+	}
+
+	async componentDidMount() {
+		const { match } = this.props;
+		await this.props.getProposalData(match.params.id);
 	}
 
 	handleTabChange = (event, value) => {
@@ -41,8 +54,13 @@ class ConnectedSCVPipelineView extends React.Component {
 	}
 
 	render() {
-		const { classes } = this.props;
+		const { classes, match, proposal } = this.props;
 		const curDetailTab = this.state.curDetailTab;
+
+		if (proposal === null)
+			return (
+				<CircularProgress className={classes.waitingSpin} />
+			);
 
 		return (
 
@@ -58,18 +76,12 @@ class ConnectedSCVPipelineView extends React.Component {
 							scrollButtons="on"
 							className={classes.toolbarstyle}
 						>
-							<Tab icon={<DashboardIcon />} />
-							<Tab icon={<ControlCameraIcon />} />
-							<Tab icon={<DoneIcon />} />
-							<Tab icon={<DoneAllIcon />} />
-							<Tab icon={<ArchiveIcon />} />
+							<Tab label="Detail" />
+							<Tab label="Files" />
 						</Tabs>
 
-						{curDetailTab === 0 && <div>Undecided </div>}
-						{curDetailTab === 1 && <div>Accepted</div>}
-						{curDetailTab === 2 && <div>Submitted</div>}
-						{curDetailTab === 3 && <div>Won</div>}
-						{curDetailTab === 4 && <div>Archived</div>}
+						{curDetailTab === 0 && <ProposalDetailOverview />}
+						{curDetailTab === 1 && <ProposalDetailFiles />}
 					</Paper>
 				</div>
 			</NoSsr>
@@ -77,15 +89,22 @@ class ConnectedSCVPipelineView extends React.Component {
 	}
 }
 
+const mapDispatchToProps = dispatch => {
+	return {
+		getProposalData: (id) => dispatch(getProposalData(id))
+	}
+}
+
 const mapStateToProps = state => {
 	return {
+		proposal: state.sub_data.proposal
 	};
 };
 
-const SCVPipelineView = connect(mapStateToProps)(ConnectedSCVPipelineView);
+const ProposalDetailView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailView);
 
-SCVPipelineView.propTypes = {
+ProposalDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SCVPipelineView);
+export default withRouter(withStyles(styles)(ProposalDetailView));

@@ -41,10 +41,10 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, selectedProposal } = this.props;
+		const { classes, match, selectedProposal } = this.props;
 		const curDetailTab = this.state.curDetailTab;
 
-		if (selectedProposal === null)
+		if (selectedProposal === null && match.params.mode !== 'c')
 			return (
 				<div> no proposal is selected </div>
 			);
@@ -64,7 +64,7 @@ class ConnectedProposalDetailView extends React.Component {
 							className={classes.toolbarstyle}
 						>
 							<Tab label="Detail" />
-							<Tab label="Files" />
+							{selectedProposal && <Tab label="Files" />}
 						</Tabs>
 
 						{curDetailTab === 0 && <ProposalDetailOverview />}

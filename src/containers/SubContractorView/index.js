@@ -15,12 +15,13 @@ import TuneIcon from '@material-ui/icons/Tune';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-import SCVPipelineView from './SCVPipelineView';
+import SCVPipelineView from './SCVPipelineView/index';
 import SCVCalendarView from './SCVCalendarView';
 import SCVReportsView from './SCVReportsView';
 import SCVAnalyticsView from './SCVAnalyticsView';
 import SCVSettingsView from './SCVSettingsView';
 import { CircularProgress } from '@material-ui/core';
+import ProposalDetailView from './ProposalDetailView';
 
 const styles = theme => ({
 	root: {
@@ -48,18 +49,27 @@ class ConnectedSubContView extends React.Component {
 	}
 
 	render() {
-		const { classes, userProfile, location } = this.props;
+		const { classes, match, userProfile, location } = this.props;
 
-		const tabNo = {
-			'/s_cont': 0,
-			'/s_cont/pipeline': 0,
-			'/s_cont/calendar': 1,
-			'/s_cont/analytics': 2,
-			'/s_cont/reports': 3,
-			'/s_cont/settings': 4
-		};
+		const tabName = [
+			match.url + '/pipeline',
+			match.url + '/calendar',
+			match.url + '/analytics',
+			match.url + '/reports',
+			match.url + '/settings',
+		];
 
-		const curTabPos = tabNo[location.pathname];
+		let curTabPos;
+
+		for (let i = 0; i < tabName.length; i++) {
+			if (location.pathname.includes(tabName[i])) {
+				curTabPos = i;
+				break;
+			}
+		}
+
+		if (location.pathname === match.url || location.pathname.includes(match.url + '/proposal_detail'))
+			curTabPos = 0;
 
 		if (!userProfile.user_metadata.roles.includes("Sub") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&
@@ -72,25 +82,25 @@ class ConnectedSubContView extends React.Component {
 					<AppBar position="static" className={classes.toolbarstyle}>
 						<Tabs
 							value={curTabPos}
-							onChange={this.handleTabChange}
 							variant="scrollable"
 							scrollButtons="on">
 
-							<Tab component={Link} to={`/s_cont/pipeline`} label="Pipeline" icon={<TableChartIcon />} />
-							<Tab component={Link} to={`/s_cont/calendar`} label="Calendar" icon={<CalendarTodayIcon />} />
-							<Tab component={Link} to={`/s_cont/analytics`} label="Analytics" icon={<TuneIcon />} />
-							<Tab component={Link} to={`/s_cont/reports`} label="Reports" icon={<AssignmentIcon />} />
-							<Tab component={Link} to={`/s_cont/settings`} label="Setting" icon={<SettingsIcon />} />
+							<Tab component={Link} to={`${match.url}/pipeline`} label="Pipeline" icon={<TableChartIcon />} />
+							<Tab component={Link} to={`${match.url}/calendar`} label="Calendar" icon={<CalendarTodayIcon />} />
+							<Tab component={Link} to={`${match.url}/analytics`} label="Analytics" icon={<TuneIcon />} />
+							<Tab component={Link} to={`${match.url}/reports`} label="Reports" icon={<AssignmentIcon />} />
+							<Tab component={Link} to={`${match.url}/settings`} label="Setting" icon={<SettingsIcon />} />
 						</Tabs>
 					</AppBar>
 
 					<Switch>
-						<SecuredRoute path='/s_cont/pipeline' component={SCVPipelineView} />
-						<SecuredRoute path='/s_cont/calendar' component={SCVCalendarView} />
-						<SecuredRoute path='/s_cont/analytics' component={SCVAnalyticsView} />
-						<SecuredRoute path='/s_cont/reports' component={SCVReportsView} />
-						<SecuredRoute path='/s_cont/settings' component={SCVSettingsView} />
-						<Redirect path='/s_cont' to={`/s_cont/pipeline`} />
+						<SecuredRoute path={`${match.url}/pipeline`} component={SCVPipelineView} />
+						<SecuredRoute path={`${match.url}/calendar`} component={SCVCalendarView} />
+						<SecuredRoute path={`${match.url}/analytics`} component={SCVAnalyticsView} />
+						<SecuredRoute path={`${match.url}/reports`} component={SCVReportsView} />
+						<SecuredRoute path={`${match.url}/settings`} component={SCVSettingsView} />
+						<SecuredRoute path={`${match.url}/proposal_detail/:id`} component={ProposalDetailView} />
+						<Redirect path='/s_cont' to={`${match.url}/pipeline`} />
 					</Switch>
 				</div>
 			</NoSsr>
@@ -106,6 +116,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
+		
 	};
 };
 

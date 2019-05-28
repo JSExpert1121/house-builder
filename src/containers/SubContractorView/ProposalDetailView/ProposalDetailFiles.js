@@ -14,7 +14,7 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import CustomTableCell from '../../../components/shared/CustomTableCell';
 
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { setSelectedProposal, addFilesToProposal, deleteProposalFile } from '../../../actions/gen-actions';
+import { getProposalData, addFilesToProposal, deleteProposalFile } from '../../../actions/sub-actions';
 
 const styles = theme => ({
 	root: {
@@ -43,9 +43,9 @@ class ConnectedProposalDetailFiles extends React.Component {
 	}
 
 	handleUploadFiles = async (files) => {
-		const { selectedProposal } = this.props;
+		const { proposal } = this.props;
 
-		await this.props.addFilesToProposal(selectedProposal.id, files, (res) => {
+		await this.props.addFilesToProposal(proposal.id, files, (res) => {
 			this.setState({
 				snackBar: true,
 				snackBarContent: res ? 'File Upload Success' : 'File Upload Failed',
@@ -53,25 +53,25 @@ class ConnectedProposalDetailFiles extends React.Component {
 			});
 
 			if (res)
-				this.props.setSelectedProposal(selectedProposal.id);
+				this.props.getProposalData(proposal.id);
 		});
 	}
 
 	handleDeletefile = async (name) => {
-		const { selectedProposal } = this.props;
+		const { proposal } = this.props;
 
-		await this.props.deleteProposalFile(selectedProposal.id, name, (res) => {
+		await this.props.deleteProposalFile(proposal.id, name, (res) => {
 			this.setState({
 				snackBar: true,
 				snackBarContent: res ? 'File Delete Success' : 'File Delete Failed'
 			});
 			if (res)
-				this.props.setSelectedProposal(selectedProposal.id);
+				this.props.getProposalData(proposal.id);
 		});
 	}
 
 	render() {
-		const { classes, selectedProposal } = this.props;
+		const { classes, proposal } = this.props;
 
 		return (
 			<div className={classes.root}>
@@ -88,10 +88,10 @@ class ConnectedProposalDetailFiles extends React.Component {
 					</TableHead>
 					<TableBody>
 						{
-							selectedProposal.proposalFiles.map((row) => (
+							proposal.proposalFiles.map((row) => (
 								<TableRow key={row.id} hover>
 									<CustomTableCell align="center">
-										<a download={row.name} href={process.env.PROJECT_API + "/proposals/" + selectedProposal.id + "/files/" + row.name}>{row.name}</a>
+										<a download={row.name} href={process.env.PROJECT_API + "/proposals/" + proposal.id + "/files/" + row.name}>{row.name}</a>
 									</CustomTableCell>
 									<CustomTableCell align="center">
 										<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
@@ -139,7 +139,7 @@ class ConnectedProposalDetailFiles extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setSelectedProposal: (id) => dispatch(setSelectedProposal(id)),
+		getProposalData: (id) => dispatch(getProposalData(id)),
 		addFilesToProposal: (id, files, cb) => dispatch(addFilesToProposal(id, files, cb)),
 		deleteProposalFile: (id, name, cb) => dispatch(deleteProposalFile(id, name, cb))
 	}
@@ -147,7 +147,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
 	return {
-		selectedProposal: state.gen_data.selectedProposal
+		proposal: state.sub_data.proposal
 	};
 };
 

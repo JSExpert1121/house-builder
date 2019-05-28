@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Switch, Route, Link, Redirect, withRouter } from 'react-router-dom';
 
 // Material import 
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 
 // local import
@@ -78,7 +78,7 @@ class AppRouterConnect extends React.Component {
 		this.setState({ checkingSession: false });
 	}
 	render() {
-		const { classes, userProfile } = this.props;
+		const { userProfile, classes } = this.props;
 		if (this.state.checkingSession || (auth0Client.isAuthenticated() && userProfile === null)) return <CircularProgress className={classes.waitingSpin} />;
 
 		return (
