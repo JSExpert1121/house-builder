@@ -20,8 +20,6 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 // local components
 import CurrentProjectView from './CurrentProjectView';
-import ProjectDetailView from './ProjectDetailView';
-import ProposalDetailView from './ProposalDetailView';
 import AddProjectView from './AddProjectView'
 
 const styles = theme => ({
@@ -50,15 +48,10 @@ class ConnectedGenContView extends React.Component {
 		const tabNo = {
 			'/g_cont': 0,
 			'/g_cont/current_pros': 0,
-			'/g_cont/project_detail': 1,
-			'/g_cont/propose_detail': 2,
-			'/g_cont/add_project': 3
+			'/g_cont/add_project': 1
 		};
 
 		let curTabPos = tabNo[location.pathname];
-
-		if (location.pathname.includes('/g_cont/project_detail'))
-			curTabPos = 1;
 
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&
@@ -75,16 +68,12 @@ class ConnectedGenContView extends React.Component {
 							scrollButtons="on">
 
 							<Tab component={Link} to={`${match.url}/current_pros`} label="Current Projects" icon={<AppsIcon />} />
-							<Tab component={Link} to={`${match.url}/project_detail`} label="Project Detail" icon={<BallotIcon />} />
-							<Tab component={Link} to={`${match.url}/propose_detail`} label="Proposal Detail" icon={<DoneAllIcon />} />
 							<Tab component={Link} to={`${match.url}/add_project`} label="Add Project" icon={<PlaylistAddIcon />} />
 						</Tabs>
 					</AppBar>
 
 					<Switch>
 						<SecuredRoute path={`${match.url}/current_pros`} component={CurrentProjectView} />
-						<SecuredRoute path={`${match.url}/project_detail`} component={ProjectDetailView} />
-						<SecuredRoute path={`${match.url}/propose_detail`} component={ProposalDetailView} />
 						<SecuredRoute path={`${match.url}/add_project`} component={AddProjectView} />
 						<Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
 					</Switch>

@@ -255,7 +255,7 @@ class ConnAllTemplateView extends Component {
 						}} color="primary">
 							Add {
 								this.state.isSaving && <CircularProgress
-									disableShrink
+
 									size={24}
 									thickness={4} />
 							}

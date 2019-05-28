@@ -261,7 +261,7 @@ class connectedSettingsView extends React.Component {
 						{
 							this.state.isSaving &&
 							<CircularProgress
-								disableShrink
+
 								size={24}
 								thickness={4}
 							/>

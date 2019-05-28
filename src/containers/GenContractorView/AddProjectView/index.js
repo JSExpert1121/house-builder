@@ -12,7 +12,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { Card, TextField, Button } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import axios from 'axios';
-import { addProject, addFiles } from '../../../actions/gen-actions';
+import { addProject } from '../../../actions/gen-actions';
+import { addFilesToProject } from '../../../actions';
 
 const styles = theme => ({
 	root: {
@@ -181,7 +182,7 @@ class connectedAddProjectView extends Component {
 							{
 							this.state.isSaving &&
 							<CircularProgress
-								disableShrink
+
 								size={24}
 								thickness={4}
 							/>
@@ -197,7 +198,7 @@ class connectedAddProjectView extends Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		addProject: (id, data, cb) => dispatch(addProject(id, data, cb)),
-		addFiles: (id, files, cb) => dispatch(addFiles(id, files, cb))
+		addFiles: (id, files, cb) => dispatch(addFilesToProject(id, files, cb))
 	};
 };
 

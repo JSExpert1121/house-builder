@@ -26,7 +26,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Redux
 import { connect } from 'react-redux';
-import { selectCategory, addOption, deleteOption,  editCategory, selectOption, selectTemplate, deleteCategory } from '../../../actions/tem-actions';
+import { selectCategory, addOption, deleteOption, editCategory, selectOption, selectTemplate, deleteCategory } from '../../../actions/tem-actions';
 import SplitPane from 'react-split-pane';
 
 const styles = theme => ({
@@ -66,7 +66,7 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50vw - 10px)",
 		top: "calc(50vh - 10px)",
-	}, 
+	},
 	editField: {
 		lineHeight: '1.5rem'
 	}
@@ -207,7 +207,7 @@ class ConnCategoryDetailView extends Component {
 							}} color="primary">
 								Save {
 									this.state.isSaving && <CircularProgress
-										disableShrink
+
 										size={24}
 										thickness={4} />
 								}
@@ -215,13 +215,13 @@ class ConnCategoryDetailView extends Component {
 							<Button disabled={this.state.isDeleting} className={classes.halfWidth} onClick={async () => {
 								this.setState({ isDeleting: true });
 								await this.props.deleteCategory(category.id, (result) => {
-									if (result){
+									if (result) {
 										this.props.history.push("/m_temp/template_detail");
 										return;
 									}
 
 									this.setState({
-										snackBar: true, 
+										snackBar: true,
 										snackBarContent: 'failed, please delete options'
 									})
 								});
@@ -229,7 +229,7 @@ class ConnCategoryDetailView extends Component {
 							}} color="primary">
 								Delete{
 									this.state.isDeleting && <CircularProgress
-										disableShrink
+
 										size={24}
 										thickness={4} />
 								}
@@ -279,8 +279,8 @@ class ConnCategoryDetailView extends Component {
 														async () => {
 															await this.props.deleteOption(row.id, (res) => {
 																this.setState({
-																	snackBar: true, 
-																	snackBarContent: res ? 'delete option success': 'delete option failed'
+																	snackBar: true,
+																	snackBarContent: res ? 'delete option success' : 'delete option failed'
 																})
 															});
 															await this.props.selectCategory(category.id);
@@ -352,7 +352,7 @@ class ConnCategoryDetailView extends Component {
 
 							await this.props.addOption(category.id, data, (res) => {
 								this.setState({
-									snackBar: true, 
+									snackBar: true,
 									snackBarContent: res ? 'add option success' : 'add option failed'
 								})
 							});
@@ -362,7 +362,7 @@ class ConnCategoryDetailView extends Component {
 						}} color="primary">
 							Add {
 								this.state.isAdding && <CircularProgress
-									disableShrink
+
 									size={24}
 									thickness={4} />
 							}

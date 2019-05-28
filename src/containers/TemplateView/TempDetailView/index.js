@@ -178,7 +178,7 @@ class ConnTempDetailView extends Component {
 							}} color="primary">
 								Save {
 									this.state.isSaving && <CircularProgress
-										disableShrink
+
 										size={24}
 										thickness={4} />
 								}
@@ -200,7 +200,7 @@ class ConnTempDetailView extends Component {
 							}} color="primary">
 								Delete{
 									this.state.isDeleting && <CircularProgress
-										disableShrink
+
 										size={24}
 										thickness={4} />
 								}
@@ -349,7 +349,7 @@ class ConnTempDetailView extends Component {
 						}} color="primary">
 							Add {
 								this.state.isAdding && <CircularProgress
-									disableShrink
+
 									size={24}
 									thickness={4} />
 							}

@@ -396,7 +396,6 @@ class connectedProfileView extends Component {
 							{
 								this.state.isSaving &&
 								<CircularProgress
-									disableShrink
 									size={24}
 									thickness={4}
 								/>

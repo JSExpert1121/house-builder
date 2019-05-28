@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
-import { getProjectDetailById, getAllProjects } from '../../../actions/gen-actions';
+import { getAllProjects } from '../../../actions/gen-actions';
 
 import PropTypes from 'prop-types';
 
@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 
 import CustomTableCell from '../../../components/shared/CustomTableCell';
+import { setRedirectTo } from '../../../actions';
 
 const styles = theme => ({
 	root: {
@@ -76,9 +77,6 @@ class connectedCurProView extends React.Component {
 		this.props.getAllProjects(currentPage, rowsPerPage);
 	};
 
-	handleAddProject = () => {
-	}
-
 	render() {
 		const { classes, projects } = this.props;
 
@@ -102,9 +100,9 @@ class connectedCurProView extends React.Component {
 								projects.content.map(
 									row => (
 										<TableRow className={classes.row} key={row.id} hover
-											onClick={async () => {
-												await this.props.getProjectDetailById(row.id);
-												this.props.history.push("/a_pros/project_detail");
+											onClick={() => {
+												this.props.setRedirectTo('/a_pros');
+												this.props.history.push("/project_detail/" + row.id);
 											}}>
 											<CustomTableCell component="th" scope="row">
 												{row.title}
@@ -141,9 +139,8 @@ class connectedCurProView extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
-		addProject: proEl => dispatch(addProject(proEl)),
-		getAllProjects: (page, size) => dispatch(getAllProjects(page, size))
+		getAllProjects: (page, size) => dispatch(getAllProjects(page, size)),
+		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 };
 

@@ -7,20 +7,19 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import List from '@material-ui/core/List';
-import { CircularProgress, IconButton, Snackbar } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import CustomTableCell from '../../../components/shared/CustomTableCell';
+import CustomTableCell from "../shared/CustomTableCell";
+import { CircularProgress, IconButton, Snackbar } from '@material-ui/core';
 
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { getProposalData, addFilesToProposal, deleteProposalFile } from '../../../actions/sub-actions';
+import { getProposalData, addFilesToProposal, deleteProposalFile } from '../../actions/index';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		height: "calc(100vh - 64px - 48px - 20px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
@@ -147,7 +146,7 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
 	return {
-		proposal: state.sub_data.proposal
+		proposal: state.global_data.proposal
 	};
 };
 

@@ -21,8 +21,6 @@ import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 // local components
 import CurrentProjectView from './CurrentProjectView/index';
-import ProjectDetailView from './ProjectDetailView/index';
-import ProposalDetailView from './ProposalDetailView';
 
 const styles = theme => ({
 	root: {
@@ -54,13 +52,10 @@ class ConnectedGenContView extends React.Component {
 		const tabNo = {
 			'/a_pros': 0,
 			'/a_pros/current_pros': 0,
-			'/a_pros/project_detail': 1,
-			'/a_pros/proposal_detail/v': 2,
-			'/a_pros/proposal_detail/c': 2,
 		};
 
 		let curTabPos = tabNo[location.pathname];
-		if(location.pathname.includes("/a_pros/project_detail"))
+		if (location.pathname.includes("/a_pros/project_detail"))
 			curTabPos = 1;
 
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
@@ -78,15 +73,11 @@ class ConnectedGenContView extends React.Component {
 							scrollButtons="on">
 
 							<Tab component={Link} to={`/a_pros/current_pros`} label="Current Projects" icon={<AppsIcon />} />
-							<Tab component={Link} to={`/a_pros/project_detail`} label="Project Detail" icon={<BallotIcon />} />
-							<Tab component={Link} to={`/a_pros/proposal_detail/v`} label="Proposal Detail" icon={<BallotIcon />} />
 						</Tabs>
 					</AppBar>
 
 					<Switch>
 						<SecuredRoute path='/a_pros/current_pros' component={CurrentProjectView} />
-						<SecuredRoute path='/a_pros/project_detail' component={ProjectDetailView} />
-						<SecuredRoute path='/a_pros/proposal_detail/:mode' component={ProposalDetailView} />
 						<Redirect path='/a_pros' to={`/a_pros/current_pros`} />
 					</Switch>
 				</div>

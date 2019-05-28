@@ -21,17 +21,18 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import { getSpecialties, addSpecialty, deleteSpecialty, updateContractor } from '../../../actions/cont-actions';
+import { getTemplates, addTemplate, deleteTemplate } from '../../actions/gen-actions';
+import { getProjectData } from '../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
+		height: "calc(100vh - 64px - 20px)",
 		margin: "10px 10px 10px 10px",
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		maxHeight: "calc(100vh - 64px - 57px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -43,10 +44,13 @@ const styles = theme => ({
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
 	},
+	successAlert: {
+		marginBottom: "10px"
+	},
 	editField: {
 		lineHeight: '1.5rem',
 	},
-	specialty: {
+	template: {
 		margin: "10px",
 	},
 	fab: {
@@ -67,7 +71,7 @@ const CustomTableCell = withStyles(theme => ({
 	},
 }))(TableCell);
 
-class ConnectedContractorInfoView extends React.Component {
+class ConnectedProjectTemplateView extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -80,31 +84,31 @@ class ConnectedContractorInfoView extends React.Component {
 			description: "",
 			snackBar: false,
 			SnackBarContent: '',
-			specialty: '',
+			template: '',
 		}
 	}
 
 
 	componentDidMount() {
-		this.props.getSpecialties(0, 20);
+		this.props.getTemplates(0, 20);
 	}
 	handleChangePage = (event, page) => {
 		this.setState({ currentPage: page });
 
-		this.props.getSpecialties(page, this.state.rowsPerPage);
+		this.props.getTemplates(page, this.state.rowsPerPage);
 	};
 
 	handleChangeRowsPerPage = event => {
-		const { selectedContractor } = this.props;
+		const { project } = this.props;
 		const rowsPerPage = event.target.value;
-		const currentPage = rowsPerPage >= selectedContractor.contractorSpecialties.length ? 0 : this.state.currentPage;
+		const currentPage = rowsPerPage >= project.projectTemplates.length ? 0 : this.state.currentPage;
 
 		this.setState({
 			rowsPerPage: rowsPerPage,
 			currentPage: currentPage
 		});
 
-		this.props.getSpecialties(currentPage, rowsPerPage);
+		this.props.getTemplates(currentPage, rowsPerPage);
 	};
 	createSortHandler = () => {
 		let order = 'desc';
@@ -118,30 +122,30 @@ class ConnectedContractorInfoView extends React.Component {
 
 	handleChange = (event) => {
 		this.setState({
-			specialty: event.target.value,
+			template: event.target.value,
 		});
 	}
 
 	render() {
-		const { classes, specialties, selectedContractor } = this.props;
-		const { specialty } = this.state;
-		if (selectedContractor === null) {
+		const { classes, templates, project } = this.props;
+		const { template } = this.state;
+		if (project === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}
 		return (
 			<div className={classes.root}>
 				<Paper className={classes.root}>
-					<div className={classes.specialty}>
+					<div className={classes.template}>
 						<Select
-							value={specialty}
+							value={template}
 							onChange={this.handleChange}
-							name="specialties"
+							name="templates"
 						>
 							<MenuItem value="">
 								<em>None</em>
 							</MenuItem>
 							{
-								specialties ? specialties.content.map(
+								templates ? templates.content.map(
 									row => (
 										<MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>
 									)
@@ -149,17 +153,18 @@ class ConnectedContractorInfoView extends React.Component {
 									null
 							}
 						</Select>
-						<Fab color="primary" aria-label="Add" className={classes.fab} onClick={() => this.props.addSpecialty(selectedContractor.id, specialty, (result) => {
-							this.setState({ specialty: '' })
-							if (result)
-								this.props.updateContractor(selectedContractor.id);
-						})}>
+						<Fab color="primary" aria-label="Add" className={classes.fab}
+							onClick={() => this.props.addTemplate(project.id, template, (result) => {
+								this.setState({ template: '' })
+								if (result)
+									this.props.getProjectData(project.id);
+							})}>
 							<AddIcon />
 						</Fab>
 						{
-							specialties ? specialties.content.map(
+							templates ? templates.content.map(
 								row => (
-									row.id == specialty ?
+									row.id == template ?
 										<ul key={row.id}>
 											<li>
 												Name: {row.name}
@@ -179,9 +184,9 @@ class ConnectedContractorInfoView extends React.Component {
 						<Table >
 							<TableHead>
 								<TableRow>
-									<CustomTableCell> Specialty Name </CustomTableCell>
-									<CustomTableCell align="center">Specialty Desc</CustomTableCell>
-									<CustomTableCell align="center">Specialty Value</CustomTableCell>
+									<CustomTableCell> Template Name </CustomTableCell>
+									<CustomTableCell align="center">Template Desc</CustomTableCell>
+									<CustomTableCell align="center">Template Value</CustomTableCell>
 									<CustomTableCell align="center" >
 										<IconButton style={{ color: "#FFFFFF" }} onClick={
 											() => this.setState({ openCategoryForm: true })
@@ -193,43 +198,43 @@ class ConnectedContractorInfoView extends React.Component {
 							</TableHead>
 							<TableBody >
 								{
-									selectedContractor.contractorSpecialties.map(
+									project.projectTemplates.map(
 										row => (
 											<TableRow className={classes.row} key={row.id} hover>
 												<CustomTableCell component="th" scope="row"
 													onClick={async () => {
-														await this.props.selectContractor(row.id);
-														this.props.history.push("/m_cont/contractor_detail");
+														await this.props.selectProject(row.id);
+														this.props.history.push("/m_cont/project_detail");
 													}}>
-													{row.specialty.name ? row.specialty.name : "N/A"}
+													{row.template.name ? row.template.name : "N/A"}
 												</CustomTableCell>
 												<CustomTableCell align="center"
 													onClick={async () => {
-														await this.props.selectContractor(row.id);
-														this.props.history.push("/m_cont/contractor_detail");
+														await this.props.selectProject(row.id);
+														this.props.history.push("/m_cont/project_detail");
 													}}>
-													{row.specialty.description ? row.specialty.description : "N/A"}
+													{row.template.description ? row.template.description : "N/A"}
 												</CustomTableCell>
 												<CustomTableCell align="center"
 													onClick={async () => {
-														await this.props.selectContractor(row.id);
-														this.props.history.push("/m_cont/contractor_detail");
+														await this.props.selectProject(row.id);
+														this.props.history.push("/m_cont/project_detail");
 													}}>
-													{row.specialty.value ? row.specialty.value : "N/A"}
+													{row.template.value ? row.template.value : "N/A"}
 												</CustomTableCell>
 												<CustomTableCell align="center">
 													<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
 														async () => {
-															await this.props.deleteSpecialty(selectedContractor.id, row.specialty.id, (result) => {
+															await this.props.deleteTemplate(project.id, row.template.id, (result) => {
 																this.setState({
 																	snackBar: true,
-																	snackBarContent: result ? 'delete specialty success' : 'please specialty categories'
+																	snackBarContent: result ? 'delete template success' : 'please template categories'
 																});
-																this.props.updateContractor(selectedContractor.id);
+																this.props.getProjectData(project.id);
 															});
 
-															if (this.state.rowsPerPage * (this.state.currentPage) < selectedContractor.contractorSpecialties.length - 1) {
-																await this.props.getSpecialties(this.state.currentPage, this.state.rowsPerPage);
+															if (this.state.rowsPerPage * (this.state.currentPage) < project.projectTemplates.length - 1) {
+																await this.props.getTemplates(this.state.currentPage, this.state.rowsPerPage);
 															}
 															else {
 																const currentPage = this.state.currentPage - 1;
@@ -238,7 +243,7 @@ class ConnectedContractorInfoView extends React.Component {
 																	currentPage: currentPage
 																});
 
-																await this.props.getSpecialties(currentPage, this.state.rowsPerPage);
+																await this.props.getTemplates(currentPage, this.state.rowsPerPage);
 															}
 														}
 													}>
@@ -256,7 +261,7 @@ class ConnectedContractorInfoView extends React.Component {
 						style={{ overflow: "scroll" }}
 						rowsPerPageOptions={[5, 10, 20]}
 						component="div"
-						count={selectedContractor.contractorSpecialties.length}
+						count={project.projectTemplates.length}
 						rowsPerPage={this.state.rowsPerPage}
 						page={this.state.currentPage}
 						backIconButtonProps={{
@@ -302,7 +307,7 @@ class ConnectedContractorInfoView extends React.Component {
 						<DialogActions>
 							<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
 								Cancel
-						</Button>
+							</Button>
 							<Button disabled={this.state.isSaving} onClick={async () => {
 								this.setState({ isSaving: true });
 								const { userProfile } = this.props;
@@ -312,7 +317,7 @@ class ConnectedContractorInfoView extends React.Component {
 									"updatedBy": userProfile.email
 								};
 
-								await this.props.createContractor(data, (res) => {
+								await this.props.createProject(data, (res) => {
 									this.setState({
 										snackBar: true,
 										snackBarContent: res ? 'create template success' : 'create template failed'
@@ -324,7 +329,6 @@ class ConnectedContractorInfoView extends React.Component {
 							}} color="primary">
 								Add {
 									this.state.isSaving && <CircularProgress
-
 										size={24}
 										thickness={4} />
 								}
@@ -354,23 +358,24 @@ class ConnectedContractorInfoView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		specialties: state.cont_data.specialties,
-		selectedContractor: state.cont_data.selectedContractor
+		templates: state.gen_data.templates,
+		project: state.global_data.project, 
+		userProfile: state.global_data.userProfile
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getSpecialties: (page, size) => dispatch(getSpecialties(page, size)),
-		addSpecialty: (contractor, specialty, cb) => dispatch(addSpecialty(contractor, specialty, cb)),
-		deleteSpecialty: (contractor, specialty, cb) => dispatch(deleteSpecialty(contractor, specialty, cb)),
-		updateContractor: (id) => dispatch(updateContractor(id)),
+		getTemplates: (page, size) => dispatch(getTemplates(page, size)),
+		addTemplate: (project, template, cb) => dispatch(addTemplate(project, template, cb)),
+		deleteTemplate: (project, template, cb) => dispatch(deleteTemplate(project, template, cb)),
+		getProjectData: (id) => dispatch(getProjectData(id)),
 	}
 }
-const ContractorInfoView = connect(mapStateToProps, mapDispatchToProps)(ConnectedContractorInfoView);
+const ProjectTemplateView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProjectTemplateView);
 
-ContractorInfoView.propTypes = {
+ProjectTemplateView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ContractorInfoView);
+export default withStyles(styles)(ProjectTemplateView);

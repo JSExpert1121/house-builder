@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
@@ -8,20 +9,25 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import NoSsr from '@material-ui/core/NoSsr';
 
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import LoyaltyIcon from '@material-ui/icons/Loyalty';
-
 import ProposalDetailFiles from './ProposalDetailFiles';
 import ProposalDetailOverview from './ProposalDetailOverview';
+import { CircularProgress } from '@material-ui/core';
+
+import { getProposalData } from "../../actions/index";
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px"
+		padding: "10px"
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.primary.dark
+	},
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(40vh)",
 	}
 });
 
@@ -34,6 +40,11 @@ class ConnectedProposalDetailView extends React.Component {
 		}
 	}
 
+	async componentDidMount() {
+		const { match } = this.props;
+		await this.props.getProposalData(match.params.id);
+	}
+
 	handleTabChange = (event, value) => {
 		this.setState({
 			curDetailTab: value
@@ -41,12 +52,12 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, selectedProposal } = this.props;
+		const { classes, match, proposal } = this.props;
 		const curDetailTab = this.state.curDetailTab;
 
-		if (selectedProposal === null)
+		if (proposal === null)
 			return (
-				<div> no proposal is selected </div>
+				<CircularProgress className={classes.waitingSpin} />
 			);
 
 		return (
@@ -76,16 +87,22 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 }
 
+const mapDispatchToProps = dispatch => {
+	return {
+		getProposalData: (id) => dispatch(getProposalData(id))
+	}
+}
+
 const mapStateToProps = state => {
 	return {
-		selectedProposal: state.gen_data.selectedProposal
+		proposal: state.global_data.proposal
 	};
 };
 
-const ProposalDetailView = connect(mapStateToProps)(ConnectedProposalDetailView);
+const ProposalDetailView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailView);
 
 ProposalDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProposalDetailView);
+export default withRouter(withStyles(styles)(ProposalDetailView));

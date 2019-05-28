@@ -13,17 +13,17 @@ import {
 	Snackbar
 } from '@material-ui/core';
 
-import { setSelectedProposal, getProposals, deleteProposal } from '../../../actions/gen-actions';
+import { getProposalData, getProposalsByProjectId, deleteProposal, setRedirectTo } from '../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		height: "calc(100vh - 64px - 48px - 20px)",
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 56px - 20px)",
+		maxHeight: "calc(100vh - 64px - 57px - 56px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -68,19 +68,19 @@ class ConnectedProjectProposals extends React.Component {
 	}
 
 	componentDidMount() {
-		const { selectedProject } = this.props;
-		this.props.getProposals(selectedProject.id, 0, 0);
+		const { project } = this.props;
+		this.props.getProposalsByProjectId(project.id, 0, 0);
 	}
 
 	handleChangePage = (event, page) => {
-		const { selectedProject } = this.props;
+		const { project } = this.props;
 		this.setState({ currentPage: page });
 
-		this.props.getProposals(selectedProject.id, page, this.state.rowsPerPage);
+		this.props.getProposalsByProjectId(project.id, page, this.state.rowsPerPage);
 	};
 
 	handleChangeRowsPerPage = event => {
-		const { proposals, selectedProject } = this.props;
+		const { proposals, project } = this.props;
 
 		const rowsPerPage = event.target.value;
 		const currentPage = rowsPerPage >= proposals.totalElements ? 0 : this.state.currentPage;
@@ -90,7 +90,7 @@ class ConnectedProjectProposals extends React.Component {
 			currentPage: currentPage
 		});
 
-		this.props.getProposals(selectedProject.id, currentPage, rowsPerPage);
+		this.props.getProposalsByProjectId(project.id, currentPage, rowsPerPage);
 	};
 
 	render() {
@@ -115,8 +115,7 @@ class ConnectedProjectProposals extends React.Component {
 						<TableBody>
 							{proposals.content.map(row => (
 								<TableRow className={classes.row} key={row.id} hover onClick={async () => {
-									await this.props.setSelectedProposal(row.id);
-									this.props.history.push("/g_cont/propose_detail");
+									this.props.history.push("/proposal_detail/" + row.id);
 								}} >
 									<CustomTableCell component="th" scope="row" align="center">{row.subContractor.email}</CustomTableCell>
 									<CustomTableCell align="center">{row.budget}</CustomTableCell>
@@ -166,15 +165,16 @@ class ConnectedProjectProposals extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setSelectedProposal: id => dispatch(setSelectedProposal(id)),
-		getProposals: (id, page, row) => dispatch(getProposals(id, page, row)),
+		getProposalData: id => dispatch(getProposalData(id)),
+		getProposalsByProjectId: (id, page, row) => dispatch(getProposalsByProjectId(id, page, row)),
+		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 }
 
 const mapStateToProps = state => {
 	return {
-		proposals: state.gen_data.proposals,
-		selectedProject: state.gen_data.selectedProject,
+		proposals: state.global_data.proposals,
+		project: state.global_data.project,
 	};
 };
 

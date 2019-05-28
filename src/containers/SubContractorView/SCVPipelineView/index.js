@@ -60,7 +60,7 @@ class ConnectedSCVPipelineView extends React.Component {
 							className={classes.toolbarstyle}
 						>
 							<Tab component={Link} to={`${match.url}/submitted`} label="Submitted" />
-							<Tab component={Link} to={`${match.url}/awarded`} label="Awarded" />
+							<Tab component={Link} to={`${match.url}/awarded`} label="Won" />
 							<Tab component={Link} to={`${match.url}/invited`} label="Invited" />
 						</Tabs>
 

@@ -12,7 +12,8 @@ import {
 	Snackbar
 } from '@material-ui/core';
 
-import { getProposals, deleteProposal } from '../../../actions/sub-actions';
+import { getProposals } from '../../../actions/sub-actions';
+import { deleteProposal, setRedirectTo } from '../../../actions';
 
 const styles = theme => ({
 	root: {
@@ -124,7 +125,10 @@ class ConnectedSubmittedProView extends React.Component {
 	}
 
 	handleSelectProposal = (id) => {
-		this.props.history.push(`/s_cont/proposal_detail/${id}`);
+		const { location } = this.props;
+
+		this.props.setRedirectTo("/s_cont");
+		this.props.history.push(`/proposal_detail/${id}`);
 	}
 
 	render() {
@@ -209,7 +213,8 @@ class ConnectedSubmittedProView extends React.Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		getProposals: (id, page, row, filterStr) => dispatch(getProposals(id, page, row, filterStr)),
-		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb))
+		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
+		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 }
 

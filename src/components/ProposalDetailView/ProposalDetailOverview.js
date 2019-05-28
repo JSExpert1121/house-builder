@@ -6,12 +6,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Card, Button, Snackbar, CircularProgress, Link } from '@material-ui/core';
-import { submitProposal, deleteProposal, setSelectedProposal, getProjectsByGenId } from '../../../actions/gen-actions';
+
+import { getProposalData, deleteProposal } from '../../actions/index';
 
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		height: "calc(100vh - 64px - 48px - 20px)",
 		padding: "10px"
 	},
 	editField: {
@@ -56,33 +57,6 @@ class ConnectedProposalDetailView extends Component {
 		}
 	}
 
-	handleSubmitProposal = async () => {
-		const { userProfile, project } = this.props;
-		this.setState({
-			isSaving: true,
-		});
-
-		const proposalData = {
-			"budget": this.state.budget,
-			"duration": this.state.duration,
-			"description": this.state.description,
-			"updatedBy": userProfile.email
-		};
-
-		await this.props.submitProposal(userProfile.user_metadata.contractor_id, project.id, proposalData, (res) => {
-			this.setState({
-				isSaving: false,
-				snackBar: true,
-				snackBarContent: res !== 'false' ? "submit proposal success" : "submit proposal failed"
-			});
-
-			if (res) {
-				this.props.setSelectedProposal(res);
-				this.props.history.push("/a_pros/proposal_detail/v");
-			}
-		});
-	}
-
 	handleDeleteProposal = async () => {
 		const { proposal } = this.props;
 		this.setState({
@@ -97,28 +71,38 @@ class ConnectedProposalDetailView extends Component {
 			});
 
 			if (res) {
-				this.props.history.push("/a_pros/project_detail/proposals");
+				this.props.history.push("/s_cont/pipeline/submitted");
 			}
 		})
 	}
 
-	handleBack = async () => {
-		const { project } = this.props;
-
-		await this.props.selectProject(project.id);
-		this.props.history.push("/a_pros/project_detail/proposals");
+	handleBack = () => {
+		const { proposal } = this.props;
+		switch (this.props.redirectTo) {
+			case '/g_cont':
+				this.props.history.push("/project_detail/" + proposal.project.id + "/proposals");
+				break;
+			case '/s_cont':
+				this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
+				break;
+			case '/a_pros':
+				this.props.history.push("/project_detail/" + proposal.project.id + "/proposals");
+				break;
+			default:
+				break;
+		}
 	}
 
 	render() {
-		const { classes, match, proposal, project } = this.props;
-		const mode = match.params.mode;
+		const { classes, proposal } = this.props;
+		const project = proposal.project;
 
-		if ((proposal === null && mode === 'v') || project === null)
+		if (proposal === null)
 			return <Card className={classes.root} ></Card>
 
 		return (
 			<div className={classes.root}>
-				<Link onClick={this.handleBack}> Back to all proposals</Link>
+				<Link onClick={this.handleBack}> Back to proposals</Link>
 				<div>
 					<TextField
 						autoFocus
@@ -158,9 +142,8 @@ class ConnectedProposalDetailView extends Component {
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={mode === 'v' ? proposal.budget : this.state.budget}
-						readOnly={mode === 'v'}
-						onChange={(val) => this.setState({ budget: val.target.value })}
+						value={proposal.budget}
+						readOnly
 					/>
 					<TextField
 						margin="normal"
@@ -168,21 +151,18 @@ class ConnectedProposalDetailView extends Component {
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={mode === 'v' ? proposal.duration : this.state.duration}
-						readOnly={mode === 'v'}
-						onChange={(val) => this.setState({ duration: val.target.value })}
+						value={proposal.duration}
+						readOnly
 					/>
-					{
-						mode === 'v' && <TextField
-							margin="normal"
-							label="status"
-							type="text"
-							fullWidth
-							className={classes.width_300}
-							value={proposal.status}
-							readOnly={true}
-						/>
-					}
+					<TextField
+						margin="normal"
+						label="status"
+						type="text"
+						fullWidth
+						className={classes.width_300}
+						value={proposal.status}
+						readOnly={true}
+					/>
 					<TextField
 						margin="normal"
 						label="description"
@@ -190,23 +170,15 @@ class ConnectedProposalDetailView extends Component {
 						multiline
 						rows="10"
 						fullWidth
-						value={mode === 'v' ? proposal.description : this.state.description}
-						readOnly={mode === 'v'}
-						onChange={(val) => this.setState({ description: val.target.value })}
+						value={proposal.description}
+						readOnly
 					/>
-					{
-						mode === 'c' && <Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={
-							this.handleSubmitProposal
-						}> Submit Proposal {this.state.isSaving && <CircularProgress
-							disableShrink
-							size={24}
-							thickness={4} />} </Button>/* : <Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={
-								this.handleDeleteProposal
-							}> Delete Proposal {this.state.isSaving && <CircularProgress
-								disableShrink
-								size={24}
-								thickness={4} />} </Button>*/
-					}
+					<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={
+						this.handleDeleteProposal
+					}> Delete Proposal {this.state.isSaving && <CircularProgress
+
+						size={24}
+						thickness={4} />} </Button>
 				</div>
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -230,18 +202,16 @@ class ConnectedProposalDetailView extends Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		submitProposal: (cont_id, pro_id, proposal, cb) => dispatch(submitProposal(cont_id, pro_id, proposal, cb)),
-		setSelectedProposal: (id) => dispatch(setSelectedProposal(id)),
+		getProposalData: (id) => dispatch(getProposalData(id)),
 		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
-		selectProject: (id) => dispatch(getProjectsByGenId(id))
 	};
 }
 
 const mapStateToProps = state => {
 	return {
-		project: state.gen_data.selectedProject,
 		userProfile: state.global_data.userProfile,
-		proposal: state.gen_data.selectedProposal
+		proposal: state.global_data.proposal,
+		redirectTo: state.global_data.redirectTo
 	};
 };
 

@@ -2,7 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
-import { getProjectDetailById, getAllProjects, getProjectsByGenId, deleteProject } from '../../../actions/gen-actions';
+import { getProjectsByGenId } from '../../../actions/gen-actions';
+import { deleteProject, setRedirectTo } from '../../../actions';
 
 import PropTypes from 'prop-types';
 
@@ -133,8 +134,8 @@ class connectedCurProView extends React.Component {
 	}
 
 	handleSelectProject = async (id) => {
-		await this.props.getProjectDetailById(id);
-		this.props.history.push("/g_cont/project_detail");
+		this.props.setRedirectTo('/g_cont');
+		this.props.history.push("/project_detail/" + id);
 	}
 
 	render() {
@@ -247,9 +248,9 @@ class connectedCurProView extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
 		getProjectsByGenId: (id, page, rowSize) => dispatch(getProjectsByGenId(id, page, rowSize)),
-		deleteProject: (id, cb) => dispatch(deleteProject(id, cb))
+		deleteProject: (id, cb) => dispatch(deleteProject(id, cb)),
+		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 };
 

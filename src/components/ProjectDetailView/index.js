@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
-import SecuredRoute from '../../../routers/SecuredRoute';
+import SecuredRoute from '../../routers/SecuredRoute';
 
 import { connect } from 'react-redux';
 
@@ -18,10 +18,13 @@ import ProjectMessages from './ProjectMessages';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 
+import { getProjectData } from '../../actions';
+import { dispatch } from 'rxjs/internal/observable/range';
+
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
+		height: "calc(100vh - 64px - 20px)",
 		margin: "10px",
 	},
 	toolbarstyle: {
@@ -44,22 +47,37 @@ class ConnectedProjectDetailView extends React.Component {
 		}
 	}
 
+	async componentDidMount() {
+		const { match } = this.props;
+
+		await this.props.getProjectData(match.params.id);
+	}
+
 	render() {
-		const { classes, match, selectedProject, location } = this.props;
+		const { classes, match, project, location } = this.props;
 
-		const tabNo = {
-			'/a_pros/project_detail': 0,
-			'/a_pros/project_detail/overview': 0,
-			'/a_pros/project_detail/bidders': 1,
-			'/a_pros/project_detail/files': 2,
-			'/a_pros/project_detail/messages': 3,
-			'/a_pros/project_detail/proposals': 4,
-			'/a_pros/project_detail/templates': 5,
-		};
+		const tabNo = [
+			match.url + '/overview',
+			match.url + '/bidders',
+			match.url + '/files',
+			match.url + '/messages',
+			match.url + '/proposals',
+			match.url + '/templates',
+		];
 
-		const curTabPos = tabNo[location.pathname];
+		let curTabPos = 0;
 
-		if (selectedProject === null)
+		for (let i = 0; i < tabNo.length; i++) {
+			if (tabNo[i] === location.pathname) {
+				curTabPos = i;
+				break;
+			}
+		}
+
+		if (location.pathname === match.url)
+			curTabPos = 0;
+
+		if (project === null)
 			return <div />;
 
 		return (
@@ -98,13 +116,19 @@ class ConnectedProjectDetailView extends React.Component {
 	}
 }
 
+const mapDispatchToProps = dispatch => {
+	return {
+		getProjectData: (id) => dispatch(getProjectData(id))
+	}
+};
+
 const mapStateToProps = state => {
 	return {
-		selectedProject: state.gen_data.selectedProject
+		project: state.global_data.project
 	};
 };
 
-const ProjectDetailView = connect(mapStateToProps)(ConnectedProjectDetailView);
+const ProjectDetailView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProjectDetailView);
 
 ProjectDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,

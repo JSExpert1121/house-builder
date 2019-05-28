@@ -1,8 +1,7 @@
 import { PROPOSALS_LOADED, SET_SELECTED_PROPOSAL } from '../constants/sub-action-types';
 
 const initialState = {
-	proposals: null,
-	proposal: null
+	proposals: null
 };
 
 function sub_reducer(state = initialState, action) {
@@ -10,14 +9,6 @@ function sub_reducer(state = initialState, action) {
 		case PROPOSALS_LOADED:
 			return Object.assign({}, state, {
 				proposals: action.payload
-			});
-		case SET_SELECTED_PROPOSAL:
-			return Object.assign({}, state, {
-				proposal: action.payload
-			})
-		case "CLEAR_SELECTED_PROPOSAL":
-			return Object.assign({}, state, {
-				proposal: null
 			});
 		case "CLEAR_PROPOSALS":
 			return Object.assign({}, state, {
