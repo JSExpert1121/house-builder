@@ -93,32 +93,35 @@ class ConnectedContractorInfoView extends React.Component {
 							<CustomTableCell align="center">Status</CustomTableCell>
 						</TableRow>
 					</TableHead>
-					<TableBody>						
-							<TableRow className={classes.row} hover>
-								<CustomTableCell component="th" scope="row" align="center">
-									{selectedContractor? selectedContractor.email: "N/A"}
-								</CustomTableCell>
-								<CustomTableCell align="center">
-									{selectedContractor.address ? selectedContractor.address.name: "N/A"}
-								</CustomTableCell>
-								<CustomTableCell align="center">
-									{selectedContractor.address? selectedContractor.address.city: "N/A"}
-								</CustomTableCell>
-								<CustomTableCell align="center">
-									{selectedContractor.address? selectedContractor.address.street: "N/A"} 
-								</CustomTableCell>
-								<CustomTableCell align="center">
-									{selectedContractor.status? selectedContractor.status: "N/A"}
-								</CustomTableCell>
-							</TableRow>						
+					<TableBody>
+						<TableRow className={classes.row} hover>
+							<CustomTableCell component="th" scope="row" align="center">
+								{selectedContractor ? selectedContractor.email : "N/A"}
+							</CustomTableCell>
+							<CustomTableCell align="center">
+								{selectedContractor.address ? selectedContractor.address.name : "N/A"}
+							</CustomTableCell>
+							<CustomTableCell align="center">
+								{selectedContractor.address ? selectedContractor.address.city : "N/A"}
+							</CustomTableCell>
+							<CustomTableCell align="center">
+								{selectedContractor.address ? selectedContractor.address.street : "N/A"}
+							</CustomTableCell>
+							<CustomTableCell align="center">
+								{selectedContractor.status ? selectedContractor.status : "N/A"}
+							</CustomTableCell>
+						</TableRow>
 					</TableBody>
 				</Table>
+				<br />
+				Approve/Reject Reason
+				<br /><br />
 				<TextField
-						placeholder=""
-						multiline={true}
-						rows={4}
-						className={classes.textField}
-				/> 	
+					placeholder=""
+					multiline={true}
+					rows={4}
+					className={classes.textField}
+				/>
 				<DropzoneDialog
 					open={this.state.openUploadForm}
 					onSave={this.handleUploadFiles}
@@ -145,15 +148,15 @@ class ConnectedContractorInfoView extends React.Component {
 					}
 				/>
 				<div className={classes.buttons}>
-					<Button variant="contained" color="primary" className={classes.button} onClick = {() => this.props.approveContractor(selectedContractor.id, {"status" : "ACTIVE"}, (result) => {
-						if(result)
-								this.props.updateContractor(selectedContractor.id);
-							}
-						)}>Approve</Button>
-					<Button variant="contained" color="default" className={classes.button} onClick = {() => this.props.rejectContractor(selectedContractor.id, {"status" : "REJECTED"}, (result) => {					
-						if(result)
-								this.props.updateContractor(selectedContractor.id);
-							}
+					<Button variant="contained" color="primary" className={classes.button} onClick={() => this.props.approveContractor(selectedContractor.id, { "status": "ACTIVE" }, (result) => {
+						if (result)
+							this.props.updateContractor(selectedContractor.id);
+					}
+					)}>Approve</Button>
+					<Button variant="contained" color="default" className={classes.button} onClick={() => this.props.rejectContractor(selectedContractor.id, { "status": "REJECTED" }, (result) => {
+						if (result)
+							this.props.updateContractor(selectedContractor.id);
+					}
 					)}>Reject</Button>
 				</div>
 			</div>
@@ -170,8 +173,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		approveContractor: (id, data, cb) => dispatch(approveContractor(id, data, cb)),
-		rejectContractor: (id, data, cb) => dispatch(rejectContractor(id, data, cb)),	
-		updateContractor: (id) => dispatch(updateContractor(id)),	
+		rejectContractor: (id, data, cb) => dispatch(rejectContractor(id, data, cb)),
+		updateContractor: (id) => dispatch(updateContractor(id)),
 	}
 }
 const ContractorInfoView = connect(mapStateToProps, mapDispatchToProps)(ConnectedContractorInfoView);
