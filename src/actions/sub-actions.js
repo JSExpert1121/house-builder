@@ -10,7 +10,8 @@ export function getProposals(cont_id, page, row, filterStr) {
 		return Axios.get(process.env.PROJECT_API + 'contractors/' + cont_id + '/proposals', {
 			params: {
 				'page': page,
-				'size': row
+				'size': row,
+				'status': filterStr
 			}
 		})
 			.then(res => {

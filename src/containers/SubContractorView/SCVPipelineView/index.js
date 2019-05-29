@@ -15,6 +15,8 @@ import NoSsr from '@material-ui/core/NoSsr';
 import SecuredRoute from '../../../routers/SecuredRoute';
 import { Redirect, Link, Switch, withRouter } from 'react-router-dom';
 import SubmittedProView from './SubmittedProView';
+import WonProView from './WonProView';
+import InvitedProView from './InvitedProView';
 
 const styles = theme => ({
 	root: {
@@ -66,8 +68,8 @@ class ConnectedSCVPipelineView extends React.Component {
 
 						<Switch>
 							<SecuredRoute path={`${match.url}/submitted`} component={SubmittedProView} />
-							<SecuredRoute path={`${match.url}/awarded`} render={<div />} />
-							<SecuredRoute path={`${match.url}/invited`} render={<div />} />
+							<SecuredRoute path={`${match.url}/awarded`} component = {WonProView} />
+							<SecuredRoute path={`${match.url}/invited`} component = {InvitedProView} />
 							<Redirect path={`${match.url}`} to={`${match.url}/submitted`} />
 						</Switch>
 					</Paper>
