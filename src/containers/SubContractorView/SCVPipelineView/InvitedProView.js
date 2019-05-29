@@ -134,6 +134,8 @@ class ConnectedSubmittedProView extends React.Component {
 	render() {
 		const { classes, proposals } = this.props;
 
+		return <div className={classes.root}></div>;
+		
 		if (proposals === null)
 			return <div className={classes.root}> <CircularProgress className={classes.waitingSpin} /> </div>;
 
