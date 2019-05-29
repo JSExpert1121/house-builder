@@ -15,6 +15,8 @@ import { CircularProgress } from '@material-ui/core';
 
 import { getProposalData } from "../../actions/index";
 import ProposalDetailMessages from './ProposalDetailMessages';
+import { IconButton } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
 	root: {
@@ -23,6 +25,10 @@ const styles = theme => ({
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
+		color: theme.palette.primary.dark,
+		flexGrow: 1
+	},
+	backBtn: {
 		color: theme.palette.primary.dark
 	},
 	waitingSpin: {
@@ -54,6 +60,29 @@ class ConnectedProposalDetailView extends React.Component {
 		});
 	}
 
+	handleBack = () => {
+		const { proposal, match } = this.props;
+		/*switch (this.props.redirectTo) {
+			case '/g_cont':
+				this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
+				break;
+			case '/s_cont':
+				this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
+				break;
+			case '/a_pros':
+				this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
+				break;
+			default:
+				break;
+		}*/
+		if (match.url.includes("g_cont"))
+			this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
+		else if (match.url.includes("s_cont"))
+			this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
+		else if (match.url.includes("a_pros"))
+			this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
+	}
+
 	render() {
 		const { classes, match, proposal, redirectTo } = this.props;
 		const curDetailTab = this.state.curDetailTab;
@@ -68,28 +97,33 @@ class ConnectedProposalDetailView extends React.Component {
 			<NoSsr>
 				<div className={classes.root}>
 					<Paper square >
-						<Tabs
-							value={curDetailTab}
-							onChange={this.handleTabChange}
-							variant="scrollable"
-							indicatorColor="primary"
-							textColor="primary"
-							scrollButtons="on"
-							className={classes.toolbarstyle}
-						>
-							<Tab label="Detail" />
-							{
-								match.params.id !== '-1' && <Tab label="Files" />
-							}
-							{
-								match.params.id !== '-1' &&
-								(
-									redirectTo === '/g_cont' ||
-									(redirectTo === '/s_cont' && (proposal.status === 'SUBMITTED' || proposal.status === 'AWARDED'))
-								) &&
-								<Tab label="Messages" />
-							}
-						</Tabs>
+						<div style={{ display: 'flex' }}>
+							<IconButton className={classes.backBtn} onClick={this.handleBack}>
+								<ArrowBackIcon />
+							</IconButton>
+							<Tabs
+								value={curDetailTab}
+								onChange={this.handleTabChange}
+								variant="scrollable"
+								indicatorColor="primary"
+								textColor="primary"
+								scrollButtons="off"
+								className={classes.toolbarstyle}
+							>
+								<Tab label="Detail" />
+								{
+									match.params.id !== '-1' && <Tab label="Files" />
+								}
+								{
+									match.params.id !== '-1' &&
+									(
+										redirectTo === '/g_cont' ||
+										(redirectTo === '/s_cont' && (proposal.status === 'SUBMITTED' || proposal.status === 'AWARDED'))
+									) &&
+									<Tab label="Messages" />
+								}
+							</Tabs>
+						</div>
 
 						{curDetailTab === 0 && <ProposalDetailOverview />}
 						{curDetailTab === 1 && <ProposalDetailFiles />}

@@ -133,23 +133,6 @@ class ConnectedProposalDetailView extends Component {
 		})
 	}
 
-	handleBack = () => {
-		const { proposal } = this.props;
-		switch (this.props.redirectTo) {
-			case '/g_cont':
-				this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
-				break;
-			case '/s_cont':
-				this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
-				break;
-			case '/a_pros':
-				this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
-				break;
-			default:
-				break;
-		}
-	}
-
 	render() {
 		const { classes, match, proposal, redirectTo, project } = this.props;
 		let mode = match.params.id === '-1' ? 'c' : 'v';
@@ -162,7 +145,6 @@ class ConnectedProposalDetailView extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Link onClick={this.handleBack}> Back to proposals</Link>
 				<div>
 					<TextField
 						autoFocus

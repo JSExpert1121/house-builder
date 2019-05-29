@@ -29,6 +29,9 @@ const styles = theme => ({
 		height: "calc(100vh - 64px - 72px - 20px)",
 		margin: "10px",
 	},
+	backBtn: {
+		color: theme.palette.primary.dark
+	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
 		color: theme.palette.primary.dark,
@@ -100,7 +103,7 @@ class ConnectedProjectDetailView extends React.Component {
 				<div className={classes.root}>
 					<Paper square >
 						<div style={{ display: 'flex' }}>
-							<IconButton onClick={this.handleBack}>
+							<IconButton className = {classes.backBtn} onClick={this.handleBack}>
 								<ArrowBackIcon />
 							</IconButton>
 							<Tabs
