@@ -102,7 +102,7 @@ class connectedCurProView extends React.Component {
 										<TableRow className={classes.row} key={row.id} hover
 											onClick={() => {
 												this.props.setRedirectTo('/a_pros');
-												this.props.history.push("/project_detail/" + row.id);
+												this.props.history.push("/a_pros/project_detail/" + row.id);
 											}}>
 											<CustomTableCell component="th" scope="row">
 												{row.title}

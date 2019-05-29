@@ -27,12 +27,12 @@ import { getProjectData } from '../../actions';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 20px)",
+		height: "calc(100vh - 64px - 72px - 20px)",
 		margin: "10px 10px 10px 10px",
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 57px - 20px)",
+		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -359,7 +359,7 @@ class ConnectedProjectTemplateView extends React.Component {
 const mapStateToProps = state => {
 	return {
 		templates: state.gen_data.templates,
-		project: state.global_data.project, 
+		project: state.global_data.project,
 		userProfile: state.global_data.userProfile
 	};
 };

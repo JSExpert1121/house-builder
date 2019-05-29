@@ -21,6 +21,8 @@ import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 // local components
 import CurrentProjectView from './CurrentProjectView/index';
+import ProjectDetailView from '../../components/ProjectDetailView';
+import ProposalDetailView from '../../components/ProposalDetailView';
 
 const styles = theme => ({
 	root: {
@@ -55,8 +57,8 @@ class ConnectedGenContView extends React.Component {
 		};
 
 		let curTabPos = tabNo[location.pathname];
-		if (location.pathname.includes("/a_pros/project_detail"))
-			curTabPos = 1;
+		//if (location.pathname.includes("/a_pros/project_detail"))
+		curTabPos = 0;
 
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&
@@ -78,6 +80,8 @@ class ConnectedGenContView extends React.Component {
 
 					<Switch>
 						<SecuredRoute path='/a_pros/current_pros' component={CurrentProjectView} />
+						<SecuredRoute path="/a_pros/proposal_detail/:id" component={ProposalDetailView} />
+						<SecuredRoute path="/a_pros/project_detail/:id" component={ProjectDetailView} />
 						<Redirect path='/a_pros' to={`/a_pros/current_pros`} />
 					</Switch>
 				</div>

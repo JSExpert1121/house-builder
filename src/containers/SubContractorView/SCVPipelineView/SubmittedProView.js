@@ -128,7 +128,7 @@ class ConnectedSubmittedProView extends React.Component {
 		const { location } = this.props;
 
 		this.props.setRedirectTo("/s_cont");
-		this.props.history.push(`/proposal_detail/${id}`);
+		this.props.history.push(`/s_cont/proposal_detail/${id}`);
 	}
 
 	render() {

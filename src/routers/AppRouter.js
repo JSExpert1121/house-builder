@@ -99,8 +99,6 @@ class AppRouterConnect extends React.Component {
 						<SecuredRoute path='/m_cont' component={ContractorView} />
 						<SecuredRoute path="/profile" component={ProfileView} />
 						<SecuredRoute path="/settings" component={SettingsView} />
-						<SecuredRoute path="/proposal_detail/:id" component={ProposalDetailView} />
-						<SecuredRoute path="/project_detail/:id" component={ProjectDetailView} />
 						<Route exact path='/callback' component={Callback} />
 						<Redirect to="/" />
 					</Switch>

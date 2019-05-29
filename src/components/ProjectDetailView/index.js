@@ -24,7 +24,7 @@ import { dispatch } from 'rxjs/internal/observable/range';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 20px)",
+		height: "calc(100vh - 64px - 72px - 20px)",
 		margin: "10px",
 	},
 	toolbarstyle: {

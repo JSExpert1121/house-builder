@@ -21,6 +21,8 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 // local components
 import CurrentProjectView from './CurrentProjectView';
 import AddProjectView from './AddProjectView'
+import ProjectDetailView from '../../components/ProjectDetailView';
+import ProposalDetailView from '../../components/ProposalDetailView';
 
 const styles = theme => ({
 	root: {
@@ -53,6 +55,9 @@ class ConnectedGenContView extends React.Component {
 
 		let curTabPos = tabNo[location.pathname];
 
+		if (location.pathname.includes("proposal_detail") || location.pathname.includes("project_detail"))
+			curTabPos = 0;
+
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&
 			!userProfile.user_metadata.roles.includes("SuperAdmin"))
@@ -75,6 +80,8 @@ class ConnectedGenContView extends React.Component {
 					<Switch>
 						<SecuredRoute path={`${match.url}/current_pros`} component={CurrentProjectView} />
 						<SecuredRoute path={`${match.url}/add_project`} component={AddProjectView} />
+						<SecuredRoute path={`${match.url}/proposal_detail/:id`} component={ProposalDetailView} />
+						<SecuredRoute path={`${match.url}/project_detail/:id`} component={ProjectDetailView} />
 						<Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
 					</Switch>
 				</div>

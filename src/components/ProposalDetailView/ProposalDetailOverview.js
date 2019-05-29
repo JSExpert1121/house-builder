@@ -13,7 +13,7 @@ import { awardProject } from '../../actions/gen-actions';
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 48px - 20px)",
+		height: "calc(100vh - 64px - 72px - 48px - 20px)",
 		padding: "10px"
 	},
 	editField: {
@@ -72,13 +72,25 @@ class ConnectedProposalDetailView extends Component {
 			});
 
 			if (res) {
-				this.props.history.push("/s_cont/pipeline/submitted");
+				switch (this.props.redirectTo) {
+					case '/g_cont':
+						this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
+						break;
+					case '/s_cont':
+						this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
+						break;
+					case '/a_pros':
+						this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
+						break;
+					default:
+						break;
+				}
 			}
 		})
 	}
 
 	handleSubmitProposal = async () => {
-		const { userProfile, project } = this.props;
+		const { userProfile, redirectTo, project } = this.props;
 		this.setState({
 			isSaving: true,
 		});
@@ -99,7 +111,7 @@ class ConnectedProposalDetailView extends Component {
 
 			if (res) {
 				await this.props.getProposalData(res);
-				this.props.history.push("/proposal_detail/" + res);
+				this.props.history.push(redirectTo + "/proposal_detail/" + res);
 			}
 		});
 	}
@@ -125,13 +137,13 @@ class ConnectedProposalDetailView extends Component {
 		const { proposal } = this.props;
 		switch (this.props.redirectTo) {
 			case '/g_cont':
-				this.props.history.push("/project_detail/" + proposal.project.id + "/proposals");
+				this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
 				break;
 			case '/s_cont':
 				this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
 				break;
 			case '/a_pros':
-				this.props.history.push("/project_detail/" + proposal.project.id + "/proposals");
+				this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
 				break;
 			default:
 				break;

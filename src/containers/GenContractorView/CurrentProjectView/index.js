@@ -134,8 +134,10 @@ class connectedCurProView extends React.Component {
 	}
 
 	handleSelectProject = async (id) => {
+		const { match } = this.props;
+
 		this.props.setRedirectTo('/g_cont');
-		this.props.history.push("/project_detail/" + id);
+		this.props.history.push("/g_cont/project_detail/" + id);
 	}
 
 	render() {

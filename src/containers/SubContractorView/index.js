@@ -21,6 +21,8 @@ import SCVReportsView from './SCVReportsView';
 import SCVAnalyticsView from './SCVAnalyticsView';
 import SCVSettingsView from './SCVSettingsView';
 import { CircularProgress } from '@material-ui/core';
+import ProposalDetailView from '../../components/ProposalDetailView';
+import ProjectDetailView from '../../components/ProjectDetailView';
 
 const styles = theme => ({
 	root: {
@@ -98,6 +100,8 @@ class ConnectedSubContView extends React.Component {
 						<SecuredRoute path={`${match.url}/analytics`} component={SCVAnalyticsView} />
 						<SecuredRoute path={`${match.url}/reports`} component={SCVReportsView} />
 						<SecuredRoute path={`${match.url}/settings`} component={SCVSettingsView} />
+						<SecuredRoute path={`${match.url}/proposal_detail/:id`} component={ProposalDetailView} />
+						<SecuredRoute path={`${match.url}/project_detail/:id`} component={ProjectDetailView} />
 						<Redirect path='/s_cont' to={`${match.url}/pipeline`} />
 					</Switch>
 				</div>

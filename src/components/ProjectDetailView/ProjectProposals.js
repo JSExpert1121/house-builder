@@ -19,11 +19,11 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 48px - 20px)",
+		height: "calc(100vh - 64px - 48px - 72px - 20px)",
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 57px - 56px - 20px)",
+		maxHeight: "calc(100vh - 64px - 72px - 57px - 56px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -105,65 +105,65 @@ class ConnectedProjectProposals extends React.Component {
 					{
 						redirectTo === '/a_pros' &&
 						<Button className={classes.btnSubmitProposal} onClick={
-							() => this.props.history.push("/proposal_detail/-1")
+							() => this.props.history.push("/a_pros/proposal_detail/-1")
 						}> Submit Proposal </Button>
 					}
 					<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell align="center">Bidder Name</CustomTableCell>
-							<CustomTableCell align="center">Price($)</CustomTableCell>
-							<CustomTableCell align="center">Duration</CustomTableCell>
-							<CustomTableCell align="center">Status</CustomTableCell>
-							<CustomTableCell align="center">Description</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{proposals.content.map(row => (
-							<TableRow className={classes.row} key={row.id} hover onClick={async () => {
-								this.props.history.push("/proposal_detail/" + row.id);
-							}} >
-								<CustomTableCell component="th" scope="row" align="center">{row.subContractor.email}</CustomTableCell>
-								<CustomTableCell align="center">{row.budget}</CustomTableCell>
-								<CustomTableCell align="center">{row.duration}</CustomTableCell>
-								<CustomTableCell align="center">{row.status}</CustomTableCell>
-								<CustomTableCell align="center">{row.description.length > 40 ? row.description.slice(0, 40) + "..." : row.description}</CustomTableCell>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell align="center">Bidder Name</CustomTableCell>
+								<CustomTableCell align="center">Price($)</CustomTableCell>
+								<CustomTableCell align="center">Duration</CustomTableCell>
+								<CustomTableCell align="center">Status</CustomTableCell>
+								<CustomTableCell align="center">Description</CustomTableCell>
 							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</div>
-			<TablePagination
-				style={{ overflow: "scroll" }}
-				rowsPerPageOptions={[5, 10, 20]}
-				component="div"
-				count={proposals.totalElements}
-				rowsPerPage={this.state.rowsPerPage}
-				page={this.state.currentPage}
-				backIconButtonProps={{
-					'aria-label': 'Previous Page',
-				}}
-				nextIconButtonProps={{
-					'aria-label': 'Next Page',
-				}}
-				onChangePage={this.handleChangePage}
-				onChangeRowsPerPage={this.handleChangeRowsPerPage}
-			/>
-			<Snackbar
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-				open={this.state.snackBar}
-				onClose={() => this.setState({
-					snackBar: false
-				})}
-				ContentProps={{
-					'aria-describedby': 'message-id',
-				}}
-				message={
-					<span id="message-id"> {
-						this.state.snackBarContent
-					}</span>
-				}
-			/>
+						</TableHead>
+						<TableBody>
+							{proposals.content.map(row => (
+								<TableRow className={classes.row} key={row.id} hover onClick={async () => {
+									this.props.history.push(redirectTo + "/proposal_detail/" + row.id);
+								}} >
+									<CustomTableCell component="th" scope="row" align="center">{row.subContractor.email}</CustomTableCell>
+									<CustomTableCell align="center">{row.budget}</CustomTableCell>
+									<CustomTableCell align="center">{row.duration}</CustomTableCell>
+									<CustomTableCell align="center">{row.status}</CustomTableCell>
+									<CustomTableCell align="center">{row.description.length > 40 ? row.description.slice(0, 40) + "..." : row.description}</CustomTableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+				<TablePagination
+					style={{ overflow: "scroll" }}
+					rowsPerPageOptions={[5, 10, 20]}
+					component="div"
+					count={proposals.totalElements}
+					rowsPerPage={this.state.rowsPerPage}
+					page={this.state.currentPage}
+					backIconButtonProps={{
+						'aria-label': 'Previous Page',
+					}}
+					nextIconButtonProps={{
+						'aria-label': 'Next Page',
+					}}
+					onChangePage={this.handleChangePage}
+					onChangeRowsPerPage={this.handleChangeRowsPerPage}
+				/>
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
 			</div >
 		);
 	}
