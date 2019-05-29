@@ -13,7 +13,7 @@ import {
 	Snackbar
 } from '@material-ui/core';
 
-import { getProposalData, getProposalsByProjectId, deleteProposal, setRedirectTo } from '../../actions';
+import { getProposalData, getProposalsByProjectId, deleteProposal } from '../../actions';
 
 const styles = theme => ({
 	root: {
@@ -94,7 +94,7 @@ class ConnectedProjectProposals extends React.Component {
 	};
 
 	render() {
-		const { classes, proposals, redirectTo } = this.props;
+		const { classes, proposals, match } = this.props;
 
 		if (proposals === null)
 			return <div className={classes.root}> <CircularProgress className={classes.waitingSpin} /> </div>;
@@ -103,7 +103,7 @@ class ConnectedProjectProposals extends React.Component {
 			<div className={classes.root}>
 				<div className={classes.tableWrap}>
 					{
-						redirectTo === '/a_pros' &&
+						match.url.includes('/a_pros') &&
 						<Button className={classes.btnSubmitProposal} onClick={
 							() => this.props.history.push("/a_pros/proposal_detail/-1")
 						}> Submit Proposal </Button>
@@ -121,7 +121,7 @@ class ConnectedProjectProposals extends React.Component {
 						<TableBody>
 							{proposals.content.map(row => (
 								<TableRow className={classes.row} key={row.id} hover onClick={async () => {
-									this.props.history.push(redirectTo + "/proposal_detail/" + row.id);
+									this.props.history.push(match.url.substring(0, 7) + "/proposal_detail/" + row.id);
 								}} >
 									<CustomTableCell component="th" scope="row" align="center">{row.subContractor.email}</CustomTableCell>
 									<CustomTableCell align="center">{row.budget}</CustomTableCell>
@@ -173,7 +173,6 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getProposalData: id => dispatch(getProposalData(id)),
 		getProposalsByProjectId: (id, page, row) => dispatch(getProposalsByProjectId(id, page, row)),
-		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 }
 
@@ -181,7 +180,6 @@ const mapStateToProps = state => {
 	return {
 		proposals: state.global_data.proposals,
 		project: state.global_data.project,
-		redirectTo: state.global_data.redirectTo
 	};
 };
 

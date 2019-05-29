@@ -1,7 +1,8 @@
 import {
 	SET_USER_PROFILE, SET_SELECTED_PROPOSAL,
 	SET_REDIRECT_TO, PROPOSALS_LOADED,
-	PROJECT_DETAIL_LOADED
+	PROJECT_DETAIL_LOADED,
+	PROPOSAL_MESSAGES_LOADED
 } from '../constants/global-action-types'
 
 import Axios from 'axios';
@@ -70,12 +71,6 @@ export function deleteProposalFile(id, name, cb) {
 				cb(false);
 				console.log(err.message);
 			})
-	}
-}
-
-export function setRedirectTo(str) {
-	return function (dispatch) {
-		dispatch({ type: SET_REDIRECT_TO, payload: str });
 	}
 }
 
@@ -166,5 +161,30 @@ export function submitProposal(cont_id, pro_id, proposal, cb) {
 				cb(false);
 				console.log(err.message)
 			});
+	}
+}
+
+export function getProposalMessages(prop_id) {
+	return function (dispatch) {
+		dispatch({ type: 'CLEAR_PROPOSAL_MESSAGES' });
+		return Axios.get(process.env.PROJECT_API + "messages/proposals/" + prop_id)
+			.then(res => {
+				dispatch({ type: PROPOSAL_MESSAGES_LOADED, payload: res.data });
+			})
+			.catch(err => {
+				console.log(err.message);
+			})
+	}
+}
+
+export function addMessageToProposal(prop_id, message, cb, cont_type) {
+	return function (dispatch) {
+		return Axios.post(process.env.PROJECT_API + "messages/proposals/" +
+			prop_id + (cont_type === 's_cont' ? '/togencon' : '/tosubcon'), message).then(res => {
+				cb(true);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
 	}
 }

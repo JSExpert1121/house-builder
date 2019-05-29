@@ -16,7 +16,6 @@ export function getProposals(cont_id, page, row, filterStr) {
 		})
 			.then(res => {
 				const result = res.data;
-				console.log(result);
 				//result.content = result.content.filter(cont => cont.status === filterStr);
 				dispatch({ type: PROPOSALS_LOADED, payload: result });
 			})

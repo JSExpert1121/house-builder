@@ -44,7 +44,6 @@ class ProfileView extends React.Component {
         };
 
         const curTabPos = tabNo[location.pathname];
-        console.log('tab', curTabPos);
         return (
             <NoSsr>
                 <div className={classes.root}>

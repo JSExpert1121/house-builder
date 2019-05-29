@@ -62,19 +62,6 @@ class ConnectedProposalDetailView extends React.Component {
 
 	handleBack = () => {
 		const { proposal, match } = this.props;
-		/*switch (this.props.redirectTo) {
-			case '/g_cont':
-				this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
-				break;
-			case '/s_cont':
-				this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
-				break;
-			case '/a_pros':
-				this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
-				break;
-			default:
-				break;
-		}*/
 		if (match.url.includes("g_cont"))
 			this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
 		else if (match.url.includes("s_cont"))
@@ -84,7 +71,7 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, match, proposal, redirectTo } = this.props;
+		const { classes, match, proposal } = this.props;
 		const curDetailTab = this.state.curDetailTab;
 
 		if (proposal === null && match.params.id !== '-1')
@@ -117,8 +104,8 @@ class ConnectedProposalDetailView extends React.Component {
 								{
 									match.params.id !== '-1' &&
 									(
-										redirectTo === '/g_cont' ||
-										(redirectTo === '/s_cont' && (proposal.status === 'SUBMITTED' || proposal.status === 'AWARDED'))
+										match.url.includes('/g_cont') ||
+										(match.url.includes('/s_cont') && (proposal.status === 'SUBMITTED' || proposal.status === 'AWARDED'))
 									) &&
 									<Tab label="Messages" />
 								}
@@ -144,7 +131,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
 	return {
 		proposal: state.global_data.proposal,
-		redirectTo: state.global_data.redirectTo
 	};
 };
 

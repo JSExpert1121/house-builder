@@ -59,10 +59,6 @@ class ConnectedProjectDetailView extends React.Component {
 	}
 
 	handleBack = () => {
-		/*const {redirectTo} = this.props;
-
-		this.props.history.push(redirectTo);*/
-
 		const { match } = this.props;
 		if (match.url.includes("g_cont"))
 			this.props.history.push("/g_cont");
@@ -71,7 +67,7 @@ class ConnectedProjectDetailView extends React.Component {
 	}
 
 	render() {
-		const { classes, match, project, location, redirectTo } = this.props;
+		const { classes, match, project, location } = this.props;
 
 		const tabNo = [
 			match.url + '/overview',
@@ -103,7 +99,7 @@ class ConnectedProjectDetailView extends React.Component {
 				<div className={classes.root}>
 					<Paper square >
 						<div style={{ display: 'flex' }}>
-							<IconButton className = {classes.backBtn} onClick={this.handleBack}>
+							<IconButton className={classes.backBtn} onClick={this.handleBack}>
 								<ArrowBackIcon />
 							</IconButton>
 							<Tabs
@@ -147,7 +143,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
 	return {
 		project: state.global_data.project,
-		redirectTo: state.global_data.redirectTo
 	};
 };
 

@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 
 import { getProposals } from '../../../actions/sub-actions';
-import { deleteProposal, setRedirectTo } from '../../../actions';
+import { deleteProposal } from '../../../actions';
 
 const styles = theme => ({
 	root: {
@@ -127,7 +127,6 @@ class ConnectedSubmittedProView extends React.Component {
 	handleSelectProposal = (id) => {
 		const { location } = this.props;
 
-		this.props.setRedirectTo("/s_cont");
 		this.props.history.push(`/s_cont/proposal_detail/${id}`);
 	}
 
@@ -214,7 +213,6 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getProposals: (id, page, row, filterStr) => dispatch(getProposals(id, page, row, filterStr)),
 		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
-		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 }
 

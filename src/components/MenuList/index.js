@@ -22,7 +22,6 @@ import HelpIcon from '@material-ui/icons/Help';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import auth0Client from '../../auth0/auth';
-import { setRedirectTo } from '../../actions';
 
 const styles = theme => ({
 	list: {
@@ -74,8 +73,7 @@ class ConnectedMenuList extends React.Component {
 		return (
 			<Card className={classes.list}>
 				<List>
-					<ListItem button component={Link} to='/' className={pathname === '/' ? classes.selectedStyle : ""}
-						onClick={() => this.props.setRedirectTo(null)}>
+					<ListItem button component={Link} to='/' className={pathname === '/' ? classes.selectedStyle : ""}>
 						<ListItemIcon>
 							<HomeIcon />
 						</ListItemIcon>
@@ -85,7 +83,6 @@ class ConnectedMenuList extends React.Component {
 					{
 						(roles.includes("Gen") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
 						<ListItem button component={Link} to='/g_cont'
-							onClick={() => this.props.setRedirectTo(null)}
 							className={pathname.includes('/g_cont') ? classes.selectedStyle : ""}>
 							<ListItemIcon>
 								<MessageIcon />
@@ -96,7 +93,6 @@ class ConnectedMenuList extends React.Component {
 					{
 						(roles.includes("Sub") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
 						<ListItem button component={Link} to='/s_cont'
-							onClick={() => this.props.setRedirectTo(null)}
 							className={pathname.includes('/s_cont') ? classes.selectedStyle : ""}>
 							<ListItemIcon>
 								<ServiceIcon />
@@ -107,7 +103,6 @@ class ConnectedMenuList extends React.Component {
 					{
 						(roles.includes("Gen") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
 						<ListItem button component={Link} to='/b_list'
-							onClick={() => this.props.setRedirectTo(null)}
 							className={pathname.includes('/b_list') ? classes.selectedStyle : ""}>
 							<ListItemIcon>
 								<HelpIcon />
@@ -118,7 +113,6 @@ class ConnectedMenuList extends React.Component {
 					{
 						(roles.includes("Sub") || roles.includes("GenSub") || roles.includes("SuperAdmin")) &&
 						<ListItem button component={Link} to='/a_pros'
-							onClick={() => this.props.setRedirectTo(null)}
 							className={pathname.includes('/a_pros') ? classes.selectedStyle : ""}>
 							<ListItemIcon>
 								<WidgetsIcon />
@@ -129,7 +123,6 @@ class ConnectedMenuList extends React.Component {
 					{
 						(roles.includes("Admin") || roles.includes("SuperAdmin")) &&
 						<ListItem button component={Link} to='/m_temp'
-							onClick={() => this.props.setRedirectTo(null)}
 							className={pathname.includes('/m_temp') ? classes.selectedStyle : ""}>
 							<ListItemIcon>
 								<PagesIcon />
@@ -140,7 +133,6 @@ class ConnectedMenuList extends React.Component {
 					{
 						(roles.includes("Admin") || roles.includes("SuperAdmin")) &&
 						<ListItem button component={Link} to='/m_cont'
-							onClick={() => this.props.setRedirectTo(null)}
 							className={pathname.includes('/m_cont') ? classes.selectedStyle : ""}>
 							<ListItemIcon>
 								<SettingsIcon />
@@ -151,7 +143,6 @@ class ConnectedMenuList extends React.Component {
 					{
 						(roles.includes("Admin") || roles.includes("SuperAdmin")) &&
 						<ListItem button component={Link} to='/m_spec'
-							onClick={() => this.props.setRedirectTo(null)}
 							className={pathname.includes('/m_spec') ? classes.selectedStyle : ""}>
 							<ListItemIcon>
 								<PagesIcon />
@@ -171,13 +162,11 @@ class ConnectedMenuList extends React.Component {
 const mapStateToProps = state => {
 	return {
 		userProfile: state.global_data.userProfile,
-		redirectTo: state.global_data.redirectTo,
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 };
 

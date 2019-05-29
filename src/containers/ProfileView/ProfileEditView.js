@@ -145,7 +145,7 @@ class connectedProfileView extends Component {
 				phone: ""
 			};
 			let status = res.data.status;
-			console.log(address, status);
+
 			this.setState({
 				status: status,
 				company: address.name,

@@ -59,7 +59,7 @@ class ConnectedProposalDetailView extends Component {
 	}
 
 	handleDeleteProposal = async () => {
-		const { proposal } = this.props;
+		const { proposal, match } = this.props;
 		this.setState({
 			isSaving: true
 		})
@@ -72,25 +72,18 @@ class ConnectedProposalDetailView extends Component {
 			});
 
 			if (res) {
-				switch (this.props.redirectTo) {
-					case '/g_cont':
-						this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
-						break;
-					case '/s_cont':
-						this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
-						break;
-					case '/a_pros':
-						this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
-						break;
-					default:
-						break;
-				}
+				if (match.url.includes("g_cont"))
+					this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
+				else if (match.url.includes("s_cont"))
+					this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
+				else if (match.url.includes("a_pros"))
+					this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
 			}
 		})
 	}
 
 	handleSubmitProposal = async () => {
-		const { userProfile, redirectTo, project } = this.props;
+		const { userProfile, project } = this.props;
 		this.setState({
 			isSaving: true,
 		});
@@ -111,7 +104,7 @@ class ConnectedProposalDetailView extends Component {
 
 			if (res) {
 				await this.props.getProposalData(res);
-				this.props.history.push(redirectTo + "/proposal_detail/" + res);
+				this.props.history.push("/a_pros/proposal_detail/" + res);
 			}
 		});
 	}
@@ -134,7 +127,7 @@ class ConnectedProposalDetailView extends Component {
 	}
 
 	render() {
-		const { classes, match, proposal, redirectTo, project } = this.props;
+		const { classes, match, proposal, project } = this.props;
 		let mode = match.params.id === '-1' ? 'c' : 'v';
 		let c_project;
 
@@ -221,7 +214,7 @@ class ConnectedProposalDetailView extends Component {
 						onChange={(val) => this.setState({ description: val.target.value })}
 					/>
 					{
-						redirectTo === '/s_cont' &&
+						match.url.includes('/s_cont') &&
 						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleDeleteProposal}>
 							Delete Proposal {
 								this.state.isSaving && <CircularProgress
@@ -231,7 +224,7 @@ class ConnectedProposalDetailView extends Component {
 						</Button>
 					}
 					{
-						redirectTo === '/g_cont' &&
+						match.url.includes('/g_cont') &&
 						<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={this.handleAwardProject}>
 							Award Project {
 								this.state.isSaving && <CircularProgress
@@ -285,7 +278,6 @@ const mapStateToProps = state => {
 		userProfile: state.global_data.userProfile,
 		proposal: state.global_data.proposal,
 		project: state.global_data.project,
-		redirectTo: state.global_data.redirectTo
 	};
 };
 

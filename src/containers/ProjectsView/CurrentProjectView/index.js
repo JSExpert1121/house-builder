@@ -17,7 +17,6 @@ import {
 } from '@material-ui/core';
 
 import CustomTableCell from '../../../components/shared/CustomTableCell';
-import { setRedirectTo } from '../../../actions';
 
 const styles = theme => ({
 	root: {
@@ -101,7 +100,6 @@ class connectedCurProView extends React.Component {
 									row => (
 										<TableRow className={classes.row} key={row.id} hover
 											onClick={() => {
-												this.props.setRedirectTo('/a_pros');
 												this.props.history.push("/a_pros/project_detail/" + row.id);
 											}}>
 											<CustomTableCell component="th" scope="row">
@@ -140,7 +138,6 @@ class connectedCurProView extends React.Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		getAllProjects: (page, size) => dispatch(getAllProjects(page, size)),
-		setRedirectTo: (str) => dispatch(setRedirectTo(str))
 	};
 };
 
