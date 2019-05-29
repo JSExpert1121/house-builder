@@ -20,6 +20,8 @@ import ProjectTemplates from './ProjectTemplates';
 
 import { getProjectData } from '../../actions';
 import { dispatch } from 'rxjs/internal/observable/range';
+import { IconButton } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
 	root: {
@@ -29,9 +31,9 @@ const styles = theme => ({
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
-		color: theme.palette.primary.dark
+		color: theme.palette.primary.dark,
+		flexGrow: 1,
 	},
-
 	waitingSpin: {
 		position: "relative",
 		left: "calc(50% - 10px)",
@@ -53,8 +55,20 @@ class ConnectedProjectDetailView extends React.Component {
 		await this.props.getProjectData(match.params.id);
 	}
 
+	handleBack = () => {
+		/*const {redirectTo} = this.props;
+
+		this.props.history.push(redirectTo);*/
+
+		const { match } = this.props;
+		if (match.url.includes("g_cont"))
+			this.props.history.push("/g_cont");
+		else if (match.url.includes("a_pros"))
+			this.props.history.push("/a_pros");
+	}
+
 	render() {
-		const { classes, match, project, location } = this.props;
+		const { classes, match, project, location, redirectTo } = this.props;
 
 		const tabNo = [
 			match.url + '/overview',
@@ -85,21 +99,26 @@ class ConnectedProjectDetailView extends React.Component {
 			<NoSsr>
 				<div className={classes.root}>
 					<Paper square >
-						<Tabs
-							value={curTabPos}
-							variant="scrollable"
-							indicatorColor="primary"
-							textColor="primary"
-							scrollButtons="on"
-							className={classes.toolbarstyle}
-						>
-							<Tab component={Link} to={`${match.url}/overview`} label="Overview" />
-							<Tab component={Link} to={`${match.url}/bidders`} label="Bidders" />
-							<Tab component={Link} to={`${match.url}/files`} label="Files" />
-							<Tab component={Link} to={`${match.url}/messages`} label="Messages" />
-							<Tab component={Link} to={`${match.url}/proposals`} label="Proposals" />
-							<Tab component={Link} to={`${match.url}/templates`} label="Templates" />
-						</Tabs>
+						<div style={{ display: 'flex' }}>
+							<IconButton onClick={this.handleBack}>
+								<ArrowBackIcon />
+							</IconButton>
+							<Tabs
+								value={curTabPos}
+								variant="scrollable"
+								indicatorColor="primary"
+								textColor="primary"
+								scrollButtons="off"
+								className={classes.toolbarstyle}
+							>
+								<Tab component={Link} to={`${match.url}/overview`} label="Overview" />
+								<Tab component={Link} to={`${match.url}/bidders`} label="Bidders" />
+								<Tab component={Link} to={`${match.url}/files`} label="Files" />
+								<Tab component={Link} to={`${match.url}/messages`} label="Messages" />
+								<Tab component={Link} to={`${match.url}/proposals`} label="Proposals" />
+								<Tab component={Link} to={`${match.url}/templates`} label="Templates" />
+							</Tabs>
+						</div>
 
 						<Switch>
 							<SecuredRoute path={`${match.url}/overview`} component={ProjectOverView} />
@@ -124,7 +143,8 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
 	return {
-		project: state.global_data.project
+		project: state.global_data.project,
+		redirectTo: state.global_data.redirectTo
 	};
 };
 
