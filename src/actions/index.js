@@ -164,14 +164,21 @@ export function submitProposal(cont_id, pro_id, proposal, cb) {
 	}
 }
 
-export function getProposalMessages(prop_id) {
+export function getProposalMessages(prop_id, page, cb) {
 	return function (dispatch) {
 		dispatch({ type: 'CLEAR_PROPOSAL_MESSAGES' });
-		return Axios.get(process.env.PROJECT_API + "messages/proposals/" + prop_id)
+		return Axios.get(process.env.PROJECT_API + "messages/proposals/" + prop_id, {
+			params: {
+				'page': page,
+				'size': 20,
+			}
+		})
 			.then(res => {
-				dispatch({ type: PROPOSAL_MESSAGES_LOADED, payload: res.data });
+				//dispatch({ type: PROPOSAL_MESSAGES_LOADED, payload: res.data });
+				cb(res.data);
 			})
 			.catch(err => {
+				cb(null);
 				console.log(err.message);
 			})
 	}

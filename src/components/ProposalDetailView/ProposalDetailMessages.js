@@ -12,18 +12,22 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 
+import ReactScrolla from 'react-scrolla';
+
 import { CircularProgress, IconButton, Snackbar, ListItemSecondaryAction, TextField, Button } from '@material-ui/core';
 import { getProposalMessages, addMessageToProposal } from '../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 48px)",
+		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		display: 'flex',
+		flexDirection: 'column'
 	},
 	listRoot: {
 		padding: "10px",
-		height: "calc(100vh - 64px - 72px - 48px - 64px)",
-		overflow: 'auto'
+		overflow: 'scroll',
+		flexGrow: 1
 	},
 	waitingSpin: {
 		position: "relative",
@@ -36,13 +40,17 @@ const styles = theme => ({
 	inputArea: {
 		backgroundColor: "#FBFBFB",
 		padding: '10px',
-		display: 'flex'
+		display: 'flex',
+		borderTop: "1px solid #AAAAAA",
 	},
 	inputField: {
-		flexGrow: '1'
+		flexGrow: 1,
+		border: "1px solid #AAAAAA",
 	},
 	editField: {
-		lineHeight: '1.5rem'
+		lineHeight: '1.5rem',
+		underline: 'none',
+		padding: '0 10px 0 10px'
 	},
 	sendBtn: {
 		border: "1px solid #4a148c",
@@ -50,11 +58,14 @@ const styles = theme => ({
 		backgroundColor: theme.palette.primary.light,
 		color: "#FFFFFF",
 		marginLeft: 10,
+		height: 39,
+		width: 100,
 		'&:hover': {
 			backgroundColor: theme.palette.primary.dark
 		},
 		'&:disabled': {
-			backgroundColor: "#FFFFFF"
+			backgroundColor: "#FAFAFA",
+			border: "1px solid #AAAAAA",
 		}
 	}
 });
@@ -65,18 +76,29 @@ class ConnectedProposalDetailMessages extends React.Component {
 
 		this.state = {
 			messageInput: '',
-			isSending: false
+			isSending: false,
+			currentPage: 0,
+			isLoadingMore: false,
+			messageList: []
 		}
 	}
 
 	async componentDidMount() {
 		const { proposal } = this.props;
 
-		await this.props.getProposalMessages(proposal.id);
+		await this.props.getProposalMessages(proposal.id, 0, (res) => {
+			let { messageList } = this.state;
+			messageList.push(res);
+
+			if (res)
+				this.setState({ messageList: messageList });
+		});
 	}
 
 	handleSendMessage = async () => {
 		const { proposal, match, userProfile } = this.props;
+		const { messageList } = this.state;
+
 		if (this.state.messageInput === '')
 			return;
 
@@ -91,67 +113,127 @@ class ConnectedProposalDetailMessages extends React.Component {
 				'updatedBy': userProfile.email
 			},
 			async (res) => {
+				const pagen = messageList[messageList.length - 1].numberOfElements === 20 ?
+					messageList[messageList.length - 1].number + 1 : messageList[messageList.length - 1].number;
+
 				this.setState({
 					isSending: false,
 					messageInput: ''
 				});
 
-				await this.props.getProposalMessages(proposal.id);
+				await this.props.getProposalMessages(proposal.id, pagen, (res) => {
+					if (messageList[messageList.length - 1].number === pagen) {
+						messageList[messageList.length - 1] = res;
+					} else {
+						messageList.push(res);
+					}
+
+					this.setState({ messageList });
+				});
 			},
 			match.url.substring(1, 7)
 		);
 	}
 
+	handleMessageKey = (ev) => {
+		if (ev.key === 'Enter' && ev.shiftKey) {
+			ev.preventDefault();
+			this.handleSendMessage();
+		}
+	}
+
+	handleLoadMore = async () => {
+		const { proposal } = this.props;
+		const { messageList } = this.state;
+
+		if (this.state.isLoadingMore)
+			return;
+
+		this.setState({
+			isLoadingMore: true
+		});
+
+		if (messageList.length === 0)
+			return;
+
+		if (messageList[messageList.length - 1].number < messageList[messageList.length - 1].totalPages - 1) {
+			await this.props.getProposalMessages(proposal.id, messageList[messageList.length - 1].number + 1, (res) => {
+				messageList.push(res);
+
+				if (res)
+					this.setState({ messageList: messageList });
+			});
+		}
+
+		this.setState({
+			isLoadingMore: false
+		})
+	}
+
 	render() {
-		const { classes, proposalMessages } = this.props;
+		const { classes } = this.props;
+		const { messageList } = this.state;
+		const lineCount = this.state.messageInput.split('\n').length;
+
+		const renderMessages =
+			messageList.map(messages => messages.content.map((message) =>
+				(
+					<div key={message.id}>
+						<ListItem alignItems="flex-start">
+							<ListItemAvatar>
+								<Avatar> {message.from.email[0]}</Avatar>
+							</ListItemAvatar>
+							<ListItemText
+								primary={message.from.email}
+								secondary={
+									<React.Fragment>
+										<Typography
+											component="span"
+											variant="body2"
+											className={classes.inline}
+											color="textPrimary"
+										>
+											<pre>{message.content}</pre>
+											{
+												/* message.contractorFiles.map(file => {
+	
+												})*/
+											}
+										</Typography>
+									</React.Fragment>
+								}
+							/>
+							<ListItemSecondaryAction>
+								{message.updatedAt}
+							</ListItemSecondaryAction>
+						</ListItem>
+						<Divider variant="inset" component="li" />
+					</div>
+				)
+			));
 
 		return (
-			<div className={classes.root}>
-				<List className={classes.listRoot}>
-					{
-						proposalMessages && proposalMessages.content.map((message) =>
-							(
-								<div key={message.id}>
-									<ListItem alignItems="flex-start">
-										<ListItemAvatar>
-											<Avatar> {message.from.email[0]}</Avatar>
-										</ListItemAvatar>
-										<ListItemText
-											primary={message.from.email}
-											secondary={
-												<React.Fragment>
-													<Typography
-														component="span"
-														variant="body2"
-														className={classes.inline}
-														color="textPrimary"
-													>
-														{message.content}
-														{
-															/* message.contractorFiles.map(file => {
-
-															})*/
-														}
-													</Typography>
-												</React.Fragment>
-											}
-										/>
-										<ListItemSecondaryAction>
-											{message.updatedAt}
-										</ListItemSecondaryAction>
-									</ListItem>
-									<Divider variant="inset" component="li" />
-								</div>
-							)
-						)
-					}
-				</List>
+			<div className={classes.root} >
+				<ReactScrolla
+					className={classes.listRoot}
+					percentage={95}
+					onPercentage={this.handleLoadMore} >
+					{renderMessages}
+					<br />
+					{this.state.isLoadingMore && <CircularProgress className={classes.waitingSpin}
+						size={24}
+						thickness={4} />}
+				</ReactScrolla>
 				<div className={classes.inputArea}>
-					<TextField value={this.state.messageInput} className={classes.inputField}
+					<TextField value={this.state.messageInput}
+						multiline rows={lineCount > 5 ? 5 : lineCount}
+						className={classes.inputField}
 						onChange={(event) => this.setState({ messageInput: event.target.value })}
-						InputProps={{ classes: { input: classes.editField } }} />
+						InputProps={{ disableUnderline: true, classes: { input: classes.editField } }}
+						onKeyPress={this.handleMessageKey} />
 					<Button className={classes.sendBtn}
-						onClick={this.handleSendMessage} disabled={this.state.isSending}>Send</Button>
+						onClick={this.handleSendMessage}
+						disabled={this.state.isSending || (this.state.messageInput.length - lineCount + 1) === 0}>Send</Button>
 				</div>
 			</div>
 		);
@@ -160,14 +242,13 @@ class ConnectedProposalDetailMessages extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProposalMessages: (id) => dispatch(getProposalMessages(id)),
+		getProposalMessages: (id, page, cb) => dispatch(getProposalMessages(id, page, cb)),
 		addMessageToProposal: (prop_id, message, cb, cont_type) => dispatch(addMessageToProposal(prop_id, message, cb, cont_type))
 	}
 }
 
 const mapStateToProps = state => {
 	return {
-		proposalMessages: state.global_data.proposalMessages,
 		userProfile: state.global_data.userProfile,
 		proposal: state.global_data.proposal
 	};
