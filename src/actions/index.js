@@ -143,7 +143,6 @@ export function addFilesToProject(id, files, cb) {
 			})
 			.then((response) => {
 				cb(true);
-				console.log(response);
 			}).catch(err => {
 				cb(false);
 				console.log(err.message);
@@ -164,21 +163,19 @@ export function submitProposal(cont_id, pro_id, proposal, cb) {
 	}
 }
 
-export function getProposalMessages(prop_id, page, cb) {
+export function getProposalMessages(prop_id, page, size, cb) {
 	return function (dispatch) {
 		dispatch({ type: 'CLEAR_PROPOSAL_MESSAGES' });
 		return Axios.get(process.env.PROJECT_API + "messages/proposals/" + prop_id, {
 			params: {
 				'page': page,
-				'size': 20,
+				'size': size,
 			}
 		})
 			.then(res => {
-				//dispatch({ type: PROPOSAL_MESSAGES_LOADED, payload: res.data });
 				cb(res.data);
 			})
 			.catch(err => {
-				cb(null);
 				console.log(err.message);
 			})
 	}
@@ -188,10 +185,34 @@ export function addMessageToProposal(prop_id, message, cb, cont_type) {
 	return function (dispatch) {
 		return Axios.post(process.env.PROJECT_API + "messages/proposals/" +
 			prop_id + (cont_type === 's_cont' ? '/togencon' : '/tosubcon'), message).then(res => {
-				cb(true);
+				cb(res.data);
 			}).catch(err => {
 				cb(false);
 				console.log(err.message);
 			})
+	}
+}
+
+export function addFileToPropMessage(msg_id, files, cb) {
+	return function (dispatch) {
+		const formData = new FormData();
+		files.forEach(async (file) => {
+			await formData.append('file', file);
+		});
+
+		console.log("MESSAGE_ID", msg_id);
+		return Axios.post(process.env.PROJECT_API + "messages/" + msg_id + "/files/upload/multiple",
+			formData,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				cb(response.data);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message);
+			});
 	}
 }
