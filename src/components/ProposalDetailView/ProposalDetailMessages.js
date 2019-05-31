@@ -248,7 +248,7 @@ class ConnectedProposalDetailMessages extends React.Component {
 			for (let j = 0; j < message.proposalMessageFiles.length; j++) {
 				const row = message.proposalMessageFiles[j];
 
-				msgFiles.push(<h5><a download={row.name} key={j}
+				msgFiles.push(<h5 key={j}><a download={row.name}
 					href={process.env.PROJECT_API + "/messages/" + message.id + "/files/" + row.name}>{row.name}</a></h5>);
 			}
 
