@@ -172,32 +172,27 @@ class ConnectedProposalDetailMessages extends React.Component {
 		const { proposal } = this.props;
 		let { messageList } = this.state;
 		let pagen = Math.floor(messageList.length / this.state.pageSize);
-		const firstTime = messageList.length === 0 ? true : false;
 
 		if (this.state.isLoadingMore)
 			return;
 
-		this.setState({ isLoadingMore: true });
+		this.setState({ isLoadingMore: true, toBottom: false });
 
 		await this.props.getProposalMessages(proposal.id, pagen, this.state.pageSize, (res) => {
 			let contents = res.content.reverse();
 
-			if (firstTime) {
-				messageList = contents;
-			} else {
-				let i = 0;
+			let i = 0;
 
-				for (i = 0; i < contents.length; i++) {
-					if (contents[i].id === messageList[0].id) {
-						break;
-					}
+			for (i = 0; i < contents.length; i++) {
+				if (contents[i].id === messageList[0].id) {
+					break;
 				}
-
-				contents.splice(i, contents.length - i);
-				messageList = contents.concat(messageList);
 			}
 
-			this.setState({ messageList: messageList, isLoadingMore: false, canLoadMore: !res.last, toBottom: firstTime });
+			contents.splice(i, contents.length - i);
+			messageList = contents.concat(messageList);
+
+			this.setState({ messageList: messageList, isLoadingMore: false, canLoadMore: !res.last, toBottom: false });
 		});
 	}
 
@@ -282,7 +277,7 @@ class ConnectedProposalDetailMessages extends React.Component {
 							initialLoad={false}
 							useWindow={false}
 						>
-							{/* {this.state.isLoadingMore && <CircularProgress key={'loader'} className={classes.waitingSpin} size={24} thickness={4} />} */}
+							{this.state.isLoadingMore && <CircularProgress key={'loader'} className={classes.waitingSpin} size={24} thickness={4} />}
 							{renderMessages}
 							<div ref={this.messageEndRef}></div>
 						</InfiniteScroll>
@@ -301,7 +296,8 @@ class ConnectedProposalDetailMessages extends React.Component {
 							onKeyPress={this.handleMessageKey} />
 						<Button className={classes.sendBtn}
 							onClick={this.handleSendMessage}
-							disabled={this.state.isSending || (this.state.files.length === 0 && this.state.messageInput.length - lineCount + 1) === 0}>Send</Button>
+							disabled={this.state.isSending || (this.state.files.length === 0 &&
+								this.state.messageInput.length - this.state.messageInput.split('\n').length + 1 === 0)}>Send</Button>
 					</div>
 					{
 						files.map(file =>
