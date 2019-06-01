@@ -297,7 +297,8 @@ class ConnectedProposalDetailMessages extends React.Component {
 						<Button className={classes.sendBtn}
 							onClick={this.handleSendMessage}
 							disabled={this.state.isSending || (this.state.files.length === 0 &&
-								this.state.messageInput.length - this.state.messageInput.split('\n').length + 1 === 0)}>Send</Button>
+								this.state.messageInput.length - this.state.messageInput.split('\n').length + 1 === 0)}>Send{this.state.isSending && <CircularProgress size={24} thickness={4} />}
+						</Button>
 					</div>
 					{
 						files.map(file =>
