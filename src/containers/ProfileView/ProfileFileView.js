@@ -3,20 +3,29 @@ import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 
-import { CircularProgress, IconButton, Dialog, DialogActions, DialogContentText, DialogTitle, DialogContent, Button } from '@material-ui/core';
+import { DropzoneDialog } from 'material-ui-dropzone';
+
 import CustomizedSnackbars from '../../components/shared/CustomSnackbar';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import { DropzoneDialog } from 'material-ui-dropzone';
 import CustomTableCell from '../../components/shared/CustomTableCell';
 
-import { uploadFiles, getContractorDetailById, removeFile, updateContractor } from '../../actions/cont-actions';
+import { uploadFiles, getContractorDetailById, removeFile } from '../../actions/cont-actions';
 
 const styles = theme => ({
     root: {
@@ -24,14 +33,15 @@ const styles = theme => ({
         left: "0px",
         top: "0px",
         flexGrow: 1,
-        padding: "10px 10px 10px 10px",
-        height: "calc(100vh - 64px - 72px - 48px - 20px)",
-        overflow: "auto",
+        padding: theme.spacing(1),
+        margin: theme.spacing(1),
+        height: "calc(100vh - 152px)",
+        overflowY: "auto",
         overflowX: "hidden"
     },
     waitingSpin: {
         position: "relative",
-        left: "calc(50% - 10px)",
+        left: "calc(50% - 20px)",
         top: "calc(40vh)",
     },
     dropzone: {
@@ -39,6 +49,9 @@ const styles = theme => ({
         [theme.breakpoints.up('sm')]: {
             width: '500px'
         }
+    },
+    button: {
+        padding: '6px'
     },
     busy: {
         position: "absolute",
@@ -100,7 +113,7 @@ class ProfileFileView extends React.Component {
         this.setState({ busy: true });
         let message = 'Files were uploaded successfully.'
         let variant = 'success';
-        let id = this.props.user.user_metadata.contractor_id;
+        let id = user.user_metadata.contractor_id;
 
         try {
             await this.props.uploadFiles(id, files);
@@ -152,14 +165,14 @@ class ProfileFileView extends React.Component {
                 <CircularProgress className={classes.waitingSpin} /> </div>;
 
         return (
-            <div className={classes.root} >
+            <Paper className={classes.root} >
                 {this.state.busy && <CircularProgress size={32} thickness={4} className={classes.busy} />}
-                <Table className={classes.relative}>
+                <Table className={classes.relative} size='small'>
                     <TableHead>
                         <TableRow>
                             <CustomTableCell align="center">Name</CustomTableCell>
                             <CustomTableCell align="center">
-                                <IconButton style={{ color: "#FFFFFF" }} onClick={() => this.setState({ openUploadForm: true })}>
+                                <IconButton className={classes.button} aria-label="Add" style={{ color: "#FFFFFF" }} onClick={() => this.setState({ openUploadForm: true })}>
                                     <NoteAddIcon />
                                 </IconButton>
                             </CustomTableCell>
@@ -195,17 +208,6 @@ class ProfileFileView extends React.Component {
                     message={this.state.message}
                     open={this.state.showMessage}
                     handleClose={() => this.setState({ showMessage: false })} />
-                {/* <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                    open={this.state.showMessage}
-                    onClose={() => this.setState({ showMessage: false })}
-                    autoHideDuration={4000}
-                    ContentProps={{ 'aria-describedby': 'message-id' }}
-                    message={
-                        <span id="message-id">
-                            {this.state.message}
-                        </span>
-                    } /> */}
                 <Dialog
                     open={this.state.showConfirmDlg}
                     onClose={this.closeConfirmDialog}
@@ -226,8 +228,7 @@ class ProfileFileView extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
-            </div>
+            </Paper>
         );
     }
 }

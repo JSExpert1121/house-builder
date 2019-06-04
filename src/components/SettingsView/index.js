@@ -51,7 +51,7 @@ const styles = (theme) => ({
 	},
 	formControl: {
 		color: theme.palette.primary.light,
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		minWidth: 120,
 		[theme.breakpoints.up('md')]: {
 			minWidth: 240,

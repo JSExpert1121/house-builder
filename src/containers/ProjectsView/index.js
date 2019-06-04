@@ -12,12 +12,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
-import Toolbar from '@material-ui/core/Toolbar';
-import { CircularProgress } from '@material-ui/core';
 import AppsIcon from '@material-ui/icons/Apps';
-import BallotIcon from '@material-ui/icons/Ballot';
-import DoneAllIcon from '@material-ui/icons/DoneAll';
 
 // local components
 import CurrentProjectView from './CurrentProjectView/index';

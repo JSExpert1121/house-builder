@@ -1,20 +1,48 @@
 import React, { Component } from 'react';
-
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
+
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+
 import { withStyles } from '@material-ui/core/styles';
-import { TextField, Card, Button, Snackbar, CircularProgress, Link } from '@material-ui/core';
+import clsx from 'clsx';
+
+import ProjectView from './ProjectView';
+import { ConfirmDialog } from '../../components/shared/ConfirmDialog';
+import CustomTableCell from '../../components/shared/CustomTableCell';
 
 import { getProposalData, deleteProposal, submitProposal } from '../../actions/index';
 import { awardProject } from '../../actions/gen-actions';
 
 const styles = (theme) => ({
 	root: {
+		position: 'relative',
+		width: '100%',
+		height: "calc(100vh - 64px - 72px - 48px - 24px)",
+		overflow: "auto",
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
-		padding: "10px"
+		padding: theme.spacing(1)
+	},
+	tableWrap: {
+		overflow: "auto",
+		marginTop: '20px'
 	},
 	editField: {
 		lineHeight: '1.5rem',
@@ -44,18 +72,45 @@ const styles = (theme) => ({
 	}
 });
 
-class ConnectedProposalDetailView extends Component {
+class ConnectedProposalDetailOverview extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			budget: 0,
-			duration: 0,
-			description: "",
+			budget: props.brief.budget,
+			duration: props.brief.duration,
+			description: props.brief.description,
 			snackBar: false,
 			snackBarContent: "",
 			isSaving: false,
+			showConfirm: false,
+			message: 'Would you like to submit your proposal?'
 		}
+	}
+
+	handleChange = name => event => {
+		this.setState({ [name]: event.target.value });
+	};
+
+	componentWillUnmount() {
+		this.props.handleOverviewChange({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
+	}
+
+	// static getDerivedStateFromProps(props, state) {
+	// 	return {
+	// 		budget: props.brief.budget,
+	// 		duration: props.brief.duration,
+	// 		description: props.brief.description
+	// 	}
+	// }
+
+	submit = async () => {
+		this.setState({ showConfirm: true });
+	}
+
+	handleSubmit = async () => {
+		this.setState({ showConfirm: false });
+		this.props.handleSubmit({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
 	}
 
 	handleDeleteProposal = async () => {
@@ -128,17 +183,72 @@ class ConnectedProposalDetailView extends Component {
 
 	render() {
 		const { classes, match, proposal, project } = this.props;
-		let mode = match.params.id === '-1' ? 'c' : 'v';
-		let c_project;
 
-		if (proposal === null && project === null)
-			return <div className={classes.root} />;
+		let edit = match.params.id === '-1';
+		if (!project) return <div className={classes.root} />;
+		if (!edit && !proposal) return <div className={classes.root} />;
 
-		c_project = mode === 'v' ? proposal.project : project;
+		// let mode = match.params.id === '-1' ? 'c' : 'v';
+		let c_project = edit ? project : proposal.proposal.project;
 
 		return (
-			<div className={classes.root}>
-				<div>
+			<Paper className={classes.root}>
+				<ProjectView project={c_project} />
+				<Box className={classes.tableWrap}>
+					<Card id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
+						<TextField disabled={!edit}
+							label="Budget *" id="budget" type='number'
+							className={clsx(classes.margin, classes.textField)}
+							value={this.state.budget}
+							onChange={this.handleChange('budget')}
+							InputProps={{
+								endAdornment: <InputAdornment position="start">USD</InputAdornment>,
+							}}
+						/>
+						<TextField disabled={!edit}
+							label="Duration *" type='number'
+							className={clsx(classes.margin, classes.textField)}
+							value={this.state.duration}
+							onChange={this.handleChange('duration')}
+							InputProps={{
+								endAdornment: <InputAdornment position="start">days</InputAdornment>,
+							}}
+						/>
+						<FormControl fullWidth className={classes.margin}>
+							<InputLabel htmlFor="description">Description *</InputLabel>
+							<Input disabled={!edit}
+								id="description"
+								value={this.state.description}
+								onChange={this.handleChange('description')}
+								multiline={true}
+							/>
+						</FormControl>
+					</Card>
+
+					<Typography variant="subtitle1" noWrap style={{ fontWeight: 'bold', fontSize: '24px', marginTop: '16px' }}>Project Templates</Typography>
+					<Table>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell>Name</CustomTableCell>
+								<CustomTableCell align="center">Discription</CustomTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody >
+							{
+								project && project.projectTemplates.map((templ, index) => (
+									<TableRow className={classes.row} key={index} hover
+										onClick={() => this.props.templateSelected(index)}>
+										<CustomTableCell component="th" scope="row">
+											{templ.template.name}
+										</CustomTableCell>
+										<CustomTableCell align="center">{templ.template.description}</CustomTableCell>
+									</TableRow>
+								))
+							}
+						</TableBody>
+					</Table>
+				</Box>
+				{/* <div>
 					<TextField
 						autoFocus
 						margin="normal"
@@ -168,16 +278,16 @@ class ConnectedProposalDetailView extends Component {
 						value={c_project.description}
 						readOnly={true}
 					/>
-				</div>
-				<div>
-					<TextField
+				</div> */}
+				<Box style={{ textAlign: 'right', paddingTop: '16px' }}>
+					{/* <TextField
 						autoFocus
 						margin="normal"
 						label="budget"
 						type="number"
 						fullWidth
 						className={classes.width_300}
-						value={mode === 'v' ? proposal.budget : this.state.budget}
+						value={!edit ? proposal.budget : this.state.budget}
 						readOnly={mode === 'v'}
 						onChange={(val) => this.setState({ budget: val.target.value })}
 					/>
@@ -209,41 +319,31 @@ class ConnectedProposalDetailView extends Component {
 						multiline
 						rows="10"
 						fullWidth
-						value={mode === 'v' ? proposal.description : this.state.description}
-						readOnly={mode === 'v'}
+						value={!edit ? proposal.description : this.state.description}
+						readOnly={!edit}
 						onChange={(val) => this.setState({ description: val.target.value })}
-					/>
+					/> */}
 					{
 						match.url.includes('/s_cont') &&
 						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleDeleteProposal}>
-							Delete Proposal {
-								this.state.isSaving && <CircularProgress
-									size={24}
-									thickness={4} />
-							}
+							Delete Proposal
 						</Button>
 					}
 					{
 						match.url.includes('/g_cont') &&
 						<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={this.handleAwardProject}>
-							Award Project {
-								this.state.isSaving && <CircularProgress
-									size={24}
-									thickness={4} />
-							}
+							Award Project
 						</Button>
 					}
 					{
-						mode === 'c' &&
-						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleSubmitProposal}>
-							Submit Proposal {
-								this.state.isSaving && <CircularProgress
-									size={24}
-									thickness={4} />
-							}
+						edit &&
+						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleSubmit}>
+							Submit Proposal
 						</Button>
 					}
-				</div>
+				</Box>
+				<CircularProgress className={classes.busy} />
+				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.handleSubmit} onCancel={this.closeConfirm} />
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
 					open={this.state.snackBar}
@@ -259,7 +359,7 @@ class ConnectedProposalDetailView extends Component {
 						}</span>
 					}
 				/>
-			</div>
+			</Paper>
 		);
 	}
 }
@@ -276,15 +376,21 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
 	return {
 		userProfile: state.global_data.userProfile,
-		proposal: state.global_data.proposal,
+		proposal: state.global_data.proposalDetail,
 		project: state.global_data.project,
 	};
 };
 
-const ProposalDetailView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailView);
+const ProposalDetailOverview = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailOverview);
 
-ProposalDetailView.propTypes = {
+ProposalDetailOverview.propTypes = {
 	classes: PropTypes.object.isRequired,
+	project: PropTypes.object.isRequired,
+	handleOverviewChange: PropTypes.func.isRequired,
+	templateSelected: PropTypes.func.isRequired,
+	handleSubmit: PropTypes.func,
+	handleAward: PropTypes.func,
+	handleDelete: PropTypes.func,
 };
 
-export default withRouter(withStyles(styles)(ProposalDetailView));
+export default withRouter(withStyles(styles)(ProposalDetailOverview));

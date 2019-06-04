@@ -35,11 +35,11 @@ const styles = theme => ({
         width: "calc(33% - 20px)"
     },
     descTag: {
-        padding: theme.spacing.unit,
+        padding: theme.spacing(1),
         textAlign: 'center',
         color: theme.palette.text.secondary,
         whiteSpace: 'nowrap',
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         borderBottom: "5px solid " + theme.palette.primary.light,
         height: "calc((100vh - 64px - 72px - 20px) / 2)",
         [theme.breakpoints.up('md')]: {

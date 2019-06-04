@@ -1,13 +1,18 @@
 
 import React from 'react';
-import { connect } from 'react-redux';
-import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
+import { Link, Switch, withRouter } from 'react-router-dom';
 import SecuredRoute from '../../routers/SecuredRoute';
 import PropTypes from 'prop-types';
 
 // material ui
-import { withStyles, AppBar, Tabs, NoSsr, Tab, Button, Toolbar, CircularProgress } from '@material-ui/core';
-import { Apps as AppsIcon, Ballot as BallotIcon, DoneAll as DoneAllIcon, AccountCircle } from '@material-ui/icons';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import NoSsr from '@material-ui/core/NoSsr';
+import Tab from '@material-ui/core/Tab';
+
+import BallotIcon from '@material-ui/icons/Ballot';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import ProfileEditView from './ProfileEditView';
 import ProfileFileView from './ProfileFileView';
@@ -38,18 +43,19 @@ const PROFILE_CONTRACT = '/profile/files';
 class ProfileView extends React.Component {
     render() {
         const { classes, location } = this.props;
-        const tabNo = {
-            [PROFILE_OVERVIEW]: 0,
-            [PROFILE_CONTRACT]: 1
-        };
+        const URLS = [
+            '/profile',
+            '/profile/files'
+        ];
 
-        const curTabPos = tabNo[location.pathname];
+        let curTabPos = URLS.indexOf(location.pathname);
+        if (curTabPos < 0)  curTabPos = 0;
         return (
             <NoSsr>
                 <div className={classes.root}>
                     <AppBar position="static" className={classes.toolbarstyle}>
                         <Tabs value={curTabPos} variant="scrollable" scrollButtons="on">
-                            <Tab component={Link} to={PROFILE_OVERVIEW} label="Profile Detail" icon={<AccountCircle />} />
+                            <Tab component={Link} to={PROFILE_OVERVIEW} label="Profile Detail" icon={<AccountCircleIcon />} />
                             <Tab component={Link} to={PROFILE_CONTRACT} label="Files" icon={<BallotIcon />} />
                         </Tabs>
                     </AppBar>

@@ -2,6 +2,7 @@ import {
 	SET_USER_PROFILE, SET_SELECTED_PROPOSAL,
 	SET_REDIRECT_TO, PROPOSALS_LOADED,
 	PROJECT_DETAIL_LOADED,
+	SET_DETAIL_PROPOSAL,
 	PROPOSAL_MESSAGES_LOADED
 } from "../constants/global-action-types";
 
@@ -10,7 +11,8 @@ const initialState = {
 	proposals: null,
 	proposalMessages: null,
 	proposal: null,
-	project: null
+	project: null,
+	proposalDetail: null
 }
 
 function global_reducer(state = initialState, action) {
@@ -19,6 +21,11 @@ function global_reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				userProfile: action.payload
 			});
+		case SET_DETAIL_PROPOSAL:
+			return {
+				...state,
+				proposalDetail: action.payload
+			}
 		case SET_SELECTED_PROPOSAL:
 			return Object.assign({}, state, {
 				proposal: action.payload

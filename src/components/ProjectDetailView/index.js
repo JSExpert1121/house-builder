@@ -121,9 +121,9 @@ class ConnectedProjectDetailView extends React.Component {
 
 						<Switch>
 							<SecuredRoute path={`${match.url}/overview`} component={ProjectOverView} />
-							<SecuredRoute path={`${match.url}/bidders`} /* component={ProjectBidders} */ render={<div />} />
+							<SecuredRoute path={`${match.url}/bidders`} /* component={ProjectBidders} */ render={() => <div />} />
 							<SecuredRoute path={`${match.url}/files`} component={ProjectFiles} />
-							<SecuredRoute path={`${match.url}/messages`} /*component={ProjectMessages}*/ render={<div />} />
+							<SecuredRoute path={`${match.url}/messages`} /*component={ProjectMessages}*/ render={() => <div />} />
 							<SecuredRoute path={`${match.url}/proposals`} component={ProjectProposals} />
 							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />
 							<Redirect path={`${match.url}`} to={`${match.url}/overview`} />

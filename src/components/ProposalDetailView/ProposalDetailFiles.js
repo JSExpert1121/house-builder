@@ -7,21 +7,28 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
+
+
 import CustomTableCell from "../shared/CustomTableCell";
-import { CircularProgress, IconButton, Snackbar } from '@material-ui/core';
+import CustomizedSnackbars from '../shared/CustomSnackbar';
 
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { getProposalData, addFilesToProposal, deleteProposalFile } from '../../actions/index';
+import { getProposalData, addFilesToProposal, deleteProposalFile, getProposalDetails } from '../../actions/index';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh - 64px - 72px - 48px - 24px)",
 		overflow: "auto",
 		overflowX: "hidden"
+	},
+	button: {
+		padding: '6px'
 	},
 	waitingSpin: {
 		position: "relative",
@@ -36,50 +43,72 @@ class ConnectedProposalDetailFiles extends React.Component {
 
 		this.state = {
 			openUploadForm: false,
-			snackBar: false,
-			snackBarContent: ''
+			showMessage: false,
+			message: '',
+			variant: 'success'
 		}
 	}
 
 	handleUploadFiles = async (files) => {
 		const { proposal } = this.props;
 
-		await this.props.addFilesToProposal(proposal.id, files, (res) => {
-			this.setState({
-				snackBar: true,
-				snackBarContent: res ? 'File Upload Success' : 'File Upload Failed',
-				openUploadForm: false
-			});
+		let variant = 'success';
+		let message = 'File Upload Success';
 
-			if (res)
-				this.props.getProposalData(proposal.id);
-		});
+		try {
+			await this.props.addFilesToProposal(proposal.proposal.id, files);
+			await this.props.getProposalDetails(proposal.proposal.id);
+		} catch (error) {
+			console.log(error);
+			message = 'File Upload failed';
+			variant = 'error';
+		}
+
+		this.setState({ showMessage: true, openUploadForm: false, message, variant });
 	}
 
 	handleDeletefile = async (name) => {
 		const { proposal } = this.props;
+		let variant = 'success';
+		let message = 'File Delete Success';
 
-		await this.props.deleteProposalFile(proposal.id, name, (res) => {
-			this.setState({
-				snackBar: true,
-				snackBarContent: res ? 'File Delete Success' : 'File Delete Failed'
-			});
-			if (res)
-				this.props.getProposalData(proposal.id);
-		});
+		try {
+			await this.props.deleteProposalFile(proposal.proposal.id, name);
+			await this.props.getProposalDetails(proposal.proposal.id);
+		} catch (error) {
+			console.log(error);
+			message = 'File Delete failed';
+			variant = 'error';
+		}
+
+		this.setState({ showMessage: true, openUploadForm: false, message, variant });
+	}
+
+	openUpload = () => {
+		const { proposal } = this.props;
+		if (!proposal.proposal.id) {
+			this.setState({ showMessage: true, openUploadForm: false, message: 'You must submit a proposal first', variant: 'info' });
+			return;
+		}
+
+		this.setState({ openUploadForm: true, showMessage: false });
 	}
 
 	render() {
 		const { classes, proposal } = this.props;
+		if (!proposal) {
+			return <div>No Proposal selected</div>
+		}
 
 		return (
 			<div className={classes.root}>
-				<Table className={classes.table}>
+				<Table className={classes.table} size='small'>
 					<TableHead>
 						<TableRow>
 							<CustomTableCell align="center">Name</CustomTableCell>
 							<CustomTableCell align="center">
-								<IconButton style={{ color: "#FFFFFF" }} onClick={() => this.setState({ openUploadForm: true })}>
+								<IconButton className={classes.button} style={{ color: "#FFFFFF" }} aria-label="Add"
+									onClick={this.openUpload}>
 									<NoteAddIcon />
 								</IconButton>
 							</CustomTableCell>
@@ -87,10 +116,11 @@ class ConnectedProposalDetailFiles extends React.Component {
 					</TableHead>
 					<TableBody>
 						{
-							proposal.proposalFiles.map((row) => (
+							proposal.proposal.proposalFiles &&
+							proposal.proposal.proposalFiles.map((row) => (
 								<TableRow key={row.id} hover>
 									<CustomTableCell align="center">
-										<a download={row.name} href={process.env.PROJECT_API + "/proposals/" + proposal.id + "/files/" + row.name}>{row.name}</a>
+										<a download={row.name} href={process.env.PROJECT_API + "/proposals/" + proposal.proposal.id + "/files/" + row.name}>{row.name}</a>
 									</CustomTableCell>
 									<CustomTableCell align="center">
 										<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
@@ -116,21 +146,11 @@ class ConnectedProposalDetailFiles extends React.Component {
 					onClose={() => this.setState({ openUploadForm: false })}
 				/>
 
-				<Snackbar
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-					open={this.state.snackBar}
-					onClose={() => this.setState({
-						snackBar: false
-					})}
-					ContentProps={{
-						'aria-describedby': 'message-id',
-					}}
-					message={
-						<span id="message-id"> {
-							this.state.snackBarContent
-						}</span>
-					}
-				/>
+				<CustomizedSnackbars
+					variant={this.state.variant}
+					message={this.state.message}
+					open={this.state.showMessage}
+					handleClose={() => this.setState({ showMessage: false })} />
 			</div>
 		);
 	}
@@ -140,13 +160,14 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getProposalData: (id) => dispatch(getProposalData(id)),
 		addFilesToProposal: (id, files, cb) => dispatch(addFilesToProposal(id, files, cb)),
-		deleteProposalFile: (id, name, cb) => dispatch(deleteProposalFile(id, name, cb))
+		deleteProposalFile: (id, name, cb) => dispatch(deleteProposalFile(id, name, cb)),
+		getProposalDetails: id => dispatch(getProposalDetails(id))
 	}
 }
 
 const mapStateToProps = state => {
 	return {
-		proposal: state.global_data.proposal
+		proposal: state.global_data.proposalDetail
 	};
 };
 

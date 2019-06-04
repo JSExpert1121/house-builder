@@ -28,8 +28,6 @@ import { setUserProfile } from '../actions';
 import { CircularProgress } from '@material-ui/core/es';
 
 import SecuredRoute from './SecuredRoute';
-import ProposalDetailView from '../components/ProposalDetailView';
-import ProjectDetailView from '../components/ProjectDetailView';
 
 const styles = theme => ({
 	viewarea: {
