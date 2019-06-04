@@ -12,7 +12,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
-import { CircularProgress } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import AppsIcon from '@material-ui/icons/Apps';
 import BallotIcon from '@material-ui/icons/Ballot';
 import DoneAllIcon from '@material-ui/icons/DoneAll';

@@ -3,6 +3,7 @@ import {
 	SET_REDIRECT_TO, PROPOSALS_LOADED,
 	PROJECT_DETAIL_LOADED,
 	SET_DETAIL_PROPOSAL,
+	SET_PROPOSALS_COMPARE,
 	PROPOSAL_MESSAGES_LOADED
 } from '../constants/global-action-types'
 
@@ -19,6 +20,13 @@ export const getProposalDetails = id => dispatch => {
 		return data;
 	})
 }
+
+export const setProposals4Compare = (proposals) => (
+	{
+		type: SET_PROPOSALS_COMPARE,
+		payload: proposals
+	}
+)
 
 export function getProposalData(id) {
 	return function (dispatch) {

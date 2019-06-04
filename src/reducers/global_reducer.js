@@ -3,7 +3,8 @@ import {
 	SET_REDIRECT_TO, PROPOSALS_LOADED,
 	PROJECT_DETAIL_LOADED,
 	SET_DETAIL_PROPOSAL,
-	PROPOSAL_MESSAGES_LOADED
+	PROPOSAL_MESSAGES_LOADED,
+	SET_PROPOSALS_COMPARE
 } from "../constants/global-action-types";
 
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
 	proposalMessages: null,
 	proposal: null,
 	project: null,
-	proposalDetail: null
+	proposalDetail: null,
+	compareProps: null
 }
 
 function global_reducer(state = initialState, action) {
@@ -43,21 +45,26 @@ function global_reducer(state = initialState, action) {
 				proposalMessages: action.payload
 			});
 		case "CLEAR_SELECTED_PROJECT":
-			return Object.assign({}, state, {
+			return {
+				...state,
 				project: null
-			})
+			}
 		case "CLEAR_PROPOSALS":
-			return Object.assign({}, state, {
-				proposals: null
-			});
 		case "CLEAR_SELECTED_PROPOSAL":
-			return Object.assign({}, state, {
+			return {
+				...state,
 				proposal: null
-			});
+			}
 		case "CLEAR_PROPOSAL_MESSAGES":
-			return Object.assign({}, state, {
+			return {
+				...state,
 				proposalMessages: null
-			});
+			}
+		case SET_PROPOSALS_COMPARE:
+			return {
+				...state,
+				compareProps: [...action.payload]
+			}
 		default:
 			return state;
 	}

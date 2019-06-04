@@ -52,6 +52,11 @@ const styles = (theme) => ({
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
 	},
+	busy: {
+		position: "absolute",
+		left: "calc(50% - 20px)",
+		top: "calc(50% - 20px)",
+	},
 	width_300: {
 		width: 300,
 		marginRight: 10,
@@ -182,9 +187,11 @@ class ConnectedProposalDetailOverview extends Component {
 	}
 
 	render() {
-		const { classes, match, proposal, project } = this.props;
+		const { classes, match, proposal } = this.props;
 
 		let edit = match.params.id === '-1';
+		const project = edit ? this.props.project : proposal.proposal.project;
+
 		if (!project) return <div className={classes.root} />;
 		if (!edit && !proposal) return <div className={classes.root} />;
 
@@ -342,7 +349,7 @@ class ConnectedProposalDetailOverview extends Component {
 						</Button>
 					}
 				</Box>
-				<CircularProgress className={classes.busy} />
+				{this.state.isSaving && <CircularProgress className={classes.busy} />}
 				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.handleSubmit} onCancel={this.closeConfirm} />
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
@@ -385,7 +392,7 @@ const ProposalDetailOverview = connect(mapStateToProps, mapDispatchToProps)(Conn
 
 ProposalDetailOverview.propTypes = {
 	classes: PropTypes.object.isRequired,
-	project: PropTypes.object.isRequired,
+	project: PropTypes.object,
 	handleOverviewChange: PropTypes.func.isRequired,
 	templateSelected: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func,

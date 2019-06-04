@@ -9,7 +9,8 @@ import {
   TableHead,
   TableRow,
   Typography,
-  IconButton
+  IconButton,
+  Grid
 } from "@material-ui/core";
 import { Delete as DeleteIcon, Edit as EditIcon, NoteAdd as NoteAddIcon } from "@material-ui/icons";
 import CustomTableCell from '../shared/CustomTableCell';
@@ -116,44 +117,44 @@ const OptionTableView = ({
   return (
     <>
       <Typography className={classes.subtitle}>Options</Typography>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <CustomTableCell align="left">Name</CustomTableCell>
-            <CustomTableCell align="left">Value</CustomTableCell>
-            <CustomTableCell align="left">Description</CustomTableCell>
-            <CustomTableCell align="left">Badget</CustomTableCell>
-            <CustomTableCell align="left">Duration</CustomTableCell>
-            {edit &&
-              <CustomTableCell align="left">
-                <IconButton style={{ color: "#FFFFFF" }} onClick={handleAdd} size='small'>
-                  <NoteAddIcon />
-                </IconButton>
-              </CustomTableCell>}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {options.map(opt =>
-            editingId !== opt.id ? (
-              <OptionView
-                edit={edit}
-                key={opt.id}
-                option={opt}
-                handleDelete={() => handleDelete(opt.id)}
-                handleEdit={() => handleEdit(opt.id)}
-              />
-            ) : (
-                <CustomTableCell colSpan={colcnt}>
-                  <OptionEdit
-                    option={opt}
-                    handleSave={handleSave}
-                    handleCancel={handleCancel}
-                  />
-                </CustomTableCell>
-              )
-          )}
-        </TableBody>
-      </Table>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell align="left">Name</CustomTableCell>
+              <CustomTableCell align="left">Value</CustomTableCell>
+              <CustomTableCell align="left">Description</CustomTableCell>
+              <CustomTableCell align="left">Badget</CustomTableCell>
+              <CustomTableCell align="left">Duration</CustomTableCell>
+              {edit &&
+                <CustomTableCell align="left">
+                  <IconButton style={{ color: "#FFFFFF" }} onClick={handleAdd} size='small'>
+                    <NoteAddIcon />
+                  </IconButton>
+                </CustomTableCell>}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {options.map(opt =>
+              editingId !== opt.id ? (
+                <OptionView
+                  edit={edit}
+                  key={opt.id}
+                  option={opt}
+                  handleDelete={() => handleDelete(opt.id)}
+                  handleEdit={() => handleEdit(opt.id)}
+                />
+              ) : (
+                  <CustomTableCell colSpan={colcnt}>
+                    <OptionEdit
+                      option={opt}
+                      handleSave={handleSave}
+                      handleCancel={handleCancel}
+                    />
+                  </CustomTableCell>
+                )
+            )}
+          </TableBody>
+        </Table>
     </>
   );
 };

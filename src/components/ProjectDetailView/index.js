@@ -17,6 +17,7 @@ import ProjectFiles from './ProjectFiles';
 import ProjectMessages from './ProjectMessages';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
+// import ProposalsCompare from './ProposalsCompare';
 
 import { getProjectData } from '../../actions';
 import { dispatch } from 'rxjs/internal/observable/range';
@@ -76,6 +77,7 @@ class ConnectedProjectDetailView extends React.Component {
 			match.url + '/messages',
 			match.url + '/proposals',
 			match.url + '/templates',
+			match.url + '/compare'
 		];
 
 		let curTabPos = 0;
@@ -116,6 +118,7 @@ class ConnectedProjectDetailView extends React.Component {
 								<Tab component={Link} to={`${match.url}/messages`} label="Messages" />
 								<Tab component={Link} to={`${match.url}/proposals`} label="Proposals" />
 								<Tab component={Link} to={`${match.url}/templates`} label="Templates" />
+								<Tab component={Link} to={`${match.url}/compare`} label="Compare" />
 							</Tabs>
 						</div>
 
@@ -126,6 +129,7 @@ class ConnectedProjectDetailView extends React.Component {
 							<SecuredRoute path={`${match.url}/messages`} /*component={ProjectMessages}*/ render={() => <div />} />
 							<SecuredRoute path={`${match.url}/proposals`} component={ProjectProposals} />
 							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />
+							<SecuredRoute path={`${match.url}/compare`} component={ProposalsCompare} />
 							<Redirect path={`${match.url}`} to={`${match.url}/overview`} />
 						</Switch>
 					</Paper>

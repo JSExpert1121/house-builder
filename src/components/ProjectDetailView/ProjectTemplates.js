@@ -2,26 +2,34 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {
-	CircularProgress,
-	Paper,
-	Table, TableHead, TableCell, TableRow, TableBody,
-	IconButton, TablePagination, TextField,
-	Button,
-	Snackbar,
-	Select,
-	MenuItem
-} from '@material-ui/core';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import DeleteIcon from '@material-ui/icons/Delete';
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import IconButton from '@material-ui/core/IconButton';
+import TablePagination from '@material-ui/core/TablePagination';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Fab from '@material-ui/core/Fab';
+import Box from '@material-ui/core/Box';
+
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import { getTemplates, addTemplate, deleteTemplate } from '../../actions/gen-actions';
+
+import { getTemplates, addTemplate, deleteTemplate, selectProject } from '../../actions/gen-actions';
 import { getProjectData } from '../../actions';
 
 const styles = theme => ({
@@ -38,6 +46,12 @@ const styles = theme => ({
 		'&:nth-of-type(odd)': {
 			backgroundColor: theme.palette.background.default,
 		},
+	},
+	button: {
+		padding: '6px'
+	},
+	select: {
+		width: '180px'
 	},
 	waitingSpin: {
 		position: "relative",
@@ -132,25 +146,24 @@ class ConnectedProjectTemplateView extends React.Component {
 		if (project === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}
+
 		return (
-			<div className={classes.root}>
+			<Box className={classes.root}>
 				<Paper className={classes.root}>
-					<div className={classes.template}>
+					<Box className={classes.template}>
 						<Select
+							className={classes.select}
 							value={template}
 							onChange={this.handleChange}
 							name="templates"
 						>
-							<MenuItem value="">
-								<em>None</em>
+							<MenuItem disabled value="">
+								<em>Select a template</em>
 							</MenuItem>
 							{
-								templates ? templates.content.map(
-									row => (
-										<MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>
-									)
-								) :
-									null
+								templates && templates.content.map(
+									row => <MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>
+								)
 							}
 						</Select>
 						<Fab color="primary" aria-label="Add" className={classes.fab}
@@ -179,16 +192,16 @@ class ConnectedProjectTemplateView extends React.Component {
 							) :
 								null
 						}
-					</div>
-					<div className={classes.tableWrap}>
-						<Table >
+					</Box>
+					<Box className={classes.tableWrap}>
+						<Table>
 							<TableHead>
 								<TableRow>
 									<CustomTableCell> Template Name </CustomTableCell>
 									<CustomTableCell align="center">Template Desc</CustomTableCell>
 									<CustomTableCell align="center">Template Value</CustomTableCell>
 									<CustomTableCell align="center" >
-										<IconButton style={{ color: "#FFFFFF" }} onClick={
+										<IconButton className={classes.button} style={{ color: "#FFFFFF" }} onClick={
 											() => this.setState({ openCategoryForm: true })
 										}>
 											<NoteAddIcon />
@@ -256,7 +269,7 @@ class ConnectedProjectTemplateView extends React.Component {
 								}
 							</TableBody>
 						</Table>
-					</div>
+					</Box>
 					<TablePagination
 						style={{ overflow: "scroll" }}
 						rowsPerPageOptions={[5, 10, 20]}
@@ -351,7 +364,7 @@ class ConnectedProjectTemplateView extends React.Component {
 						}
 					/>
 				</Paper >
-			</div>
+			</Box>
 		);
 	}
 }
