@@ -44,7 +44,8 @@ const styles = theme => ({
   brief: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(1)
+    paddingLeft: theme.spacing(1),
+    color: "#444"
   },
   desc: {
     color: "#444",
@@ -121,20 +122,19 @@ const ProjectView = ({ classes, project }) => {
               <Typography className={classes.posttime}>Posted: {postdate.toDateString()}</Typography>
             </Box>
             <Box className={classes.brief}>
-              Description: <br />
+              <Typography style={{ fontWeight: '700' }}> Description:  </Typography>
               <Typography className={classes.desc}>
                 {project.description}
               </Typography>
             </Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography component='div' className={classes.desc}>
+            <Box className={classes.brief}>
               {project.projectFiles && project.projectFiles.length > 0 && (
-                project.projectFiles.map(file => (
-                  <p key={file.id}>{file.name}</p>
-                ))
+                <>
+                  <Typography style={{ fontWeight: '700' }}> Files </Typography>
+                  {project.projectFiles.map(file => <Typography className={classes.desc} key={file.id}>{file.name}</Typography>)}
+                </>
               )}
-            </Typography>
+            </Box>
           </Grid>
         </Grid>
         {/* <Grid item sm={12} md={3}>

@@ -52,6 +52,11 @@ const styles = (theme) => ({
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
 	},
+	busy: {
+		position: "absolute",
+		left: "calc(50% - 20px)",
+		top: "calc(50% - 20px)",
+	},
 	width_300: {
 		width: 300,
 		marginRight: 10,
@@ -342,7 +347,7 @@ class ConnectedProposalDetailOverview extends Component {
 						</Button>
 					}
 				</Box>
-				<CircularProgress className={classes.busy} />
+				{this.state.isSaving && <CircularProgress className={classes.busy} />}
 				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.handleSubmit} onCancel={this.closeConfirm} />
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

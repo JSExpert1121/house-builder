@@ -175,10 +175,14 @@ class ConnectedProposalDetailView extends React.Component {
 		else if (match.url.includes("s_cont"))
 			this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
 		else if (match.url.includes("a_pros")) {
-			if (match.params.id !== -1) {
+			if (match.params.id !== '-1') {
 				this.props.history.push("/a_pros/project_detail/" + proposal.proposal.project.id + "/proposals");
 			} else {
-				this.props.history.push("/a_pros/project_detail/" + project.id + "/proposals");
+				if (!!project) {
+					this.props.history.push("/a_pros/project_detail/" + project.id + "/proposals");
+				} else {
+					this.props.history.push("/a_pros/project_detail/");
+				}
 			}
 		}
 	}
@@ -275,11 +279,9 @@ class ConnectedProposalDetailView extends React.Component {
 			this.setState({ busy: false });
 			this.handleBack();
 		} catch (error) {
-			this.setState({ showAlert: true, message: 'Some error occured' });
+			this.setState({ showAlert: true, message: 'Some error occured', busy: false });
 			console.log(error);
 		}
-
-		this.setState({ busy: false });
 	}
 
 	closeAlert = () => {
@@ -353,7 +355,7 @@ class ConnectedProposalDetailView extends React.Component {
 						{currentTab === 3 && <ProposalDetailMessages />}
 					</Paper>
 					<ConfirmDialog open={this.state.showAlert} message={this.state.message} onYes={this.closeAlert} />
-					{this.state.busy && <CircularProgress className={classes.waitingSpin} />}
+					{this.state.busy && <CircularProgress className={classes.busy} />}
 				</Box>
 			</NoSsr>
 		);
