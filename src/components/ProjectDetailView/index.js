@@ -17,7 +17,7 @@ import ProjectFiles from './ProjectFiles';
 import ProjectMessages from './ProjectMessages';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
-// import ProposalsCompare from './ProposalsCompare';
+import ProposalsCompare from './ProposalsCompare';
 
 import { getProjectData } from '../../actions';
 import { dispatch } from 'rxjs/internal/observable/range';

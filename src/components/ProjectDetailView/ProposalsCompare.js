@@ -1,10 +1,21 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-export default ProposalsCompare = (props) => {
+class ProposalsCompare extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            busy: false
+        }
+    }
 
-    return (
-        <div>Hello Compare!</div>
-    )
+    render() {
+
+        return (
+            <div>Hello Compare!</div>
+        )
+    }
 }
+
+export default ProposalsCompare;
