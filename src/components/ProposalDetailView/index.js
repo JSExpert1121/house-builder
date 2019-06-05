@@ -246,9 +246,9 @@ class ConnectedProposalDetailView extends React.Component {
 
 		this.setState({ busy: true });
 		const { proposal } = this.state;
-		const { project } = this.props;
+		const { project, userProfile } = this.props;
 		try {
-			let data = await this.props.submitProposal(project.genContractor.id, project.id, brief);
+			let data = await this.props.submitProposal(userProfile.user_metadata.contractor_id, project.id, brief);
 			const propid = data.id;
 			// const propid = '6b1f5540-6f74-4341-b4bd-907e4d38024a';
 			// console.log(propid, proposal);
@@ -374,7 +374,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
 	return {
 		proposal: state.global_data.proposalDetail,
-		project: state.global_data.project
+		project: state.global_data.project,
+		userProfile: state.global_data.userProfile
 	};
 };
 
