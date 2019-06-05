@@ -27,7 +27,6 @@ const styles = theme => ({
     display: 'inline-block',
     height: '100%',
     width: menuWidth,
-    borderRight: '1px solid #CCC',
     [theme.breakpoints.up('sm')]: {
       width: menuWidth,
       flexShrink: 0,
@@ -35,7 +34,6 @@ const styles = theme => ({
   },
   header: {
     height: `${barHeight}px`,
-    borderBottom: '1px solid #CCC',
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -136,7 +134,7 @@ class ProposalEditView extends React.Component {
           <Typography className={classes.header}>
             {proposal && proposal.name}
           </Typography>
-          <List>
+          <List style={{ borderTop: '1px solid #CCC' }}>
             {keys && keys.map((key, index) => (key !== 'id' && key !== 'name' &&
               <>
                 <ListItem button key={index} onClick={() => this.categoryChange(key)} className={(key === this.state.category) ? classes.active : undefined}>
@@ -149,7 +147,7 @@ class ProposalEditView extends React.Component {
         </Box>
 
         <Box className={classes.content}>
-          <Box id='category-info' className={classes.header} style={{ paddingLeft: '16px', paddingTop: '16px' }}>
+          <Box id='category-info' className={classes.header} style={{ paddingLeft: '16px', borderLeft: '1px solid #CCC' }}>
             <Grid container>
               <Grid item xs={12} sm={6}>
                 <Typography variant='subtitle1' align='left' noWrap>
@@ -169,7 +167,7 @@ class ProposalEditView extends React.Component {
             </Grid>
           </Box>
 
-          <Box id='main-content' style={{ padding: '16px' }}>
+          <Box id='main-content' style={{ padding: '16px', borderLeft: '1px solid #CCC', borderTop: '1px solid #CCC' }}>
             <CategoryEditView
               edit={edit}
               category={current}

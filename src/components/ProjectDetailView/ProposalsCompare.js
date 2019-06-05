@@ -1,21 +1,364 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom';
+
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import Typography from '@material-ui/core/Typography';
+
+// customized components
+import CustomTableCell from '../shared/CustomTableCell';
+import { getProposalDetails } from "../../actions/index";
+
+const styles = (theme) => ({
+    root: {
+        position: 'relative',
+        width: '100%',
+        height: "calc(100vh - 64px - 72px - 48px - 24px)",
+        overflow: "auto",
+        padding: theme.spacing(1)
+    },
+    table: {
+        border: '1px solid #CCC'
+    },
+    title: {
+        color: theme.palette.primary.dark,
+        margin: theme.spacing(2, 1, 1, 1),
+        textAlign: 'center',
+        fontSize: '32px',
+        color: '#333',
+        fontWeight: '700'
+    },
+    button: {
+        padding: '6px'
+    },
+    busy: {
+        position: 'absolute',
+        left: 'calc(50% - 20px)',
+        top: 'calc(50% - 20px)'
+    },
+    header: {
+        fontSize: '20px',
+        color: '#FFF',
+
+    },
+    template: {
+        fontSize: '20px',
+        color: '#FFF',
+        backgroundColor: '#1c0168'
+    },
+    span: {
+        fontSize: '20px',
+        backgroundColor: '#EEE',
+        border: '1px solid, #CCC',
+    }
+});
 
 class ProposalsCompare extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            busy: false
+            loading: true,
+            data: null
         }
+    }
+
+    async componentDidMount() {
+        const { proposals } = this.props;
+        const data = [];
+        const tasks = [];
+        proposals && proposals.forEach((pid, index) => {
+            tasks[index] = this.props.getProposalDetails(pid);
+        });
+
+        for (let i = 0; i < tasks.length; i++) {
+            const prop = await tasks[i];
+            data[i] = this.createDetails(prop);
+        }
+
+        this.setState({ loading: false, data });
+        console.log(data);
+    }
+
+    createDetails = (data) => {
+        const { project } = this.props;
+
+        const details = [];
+        project.projectTemplates.forEach((templ, index) => {
+            const cats = templ.template.categoryList;
+            details[index] = {};
+            details[index].id = templ.template.id;
+            details[index].name = templ.template.name;
+            cats.forEach(cat => {
+                details[index][cat.id] = {};
+                details[index][cat.id].id = cat.id;
+                details[index][cat.id].type = cat.type;
+                details[index][cat.id].name = cat.name;
+                details[index][cat.id].value = cat.value;
+                details[index][cat.id].description = cat.description;
+                details[index][cat.id].options = [];
+            })
+        })
+
+        data.temCatOptionDetail &&
+            data.temCatOptionDetail.forEach(template => {
+                for (let tid in template) {
+                    for (let det of details) {
+                        if (det.id !== tid) continue;
+
+                        const cats = template[tid];
+                        cats.forEach(cat => {
+                            for (let cid in cat) {
+                                det[cid].options = cat[cid] || [];
+                            }
+                        })
+
+                        break;
+                    }
+                }
+            });
+
+        details.forEach(templ => {
+            let minamount = [0, 0];
+            let mintime = [0, 0];
+            for (let cid in templ) {
+                let cmintime = 0, cminamount = 0;
+                if (cid !== 'id' && cid !== 'name') {
+                    const options = templ[cid].options;
+                    if (options[0]) {
+                        cminamount = options[0].budget;
+                        cmintime = options[0].duration;
+                    }
+                    for (let opt of options) {  // minamount
+                        if (cminamount > opt.budget) {
+                            cminamount = opt.budget;
+                            cmintime = opt.duration;
+                        }
+                    }
+                    minamount[0] += cminamount;
+                    minamount[1] += cmintime;
+
+                    if (options[0]) {
+                        cminamount = options[0].budget;
+                        cmintime = options[0].duration;
+                    }
+                    for (let opt of options) {  // mintime
+                        if (cmintime > opt.duration) {
+                            cminamount = opt.budget;
+                            cmintime = opt.duration;
+                        }
+                    }
+                    mintime[0] += cminamount;
+                    mintime[1] += cmintime;
+                }
+            }
+
+            templ.mintime = [...mintime];
+            templ.minamount = [...minamount];
+        });
+        const prop = {
+            mail: data.proposal.subContractor.email,
+            proposal: [...details]
+        }
+        return prop;
     }
 
     render() {
 
+        const { classes, proposals, project } = this.props;
+        const { loading, data } = this.state;
+
+        if (!project) {
+            return <Box>No Project selected</Box>
+        }
+
+        if (!proposals || proposals.length < 2) {
+            return <Box>No Proposals selected</Box>
+        }
+
+        if (loading || !data) {
+            return (
+                <Box className={classes.root}>
+                    <CircularProgress className={classes.busy} />
+                </Box>
+            )
+        }
+
         return (
-            <div>Hello Compare!</div>
+            <Box className={classes.root}>
+                <Typography className={classes.title} gutterBottom>
+                    Project: {project.title}
+                </Typography>
+                <Box className={classes.table}>
+                    <Table>
+                        {
+                            data.length === 2 &&
+                            <colgroup>
+                                <col width='20%' />
+                                <col width='40%' />
+                                <col width='40%' />
+                            </colgroup>
+                        }
+                        {
+                            data.length === 3 &&
+                            <colgroup>
+                                <col width='16%' />
+                                <col width='28%' />
+                                <col width='28%' />
+                                <col width='28%' />
+                            </colgroup>
+                        }
+                        <TableHead>
+                            <TableRow>
+                                <CustomTableCell className={classes.header}>Categories</CustomTableCell>
+                                {data && data.map(proposal => (
+                                    <CustomTableCell style={{ fontSize: '24px' }}>{proposal.mail}</CustomTableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody >
+                            {
+                                project && project.projectTemplates && project.projectTemplates.map((templ, index) => (
+                                    <>
+                                        <TableRow className={classes.row} key={index}>
+                                            <CustomTableCell colSpan={data.length + 1} className={classes.template}>
+                                                Template: {templ.template.name}
+                                            </CustomTableCell>
+                                        </TableRow>
+                                        {
+                                            templ.template.categoryList && templ.template.categoryList.map(cat => {
+                                                let maxOpts = 0;
+                                                for (let datum of data) {
+                                                    for (let temp of datum.proposal) {
+                                                        if (temp.id === templ.template.id) {
+                                                            let optCnt = temp[cat.id] ? temp[cat.id].options.length : 0
+                                                            if (maxOpts < optCnt) maxOpts = optCnt;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+
+                                                const list = [];
+                                                for (let i = 0; i < maxOpts; i++) {
+                                                    list.push(i);
+                                                }
+                                                console.log('max rows: ', maxOpts);
+                                                return (
+                                                    <>
+                                                        {
+                                                            list.map(i => (
+                                                                <TableRow className={classes.row} key={i}>
+                                                                    {(i === 0) && (
+                                                                        <CustomTableCell className={classes.span} rowSpan={maxOpts}>
+                                                                            {cat.name}
+                                                                        </CustomTableCell>
+                                                                    )}
+                                                                    {
+                                                                        data.map(datum => {
+                                                                            for (let temp of datum.proposal) {
+                                                                                if (temp.id === templ.template.id) {
+                                                                                    const option = temp[cat.id] && temp[cat.id].options && temp[cat.id].options[i];
+                                                                                    console.log(option);
+                                                                                    if (!!option) {
+                                                                                        return (
+                                                                                            <CustomTableCell>
+                                                                                                Name: {option.name} <br />
+                                                                                                Value: {option.value} <br />
+                                                                                                {option.budget} $ in {option.duration} days
+                                                                                            </CustomTableCell>
+                                                                                        )
+                                                                                    } else {
+                                                                                        return (
+                                                                                            <CustomTableCell>None</CustomTableCell>
+                                                                                        )
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                </TableRow>
+                                                            ))
+                                                        }
+                                                    </>
+                                                )
+                                            }
+                                            )
+                                        }
+                                        <TableRow className={classes.row} hover>
+                                            <CustomTableCell className={classes.span}>
+                                                Template Total
+                                            </CustomTableCell>
+                                            {
+                                                data.map(datum => {
+                                                    for (let temp of datum.proposal) {
+                                                        if (temp.id === templ.template.id) {
+                                                            return (
+                                                                <CustomTableCell>
+                                                                    {temp.minamount[0]} USD in {temp.minamount[1]} days<br />
+                                                                    {temp.mintime[0]} USD in {temp.mintime[1]} days<br />
+                                                                </CustomTableCell>
+                                                            )
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        </TableRow>
+                                    </>
+                                ))
+                            }
+                            <TableRow className={classes.row}>
+                                <CustomTableCell className={classes.span}>
+                                    Project Total
+                                </CustomTableCell>
+                                {
+                                    data.map(datum => {
+                                        let mintime = [0, 0], minamount = [0, 0];
+                                        for (let prop of datum.proposal) {
+                                            mintime[0] += prop.mintime[0];
+                                            mintime[1] += prop.mintime[1];
+                                            minamount[0] += prop.minamount[0];
+                                            minamount[1] += prop.minamount[1];
+                                        }
+
+                                        return (
+                                            <CustomTableCell>
+                                                {minamount[0]} USD in {minamount[1]} days<br />
+                                                {mintime[0]} USD in {mintime[1]} days<br />
+                                            </CustomTableCell>
+                                        )
+                                    })
+                                }
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </Box>
+            </Box>
         )
     }
 }
 
-export default ProposalsCompare;
+ProposalsCompare.propTypes = {
+    proposals: PropTypes.arrayOf(PropTypes.string),
+    project: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    proposals: state.global_data.compareProps,
+    project: state.global_data.project
+});
+
+const mapDispatchToProps = dispatch => ({
+    getProposalDetails: id => dispatch(getProposalDetails(id))
+});
+
+const ConnectedProposalsCompare = connect(mapStateToProps, mapDispatchToProps)(ProposalsCompare);
+
+export default withRouter(withStyles(styles)(ConnectedProposalsCompare));

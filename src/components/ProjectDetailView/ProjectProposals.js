@@ -21,7 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CompareIcon from '@material-ui/icons/Compare';
 import { ConfirmDialog } from '../shared/ConfirmDialog';
 
-import { getProposalData, getProposalsByProjectId, deleteProposal } from '../../actions';
+import { getProposalData, getProposalsByProjectId, deleteProposal, setProposals4Compare } from '../../actions';
 
 const MAX_COMPARE = 3;
 const styles = theme => ({
@@ -124,6 +124,8 @@ class ConnectedProjectProposals extends React.Component {
 
 	handleCompare = () => {
 		const { compState, compares } = this.state;
+		const { match, history } = this.props;
+
 		if (compState == 0) {
 			this.setState({ compState: 1 });
 		} else {
@@ -132,7 +134,9 @@ class ConnectedProjectProposals extends React.Component {
 				return;
 			}
 			this.setState({ compState: 0 });
-			console.log('ProjectProposals.handleCompare');
+
+			this.props.setProposals4Compare(compares);
+			history.push(match.url.slice(0, match.url.lastIndexOf('/')) + '/compare');
 		}
 	}
 
@@ -277,6 +281,7 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getProposalData: id => dispatch(getProposalData(id)),
 		getProposalsByProjectId: (id, page, row) => dispatch(getProposalsByProjectId(id, page, row)),
+		setProposals4Compare: (proposals) => dispatch(setProposals4Compare(proposals))
 	};
 }
 
@@ -289,8 +294,13 @@ const mapStateToProps = state => {
 
 const ProjectProposals = connect(mapStateToProps, mapDispatchToProps)(ConnectedProjectProposals);
 
-ProjectProposals.propTypes = {
+ConnectedProjectProposals.propTypes = {
 	classes: PropTypes.object.isRequired,
+	project: PropTypes.object,
+	proposals: PropTypes.object,
+	getProposalData: PropTypes.func.isRequired,
+	getProposalsByProjectId: PropTypes.func.isRequired,
+	setProposals4Compare: PropTypes.func.isRequired
 };
 
 export default withRouter(withStyles(styles)(ProjectProposals));
