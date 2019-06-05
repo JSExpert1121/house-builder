@@ -19,7 +19,9 @@ import ProposalDetailMessages from './ProposalDetailMessages';
 import ProposalEditView from './ProposalEditView';
 import { ConfirmDialog } from '../../components/shared/ConfirmDialog';
 
-import { getProposalData, getProposalDetails, submitProposal, addOption } from "../../actions/index";
+import { getProposalData, getProposalDetails, submitProposal, addOption, deleteProposal } from "../../actions/index";
+import { awardProject } from '../../actions/gen-actions';
+
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
@@ -163,9 +165,7 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 
 	handleTabChange = (event, value) => {
-		this.setState({
-			currentTab: value
-		});
+		this.setState({ currentTab: value });
 	}
 
 	handleBack = () => {
@@ -237,6 +237,58 @@ class ConnectedProposalDetailView extends React.Component {
 		return true;
 	}
 
+	handleAward = async (id) => {
+
+		this.setState({ busy: true });
+		try {
+			await this.props.awardProject(id);
+
+			let proposal = [];
+			let brief = {
+				budget: 0, duration: 0, description: ''
+			};
+
+			try {
+				const data = await this.props.getProposalDetails(id);
+				// console.log('ProposalDetailView.cdm', data);
+				proposal = this.createDetails(data);
+				brief.budget = data.proposal.budget;
+				brief.duration = data.proposal.duration;
+				brief.description = data.proposal.description;
+			} catch (error) {
+				console.log(error);
+				this.setState({ busy: false, showAlert: true, message: 'Some errors occured.' });
+				proposal = this.createEmptyDetails();
+			}
+
+			this.setState({ busy: false, proposal, brief });
+
+		} catch (error) {
+			console.log(error);
+			this.setState({ busy: false, showAlert: true, message: 'Proposal awarding failed.' });
+		}
+	}
+
+	handleDelete = async (id) => {
+		const { match, proposal } = this.props;
+
+		this.setState({ busy: true });
+		try {
+			await this.props.deleteProposal(id);
+			this.setState({ busy: false });
+
+			if (match.url.includes("g_cont"))
+				this.props.history.push("/g_cont/project_detail/" + proposal.proposal.project.id + "/proposals");
+			else if (match.url.includes("s_cont"))
+				this.props.history.push('/s_cont/pipeline/' + proposal.proposal.status.toLowerCase());
+			else if (match.url.includes("a_pros"))
+				this.props.history.push("/a_pros/project_detail/" + proposal.proposal.project.id + "/proposals");
+		} catch (error) {
+			console.log(error);
+			this.setState({ busy: false, showAlert: true, message: 'Proposal deletion failed.' });
+		}
+	}
+
 	handleSubmit = async (brief) => {
 		console.log(brief);
 		if (!this.checkProposal(brief)) {
@@ -244,14 +296,16 @@ class ConnectedProposalDetailView extends React.Component {
 			return;
 		}
 
-		this.setState({ busy: true });
 		const { proposal } = this.state;
-		const { project, userProfile } = this.props;
+		const { project, userProfile, match } = this.props;
+
+		this.setState({ busy: true });
 		try {
+			if (match.url.includes('/s_cont')) {	// In case of update
+				await this.props.deleteProposal(this.props.proposal.proposal.id);
+			}
 			let data = await this.props.submitProposal(userProfile.user_metadata.contractor_id, project.id, brief);
 			const propid = data.id;
-			// const propid = '6b1f5540-6f74-4341-b4bd-907e4d38024a';
-			// console.log(propid, proposal);
 			let tasks = [];
 			console.log(proposal);
 
@@ -279,7 +333,7 @@ class ConnectedProposalDetailView extends React.Component {
 			this.setState({ busy: false });
 			this.handleBack();
 		} catch (error) {
-			this.setState({ showAlert: true, message: 'Some error occured', busy: false });
+			this.setState({ busy: false, showAlert: true, message: 'Some error occured.' });
 			console.log(error);
 		}
 	}
@@ -291,13 +345,14 @@ class ConnectedProposalDetailView extends React.Component {
 	render() {
 		const { classes, match, project } = this.props;
 		const { proposal, templateNo, currentTab, brief } = this.state;
+		let editable = match.params.id === '-1';
 
-		if (proposal === null && match.params.id !== '-1')
+		if (proposal === null && !editable)
 			return (
 				<CircularProgress className={classes.waitingSpin} />
 			);
 
-		// console.log('ProposalDetailView.Render: brief', brief);
+		// editable = editable || match.url.includes('/s_cont');
 		return (
 
 			<NoSsr>
@@ -327,8 +382,7 @@ class ConnectedProposalDetailView extends React.Component {
 									(
 										match.url.includes('/g_cont') ||
 										(match.url.includes('/s_cont') && (proposal.status === 'SUBMITTED' || proposal.status === 'AWARDED'))
-									) &&
-									<Tab label="Messages" />
+									) && <Tab label="Messages" />
 								}
 							</Tabs>
 						</Box>
@@ -336,26 +390,29 @@ class ConnectedProposalDetailView extends React.Component {
 						{currentTab === 0 &&
 							<ProposalDetailOverview
 								templateSelected={this.handleTemplateChange}
+								edit={editable || match.url.includes('/s_cont')}
 								project={project}
 								brief={brief}
 								handleSubmit={this.handleSubmit}
+								handleAward={this.handleAward}
+								handleDelete={this.handleDelete}
 								handleOverviewChange={this.handleOverviewChange}
 							/>
 						}
 						{currentTab === 1 &&
 							<ProposalEditView
 								proposal={proposal[templateNo]}
-								edit={match.params.id === '-1'}
+								edit={editable || match.url.includes('/s_cont')}
 								handleAdd={this.AddOption}
 								handleUpdate={this.UpdateOption}
 								handleDelete={this.DeleteOption}
 							/>
 						}
-						{currentTab === 2 && <ProposalDetailFiles />}
+						{currentTab === 2 && <ProposalDetailFiles edit={editable || match.url.includes('/s_cont')} />}
 						{currentTab === 3 && <ProposalDetailMessages />}
+						<ConfirmDialog open={this.state.showAlert} message={this.state.message} onYes={this.closeAlert} />
+						{this.state.busy && <CircularProgress className={classes.busy} />}
 					</Paper>
-					<ConfirmDialog open={this.state.showAlert} message={this.state.message} onYes={this.closeAlert} />
-					{this.state.busy && <CircularProgress className={classes.busy} />}
 				</Box>
 			</NoSsr>
 		);
@@ -367,7 +424,9 @@ const mapDispatchToProps = dispatch => {
 		getProposalData: (id) => dispatch(getProposalData(id)),
 		getProposalDetails: id => dispatch(getProposalDetails(id)),
 		addOption: (propid, catid, option) => dispatch(addOption(propid, catid, option)),
-		submitProposal: (cont_id, pro_id, proposal) => dispatch(submitProposal(cont_id, pro_id, proposal))
+		submitProposal: (cont_id, pro_id, proposal) => dispatch(submitProposal(cont_id, pro_id, proposal)),
+		deleteProposal: (id) => dispatch(deleteProposal(id)),
+		awardProject: (id) => dispatch(awardProject(id)),
 	}
 }
 

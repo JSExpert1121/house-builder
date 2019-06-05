@@ -141,8 +141,10 @@ class ConnectedProjectTemplateView extends React.Component {
 	}
 
 	render() {
-		const { classes, templates, project } = this.props;
+		const { classes, templates, project, match } = this.props;
 		const { template } = this.state;
+		const editable = match.url.includes('/g_cont');
+
 		if (project === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}
@@ -150,49 +152,51 @@ class ConnectedProjectTemplateView extends React.Component {
 		return (
 			<Box className={classes.root}>
 				<Paper className={classes.root}>
-					<Box className={classes.template}>
-						<Select
-							className={classes.select}
-							value={template}
-							onChange={this.handleChange}
-							name="templates"
-						>
-							<MenuItem disabled value="">
-								<em>Select a template</em>
-							</MenuItem>
+					{editable && (
+						<Box className={classes.template}>
+							<Select
+								className={classes.select}
+								value={template}
+								onChange={this.handleChange}
+								name="templates"
+							>
+								<MenuItem disabled value="">
+									<em>Select a template</em>
+								</MenuItem>
+								{
+									templates && templates.content.map(
+										row => <MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>
+									)
+								}
+							</Select>
+							<Fab color="primary" aria-label="Add" className={classes.fab}
+								onClick={() => this.props.addTemplate(project.id, template, (result) => {
+									this.setState({ template: '' })
+									if (result)
+										this.props.getProjectData(project.id);
+								})}>
+								<AddIcon />
+							</Fab>
 							{
-								templates && templates.content.map(
-									row => <MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>
-								)
+								templates ? templates.content.map(
+									row => (
+										row.id == template ?
+											<ul key={row.id}>
+												<li>
+													Name: {row.name}
+												</li>
+												<li>
+													Description: {row.description}
+												</li>
+											</ul>
+											:
+											null
+									)
+								) :
+									null
 							}
-						</Select>
-						<Fab color="primary" aria-label="Add" className={classes.fab}
-							onClick={() => this.props.addTemplate(project.id, template, (result) => {
-								this.setState({ template: '' })
-								if (result)
-									this.props.getProjectData(project.id);
-							})}>
-							<AddIcon />
-						</Fab>
-						{
-							templates ? templates.content.map(
-								row => (
-									row.id == template ?
-										<ul key={row.id}>
-											<li>
-												Name: {row.name}
-											</li>
-											<li>
-												Description: {row.description}
-											</li>
-										</ul>
-										:
-										null
-								)
-							) :
-								null
-						}
-					</Box>
+						</Box>
+					)}
 					<Box className={classes.tableWrap}>
 						<Table>
 							<TableHead>
@@ -200,13 +204,15 @@ class ConnectedProjectTemplateView extends React.Component {
 									<CustomTableCell> Template Name </CustomTableCell>
 									<CustomTableCell align="center">Template Desc</CustomTableCell>
 									<CustomTableCell align="center">Template Value</CustomTableCell>
-									<CustomTableCell align="center" >
-										<IconButton className={classes.button} style={{ color: "#FFFFFF" }} onClick={
-											() => this.setState({ openCategoryForm: true })
-										}>
-											<NoteAddIcon />
-										</IconButton>
-									</CustomTableCell>
+									{editable && (
+										<CustomTableCell align="center" >
+											<IconButton className={classes.button} style={{ color: "#FFFFFF" }} onClick={
+												() => this.setState({ openCategoryForm: true })
+											}>
+												<NoteAddIcon />
+											</IconButton>
+										</CustomTableCell>
+									)}
 								</TableRow>
 							</TableHead>
 							<TableBody >
@@ -235,34 +241,36 @@ class ConnectedProjectTemplateView extends React.Component {
 													}}>
 													{row.template.value ? row.template.value : "N/A"}
 												</CustomTableCell>
-												<CustomTableCell align="center">
-													<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
-														async () => {
-															await this.props.deleteTemplate(project.id, row.template.id, (result) => {
-																this.setState({
-																	snackBar: true,
-																	snackBarContent: result ? 'delete template success' : 'please template categories'
-																});
-																this.props.getProjectData(project.id);
-															});
-
-															if (this.state.rowsPerPage * (this.state.currentPage) < project.projectTemplates.length - 1) {
-																await this.props.getTemplates(this.state.currentPage, this.state.rowsPerPage);
-															}
-															else {
-																const currentPage = this.state.currentPage - 1;
-
-																this.setState({
-																	currentPage: currentPage
+												{editable && (
+													<CustomTableCell align="center">
+														<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
+															async () => {
+																await this.props.deleteTemplate(project.id, row.template.id, (result) => {
+																	this.setState({
+																		snackBar: true,
+																		snackBarContent: result ? 'delete template success' : 'please template categories'
+																	});
+																	this.props.getProjectData(project.id);
 																});
 
-																await this.props.getTemplates(currentPage, this.state.rowsPerPage);
+																if (this.state.rowsPerPage * (this.state.currentPage) < project.projectTemplates.length - 1) {
+																	await this.props.getTemplates(this.state.currentPage, this.state.rowsPerPage);
+																}
+																else {
+																	const currentPage = this.state.currentPage - 1;
+
+																	this.setState({
+																		currentPage: currentPage
+																	});
+
+																	await this.props.getTemplates(currentPage, this.state.rowsPerPage);
+																}
 															}
-														}
-													}>
-														<DeleteIcon />
-													</IconButton>
-												</CustomTableCell>
+														}>
+															<DeleteIcon />
+														</IconButton>
+													</CustomTableCell>
+												)}
 											</TableRow>
 										)
 									)

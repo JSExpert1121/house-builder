@@ -17,7 +17,7 @@ import CustomTableCell from "../shared/CustomTableCell";
 import CustomizedSnackbars from '../shared/CustomSnackbar';
 
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { getProposalData, addFilesToProposal, deleteProposalFile, getProposalDetails } from '../../actions/index';
+import { addFilesToProposal, deleteProposalFile, getProposalDetails } from '../../actions/index';
 
 const styles = theme => ({
 	root: {
@@ -106,12 +106,16 @@ class ConnectedProposalDetailFiles extends React.Component {
 					<TableHead>
 						<TableRow>
 							<CustomTableCell align="center">Name</CustomTableCell>
-							<CustomTableCell align="center">
-								<IconButton className={classes.button} style={{ color: "#FFFFFF" }} aria-label="Add"
-									onClick={this.openUpload}>
-									<NoteAddIcon />
-								</IconButton>
-							</CustomTableCell>
+							{
+								this.props.edit && (
+									<CustomTableCell align="center">
+										<IconButton className={classes.button} style={{ color: "#FFFFFF" }} aria-label="Add"
+											onClick={this.openUpload}>
+											<NoteAddIcon />
+										</IconButton>
+									</CustomTableCell>
+								)
+							}
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -122,13 +126,17 @@ class ConnectedProposalDetailFiles extends React.Component {
 									<CustomTableCell align="center">
 										<a download={row.name} href={process.env.PROJECT_API + "/proposals/" + proposal.proposal.id + "/files/" + row.name}>{row.name}</a>
 									</CustomTableCell>
-									<CustomTableCell align="center">
-										<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
-											() => this.handleDeletefile(row.name)
-										}>
-											<DeleteIcon />
-										</IconButton>
-									</CustomTableCell>
+									{
+										this.props.edit && (
+											<CustomTableCell align="center">
+												<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
+													() => this.handleDeletefile(row.name)
+												}>
+													<DeleteIcon />
+												</IconButton>
+											</CustomTableCell>
+										)
+									}
 								</TableRow>
 							))
 						}
@@ -158,7 +166,6 @@ class ConnectedProposalDetailFiles extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProposalData: (id) => dispatch(getProposalData(id)),
 		addFilesToProposal: (id, files, cb) => dispatch(addFilesToProposal(id, files, cb)),
 		deleteProposalFile: (id, name, cb) => dispatch(deleteProposalFile(id, name, cb)),
 		getProposalDetails: id => dispatch(getProposalDetails(id))
@@ -175,6 +182,7 @@ const ProposalDetailFiles = connect(mapStateToProps, mapDispatchToProps)(Connect
 
 ProposalDetailFiles.propTypes = {
 	classes: PropTypes.object.isRequired,
+	edit: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(ProposalDetailFiles);

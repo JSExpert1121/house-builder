@@ -86,7 +86,6 @@ class ConnectedProjectProposals extends React.Component {
 		this.state = {
 			rowsPerPage: 20,
 			currentPage: 0,
-			compState: 0,
 			isSaving: false,
 			snackBar: false,
 			snackBarContent: "",
@@ -123,30 +122,22 @@ class ConnectedProjectProposals extends React.Component {
 	};
 
 	handleCompare = () => {
-		const { compState, compares } = this.state;
+		const { compares } = this.state;
 		const { match, history } = this.props;
 
-		if (compState == 0) {
-			this.setState({ compState: 1 });
-		} else {
-			if (compares.length < 2 || compares.length > 3) {
-				this.setState({ showConfirm: true, message: "You have to select 2 ~ 3 proposals." });
-				return;
-			}
-			this.setState({ compState: 0 });
-
-			this.props.setProposals4Compare(compares);
-			history.push(match.url.slice(0, match.url.lastIndexOf('/')) + '/compare');
+		if (compares.length < 2 || compares.length > 3) {
+			this.setState({ showConfirm: true, message: "You have to select 2 ~ 3 proposals." });
+			return;
 		}
+
+		this.props.setProposals4Compare(compares);
+		history.push(match.url.slice(0, match.url.lastIndexOf('/')) + '/compare');
 	}
 
 	handleRowSelected = (id) => {
 		const { match, history } = this.props;
-		if (this.state.compState === 0) {
-			history.push(match.url.substring(0, 7) + "/proposal_detail/" + id);
-		} else {
-			this.handleChecked(id);
-		}
+		console.log('handleRowSelected', id);
+		history.push(match.url.substring(0, 7) + "/proposal_detail/" + id);
 	}
 
 	handleChecked = (id) => {
@@ -178,14 +169,13 @@ class ConnectedProjectProposals extends React.Component {
 		if (proposals === null)
 			return <div className={classes.root}> <CircularProgress className={classes.waitingSpin} /> </div>;
 
-		const btnText = (this.state.compState === 0) ? 'Compare' : 'Done';
 		return (
 			<div className={classes.root}>
 				{
 					match.url.includes('/g_cont') && (
 						<Box style={{ textAlign: 'right', paddingRight: '16px' }}>
 							<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleCompare}>
-								{btnText}
+								Compare
 							</Button>
 						</Box>
 					)
@@ -200,13 +190,8 @@ class ConnectedProjectProposals extends React.Component {
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
-								<CustomTableCell align="center">Bidder Name</CustomTableCell>
-								<CustomTableCell align="center">Price($)</CustomTableCell>
-								<CustomTableCell align="center">Duration</CustomTableCell>
-								<CustomTableCell align="center">Status</CustomTableCell>
-								<CustomTableCell align="center">Description</CustomTableCell>
 								{
-									(this.state.compState === 1) && match.url.includes('/g_cont') && (
+									match.url.includes('/g_cont') && (
 										<CustomTableCell align="center">
 											<IconButton className={classes.button} onClick={this.handleCompare} style={{ color: "#FFFFFF" }} size='small'>
 												<CompareIcon />
@@ -214,27 +199,32 @@ class ConnectedProjectProposals extends React.Component {
 										</CustomTableCell>
 									)
 								}
+								<CustomTableCell align="center">Bidder Name</CustomTableCell>
+								<CustomTableCell align="center">Price($)</CustomTableCell>
+								<CustomTableCell align="center">Duration</CustomTableCell>
+								<CustomTableCell align="center">Status</CustomTableCell>
+								<CustomTableCell align="center">Description</CustomTableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
 							{proposals.content.map(row => (
-								<TableRow className={classes.row} key={row.id} hover onClick={() => this.handleRowSelected(row.id)} >
-									<CustomTableCell component="th" scope="row" align="center">{row.subContractor.email}</CustomTableCell>
-									<CustomTableCell align="center">{row.budget}</CustomTableCell>
-									<CustomTableCell align="center">{row.duration}</CustomTableCell>
-									<CustomTableCell align="center">{row.status}</CustomTableCell>
-									<CustomTableCell align="center">{row.description.length > 40 ? row.description.slice(0, 40) + "..." : row.description}</CustomTableCell>
+								<TableRow className={classes.row} key={row.id} hover>
 									{
-										(this.state.compState === 1) && match.url.includes('/g_cont') && (
+										match.url.includes('/g_cont') && (
 											<CustomTableCell align="center">
 												<Checkbox
-													// onChange={(e) => this.handleChecked(e, row.id)}
+													onChange={() => this.handleChecked(row.id)}
 													checked={compares.includes(row.id)}
 													inputProps={{ 'aria-label': 'Select proposals' }}
 												/>
 											</CustomTableCell>
 										)
 									}
+									<CustomTableCell onClick={() => this.handleRowSelected(row.id)} component="th" align="center">{row.subContractor.email}</CustomTableCell>
+									<CustomTableCell onClick={() => this.handleRowSelected(row.id)} align="center">{row.budget}</CustomTableCell>
+									<CustomTableCell onClick={() => this.handleRowSelected(row.id)} align="center">{row.duration}</CustomTableCell>
+									<CustomTableCell onClick={() => this.handleRowSelected(row.id)} align="center">{row.status}</CustomTableCell>
+									<CustomTableCell onClick={() => this.handleRowSelected(row.id)} align="center">{row.description.length > 40 ? row.description.slice(0, 40) + "..." : row.description}</CustomTableCell>
 								</TableRow>
 							))}
 						</TableBody>

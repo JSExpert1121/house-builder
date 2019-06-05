@@ -69,6 +69,7 @@ class ConnectedProjectDetailView extends React.Component {
 
 	render() {
 		const { classes, match, project, location } = this.props;
+		const owner = match.url.includes('/g_cont');
 
 		const tabNo = [
 			match.url + '/overview',
@@ -118,7 +119,7 @@ class ConnectedProjectDetailView extends React.Component {
 								<Tab component={Link} to={`${match.url}/messages`} label="Messages" />
 								<Tab component={Link} to={`${match.url}/proposals`} label="Proposals" />
 								<Tab component={Link} to={`${match.url}/templates`} label="Templates" />
-								<Tab component={Link} to={`${match.url}/compare`} label="Compare" />
+								{owner && <Tab component={Link} to={`${match.url}/compare`} label="Compare" />}
 							</Tabs>
 						</div>
 
@@ -129,7 +130,7 @@ class ConnectedProjectDetailView extends React.Component {
 							<SecuredRoute path={`${match.url}/messages`} /*component={ProjectMessages}*/ render={() => <div />} />
 							<SecuredRoute path={`${match.url}/proposals`} component={ProjectProposals} />
 							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />
-							<SecuredRoute path={`${match.url}/compare`} component={ProposalsCompare} />
+							{owner && <SecuredRoute path={`${match.url}/compare`} component={ProposalsCompare} />}
 							<Redirect path={`${match.url}`} to={`${match.url}/overview`} />
 						</Switch>
 					</Paper>

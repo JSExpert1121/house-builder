@@ -28,9 +28,6 @@ import ProjectView from './ProjectView';
 import { ConfirmDialog } from '../../components/shared/ConfirmDialog';
 import CustomTableCell from '../../components/shared/CustomTableCell';
 
-import { getProposalData, deleteProposal, submitProposal } from '../../actions/index';
-import { awardProject } from '../../actions/gen-actions';
-
 const styles = (theme) => ({
 	root: {
 		position: 'relative',
@@ -89,7 +86,8 @@ class ConnectedProposalDetailOverview extends Component {
 			snackBarContent: "",
 			isSaving: false,
 			showConfirm: false,
-			message: 'Would you like to submit your proposal?'
+			message: 'Would you like to submit your proposal?',
+			handleOK: null
 		}
 	}
 
@@ -101,101 +99,41 @@ class ConnectedProposalDetailOverview extends Component {
 		this.props.handleOverviewChange({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
 	}
 
-	// static getDerivedStateFromProps(props, state) {
-	// 	return {
-	// 		budget: props.brief.budget,
-	// 		duration: props.brief.duration,
-	// 		description: props.brief.description
-	// 	}
-	// }
-
 	submit = async () => {
-		this.setState({ showConfirm: true });
+		this.setState({ showConfirm: true, message: 'Would you like to submit your proposal?', handleOK: this.handleSubmit });
 	}
 
-	handleSubmit = async () => {
-		this.setState({ showConfirm: false });
+	handleSubmit = () => {
+		this.setState({ showConfirm: false, isSaving: true });
 		this.props.handleSubmit({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
 	}
 
-	handleDeleteProposal = async () => {
-		const { proposal, match } = this.props;
-		this.setState({
-			isSaving: true
-		})
-
-		await this.props.deleteProposal(proposal.id, (res) => {
-			this.setState({
-				isSaving: false,
-				snackBar: true,
-				snackBarContent: res ? 'delete proposal success' : "delete proposal failed"
-			});
-
-			if (res) {
-				if (match.url.includes("g_cont"))
-					this.props.history.push("/g_cont/project_detail/" + proposal.project.id + "/proposals");
-				else if (match.url.includes("s_cont"))
-					this.props.history.push('/s_cont/pipeline/' + proposal.status.toLowerCase());
-				else if (match.url.includes("a_pros"))
-					this.props.history.push("/a_pros/project_detail/" + proposal.project.id + "/proposals");
-			}
-		})
+	delete = () => {
+		this.setState({ showConfirm: true, message: 'Would you like to delete your proposal?', handleOK: this.handleDelete });
 	}
 
-	handleSubmitProposal = async () => {
-		const { userProfile, project } = this.props;
-		this.setState({
-			isSaving: true,
-		});
-
-		const proposalData = {
-			"budget": this.state.budget,
-			"duration": this.state.duration,
-			"description": this.state.description,
-			"updatedBy": userProfile.email
-		};
-
-		await this.props.submitProposal(userProfile.user_metadata.contractor_id, project.id, proposalData, async (res) => {
-			this.setState({
-				isSaving: false,
-				snackBar: true,
-				snackBarContent: res !== 'false' ? "submit proposal success" : "submit proposal failed"
-			});
-
-			if (res) {
-				await this.props.getProposalData(res);
-				this.props.history.push("/a_pros/proposal_detail/" + res);
-			}
-		});
+	handleDelete = () => {
+		this.setState({ showConfirm: false, isSaving: true });
+		this.props.handleDelete(this.props.proposal.id);
 	}
 
-	handleAwardProject = async () => {
-		const { proposal } = this.props;
-		this.setState({
-			isSaving: true
-		})
-
-		await this.props.awardProject(proposal.id, (res) => {
-			this.setState({
-				isSaving: false,
-				snackBar: true,
-				snackBarContent: res ? 'award project success' : "award project failed"
-			});
-
-			this.props.getProposalData(proposal.id);
-		})
+	award = () => {
+		this.setState({ showConfirm: true, message: 'Would you like to award this proposal?', handleOK: this.handleAward });
+	}
+	handleAward = () => {
+		this.setState({ showConfirm: false, isSaving: true });
+		this.props.handleAward(this.props.proposal.id);
 	}
 
 	render() {
-		const { classes, match, proposal } = this.props;
+		const { classes, match, proposal, edit } = this.props;
 
-		let edit = match.params.id === '-1';
-		const project = edit ? this.props.project : proposal.proposal.project;
+		// let edit = match.params.id === '-1';
+		const project = (edit && !match.url.includes('/s_cont')) ? this.props.project : proposal.proposal.project;
 
 		if (!project) return <div className={classes.root} />;
 		if (!edit && !proposal) return <div className={classes.root} />;
 
-		// let mode = match.params.id === '-1' ? 'c' : 'v';
 		let c_project = edit ? project : proposal.proposal.project;
 
 		return (
@@ -350,7 +288,7 @@ class ConnectedProposalDetailOverview extends Component {
 					}
 				</Box>
 				{this.state.isSaving && <CircularProgress className={classes.busy} />}
-				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.handleSubmit} onCancel={this.closeConfirm} />
+				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.state.handleOK} onCancel={this.closeConfirm} />
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
 					open={this.state.snackBar}
@@ -376,7 +314,6 @@ const mapDispatchToProps = dispatch => {
 		getProposalData: (id) => dispatch(getProposalData(id)),
 		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
 		awardProject: (id, cb) => dispatch(awardProject(id, cb)),
-		submitProposal: (cont_id, pro_id, proposal, cb) => dispatch(submitProposal(cont_id, pro_id, proposal, cb))
 	};
 }
 
@@ -392,6 +329,7 @@ const ProposalDetailOverview = connect(mapStateToProps, mapDispatchToProps)(Conn
 
 ProposalDetailOverview.propTypes = {
 	classes: PropTypes.object.isRequired,
+	edit: PropTypes.bool.isRequired,
 	project: PropTypes.object,
 	handleOverviewChange: PropTypes.func.isRequired,
 	templateSelected: PropTypes.func.isRequired,

@@ -8,6 +8,7 @@ import {
 } from '../constants/global-action-types'
 
 import PropApi from '../api/proposal';
+import ProjApi from '../api/project';
 import Axios from 'axios';
 
 export function setUserProfile(payload) {
@@ -42,19 +43,7 @@ export function getProposalData(id) {
 	}
 }
 
-export function deleteProposal(pro_id, cb) {
-	return function (dispatch) {
-		return Axios.delete(process.env.PROJECT_API + 'proposals/' + pro_id)
-			.then(res => {
-				cb(true);
-			})
-			.catch(err => {
-				cb(false);
-				console.log(err.message);
-			})
-	}
-}
-
+export const deleteProposal = (prop_id) => dispatch => PropApi.delete(prop_id);
 export const addFilesToProposal = (id, files) => dispatch => PropApi.addFiles(id, files);
 export const deleteProposalFile = (id, name) => dispatch => PropApi.deleteFile(id, name);
 
