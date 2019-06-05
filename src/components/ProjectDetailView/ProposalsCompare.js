@@ -13,6 +13,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import Typography from '@material-ui/core/Typography';
+import Radio from '@material-ui/core/Radio';
 
 // customized components
 import CustomTableCell from '../shared/CustomTableCell';
@@ -85,7 +86,7 @@ class ProposalsCompare extends React.Component {
         }
 
         this.setState({ loading: false, data });
-        console.log(data);
+        // console.log(data);
     }
 
     createDetails = (data) => {
@@ -97,6 +98,8 @@ class ProposalsCompare extends React.Component {
             details[index] = {};
             details[index].id = templ.template.id;
             details[index].name = templ.template.name;
+            details[index].budget = 0;
+            details[index].duration = 0;
             cats.forEach(cat => {
                 details[index][cat.id] = {};
                 details[index][cat.id].id = cat.id;
@@ -108,67 +111,151 @@ class ProposalsCompare extends React.Component {
             })
         })
 
+        let budget = 0, duration = 0;
         data.temCatOptionDetail &&
             data.temCatOptionDetail.forEach(template => {
                 for (let tid in template) {
                     for (let det of details) {
                         if (det.id !== tid) continue;
 
+                        det.budget = 0; det.duration = 0;
                         const cats = template[tid];
-                        cats.forEach(cat => {
+                        for (let cat of cats) {
                             for (let cid in cat) {
                                 det[cid].options = cat[cid] || [];
+                                det[cid].selected = det[cid].options[0] && det[cid].options[0].id;
+                                if (!!det[cid].selected) {
+                                    det.budget += det[cid].options[0].budget;
+                                    det.duration += det[cid].options[0].duration;
+                                }
                             }
-                        })
+                        }
 
+                        budget += det.budget;
+                        duration += det.duration;
                         break;
                     }
                 }
             });
 
-        details.forEach(templ => {
-            let minamount = [0, 0];
-            let mintime = [0, 0];
-            for (let cid in templ) {
-                let cmintime = 0, cminamount = 0;
-                if (cid !== 'id' && cid !== 'name') {
-                    const options = templ[cid].options;
-                    if (options[0]) {
-                        cminamount = options[0].budget;
-                        cmintime = options[0].duration;
-                    }
-                    for (let opt of options) {  // minamount
-                        if (cminamount > opt.budget) {
-                            cminamount = opt.budget;
-                            cmintime = opt.duration;
-                        }
-                    }
-                    minamount[0] += cminamount;
-                    minamount[1] += cmintime;
+        // details.forEach(templ => {
+        //     let minamount = [0, 0];
+        //     let mintime = [0, 0];
+        //     for (let cid in templ) {
+        //         let cmintime = 0, cminamount = 0;
+        //         if (cid !== 'id' && cid !== 'name') {
+        //             const options = templ[cid].options;
+        //             if (options[0]) {
+        //                 cminamount = options[0].budget;
+        //                 cmintime = options[0].duration;
+        //             }
+        //             for (let opt of options) {  // minamount
+        //                 if (cminamount > opt.budget) {
+        //                     cminamount = opt.budget;
+        //                     cmintime = opt.duration;
+        //                 }
+        //             }
+        //             minamount[0] += cminamount;
+        //             minamount[1] += cmintime;
 
-                    if (options[0]) {
-                        cminamount = options[0].budget;
-                        cmintime = options[0].duration;
-                    }
-                    for (let opt of options) {  // mintime
-                        if (cmintime > opt.duration) {
-                            cminamount = opt.budget;
-                            cmintime = opt.duration;
-                        }
-                    }
-                    mintime[0] += cminamount;
-                    mintime[1] += cmintime;
-                }
-            }
+        //             if (options[0]) {
+        //                 cminamount = options[0].budget;
+        //                 cmintime = options[0].duration;
+        //             }
+        //             for (let opt of options) {  // mintime
+        //                 if (cmintime > opt.duration) {
+        //                     cminamount = opt.budget;
+        //                     cmintime = opt.duration;
+        //                 }
+        //             }
+        //             mintime[0] += cminamount;
+        //             mintime[1] += cmintime;
+        //         }
+        //     }
 
-            templ.mintime = [...mintime];
-            templ.minamount = [...minamount];
-        });
+        //     templ.mintime = [...mintime];
+        //     templ.minamount = [...minamount];
+        // });
+
         const prop = {
             mail: data.proposal.subContractor.email,
+            budget: budget,
+            duration: duration,
             proposal: [...details]
         }
         return prop;
+    }
+
+    handleOptChanged = (idx, tid, cid, oid) => {
+        // console.log(idx, tid, cid, oid);
+        const { data } = this.state;
+
+        const { project } = this.props;
+        if (!project || !project.projectTemplates) return;
+
+        const proposal = data[idx].proposal;
+        if (!proposal) return;
+
+        for (let templ of proposal) {
+            if (templ.id !== tid) continue;
+
+            if (templ[cid]) {
+                templ[cid].selected = oid;
+            }
+        }
+
+        // calculate the budget and duration
+        let budget = 0, duration = 0;
+        for (let templ of proposal) {
+            templ.budget = 0;
+            templ.duration = 0;
+            for (let template of project.projectTemplates) {
+                if (template.template.id == templ.id) {
+                    const cats = template.template.categoryList;
+
+                    for (let cat of cats) {
+                        if (templ[cat.id] && templ[cat.id].selected) {
+                            const selected = templ[cat.id].selected;
+                            const options = templ[cat.id].options;
+                            if (options) {
+                                for (let opt of options) {
+                                    if (opt.id === selected) {
+                                        templ.budget += opt.budget;
+                                        templ.duration += opt.duration;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+
+            budget += templ.budget;
+            duration += templ.duration;
+        }
+
+        data[idx].budget = budget;
+        data[idx].duration = duration;
+        console.log(budget, duration);
+        // console.log(this.state.data);
+        this.setState({ data: [...data] });
+    }
+
+    isChecked = (idx, tid, cid, oid) => {
+        const proposal = this.state.data[idx].proposal;
+        if (!proposal) return false;
+
+        for (let templ of proposal) {
+            if (templ.id !== tid) continue;
+
+            if (templ[cid]) {
+                return templ[cid].selected === oid;
+            }
+        }
+
+        return false;
     }
 
     render() {
@@ -203,24 +290,29 @@ class ProposalsCompare extends React.Component {
                             data.length === 2 &&
                             <colgroup>
                                 <col width='20%' />
-                                <col width='40%' />
-                                <col width='40%' />
+                                <col width='5%' />
+                                <col width='35%' />
+                                <col width='5%' />
+                                <col width='35%' />
                             </colgroup>
                         }
                         {
                             data.length === 3 &&
                             <colgroup>
                                 <col width='16%' />
-                                <col width='28%' />
-                                <col width='28%' />
-                                <col width='28%' />
+                                <col width='4%' />
+                                <col width='24%' />
+                                <col width='4%' />
+                                <col width='24%' />
+                                <col width='4%' />
+                                <col width='24%' />
                             </colgroup>
                         }
                         <TableHead>
                             <TableRow>
                                 <CustomTableCell className={classes.header}>Categories</CustomTableCell>
                                 {data && data.map(proposal => (
-                                    <CustomTableCell style={{ fontSize: '24px' }}>{proposal.mail}</CustomTableCell>
+                                    <CustomTableCell colSpan={2} style={{ fontSize: '24px' }}>{proposal.mail}</CustomTableCell>
                                 ))}
                             </TableRow>
                         </TableHead>
@@ -229,7 +321,7 @@ class ProposalsCompare extends React.Component {
                                 project && project.projectTemplates && project.projectTemplates.map((templ, index) => (
                                     <>
                                         <TableRow className={classes.row} key={index}>
-                                            <CustomTableCell colSpan={data.length + 1} className={classes.template}>
+                                            <CustomTableCell colSpan={data.length * 2 + 1} className={classes.template}>
                                                 Template: {templ.template.name}
                                             </CustomTableCell>
                                         </TableRow>
@@ -250,7 +342,6 @@ class ProposalsCompare extends React.Component {
                                                 for (let i = 0; i < maxOpts; i++) {
                                                     list.push(i);
                                                 }
-                                                console.log('max rows: ', maxOpts);
                                                 return (
                                                     <>
                                                         {
@@ -262,22 +353,34 @@ class ProposalsCompare extends React.Component {
                                                                         </CustomTableCell>
                                                                     )}
                                                                     {
-                                                                        data.map(datum => {
+                                                                        data.map((datum, idx) => {
                                                                             for (let temp of datum.proposal) {
                                                                                 if (temp.id === templ.template.id) {
                                                                                     const option = temp[cat.id] && temp[cat.id].options && temp[cat.id].options[i];
-                                                                                    console.log(option);
                                                                                     if (!!option) {
                                                                                         return (
-                                                                                            <CustomTableCell>
-                                                                                                Name: {option.name} <br />
-                                                                                                Value: {option.value} <br />
-                                                                                                {option.budget} $ in {option.duration} days
-                                                                                            </CustomTableCell>
+                                                                                            <>
+                                                                                                <CustomTableCell>
+                                                                                                    <Radio
+                                                                                                        onChange={() => this.handleOptChanged(idx, templ.template.id, cat.id, option.id)}
+                                                                                                        value={option.id}
+                                                                                                        checked={this.isChecked(idx, templ.template.id, cat.id, option.id)}
+                                                                                                        inputProps={{ 'aria-label': option.id }}
+                                                                                                    />
+                                                                                                </CustomTableCell>
+                                                                                                <CustomTableCell>
+                                                                                                    Name: {option.name} <br />
+                                                                                                    Value: {option.value} <br />
+                                                                                                    {option.budget} $ in {option.duration} days
+                                                                                                </CustomTableCell>
+                                                                                            </>
                                                                                         )
                                                                                     } else {
                                                                                         return (
-                                                                                            <CustomTableCell>None</CustomTableCell>
+                                                                                            <>
+                                                                                                <CustomTableCell></CustomTableCell>
+                                                                                                <CustomTableCell>None</CustomTableCell>
+                                                                                            </>
                                                                                         )
                                                                                     }
                                                                                 }
@@ -301,9 +404,8 @@ class ProposalsCompare extends React.Component {
                                                     for (let temp of datum.proposal) {
                                                         if (temp.id === templ.template.id) {
                                                             return (
-                                                                <CustomTableCell>
-                                                                    {temp.minamount[0]} USD in {temp.minamount[1]} days<br />
-                                                                    {temp.mintime[0]} USD in {temp.mintime[1]} days<br />
+                                                                <CustomTableCell colSpan={2}>
+                                                                    {temp.budget} $ in {temp.duration} days
                                                                 </CustomTableCell>
                                                             )
                                                         }
@@ -320,18 +422,17 @@ class ProposalsCompare extends React.Component {
                                 </CustomTableCell>
                                 {
                                     data.map(datum => {
-                                        let mintime = [0, 0], minamount = [0, 0];
-                                        for (let prop of datum.proposal) {
-                                            mintime[0] += prop.mintime[0];
-                                            mintime[1] += prop.mintime[1];
-                                            minamount[0] += prop.minamount[0];
-                                            minamount[1] += prop.minamount[1];
-                                        }
+                                        // let mintime = [0, 0], minamount = [0, 0];
+                                        // for (let prop of datum.proposal) {
+                                        //     mintime[0] += prop.mintime[0];
+                                        //     mintime[1] += prop.mintime[1];
+                                        //     minamount[0] += prop.minamount[0];
+                                        //     minamount[1] += prop.minamount[1];
+                                        // }
 
                                         return (
-                                            <CustomTableCell>
-                                                {minamount[0]} USD in {minamount[1]} days<br />
-                                                {mintime[0]} USD in {mintime[1]} days<br />
+                                            <CustomTableCell colSpan={2}>
+                                                {datum.budget} $ in {datum.duration} days
                                             </CustomTableCell>
                                         )
                                     })
