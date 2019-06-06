@@ -404,9 +404,12 @@ class ProposalsCompare extends React.Component {
                                                     for (let temp of datum.proposal) {
                                                         if (temp.id === templ.template.id) {
                                                             return (
-                                                                <CustomTableCell colSpan={2}>
-                                                                    {temp.budget} $ in {temp.duration} days
-                                                                </CustomTableCell>
+                                                                <>
+                                                                    <CustomTableCell></CustomTableCell>
+                                                                    <CustomTableCell>
+                                                                        {temp.budget} $ in {temp.duration} days
+                                                                    </CustomTableCell>
+                                                                </>
                                                             )
                                                         }
                                                     }
@@ -431,9 +434,12 @@ class ProposalsCompare extends React.Component {
                                         // }
 
                                         return (
-                                            <CustomTableCell colSpan={2}>
-                                                {datum.budget} $ in {datum.duration} days
-                                            </CustomTableCell>
+                                            <>
+                                                <CustomTableCell></CustomTableCell>
+                                                <CustomTableCell>
+                                                    {datum.budget} $ in {datum.duration} days
+                                                </CustomTableCell>
+                                            </>
                                         )
                                     })
                                 }
