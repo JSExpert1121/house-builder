@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
@@ -82,8 +81,7 @@ class ConnectedProposalDetailOverview extends Component {
 			budget: props.brief.budget,
 			duration: props.brief.duration,
 			description: props.brief.description,
-			snackBar: false,
-			snackBarContent: "",
+
 			isSaving: false,
 			showConfirm: false,
 			message: 'Would you like to submit your proposal?',
@@ -99,30 +97,50 @@ class ConnectedProposalDetailOverview extends Component {
 		this.props.handleOverviewChange({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
 	}
 
-	submit = async () => {
-		this.setState({ showConfirm: true, message: 'Would you like to submit your proposal?', handleOK: this.handleSubmit });
+	submit = () => {
+		this.setState({
+			showConfirm: true,
+			message: 'Would you like to submit your proposal?',
+			handleOK: this.handleSubmit
+		});
 	}
 
-	handleSubmit = () => {
+	handleSubmit = async () => {
 		this.setState({ showConfirm: false, isSaving: true });
-		this.props.handleSubmit({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
+		await this.props.handleSubmit({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
+		this.setState({ isSaving: false });
 	}
 
 	delete = () => {
-		this.setState({ showConfirm: true, message: 'Would you like to delete your proposal?', handleOK: this.handleDelete });
+		this.setState({
+			showConfirm: true,
+			message: 'Would you like to delete your proposal?',
+			handleOK: this.handleDelete
+		});
 	}
 
-	handleDelete = () => {
+	handleDelete = async () => {
 		this.setState({ showConfirm: false, isSaving: true });
-		this.props.handleDelete(this.props.proposal.id);
+		await this.props.handleDelete(this.props.proposal.id);
+		this.setState({ isSaving: false });
 	}
 
 	award = () => {
-		this.setState({ showConfirm: true, message: 'Would you like to award this proposal?', handleOK: this.handleAward });
+		this.setState({
+			showConfirm: true,
+			message: 'Would you like to award this proposal?',
+			handleOK: this.handleAward
+		});
 	}
-	handleAward = () => {
+
+	handleAward = async () => {
 		this.setState({ showConfirm: false, isSaving: true });
-		this.props.handleAward(this.props.proposal.id);
+		await this.props.handleAward(this.props.proposal.id);
+		this.setState({ isSaving: false });
+	}
+
+	closeConfirm = () => {
+		this.setState({ showConfirm: false });
 	}
 
 	render() {
@@ -135,6 +153,7 @@ class ConnectedProposalDetailOverview extends Component {
 		if (!edit && !proposal) return <div className={classes.root} />;
 
 		let c_project = edit ? project : proposal.proposal.project;
+		const btnTitle = (match.url.includes('/s_cont') || (match.params.id === '-1' && this.props.proposal)) ? 'Update Proposal' : 'Submit Proposal';
 
 		return (
 			<Paper className={classes.root}>
@@ -193,81 +212,8 @@ class ConnectedProposalDetailOverview extends Component {
 						</TableBody>
 					</Table>
 				</Box>
-				{/* <div>
-					<TextField
-						autoFocus
-						margin="normal"
-						label="project name"
-						type="text"
-						fullWidth
-						className={classes.width_300}
-						value={c_project.title}
-						readOnly={true}
-					/>
-					<TextField
-						autoFocus
-						margin="normal"
-						label="project budget"
-						type="number"
-						fullWidth
-						className={classes.width_300}
-						value={c_project.budget}
-						readOnly={true}
-					/>
-					<TextField
-						margin="normal"
-						label="project description"
-						type="text"
-						fullWidth
-						className={classes.width_300}
-						value={c_project.description}
-						readOnly={true}
-					/>
-				</div> */}
+
 				<Box style={{ textAlign: 'right', paddingTop: '16px' }}>
-					{/* <TextField
-						autoFocus
-						margin="normal"
-						label="budget"
-						type="number"
-						fullWidth
-						className={classes.width_300}
-						value={!edit ? proposal.budget : this.state.budget}
-						readOnly={mode === 'v'}
-						onChange={(val) => this.setState({ budget: val.target.value })}
-					/>
-					<TextField
-						margin="normal"
-						label="duration"
-						type="number"
-						fullWidth
-						className={classes.width_300}
-						value={mode === 'v' ? proposal.duration : this.state.duration}
-						readOnly={mode === 'v'}
-						onChange={(val) => this.setState({ duration: val.target.value })}
-					/>
-					{
-						mode === 'v' && <TextField
-							margin="normal"
-							label="status"
-							type="text"
-							fullWidth
-							className={classes.width_300}
-							value={proposal.status}
-							readOnly={true}
-						/>
-					}
-					<TextField
-						margin="normal"
-						label="description"
-						type="text"
-						multiline
-						rows="10"
-						fullWidth
-						value={!edit ? proposal.description : this.state.description}
-						readOnly={!edit}
-						onChange={(val) => this.setState({ description: val.target.value })}
-					/> */}
 					{
 						match.url.includes('/s_cont') &&
 						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleDeleteProposal}>
@@ -283,27 +229,13 @@ class ConnectedProposalDetailOverview extends Component {
 					{
 						edit &&
 						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleSubmit}>
-							Submit Proposal
+							{btnTitle}
 						</Button>
 					}
 				</Box>
-				{this.state.isSaving && <CircularProgress className={classes.busy} />}
+
+				{/* {this.state.isSaving && <CircularProgress className={classes.busy} />} */}
 				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.state.handleOK} onCancel={this.closeConfirm} />
-				<Snackbar
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-					open={this.state.snackBar}
-					onClose={() => this.setState({
-						snackBar: false
-					})}
-					ContentProps={{
-						'aria-describedby': 'message-id',
-					}}
-					message={
-						<span id="message-id"> {
-							this.state.snackBarContent
-						}</span>
-					}
-				/>
 			</Paper>
 		);
 	}
@@ -329,6 +261,7 @@ const ProposalDetailOverview = connect(mapStateToProps, mapDispatchToProps)(Conn
 
 ProposalDetailOverview.propTypes = {
 	classes: PropTypes.object.isRequired,
+	proposal: PropTypes.object,
 	edit: PropTypes.bool.isRequired,
 	project: PropTypes.object,
 	handleOverviewChange: PropTypes.func.isRequired,

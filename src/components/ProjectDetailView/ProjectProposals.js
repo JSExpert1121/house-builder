@@ -21,7 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CompareIcon from '@material-ui/icons/Compare';
 import { ConfirmDialog } from '../shared/ConfirmDialog';
 
-import { getProposalData, getProposalsByProjectId, deleteProposal, setProposals4Compare } from '../../actions';
+import { getProposalData, getProposalsByProjectId, deleteProposal, setProposals4Compare, clearProposalDetail } from '../../actions';
 
 const MAX_COMPARE = 3;
 const styles = theme => ({
@@ -184,7 +184,10 @@ class ConnectedProjectProposals extends React.Component {
 					{
 						match.url.includes('/a_pros') &&
 						<Button className={classes.btnSubmitProposal} onClick={
-							() => this.props.history.push("/a_pros/proposal_detail/-1")
+							() => {
+								this.props.clearProposalDetail();
+								this.props.history.push("/a_pros/proposal_detail/-1")
+							}
 						}> Submit Proposal </Button>
 					}
 					<Table className={classes.table}>
@@ -271,7 +274,8 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getProposalData: id => dispatch(getProposalData(id)),
 		getProposalsByProjectId: (id, page, row) => dispatch(getProposalsByProjectId(id, page, row)),
-		setProposals4Compare: (proposals) => dispatch(setProposals4Compare(proposals))
+		setProposals4Compare: (proposals) => dispatch(setProposals4Compare(proposals)),
+		clearProposalDetail: () => dispatch(clearProposalDetail())
 	};
 }
 

@@ -25,12 +25,26 @@ import ProposalDetailView from '../../components/ProposalDetailView';
 import ProjectDetailView from '../../components/ProjectDetailView';
 
 const styles = theme => ({
+	"@global": {
+		".MuiTab-labelIcon": {
+			margin: '0px',
+			lineHeight: '1',
+			padding: '0px',
+			minHeight: '56px',
+			'& .MuiTab-wrapper': {
+				'& > *:first-child': {
+					marginBottom: '0px'
+				}
+			}
+		},
+	},
 	root: {
 		flexGrow: 1,
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
-		color: theme.palette.primary.dark
+		color: theme.palette.primary.dark,
+		maxHeight: '56px'
 	},
 	buttonAdditional: {
 		position: "absolute",
@@ -41,7 +55,7 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
-	}
+	},
 });
 
 class ConnectedSubContView extends React.Component {

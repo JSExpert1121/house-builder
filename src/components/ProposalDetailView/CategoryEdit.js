@@ -62,15 +62,12 @@ class CategoryEdit extends React.Component {
     this.setState({ adding: false, editingId: id });
   };
 
-  handleSave = opt => {
-    console.log(opt);
-
+  handleSave = async opt => {
     if (this.state.adding) {
-      this.props.handleAdd(this.props.category.id, opt);
+      await this.props.handleAdd(this.props.category.id, opt);
     } else {
-      this.props.handleUpdate(this.props.category.id, opt);
+      await this.props.handleUpdate(this.props.category.id, opt);
     }
-
     this.setState({ adding: false, editingId: "" });
   };
 
@@ -79,8 +76,8 @@ class CategoryEdit extends React.Component {
     this.setState({ adding: false, editingId: "" });
   };
 
-  handleDelete = opt => {
-    this.props.handleDelete(this.props.category.id, opt);
+  handleDelete = async opt => {
+    await this.props.handleDelete(this.props.category.id, opt);
     this.setState({ adding: false, editingId: "" });
   };
 

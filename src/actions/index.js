@@ -15,6 +15,13 @@ export function setUserProfile(payload) {
 	return { type: SET_USER_PROFILE, payload }
 }
 
+export const clearProposalDetail = () => {
+	return {
+		type: SET_DETAIL_PROPOSAL,
+		payload: null
+	}
+}
+
 export const getProposalDetails = id => dispatch => {
 	return PropApi.getDetail(id).then(data => {
 		dispatch({ type: SET_DETAIL_PROPOSAL, payload: data });
@@ -43,9 +50,16 @@ export function getProposalData(id) {
 	}
 }
 
+export const submitProposal = (cont_id, pro_id, proposal) => dispatch => PropApi.submit(cont_id, pro_id, proposal);
+export const updateProposal = (prop_id, proposal) => dispatch => PropApi.update(prop_id, proposal);
 export const deleteProposal = (prop_id) => dispatch => PropApi.delete(prop_id);
+
 export const addFilesToProposal = (id, files) => dispatch => PropApi.addFiles(id, files);
 export const deleteProposalFile = (id, name) => dispatch => PropApi.deleteFile(id, name);
+
+export const addOption = (propid, catid, option) => dispatch => PropApi.addOption(propid, catid, option);
+export const deleteOption = id => dispatch => PropApi.deleteOption(id);
+export const updateOption = (id, option) => dispatch => PropApi.updateOption(id, option);
 
 export function getProposalsByProjectId(id, page, size) {
 	return function (dispatch) {
@@ -122,9 +136,6 @@ export function addFilesToProject(id, files, cb) {
 			});
 	}
 }
-
-export const submitProposal = (cont_id, pro_id, proposal) => dispatch => PropApi.submit(cont_id, pro_id, proposal);
-export const addOption = (propid, catid, option) => dispatch => PropApi.addOption(propid, catid, option);
 
 export function getProposalMessages(prop_id, page, size, cb) {
 	return function (dispatch) {
