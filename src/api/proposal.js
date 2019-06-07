@@ -2,7 +2,6 @@
 import Axios from 'axios';
 
 const PROP_API_PATH = process.env.PROJECT_API + 'proposals/';
-const OPT_API_PATH = process.env.PROJECT_API + 'options/';
 
 export default {
     addFiles: (id, files) => {
@@ -27,6 +26,7 @@ export default {
         desc).then(res => res.data),
     update: (id, proposal) => Axios.put(PROP_API_PATH + id, proposal, { headers: { 'Content-Type': 'application/json' } }).then(res => res.data),
     addOption: (id, catid, option) => Axios.post(PROP_API_PATH + id + '/categories/' + catid + '/options', option).then(res => res.data),
-    updateOption: (id, catid, option) => Axios.put(OPT_API_PATH + id, option).then(res => res.data),
-    deleteOption: id => Axios.delete(OPT_API_PATH + id).then(res => res.data)
+    updateOption: (id, option) => Axios.put(PROP_API_PATH + 'options/' + id, option).then(res => res.data),
+    deleteOption: id => Axios.delete(PROP_API_PATH + 'options/' + id).then(res => res.data),
+    getOption: (id) => Axios.get(PROP_API_PATH + 'options/' + id).then(res => res.data)
 }

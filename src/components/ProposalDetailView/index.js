@@ -70,7 +70,7 @@ class ConnectedProposalDetailView extends React.Component {
 			templateNo: 0,
 			showConfirm: false,
 			message: 'Invalid proposal information',
-			handleOK: null,
+			handleOK: this.closeConfirm,
 			handleCancel: null,
 			busy: false
 		}
@@ -212,12 +212,18 @@ class ConnectedProposalDetailView extends React.Component {
 		const { proposal } = this.props;
 		if (proposal) {
 			try {
-				const data = await this.props.addOption(proposal.proposal.id, catId, option);
+				const data = await this.props.addOption(proposal.proposal.id, catId, {
+					name: option.name,
+					value: option.value,
+					budget: option.budget,
+					duration: option.duration,
+					description: option.description
+				});
 				console.log('add-option: ', data);
 				option.id = data.id;
 				categories[catId] && categories[catId].options.push(option);
 			} catch (error) {
-				console.log('add-option')
+				console.log('add-option failed. ', error)
 			}
 		}
 
@@ -233,7 +239,13 @@ class ConnectedProposalDetailView extends React.Component {
 		const { proposal } = this.props;
 		if (proposal) {
 			try {
-				await this.props.updateOption(option.id, option);
+				await this.props.updateOption(option.id, {
+					name: option.name,
+					value: option.value,
+					budget: option.budget,
+					duration: option.duration,
+					description: option.description
+				});
 				const len = cat.options.length;
 				for (let i = 0; i < len; i++) {
 					if (cat.options[i].id === option.id) {
@@ -338,7 +350,6 @@ class ConnectedProposalDetailView extends React.Component {
 				let data = await this.props.submitProposal(userProfile.user_metadata.contractor_id, project.id, brief);
 				const propid = data.id;
 				let tasks = [];
-				console.log(proposal);
 
 				// add options
 				for (let templ of proposal) {
@@ -346,7 +357,6 @@ class ConnectedProposalDetailView extends React.Component {
 						if (key !== 'id' && key !== 'name') {
 							const options = templ[key].options;
 							for (let opt of options) {
-								console.log('option: ', propid, templ[key].id, opt);
 								tasks.push(this.props.addOption(propid, templ[key].id, {
 									name: opt.name,
 									value: opt.value,
@@ -401,10 +411,11 @@ class ConnectedProposalDetailView extends React.Component {
 		const { proposal, templateNo, currentTab, brief } = this.state;
 		let editable = match.params.id === '-1';
 
-		if (proposal === null && !editable)
+		if (proposal === null && !editable) {
 			return (
 				<CircularProgress className={classes.waitingSpin} />
 			);
+		}
 
 		// editable = editable || match.url.includes('/s_cont');
 		return (
@@ -465,7 +476,7 @@ class ConnectedProposalDetailView extends React.Component {
 						{currentTab === 3 && <ProposalDetailMessages />}
 
 
-						<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.state.handleOK} onCancel={this.state.handleCancel} />
+						<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.state.handleOK || this.closeConfirm} onCancel={this.state.handleCancel} />
 						{this.state.busy && <CircularProgress className={classes.busy} />}
 
 					</Paper>
@@ -496,9 +507,7 @@ const mapStateToProps = state => {
 	};
 };
 
-const ProposalDetailView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailView);
-
-ProposalDetailView.propTypes = {
+ConnectedProposalDetailView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	project: PropTypes.object,
 	getProposalDetails: PropTypes.func.isRequired,
@@ -510,5 +519,7 @@ ProposalDetailView.propTypes = {
 	deleteOption: PropTypes.func.isRequired,
 	awardProject: PropTypes.func.isRequired
 };
+
+const ProposalDetailView = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailView);
 
 export default withRouter(withStyles(styles)(ProposalDetailView));

@@ -20,7 +20,7 @@ import { setUserProfile } from '../../actions';
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
-		margin: "10px 10px 10px 10px",
+		margin: theme.spacing(1),
 		height: "calc(100vh - 64px - 20px)",
 		overflow: "auto",
 		display: "flex",

@@ -24,7 +24,7 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		height: "calc(100vh - 64px - 56px - 48px - 20px)",
 		display: 'flex',
 		flexDirection: 'column'
 	},

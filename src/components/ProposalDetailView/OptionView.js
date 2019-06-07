@@ -45,27 +45,27 @@ const OptionView = ({ edit, option, handleEdit, handleDelete }) => {
   return (
     <TableRow key={option.id}>
       <CustomTableCell className={classes.actions} component="th" scope="row">
-        <Typography variant="subtitle1" noWrap>
+        <Typography variant="subtitle1">
           {option.name}
         </Typography>
       </CustomTableCell>
       <CustomTableCell className={classes.actions}>
-        <Typography variant="subtitle1" noWrap>
+        <Typography variant="subtitle1">
           {option.value}
         </Typography>
       </CustomTableCell>
       <CustomTableCell className={classes.actions}>
-        <Typography variant="subtitle1" noWrap>
+        <Typography variant="subtitle1">
           {option.description}
         </Typography>
       </CustomTableCell>
       <CustomTableCell className={classes.actions}>
-        <Typography variant="subtitle1" noWrap>
+        <Typography variant="subtitle1">
           {option.budget}
         </Typography>
       </CustomTableCell>
       <CustomTableCell className={classes.actions}>
-        <Typography variant="subtitle1" noWrap>
+        <Typography variant="subtitle1">
           {option.duration}
         </Typography>
       </CustomTableCell>
@@ -134,16 +134,17 @@ const OptionTableView = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {options.map(opt =>
+            {options.map((opt, index) =>
               editingId !== opt.id ? (
                 <OptionView
                   edit={edit}
-                  key={opt.id}
+                  key={index}
                   option={opt}
                   handleDelete={() => handleDelete(opt.id)}
                   handleEdit={() => handleEdit(opt.id)}
                 />
               ) : (
+                <TableRow>
                   <CustomTableCell colSpan={colcnt}>
                     <OptionEdit
                       option={opt}
@@ -151,6 +152,7 @@ const OptionTableView = ({
                       handleCancel={handleCancel}
                     />
                   </CustomTableCell>
+                </TableRow>
                 )
             )}
           </TableBody>

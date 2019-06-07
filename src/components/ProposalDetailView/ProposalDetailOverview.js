@@ -31,7 +31,7 @@ const styles = (theme) => ({
 	root: {
 		position: 'relative',
 		width: '100%',
-		height: "calc(100vh - 64px - 72px - 48px - 24px)",
+		height: "calc(100vh - 64px - 56px - 48px - 24px)",
 		overflow: "auto",
 		flexGrow: 1,
 		padding: theme.spacing(1)

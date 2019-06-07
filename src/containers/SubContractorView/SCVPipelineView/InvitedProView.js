@@ -18,12 +18,12 @@ import { deleteProposal } from '../../../actions';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh - 64px - 56px - 48px - 20px)",
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 56px - 20px)",
+		maxHeight: "calc(100vh - 64px - 56px - 57px - 56px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -134,7 +134,7 @@ class ConnectedSubmittedProView extends React.Component {
 		const { classes, proposals } = this.props;
 
 		return <div className={classes.root}></div>;
-		
+
 		if (proposals === null)
 			return <div className={classes.root}> <CircularProgress className={classes.waitingSpin} /> </div>;
 

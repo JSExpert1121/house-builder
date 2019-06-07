@@ -28,19 +28,6 @@ import ContractorDetailView from './ContractorDetailView';
 // local components
 
 const styles = theme => ({
-	"@global": {
-		".MuiTab-labelIcon": {
-			margin: '0px',
-			lineHeight: '1',
-			padding: '0px',
-			minHeight: '56px',
-			'& .MuiTab-wrapper': {
-				'& > *:first-child': {
-					marginBottom: '0px'
-				}
-			}
-		},
-	},
 	root: {
 		flexGrow: 1,
 	},

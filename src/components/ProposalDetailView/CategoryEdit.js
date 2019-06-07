@@ -72,7 +72,6 @@ class CategoryEdit extends React.Component {
   };
 
   handleCancel = () => {
-    console.log("cancel");
     this.setState({ adding: false, editingId: "" });
   };
 
@@ -130,8 +129,14 @@ CategoryEdit.propTypes = {
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
-        duration: PropTypes.string.isRequired,
-        budget: PropTypes.string.isRequired,
+        duration: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number,
+        ]).isRequired,
+        budget: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number,
+        ]).isRequired,
         description: PropTypes.string.isRequired
       })
     )

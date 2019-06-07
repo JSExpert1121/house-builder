@@ -28,11 +28,11 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: "calc(100vh - 64px - 48px - 72px - 20px)",
+		height: "calc(100vh - 64px - 48px - 56px - 20px)",
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 56px - 20px - 54px)",
+		overflowX: "hidden",
+		maxHeight: "calc(100vh - 64px - 48px - 20px - 56px - 52px - 56px - 16px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -54,7 +54,6 @@ const styles = theme => ({
 		padding: '6px'
 	},
 	submitBtn: {
-		border: "1px solid #4a148c",
 		borderRadius: 0,
 		backgroundColor: theme.palette.primary.light,
 		color: "#FFFFFF",
@@ -173,7 +172,7 @@ class ConnectedProjectProposals extends React.Component {
 			<div className={classes.root}>
 				{
 					match.url.includes('/g_cont') && (
-						<Box style={{ textAlign: 'right', paddingRight: '16px' }}>
+						<Box style={{ textAlign: 'right', paddingRight: '10px' }}>
 							<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleCompare}>
 								Compare
 							</Button>

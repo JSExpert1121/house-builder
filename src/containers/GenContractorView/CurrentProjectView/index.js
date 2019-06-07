@@ -27,13 +27,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 136px)",
+		margin: theme.spacing(1),
 		overflow: "auto",
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 192px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -190,7 +190,7 @@ class connectedCurProView extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={projects.totalElements}

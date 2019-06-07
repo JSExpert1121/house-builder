@@ -31,12 +31,12 @@ import TSnackbarContent from '../../../components/SnackBarContent';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 136px)",
+		margin: theme.spacing(1),
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 192px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -222,7 +222,7 @@ class ConnAllContractorView extends Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={contractors.totalElements}

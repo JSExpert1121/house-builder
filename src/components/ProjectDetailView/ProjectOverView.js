@@ -7,8 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 48px - 72px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh - 64px - 48px - 56px - 20px)",
 	},
 });
 

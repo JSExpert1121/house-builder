@@ -23,7 +23,7 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: "calc(100vh - 64px - 72px - 48px - 24px)",
+		height: "calc(100vh - 64px - 56px - 48px - 24px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
@@ -178,11 +178,11 @@ const mapStateToProps = state => {
 	};
 };
 
-const ProposalDetailFiles = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailFiles);
-
-ProposalDetailFiles.propTypes = {
+ConnectedProposalDetailFiles.propTypes = {
 	classes: PropTypes.object.isRequired,
 	edit: PropTypes.bool.isRequired
 };
+
+const ProposalDetailFiles = connect(mapStateToProps, mapDispatchToProps)(ConnectedProposalDetailFiles);
 
 export default withStyles(styles)(ProposalDetailFiles);

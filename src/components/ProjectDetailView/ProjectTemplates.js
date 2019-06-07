@@ -35,12 +35,12 @@ import { getProjectData } from '../../actions';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 64px - 56px - 20px)",
+		margin: theme.spacing(1),
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {

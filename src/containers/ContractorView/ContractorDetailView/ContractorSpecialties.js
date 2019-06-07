@@ -26,17 +26,20 @@ import { getSpecialties, addSpecialty, deleteSpecialty, updateContractor } from 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 184px)",
+		padding: theme.spacing(1),
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 240px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
 			backgroundColor: theme.palette.background.default,
 		},
+	},
+	select: {
+		width: '180px'
 	},
 	waitingSpin: {
 		position: "relative",
@@ -47,7 +50,14 @@ const styles = theme => ({
 		lineHeight: '1.5rem',
 	},
 	specialty: {
-		margin: "10px",
+		margin: theme.spacing(1),
+	},
+	titleBtn: {
+		color: "#FFFFFF",
+		padding: "6px"
+	},
+	button: {
+		padding: "6px"
 	},
 	fab: {
 		width: "40px",
@@ -130,9 +140,9 @@ class ConnectedContractorInfoView extends React.Component {
 		}
 		return (
 			<div className={classes.root}>
-				<Paper className={classes.root}>
 					<div className={classes.specialty}>
 						<Select
+							className={classes.select}
 							value={specialty}
 							onChange={this.handleChange}
 							name="specialties"
@@ -183,7 +193,7 @@ class ConnectedContractorInfoView extends React.Component {
 									<CustomTableCell align="center">Specialty Desc</CustomTableCell>
 									<CustomTableCell align="center">Specialty Value</CustomTableCell>
 									<CustomTableCell align="center" >
-										<IconButton style={{ color: "#FFFFFF" }} onClick={
+										<IconButton className={classes.titleBtn} onClick={
 											() => this.setState({ openCategoryForm: true })
 										}>
 											<NoteAddIcon />
@@ -253,7 +263,7 @@ class ConnectedContractorInfoView extends React.Component {
 						</Table>
 					</div>
 					<TablePagination
-						style={{ overflow: "scroll" }}
+						style={{ overflow: "auto" }}
 						rowsPerPageOptions={[5, 10, 20]}
 						component="div"
 						count={selectedContractor.contractorSpecialties.length}
@@ -346,7 +356,6 @@ class ConnectedContractorInfoView extends React.Component {
 							}</span>
 						}
 					/>
-				</Paper >
 			</div>
 		);
 	}

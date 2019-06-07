@@ -47,7 +47,6 @@ class OptionEdit extends React.Component {
   }
 
   handleSave = () => {
-    console.log(parseInt(this.state.budget));
     if (
       this.state.name.length === 0 ||
       this.state.description.length === 0 ||

@@ -10,8 +10,8 @@ import { MDBContainer } from "mdbreact";
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 64px - 56px - 20px)",
+		margin: theme.spacing(1),
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center"

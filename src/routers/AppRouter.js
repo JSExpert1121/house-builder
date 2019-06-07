@@ -30,6 +30,19 @@ import { CircularProgress } from '@material-ui/core/es';
 import SecuredRoute from './SecuredRoute';
 
 const styles = theme => ({
+	"@global": {
+		".MuiTab-labelIcon": {
+			margin: '0px',
+			lineHeight: '1',
+			padding: '0px',
+			minHeight: '56px',
+			'& .MuiTab-wrapper': {
+				'& > *:first-child': {
+					marginBottom: '0px'
+				}
+			}
+		},
+	},
 	viewarea: {
 		width: "calc(100% - 60px)",
 		float: 'left',

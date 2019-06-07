@@ -19,8 +19,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 136px)",
+		margin: theme.spacing(1),
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,

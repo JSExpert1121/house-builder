@@ -20,8 +20,8 @@ import { approveContractor, rejectContractor, updateContractor } from '../../../
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh - 184px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
@@ -35,7 +35,7 @@ const styles = theme => ({
 		width: "100%",
 	},
 	buttons: {
-		marginTop: "10px",
+		marginTop: theme.spacing(1),
 		textAlign: "center",
 	},
 	approve: {
@@ -45,7 +45,7 @@ const styles = theme => ({
 		backgroundColor: "lightblue",
 	},
 	button: {
-		margin: "5px",
+		margin: theme.spacing(1),
 	},
 });
 

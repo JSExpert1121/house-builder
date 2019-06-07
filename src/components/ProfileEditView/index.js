@@ -29,7 +29,7 @@ const styles = theme => ({
 	container: {
 		width: "300px",
 		height: "620px",
-		padding: "10px 10px 10px 10px",
+		padding: theme.spacing(1),
 		borderRadius: "0",
 		[theme.breakpoints.up('sm')]: {
 			width: '400px',
@@ -255,7 +255,7 @@ class connectedProfileView extends Component {
 
 		await axios.post(process.env.PROJECT_API + "contractors/" + cont_id, {
 			"email": userProfile.user_metadata.email,
-			"updatedBy" : userProfile.user_metadata.email,
+			"updatedBy": userProfile.user_metadata.email,
 			"address": addressData
 		})
 
