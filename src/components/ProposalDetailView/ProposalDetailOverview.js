@@ -216,19 +216,19 @@ class ConnectedProposalDetailOverview extends Component {
 				<Box style={{ textAlign: 'right', paddingTop: '16px' }}>
 					{
 						match.url.includes('/s_cont') &&
-						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleDeleteProposal}>
+						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.delete}>
 							Delete Proposal
 						</Button>
 					}
 					{
 						match.url.includes('/g_cont') &&
-						<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={this.handleAwardProject}>
+						<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={this.award}>
 							Award Project
 						</Button>
 					}
 					{
 						edit &&
-						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleSubmit}>
+						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.submit}>
 							{btnTitle}
 						</Button>
 					}
@@ -266,9 +266,9 @@ ProposalDetailOverview.propTypes = {
 	project: PropTypes.object,
 	handleOverviewChange: PropTypes.func.isRequired,
 	templateSelected: PropTypes.func.isRequired,
-	handleSubmit: PropTypes.func,
-	handleAward: PropTypes.func,
-	handleDelete: PropTypes.func,
+	handleSubmit: PropTypes.func.isRequired,
+	handleAward: PropTypes.func.isRequired,
+	handleDelete: PropTypes.func.isRequired
 };
 
 export default withRouter(withStyles(styles)(ProposalDetailOverview));

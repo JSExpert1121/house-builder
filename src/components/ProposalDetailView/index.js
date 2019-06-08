@@ -337,7 +337,7 @@ class ConnectedProposalDetailView extends React.Component {
 		this.setState({ busy: true });
 		try {
 			if (match.url.includes('/s_cont') || (match.params.id === '-1' && this.props.proposal)) {	// In case of update
-				await this.props.updateProposal(this.props.proposal.proposal.id, { ...brief, duration: `${brief.duration}`, budget: `${brief.budget}` });
+				await this.props.updateProposal(this.props.proposal.proposal.id, brief);
 				this.setState({
 					busy: false,
 					brief,
@@ -375,20 +375,20 @@ class ConnectedProposalDetailView extends React.Component {
 
 				// re-get details
 				let prop = [];
-				let brief = {
+				let brieff = {
 					budget: 0, duration: 0, description: ''
 				};
 
 				data = await this.props.getProposalDetails(propid);
 				prop = this.createDetails(data);
-				brief.budget = data.proposal.budget;
-				brief.duration = data.proposal.duration;
-				brief.description = data.proposal.description;
+				brieff.budget = data.proposal.budget;
+				brieff.duration = data.proposal.duration;
+				brieff.description = data.proposal.description;
 
 				this.setState({
 					busy: false,
 					proposal: prop,
-					brief,
+					brief: brieff,
 					showConfirm: true,
 					message: 'Submission succeed.',
 					handleOK: this.closeConfirm,
@@ -402,7 +402,6 @@ class ConnectedProposalDetailView extends React.Component {
 	}
 
 	closeConfirm = () => {
-		console.log('close-confirm', this.state);
 		this.setState({ showConfirm: false });
 	}
 
