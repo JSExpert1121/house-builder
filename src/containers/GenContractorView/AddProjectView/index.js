@@ -2,20 +2,33 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
-
 import PropTypes from 'prop-types';
 
 // material ui
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Card, TextField, Button } from '@material-ui/core';
-import { DropzoneArea } from 'material-ui-dropzone';
-import { addProject } from '../../../actions/gen-actions';
-import { addFilesToProject } from '../../../actions';
+import { Card, TextField, Button, FormLabel, IconButton } from '@material-ui/core';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import { addFilesToProject, addProject } from '../../../actions';
+import CustomSnackbar from '../../../components/shared/CustomSnackbar';
 
 const styles = theme => ({
+	"@global": {
+		".MuiInputBase-input": {
+			padding: '2px 0 3px',
+		},
+		".MuiFormControl-marginNormal": {
+			margin: '8px 0 4px'
+		},
+		".MuiFormControl-root": {
+			margin: '4px 0'
+		}
+	},
 	root: {
+		position: 'relative',
 		flexGrow: 1,
 		height: "calc(100vh - 136px)",
 		margin: theme.spacing(1),
@@ -35,18 +48,14 @@ const styles = theme => ({
 		flexDirection: "column",
 		overflow: "auto",
 	},
-	paper_title_price: {
-		display: 'flex',
-		alignItems: "stretch",
-	},
 	paper_title: {
-		marginRight: 8,
-		flexGrow: 9
+		width: '100%'
 	},
 	paper_price: {
-		flexGrow: 1
+		width: '100%'
 	},
 	paper_job_detail: {
+		width: '100%'
 	},
 	waitingSpin: {
 		position: "relative",
@@ -69,6 +78,19 @@ const styles = theme => ({
 	editField: {
 		lineHeight: "1.5rem",
 		height: '1.5rem'
+	},
+	busy: {
+		position: 'absolute',
+		left: 'calc(50% - 20px)',
+		top: 'calc(50% - 20px)'
+	},
+	fileUpload: {
+		display: 'flex',
+		flexWrap: 'wrap'
+	},
+	fileItem: {
+		margin: '6px',
+		border: '1px solid #CCC'
 	}
 });
 
@@ -77,47 +99,69 @@ class connectedAddProjectView extends Component {
 		super(props);
 
 		this.state = {
-			title: "",
+			title: '',
 			price: 0,
-			description: "",
-			isSaving: false,
+			description: '',
+			isBusy: false,
 			files: [],
+			showMessage: false,
+			message: '',
+			variant: 'error'
 		};
-	}
-
-	componentDidMount() {
 	}
 
 	handleAddProject = async () => {
 		const { userProfile } = this.props;
-		const files = this.state.files;
+		const { files, title, description, price } = this.state;
+		if (title.length === 0 || description === 0 || price.length === 0) {
+			this.setState({
+				showMessage: true,
+				message: 'You must fill in all the items'
+			})
+			return;
+		}
 
 		const projectData = {
-			"title": this.state.title,
-			"description": this.state.description,
-			"budget": this.state.price,
-			"updatedBy": userProfile.email
+			title, description,
+			budget: price,
+			updatedBy: userProfile.email
 		};
 
-		this.setState({
-			isSaving: true
-		});
+		this.setState({ isBusy: true });
 
 		let projectId = null;
-		await this.props.addProject(userProfile.user_metadata.contractor_id, projectData, (res) => {
-			if (res === false) {
-				this.setState({ isSaving: false });
-				return;
+		try {
+			projectId = await this.props.addProject(userProfile.user_metadata.contractor_id, projectData);
+			await this.props.addFiles(projectId, files);
+			this.setState({ isBusy: false });
+			this.props.history.push('/g_cont');
+		} catch (error) {
+			console.log('AddProjectView: ', error);
+			this.setState({
+				isBusy: false,
+				showMessage: true,
+				message: 'Add project failed.'
+			})
+		}
+	}
+
+	handleFileChange = (e) => {
+		this.setState({ files: [...this.state.files, ...e.target.files] }, () => {
+			console.log(this.state.files);
+		})
+	}
+
+	handleRemove = (file) => {
+		const { files } = this.state;
+
+		for (let i = 0; i < files.length; i++) {
+			if (files[i].name === file.name && files[i].size === file.size) {
+				files.splice(i, 1);
+				break;
 			}
-			projectId = res;
-		});
+		}
 
-		await this.props.addFiles(projectId, files, (res) => { });
-
-		this.setState({
-			isSaving: false
-		});
-		this.props.history.push("/g_cont");
+		this.setState({ files: [...files] });
 	}
 
 	render() {
@@ -126,78 +170,74 @@ class connectedAddProjectView extends Component {
 		return (
 			<Paper className={classes.root}>
 				<Card className={classes.mainBoard} >
-					<div className={classes.paper_title_price}>
-						<TextField
-							label="project title"
-							margin="normal"
-							InputLabelProps={{
-								shrink: true,
-							}}
-							className={classes.paper_title}
-							value={this.state.title}
-							onChange={(val) => this.setState({ title: val.target.value })}
-							InputProps={{ classes: { input: classes.editField } }}
-						/>
-						<TextField
-							type="number"
-							label="price"
-							margin="normal"
-							InputLabelProps={{
-								shrink: true,
-							}}
-							className={classes.paper_price}
-							value={this.state.price}
-							onChange={(val) => this.setState({ price: val.target.value })}
-							InputProps={{ classes: { input: classes.editField } }}
-						/>
-					</div>
 					<TextField
-						label="detail"
+						label="Project Title"
+						className={classes.paper_title}
+						value={this.state.title}
+						onChange={(val) => this.setState({ title: val.target.value })}
+						InputProps={{ classes: { input: classes.editField } }}
+					/>
+					<TextField
+						type="number"
+						label="Price"
+						className={classes.paper_price}
+						value={this.state.price}
+						onChange={(val) => this.setState({ price: val.target.value })}
+						InputProps={{ classes: { input: classes.editField } }}
+					/>
+					<TextField
+						label="Detail"
 						multiline
 						rows="10"
 						className={classes.paper_job_detail}
-						margin="normal"
-						InputLabelProps={{
-							shrink: true,
-						}}
 						value={this.state.description}
 						onChange={(val) => this.setState({ description: val.target.value })}
 					/>
-					<div
-						style={{ overflow: 'scroll', minHeight: '250px' }}>
-						<DropzoneArea
-							onChange={(files) => {
-								this.setState({ files: files })
-							}}
-							acceptedFiles={['text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*']}
-							maxFileSize={52428800}
-							showFileNamesInPreview={true}
-							filesLimit={100}
-							dropzoneText='select files to upload(< 50mb)'
+					<div className={classes.fileUpload}>
+						<input
+							accept="text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*"
+							id="upload-file"
+							multiple
+							type="file"
+							style={{ display: 'none' }}
+							onChange={this.handleFileChange}
 						/>
+						<label htmlFor="upload-file" style={{ display: 'inline' }}>
+							<Button variant="contained" color="default" className={classes.button} component="span">
+								<CloudUploadIcon className={classes.rightIcon} />
+								&nbsp;&nbsp;Upload
+							</Button>
+						</label>
+						{this.state.files.map(file => (
+							<span className={classes.fileItem} key={file.name + file.size}>
+								{file.name}
+								<IconButton onClick={() => this.handleRemove(file)} style={{ padding: '0px' }}>
+									<DeleteIcon />
+								</IconButton>
+							</span>
+						))}
 					</div>
-					<Button disabled={this.state.isSaving} className={classes.submitButton} onClick={this.handleAddProject}>
-						Add Project
-							{
-							this.state.isSaving &&
-							<CircularProgress
-
-								size={24}
-								thickness={4}
-							/>
-						}
-					</Button>
+					<div style={{ width: '100%', textAlign: 'center' }}>
+						<Button disabled={this.state.isBusy} className={classes.submitButton} onClick={this.handleAddProject}>
+							Add Project
+						</Button>
+					</div>
+					{this.state.isBusy && <CircularProgress className={classes.busy} />}
+					<CustomSnackbar
+						open={this.state.showMessage}
+						variant={this.state.variant}
+						message={this.state.message}
+						handleClose={() => this.setState({ showMessage: false })} />
 				</Card>
 			</Paper >
 		);
 	}
 }
 
-
 const mapDispatchToProps = dispatch => {
 	return {
-		addProject: (id, data, cb) => dispatch(addProject(id, data, cb)),
-		addFiles: (id, files, cb) => dispatch(addFilesToProject(id, files, cb))
+		addProject: (id, data) => dispatch(addProject(id, data)),
+		addFiles: (id, files) => dispatch(addFilesToProject(id, files))
 	};
 };
 

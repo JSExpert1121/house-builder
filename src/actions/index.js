@@ -37,18 +37,16 @@ export const setProposals4Compare = (proposals) => (
 	}
 )
 
-export function getProposalData(id) {
-	return function (dispatch) {
-		dispatch({ type: "CLEAR_SELECTED_PROPOSAL" });
+export const getProposalData = id => dispatch => {
+	dispatch({ type: "CLEAR_SELECTED_PROPOSAL" });
 
-		return Axios.get(process.env.PROJECT_API + 'proposals/' + id)
-			.then(res => {
-				dispatch({ type: SET_SELECTED_PROPOSAL, payload: res.data });
-			})
-			.catch(err => {
-				console.log(err.message);
-			})
-	}
+	return Axios.get(process.env.PROJECT_API + 'proposals/' + id)
+		.then(res => {
+			dispatch({ type: SET_SELECTED_PROPOSAL, payload: res.data });
+		})
+		.catch(err => {
+			console.log(err.message);
+		})
 }
 
 export const submitProposal = (cont_id, pro_id, proposal) => dispatch => PropApi.submit(cont_id, pro_id, proposal);
@@ -81,6 +79,9 @@ export function getProposalsByProjectId(id, page, size) {
 		}).catch(err => console.log(err.message))
 	}
 }
+
+export const addProject = (cont_id, project) => dispatch => ContApi.addProject(cont_id, project).then(data => data.id);
+export const addFilesToProject = (id, files) => dispatch => ProjApi.addFiles(id, files);
 
 export function deleteProject(id, cb) {
 	return function (dispatch) {
@@ -119,28 +120,6 @@ export function deleteFileFromProject(id, name, cb) {
 	}
 }
 
-export function addFilesToProject(id, files, cb) {
-	return function (dispatch) {
-		const formData = new FormData();
-		files.forEach(async (file) => {
-			await formData.append('file', file);
-		});
-
-		return Axios.post(process.env.PROJECT_API + "projects/" + id + "/files/upload/multiple",
-			formData,
-			{
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			})
-			.then((response) => {
-				cb(true);
-			}).catch(err => {
-				cb(false);
-				console.log(err.message);
-			});
-	}
-}
 
 export function getProposalMessages(prop_id, page, size, cb) {
 	return function (dispatch) {
