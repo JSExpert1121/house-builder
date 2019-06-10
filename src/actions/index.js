@@ -9,6 +9,7 @@ import {
 
 import PropApi from '../api/proposal';
 import ProjApi from '../api/project';
+import ContApi from '../api/contractor';
 import Axios from 'axios';
 
 export function setUserProfile(payload) {
@@ -54,6 +55,12 @@ export const submitProposal = (cont_id, pro_id, proposal) => dispatch => PropApi
 export const updateProposal = (prop_id, proposal) => dispatch => PropApi.update(prop_id, proposal);
 export const deleteProposal = (prop_id) => dispatch => PropApi.delete(prop_id);
 
+export const getProposals = (cont_id, page, size, status) => dispatch => {
+	ContApi.getProposals(cont_id, page, size, status).then(data => {
+		dispatch({ type: PROPOSALS_LOADED, payload: data });
+	});
+}
+
 export const addFilesToProposal = (id, files) => dispatch => PropApi.addFiles(id, files);
 export const deleteProposalFile = (id, name) => dispatch => PropApi.deleteFile(id, name);
 
@@ -69,11 +76,9 @@ export function getProposalsByProjectId(id, page, size) {
 				"page": page,
 				"size": size
 			}
-		})
-			.then((response) => {
-				dispatch({ type: PROPOSALS_LOADED, payload: response.data });
-			})
-			.catch(err => console.log(err.message))
+		}).then((response) => {
+			dispatch({ type: PROPOSALS_LOADED, payload: response.data });
+		}).catch(err => console.log(err.message))
 	}
 }
 

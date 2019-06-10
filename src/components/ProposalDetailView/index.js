@@ -269,7 +269,7 @@ class ConnectedProposalDetailView extends React.Component {
 		const { proposal } = this.props;
 		if (proposal) {
 			try {
-				await this.props.deleteOption(option.id);
+				await this.props.deleteOption(optId);
 				let len = cat.options.length;
 				for (let i = 0; i < len; i++) {
 					if (cat.options[i].id === optId) {
@@ -409,6 +409,7 @@ class ConnectedProposalDetailView extends React.Component {
 		const { classes, match, project } = this.props;
 		const { proposal, templateNo, currentTab, brief } = this.state;
 		let editable = match.params.id === '-1';
+		const status = this.props.proposal && this.props.proposal.proposal.status;
 
 		if (proposal === null && !editable) {
 			return (
@@ -443,7 +444,7 @@ class ConnectedProposalDetailView extends React.Component {
 									match.params.id !== '-1' &&
 									(
 										match.url.includes('/g_cont') ||
-										(match.url.includes('/s_cont') && (proposal.status === 'SUBMITTED' || proposal.status === 'AWARDED'))
+										(match.url.includes('/s_cont') && (status === 'SUBMITTED' || status === 'AWARDED'))
 									) && <Tab label="Messages" />
 								}
 							</Tabs>
