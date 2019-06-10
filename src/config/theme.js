@@ -25,8 +25,9 @@ const theme = createMuiTheme({
 			'Arial',
 		].join(','),
 	},
-	overrides: {
-
+	customHeight: {
+		level1: 'calc(100vh - 64px - 64px)',	// margin: 8px
+		level2: 'calc(100vh - 64px - 100px',
 	}
 
 });

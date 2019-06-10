@@ -23,7 +23,7 @@ const styles = (theme) => ({
     root: {
         position: 'relative',
         width: '100%',
-        height: "calc(100vh - 64px - 56px - 48px - 24px)",
+        height: "calc(100vh - 64px - 100px)",
         overflow: "auto",
         padding: theme.spacing(1)
     },

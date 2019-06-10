@@ -27,8 +27,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 56px - 20px)",
-		margin: "10px",
+		height: "calc(100vh - 64px - 48px - 16px)",
+		margin: theme.spacing(1),
 	},
 	backBtn: {
 		color: theme.palette.primary.dark
@@ -100,7 +100,7 @@ class ConnectedProjectDetailView extends React.Component {
 
 			<NoSsr>
 				<div className={classes.root}>
-					<Paper square >
+					<Paper square style={{ height: '100%' }}>
 						<div style={{ display: 'flex' }}>
 							<IconButton className={classes.backBtn} onClick={this.handleBack}>
 								<ArrowBackIcon />

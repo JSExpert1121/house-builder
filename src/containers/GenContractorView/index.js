@@ -27,6 +27,7 @@ import ProposalDetailView from '../../components/ProposalDetailView';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
+		height: '100%'
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
