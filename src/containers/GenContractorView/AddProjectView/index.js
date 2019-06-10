@@ -11,14 +11,14 @@ import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Card, TextField, Button } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
-import axios from 'axios';
-import { addProject, addFiles } from '../../../actions/gen-actions';
+import { addProject } from '../../../actions/gen-actions';
+import { addFilesToProject } from '../../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 136px)",
+		margin: theme.spacing(1),
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
@@ -27,13 +27,13 @@ const styles = theme => ({
 		width: "90%",
 		borderBottom: "5px solid " + theme.palette.primary.light,
 		height: "90%",
-		padding: "20px",
+		padding: theme.spacing(2),
 		[theme.breakpoints.up('sm')]: {
 			width: 700,
 		},
 		display: 'flex',
 		flexDirection: "column",
-		overflow: "scroll",
+		overflow: "auto",
 	},
 	paper_title_price: {
 		display: 'flex',
@@ -55,7 +55,7 @@ const styles = theme => ({
 	},
 	submitButton: {
 		border: "1px solid " + theme.palette.primary.light,
-		marginTop: "10px",
+		marginTop: theme.spacing(1),
 		width: 120,
 		[theme.breakpoints.up('sm')]: {
 			width: 170,
@@ -181,7 +181,7 @@ class connectedAddProjectView extends Component {
 							{
 							this.state.isSaving &&
 							<CircularProgress
-								disableShrink
+
 								size={24}
 								thickness={4}
 							/>
@@ -197,7 +197,7 @@ class connectedAddProjectView extends Component {
 const mapDispatchToProps = dispatch => {
 	return {
 		addProject: (id, data, cb) => dispatch(addProject(id, data, cb)),
-		addFiles: (id, files, cb) => dispatch(addFiles(id, files, cb))
+		addFiles: (id, files, cb) => dispatch(addFilesToProject(id, files, cb))
 	};
 };
 

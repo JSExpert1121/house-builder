@@ -7,8 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh - 64px - 48px - 56px - 20px)",
 	},
 });
 
@@ -21,14 +21,14 @@ class ConnectedProjectOverView extends React.Component {
 	}
 
 	render() {
-		const { classes, selectedProject } = this.props;
+		const { classes, project } = this.props;
 
 		return (
 			<div className={classes.root}>
 				<ul>
-					<li>{selectedProject.title}</li>
-					<li>{selectedProject.budget}</li>
-					<li>{selectedProject.description}</li>
+					<li>{project.title}</li>
+					<li>{project.budget}</li>
+					<li>{project.description}</li>
 				</ul>
 			</div>
 		);
@@ -37,7 +37,7 @@ class ConnectedProjectOverView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		selectedProject: state.gen_data.selectedProject
+		project: state.global_data.project
 	};
 };
 

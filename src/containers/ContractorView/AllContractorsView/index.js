@@ -31,12 +31,12 @@ import TSnackbarContent from '../../../components/SnackBarContent';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 136px)",
+		margin: theme.spacing(1),
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 192px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -86,10 +86,10 @@ class ConnAllContractorView extends Component {
 	}
 
 	componentDidMount() {
-		this.props.getContrators0(0, 20);		
+		this.props.getContrators0(0, 20);
 	}
-	componentWillReceiveProps({contractors}) {
-		this.setState({contractors: contractors});
+	componentWillReceiveProps({ contractors }) {
+		this.setState({ contractors: contractors });
 	}
 
 	handleChangePage = (event, page) => {
@@ -113,18 +113,18 @@ class ConnAllContractorView extends Component {
 		let order = 'desc';
 
 		if (this.state.order === 'desc') {
-		  order = 'asc';
+			order = 'asc';
 		}
-		this.state.contractors.content.sort((a,b) => (a.status > b.status) ? 1 : -1);
+		this.state.contractors.content.sort((a, b) => (a.status > b.status) ? 1 : -1);
 		this.setState({ order, });
-	  };	
+	};
 
 	render() {
 		const { classes } = this.props;
-		const { contractors } = this.state;		
+		const { contractors } = this.state;
 		if (contractors === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
-		}	
+		}
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
@@ -138,14 +138,14 @@ class ConnAllContractorView extends Component {
 								<CustomTableCell align="center">Contractor Phone</CustomTableCell>
 								<CustomTableCell align="center">
 									<TableSortLabel
-									  active={true}
-									  direction={this.state.order}
-									  onClick={() => this.createSortHandler()}
-									  >
+										active={true}
+										direction={this.state.order}
+										onClick={() => this.createSortHandler()}
+									>
 										Contractor Status
 									</TableSortLabel>
 								</CustomTableCell>
-								<CustomTableCell align="center">Action</CustomTableCell>								
+								<CustomTableCell align="center">Action</CustomTableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody >
@@ -158,33 +158,33 @@ class ConnAllContractorView extends Component {
 													await this.props.selectContractor(row.id);
 													this.props.history.push("/m_cont/contractor_detail");
 												}}>
-												{row.email?row.email: "N/A" }
+												{row.email ? row.email : "N/A"}
 											</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
 													this.props.history.push("/m_cont/contractor_detail");
-												}}>{row.address? row.address.name: "N/A"}</CustomTableCell>
+												}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
 													this.props.history.push("/m_cont/contractor_detail");
-												}}>{row.address? row.address.street: "N/A"}</CustomTableCell>
-											<CustomTableCell align="center"
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												this.props.history.push("/m_cont/contractor_detail");
-												}}>{row.address? row.address.city: "N/A"}</CustomTableCell>
+												}}>{row.address ? row.address.street : "N/A"}</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
 													this.props.history.push("/m_cont/contractor_detail");
-												}}>{row.address? row.address.phone: "N/A"}</CustomTableCell>
+												}}>{row.address ? row.address.city : "N/A"}</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
 													this.props.history.push("/m_cont/contractor_detail");
-												}}>{row.status?row.status: "N/A" }</CustomTableCell>
+												}}>{row.address ? row.address.phone : "N/A"}</CustomTableCell>
+											<CustomTableCell align="center"
+												onClick={async () => {
+													await this.props.selectContractor(row.id);
+													this.props.history.push("/m_cont/contractor_detail");
+												}}>{row.status ? row.status : "N/A"}</CustomTableCell>
 											<CustomTableCell align="center">
 												<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
 													async () => {
@@ -193,7 +193,7 @@ class ConnAllContractorView extends Component {
 																snackBar: true,
 																snackBarContent: result ? 'delete contractor success' : 'please delete categories'
 															});
-															if(result)
+															if (result)
 																this.props.getContrators0(this.state.currentPage, this.state.rowsPerPage)
 														});
 
@@ -222,7 +222,7 @@ class ConnAllContractorView extends Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={contractors.totalElements}
@@ -293,7 +293,7 @@ class ConnAllContractorView extends Component {
 						}} color="primary">
 							Add {
 								this.state.isSaving && <CircularProgress
-									disableShrink
+
 									size={24}
 									thickness={4} />
 							}

@@ -53,12 +53,13 @@ class ConnectedTemplatesView extends React.Component {
 		const tabNo = {
 			'/m_cont': 0,
 			'/m_cont/all_contractors': 0,
-			'/m_cont/contractor_detail': 1,
+			// '/m_cont/contractor_detail': 1,
 			// '/m_temp/category_detail': 2,
 			// '/m_temp/option_detail': 3,
 		};
 
-		const curTabPos = tabNo[location.pathname];
+		let curTabPos = tabNo[location.pathname];
+		curTabPos = 0;
 
 		if (!userProfile.user_metadata.roles.includes("SuperAdmin"))
 			return (<div> Access Forbidden </div>);
@@ -73,8 +74,8 @@ class ConnectedTemplatesView extends React.Component {
 							scrollButtons="on">
 
 							<Tab component={Link} to={`/m_cont/all_contractors`} label="All Contractors" icon={<AppsIcon />} />
-							<Tab component={Link} to={`/m_cont/contractor_detail`} label="Contractor Detail" icon={<BallotIcon />} />
-							{/* <Tab component={Link} to={`/m_temp/category_detail`} label="Category Detail" icon={<ViewHeadlineIcon />} />
+							{/* <Tab component={Link} to={`/m_cont/contractor_detail`} label="Contractor Detail" icon={<BallotIcon />} />
+							<Tab component={Link} to={`/m_temp/category_detail`} label="Category Detail" icon={<ViewHeadlineIcon />} />
 							<Tab component={Link} to={`/m_temp/option_detail`} label="Option Detail" icon={<ViewHeadlineIcon />} /> */}
 						</Tabs>
 					</AppBar>

@@ -1,8 +1,31 @@
 import Axios from 'axios';
 
-import { ALL_CONTRACTORS_LOADED, SET_SELECTED_CONTRACTOR, SET_SELECTED_CATEGORY, SET_SELECTED_OPTION, SPECIALTIES_LOADED } from '../constants/cont-action-types';
+import {
+	ALL_CONTRACTORS_LOADED, SET_SELECTED_CONTRACTOR,
+	SET_SELECTED_CATEGORY, SET_SELECTED_OPTION,
+	SPECIALTIES_LOADED, CONTRACTOR_DETAIL_LOADED
+} from '../constants/cont-action-types';
 
-export function createCONTRACTOR(contractor, cb) {
+export const uploadFiles = (id, files) => dispatch => {
+	const formData = new FormData();
+	files.forEach(async (file) => {
+		formData.append('file', file);
+	});
+
+	const API_URL = process.env.PROJECT_API + "contractors/";
+	return Axios.post(API_URL + id + "/files/upload/multiple", formData,
+		{
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		})
+		.then((response) => {
+			return true;
+			// console.log(response);
+		});
+}
+
+export function createContractor(contractor, cb) {
 	return function (dispatch) {
 		dispatch({ type: "CLEAR_ALL_CONTRACTORS" });
 
@@ -216,14 +239,12 @@ export function addFiles(id, files, cb) {
 	}
 }
 
-export function getContractorDetailById(id) {
-	return function (dispatch) {
+export const getContractorDetailById = id => dispatch => {
 		return Axios.get(process.env.PROJECT_API + "contractors/" + id)
 			.then(response => {
+			console.log(response.data);
 				dispatch({ type: CONTRACTOR_DETAIL_LOADED, payload: response.data })
-			})
-			.catch(err => console.log(err.message));
-	}
+		});
 }
 
 export function deleteFile(id, name, cb) {
@@ -237,6 +258,10 @@ export function deleteFile(id, name, cb) {
 				console.log(err.message);
 			})
 	}
+}
+
+export const removeFile = (id, name) => dispatch => {
+	return Axios.delete(process.env.PROJECT_API + "contractors/" + id + "/files/" + name);
 }
 
 export function approveContractor(id, data, cb) {

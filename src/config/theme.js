@@ -23,9 +23,11 @@ const theme = createMuiTheme({
 		fontFamily: [
 			'Niramit',
 			'Arial',
-
 		].join(','),
 	},
+	overrides: {
+
+	}
 
 });
 

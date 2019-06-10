@@ -1,0 +1,1 @@
+export const PROPOSALS_LOADED = 'PROPOSALS_LOADED';

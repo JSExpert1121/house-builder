@@ -11,7 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
 
 import { CircularProgress, Button, MenuItem, Radio, Divider } from '@material-ui/core';
-import { FormControl, InputLabel, Select, Checkbox } from '@material-ui/core/es';
+import { FormControl, InputLabel, Select, Checkbox } from '@material-ui/core';
 import TSnackbarContent from '../SnackBarContent';
 
 import { connect } from 'react-redux';
@@ -20,7 +20,7 @@ import { setUserProfile } from '../../actions';
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1,
-		margin: "10px 10px 10px 10px",
+		margin: theme.spacing(1),
 		height: "calc(100vh - 64px - 20px)",
 		overflow: "auto",
 		display: "flex",
@@ -51,7 +51,7 @@ const styles = (theme) => ({
 	},
 	formControl: {
 		color: theme.palette.primary.light,
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		minWidth: 120,
 		[theme.breakpoints.up('md')]: {
 			minWidth: 240,
@@ -261,7 +261,7 @@ class connectedSettingsView extends React.Component {
 						{
 							this.state.isSaving &&
 							<CircularProgress
-								disableShrink
+
 								size={24}
 								thickness={4}
 							/>

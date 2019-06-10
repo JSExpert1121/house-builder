@@ -11,13 +11,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { getProjectBidders } from '../../../actions/gen-actions';
-
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh - 64px - 48px - 56px - 20px)",
 		overflow: "auto",
 	},
 	card: {
@@ -69,37 +67,13 @@ class ConnectedProjectBidders extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.getProjectBidders(this.props.selectedProject.id);
 	}
 
 	render() {
-		const { classes, bidders } = this.props;
+		const { classes } = this.props;
 
 		return (
 			<Card className={classes.root}>
-				{
-					bidders.length != 0 ? <Table className={classes.table}>
-						<TableHead>
-							<TableRow>
-								<CustomTableCell align="center">Name</CustomTableCell>
-								<CustomTableCell align="center">Price($)</CustomTableCell>
-								<CustomTableCell align="center">Duration(D)</CustomTableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{bidders.map(row => (
-								<TableRow className={classes.row} key={row.id} hover
-									onClick={() => { }}>
-									<CustomTableCell component="th" scope="row" align="center">{row.name}</CustomTableCell>
-									<CustomTableCell align="center">{row.price}</CustomTableCell>
-									<CustomTableCell align="center">{row.duration}</CustomTableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-						: <CircularProgress className={classes.waitingSpin} />
-				}
-
 			</Card >
 		);
 	}
@@ -107,14 +81,11 @@ class ConnectedProjectBidders extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		bidders: state.gen_data.bidders,
-		selectedProject: state.gen_data.selectedProject
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProjectBidders: (id) => dispatch(getProjectBidders(id)),
 	};
 };
 

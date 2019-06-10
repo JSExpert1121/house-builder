@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Switch, Route, Link, Redirect, withRouter } from 'react-router-dom';
 
 // Material import 
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 
 // local import
@@ -11,11 +11,12 @@ import GenContractorView from '../containers/GenContractorView';
 import SubContractorView from '../containers/SubContractorView';
 import BidderListingView from '../containers/BidderListingView';
 import TemplatesView from '../containers/TemplateView';
+import SpecialtyView from '../containers/SpecialtyView';
 import ContractorView from '../containers/ContractorView';
 import ProjectsView from '../containers/ProjectsView';
-import ProfileEditView from '../components/ProfileEditView';
-import SettingsView from '../components/SettingsView';
 import HomeView from '../containers/HomeView';
+import ProfileView from '../containers/ProfileView';
+import SettingsView from '../components/SettingsView';
 import MenuList from '../components/MenuList';
 import Header from '../components/Header';
 import Callback from '../auth0/callback';
@@ -29,6 +30,19 @@ import { CircularProgress } from '@material-ui/core/es';
 import SecuredRoute from './SecuredRoute';
 
 const styles = theme => ({
+	"@global": {
+		".MuiTab-labelIcon": {
+			margin: '0px',
+			lineHeight: '1',
+			padding: '0px',
+			minHeight: '56px',
+			'& .MuiTab-wrapper': {
+				'& > *:first-child': {
+					marginBottom: '0px'
+				}
+			}
+		},
+	},
 	viewarea: {
 		width: "calc(100% - 60px)",
 		float: 'left',
@@ -53,6 +67,7 @@ class AppRouterConnect extends React.Component {
 			checkingSession: true
 		}
 	}
+
 	async componentDidMount() {
 		if (this.props.location.pathname === '/callback' || auth0Client.isAuthenticated()) {
 			this.setState({ checkingSession: false });
@@ -76,7 +91,7 @@ class AppRouterConnect extends React.Component {
 		this.setState({ checkingSession: false });
 	}
 	render() {
-		const { classes, userProfile } = this.props;
+		const { userProfile, classes } = this.props;
 		if (this.state.checkingSession || (auth0Client.isAuthenticated() && userProfile === null)) return <CircularProgress className={classes.waitingSpin} />;
 
 		return (
@@ -91,8 +106,9 @@ class AppRouterConnect extends React.Component {
 						<SecuredRoute path='/b_list' component={BidderListingView} />
 						<SecuredRoute path='/a_pros' component={ProjectsView} />
 						<SecuredRoute path='/m_temp' component={TemplatesView} />
+						<SecuredRoute path='/m_spec' component={SpecialtyView} />
 						<SecuredRoute path='/m_cont' component={ContractorView} />
-						<SecuredRoute path="/profile" component={ProfileEditView} />
+						<SecuredRoute path="/profile" component={ProfileView} />
 						<SecuredRoute path="/settings" component={SettingsView} />
 						<Route exact path='/callback' component={Callback} />
 						<Redirect to="/" />

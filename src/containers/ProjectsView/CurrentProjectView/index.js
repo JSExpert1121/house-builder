@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
-import { getProjectDetailById, getAllProjects } from '../../../actions/gen-actions';
+import { getAllProjects } from '../../../actions/gen-actions';
 
 import PropTypes from 'prop-types';
 
@@ -16,16 +16,18 @@ import {
 	Button
 } from '@material-ui/core';
 
+import CustomTableCell from '../../../components/shared/CustomTableCell';
+
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 64px - 56px - 20px)",
+		margin: theme.spacing(1),
 		overflow: "scroll"
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -38,17 +40,6 @@ const styles = theme => ({
 		top: "calc(40vh)",
 	}
 });
-
-const CustomTableCell = withStyles(theme => ({
-	head: {
-		backgroundColor: theme.palette.primary.light,
-		color: theme.palette.common.white,
-	},
-	body: {
-		fontSize: 14,
-		color: theme.palette.primary.light
-	},
-}))(TableCell);
 
 class connectedCurProView extends React.Component {
 	constructor(props) {
@@ -85,10 +76,6 @@ class connectedCurProView extends React.Component {
 		this.props.getAllProjects(currentPage, rowsPerPage);
 	};
 
-
-	handleAddProject = () => {
-	}
-
 	render() {
 		const { classes, projects } = this.props;
 
@@ -112,9 +99,8 @@ class connectedCurProView extends React.Component {
 								projects.content.map(
 									row => (
 										<TableRow className={classes.row} key={row.id} hover
-											onClick={async () => {
-												await this.props.getProjectDetailById(row.id);
-												this.props.history.push("/a_pros/project_detail");
+											onClick={() => {
+												this.props.history.push("/a_pros/project_detail/" + row.id);
 											}}>
 											<CustomTableCell component="th" scope="row">
 												{row.title}
@@ -151,9 +137,7 @@ class connectedCurProView extends React.Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProjectDetailById: proEl => dispatch(getProjectDetailById(proEl)),
-		addProject: proEl => dispatch(addProject(proEl)),
-		getAllProjects: (page, size) => dispatch(getAllProjects(page, size))
+		getAllProjects: (page, size) => dispatch(getAllProjects(page, size)),
 	};
 };
 

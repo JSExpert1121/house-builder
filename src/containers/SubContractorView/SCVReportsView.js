@@ -13,8 +13,8 @@ import TableRow from '@material-ui/core/TableRow';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		margin: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 20px)",
+		margin: theme.spacing(1),
+		height: "calc(100vh - 64px - 56px - 20px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},

@@ -12,7 +12,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import NoSsr from '@material-ui/core/NoSsr';
 import Tab from '@material-ui/core/Tab';
-import { CircularProgress } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import AppsIcon from '@material-ui/icons/Apps';
 import BallotIcon from '@material-ui/icons/Ballot';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
@@ -20,9 +20,9 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 // local components
 import CurrentProjectView from './CurrentProjectView';
-import ProjectDetailView from './ProjectDetailView';
-import ProposalDetailView from './ProposalDetailView';
 import AddProjectView from './AddProjectView'
+import ProjectDetailView from '../../components/ProjectDetailView';
+import ProposalDetailView from '../../components/ProposalDetailView';
 
 const styles = theme => ({
 	root: {
@@ -45,17 +45,18 @@ class ConnectedGenContView extends React.Component {
 	}
 
 	render() {
-		const { classes, userProfile, location } = this.props;
+		const { classes, userProfile, match, location } = this.props;
 
 		const tabNo = {
 			'/g_cont': 0,
 			'/g_cont/current_pros': 0,
-			'/g_cont/project_detail': 1,
-			'/g_cont/propose_detail': 2,
-			'/g_cont/add_project': 3
+			'/g_cont/add_project': 1
 		};
 
-		const curTabPos = tabNo[location.pathname];
+		let curTabPos = tabNo[location.pathname];
+
+		if (location.pathname.includes("proposal_detail") || location.pathname.includes("project_detail"))
+			curTabPos = 0;
 
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&
@@ -71,19 +72,17 @@ class ConnectedGenContView extends React.Component {
 							variant="scrollable"
 							scrollButtons="on">
 
-							<Tab component={Link} to={`/g_cont/current_pros`} label="Current Projects" icon={<AppsIcon />} />
-							<Tab component={Link} to={`/g_cont/project_detail`} label="Project Detail" icon={<BallotIcon />} />
-							<Tab component={Link} to={`/g_cont/propose_detail`} label="Proposal Detail" icon={<DoneAllIcon />} />
-							<Tab component={Link} to={`/g_cont/add_project`} label="Add Project" icon={<PlaylistAddIcon />} />
+							<Tab component={Link} to={`${match.url}/current_pros`} label="Current Projects" icon={<AppsIcon />} />
+							<Tab component={Link} to={`${match.url}/add_project`} label="Add Project" icon={<PlaylistAddIcon />} />
 						</Tabs>
 					</AppBar>
 
 					<Switch>
-						<SecuredRoute path='/g_cont/current_pros' component={CurrentProjectView} />
-						<SecuredRoute path='/g_cont/project_detail' component={ProjectDetailView} />
-						<SecuredRoute path='/g_cont/propose_detail' component={ProposalDetailView} />
-						<SecuredRoute path='/g_cont/add_project' component={AddProjectView} />
-						<Redirect path='/g_cont' to={`/g_cont/current_pros`} />
+						<SecuredRoute path={`${match.url}/current_pros`} component={CurrentProjectView} />
+						<SecuredRoute path={`${match.url}/add_project`} component={AddProjectView} />
+						<SecuredRoute path={`${match.url}/proposal_detail/:id`} component={ProposalDetailView} />
+						<SecuredRoute path={`${match.url}/project_detail/:id`} component={ProjectDetailView} />
+						<Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
 					</Switch>
 				</div>
 			</NoSsr>

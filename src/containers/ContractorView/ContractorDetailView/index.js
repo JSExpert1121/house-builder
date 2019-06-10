@@ -11,19 +11,25 @@ import NoSsr from '@material-ui/core/NoSsr';
 import ContractorInfo from './ContractorInfo';
 import ContractorSpecialties from './ContractorSpecialties';
 import ContractorFiles from './ContractorFiles';
+import { IconButton } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 // import ContractorMessages from './ContractorMessages';
 // import ContractorProposals from './ContractorProposals';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 136px)",
+		margin: theme.spacing(1),
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
+		color: theme.palette.primary.dark,
+		flexGrow: 1
+	},
+	backBtn: {
 		color: theme.palette.primary.dark
-	}
+	},
 });
 
 class ConnectedContractorDetailView extends React.Component {
@@ -41,6 +47,10 @@ class ConnectedContractorDetailView extends React.Component {
 		});
 	}
 
+	handleBack = () => {
+		this.props.history.push("/m_cont");
+	}
+
 	render() {
 		const { classes, selectedContractor } = this.props;
 		const curDetailTab = this.state.curDetailTab;
@@ -55,21 +65,25 @@ class ConnectedContractorDetailView extends React.Component {
 			<NoSsr>
 				<div className={classes.root}>
 					<Paper square >
-						<Tabs
-							value={curDetailTab}
-							onChange={this.handleTabChange}
-							variant="scrollable"
-							indicatorColor="primary"
-							textColor="primary"
-							scrollButtons="on"
-							className={classes.toolbarstyle}
-						>
-							<Tab label="Info" />
-							<Tab label="Files" />
-							<Tab label="Specialties" />
-						</Tabs>
-
-						{curDetailTab === 0 && <ContractorInfo />}						
+						<div style={{ display: "flex" }}>
+							<IconButton className={classes.backBtn} onClick={this.handleBack}>
+								<ArrowBackIcon />
+							</IconButton>
+							<Tabs
+								value={curDetailTab}
+								onChange={this.handleTabChange}
+								variant="scrollable"
+								indicatorColor="primary"
+								textColor="primary"
+								scrollButtons="off"
+								className={classes.toolbarstyle}
+							>
+								<Tab label="Info" />
+								<Tab label="Files" />
+								<Tab label="Specialties" />
+							</Tabs>
+						</div>
+						{curDetailTab === 0 && <ContractorInfo />}
 						{curDetailTab === 1 && <ContractorFiles />}
 						{curDetailTab === 2 && <ContractorSpecialties />}
 					</Paper>

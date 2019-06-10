@@ -15,13 +15,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
-import { addFiles, getProjectDetailById, deleteFile } from '../../../actions/gen-actions';
+import { getProjectData, deleteFileFromProject, addFilesToProject } from '../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh - 64px - 48px - 56px - 20px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
@@ -59,49 +59,33 @@ class ConnectedProjectFiles extends React.Component {
 	}
 
 	handleUploadFiles = async (files) => {
-		const { selectedProject } = this.props;
-		this.setState({ isProcessing: true });
+		const { project } = this.props;
 
-		await this.props.addFiles(selectedProject.id, files, (res) => this.setState({
+		await this.props.addFiles(project.id, files, (res) => this.setState({
 			snackBar: true,
-			snackBarContent: res ? 'File Upload Success' : 'File Upload Failed'
+			snackBarContent: res ? 'File Upload Success' : 'File Upload Failed',
+			openUploadForm: false
 		}));
-		await this.props.getProjectDetailById(selectedProject.id);
 
-		this.setState({
-			openUploadForm: false,
-			isProcessing: false
-		})
+		await this.props.getProjectData(project.id);
 	}
 
 	handleDeleteFile = async (name) => {
-		const { selectedProject } = this.props;
+		const { project } = this.props;
 
-		this.setState({
-			isProcessing: true
-		});
-
-		await this.props.deleteFile(selectedProject.id, name, (res) => {
+		await this.props.deleteFile(project.id, name, (res) => {
 			this.setState({
 				snackBar: true,
 				snackBarContent: res ? 'delete file success' : 'delete file failed'
 			});
 		});
 
-		await this.props.getProjectDetailById(selectedProject.id);
-
-		this.setState({
-			isProcessing: false
-		});
+		await this.props.getProjectData(project.id);
 	}
 
 	render() {
-		const { classes, selectedProject } = this.props;
-		const projectFiles = selectedProject.projectFiles;
-
-		if (this.state.isProcessing)
-			return <div className={classes.root} >
-				<CircularProgress className={classes.waitingSpin} /> </div>;
+		const { classes, project } = this.props;
+		const projectFiles = project.projectFiles;
 
 		return (
 			<div className={classes.root} >
@@ -120,7 +104,7 @@ class ConnectedProjectFiles extends React.Component {
 						{projectFiles.map(row => (
 							<TableRow className={classes.row} key={row.id} hover>
 								<CustomTableCell component="th" scope="row" align="center">
-									<a download={row.name} href={process.env.PROJECT_API + "/projects/" + selectedProject.id + "/files/" + row.name}>{row.name}</a>
+									<a download={row.name} href={process.env.PROJECT_API + "/projects/" + project.id + "/files/" + row.name}>{row.name}</a>
 								</CustomTableCell>
 								<CustomTableCell align="center">
 									<IconButton className={classes.button} aria-label="Delete" color="primary"
@@ -164,15 +148,15 @@ class ConnectedProjectFiles extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		selectedProject: state.gen_data.selectedProject,
+		project: state.global_data.project,
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		addFiles: (id, files, cb) => dispatch(addFiles(id, files, cb)),
-		getProjectDetailById: (id) => dispatch(getProjectDetailById(id)),
-		deleteFile: (id, name, cb) => dispatch(deleteFile(id, name, cb))
+		addFiles: (id, files, cb) => dispatch(addFilesToProject(id, files, cb)),
+		getProjectData: (id) => dispatch(getProjectData(id)),
+		deleteFile: (id, name, cb) => dispatch(deleteFileFromProject(id, name, cb))
 	}
 }
 

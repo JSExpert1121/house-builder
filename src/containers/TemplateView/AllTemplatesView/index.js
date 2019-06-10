@@ -31,12 +31,12 @@ import TSnackbarContent from '../../../components/SnackBarContent';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 72px - 20px)",
-		margin: "10px 10px 10px 10px",
+		height: "calc(100vh - 64px - 56px - 20px)",
+		margin: theme.spacing(1),
 	},
 	tableWrap: {
 		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 72px - 57px - 20px)",
+		maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -255,7 +255,7 @@ class ConnAllTemplateView extends Component {
 						}} color="primary">
 							Add {
 								this.state.isSaving && <CircularProgress
-									disableShrink
+
 									size={24}
 									thickness={4} />
 							}

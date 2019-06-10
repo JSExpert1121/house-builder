@@ -20,15 +20,15 @@ import SplitPane from 'react-split-pane';
 
 const styles = theme => ({
 	descTag: {
-		padding: theme.spacing.unit,
+		padding: theme.spacing(1),
 		textAlign: 'center',
 		color: theme.palette.text.secondary,
 		whiteSpace: 'nowrap',
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 72px - 20px) / 2)",
+		height: "calc((100vh - 64px - 56px - 20px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 72px - 20px)",
+			height: "calc(100vh - 64px - 56px - 20px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -41,11 +41,11 @@ const styles = theme => ({
 		textAlign: 'center',
 		color: theme.palette.text.secondary,
 		whiteSpace: 'nowrap',
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 72px - 40px) / 2)",
+		height: "calc((100vh - 64px - 56px - 40px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 72px - 20px)",
+			height: "calc(100vh - 64px - 56px - 20px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -55,8 +55,8 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50vw - 10px)",
 		top: "calc(50vh - 10px)",
-	}, 
-	editField : {
+	},
+	editField: {
 		lineHeight: '1.5rem'
 	}
 });
@@ -180,7 +180,7 @@ class ConnOptionDetailView extends Component {
 							}} color="primary">
 								Save {
 									this.state.isSaving && <CircularProgress
-										disableShrink
+
 										size={24}
 										thickness={4} />
 								}
@@ -197,7 +197,7 @@ class ConnOptionDetailView extends Component {
 								}} color="primary">
 								Delete{
 									this.state.isDeleting && <CircularProgress
-										disableShrink
+
 										size={24}
 										thickness={4} />
 								}

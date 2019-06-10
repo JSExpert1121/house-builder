@@ -20,10 +20,17 @@ import { addFiles, getContractorDetailById, deleteFile, updateContractor } from 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px 10px 10px 10px",
-		height: "calc(100vh - 64px - 72px - 48px - 20px)",
+		padding: theme.spacing(1),
+		height: "calc(100vh -184px)",
 		overflow: "auto",
 		overflowX: "hidden"
+	},
+	titleBtn: {
+		color: "#FFFFFF",
+		padding: "6px"
+	},
+	button: {
+		padding: "6px"
 	},
 	waitingSpin: {
 		position: "relative",
@@ -64,12 +71,12 @@ class ConnectedContractorFiles extends React.Component {
 
 		await this.props.addFiles(selectedContractor.id, files, (res) => {
 			this.setState({
-			snackBar: true,
-			snackBarContent: res ? 'File Upload Success' : 'File Upload Failed'
-		});
-		if(res)
-			this.props.updateContractor(selectedContractor.id);	
-	})
+				snackBar: true,
+				snackBarContent: res ? 'File Upload Success' : 'File Upload Failed'
+			});
+			if (res)
+				this.props.updateContractor(selectedContractor.id);
+		})
 		await this.props.getContractorDetailById(selectedContractor.id);
 
 		this.setState({
@@ -90,8 +97,8 @@ class ConnectedContractorFiles extends React.Component {
 				snackBar: true,
 				snackBarContent: res ? 'delete file success' : 'delete file failed'
 			});
-			if(res)
-				this.props.updateContractor(selectedContractor.id);	
+			if (res)
+				this.props.updateContractor(selectedContractor.id);
 		});
 
 		await this.props.getContractorDetailById(selectedContractor.id);
@@ -116,7 +123,7 @@ class ConnectedContractorFiles extends React.Component {
 						<TableRow>
 							<CustomTableCell align="center">Name</CustomTableCell>
 							<CustomTableCell align="center">
-								<IconButton style={{ color: "#FFFFFF" }} onClick={() => this.setState({ openUploadForm: true })}>
+								<IconButton className={classes.titleBtn} onClick={() => this.setState({ openUploadForm: true })}>
 									<NoteAddIcon />
 								</IconButton>
 							</CustomTableCell>
