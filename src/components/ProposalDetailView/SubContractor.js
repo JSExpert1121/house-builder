@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     root: {
-        padding: theme.spacing(1)
+        paddingTop: theme.spacing(2)
     },
     title: {
         fontSize: "1.2em",
@@ -19,8 +19,8 @@ const styles = theme => ({
         textAlign: "left",
         color: "#333",
         marginTop: "0",
-        paddingLeft: theme.spacing(1),
-        marginBottom: "0"
+        marginBottom: "0",
+        lineHeight: '2'
     },
     bottomLine: {
         borderBottom: "1px solid #dedede"
@@ -31,11 +31,9 @@ const styles = theme => ({
         textAlign: "left",
         color: "#444",
         marginTop: "0",
-        paddingLeft: theme.spacing(1)
     },
     brief: {
         margin: 0,
-        padding: theme.spacing(1),
     },
     desc: {
         color: "#444",
@@ -51,7 +49,7 @@ const styles = theme => ({
         textDecoration: "none"
     },
     status: {
-        margin: theme.spacing(1, 0, 0, 1),
+        marginLeft: theme.spacing(1),
         fontSize: "1em",
         textAlign: "left",
         fontWeight: "600",
@@ -63,12 +61,12 @@ const styles = theme => ({
 const TITLE = 'SubContractor Information';
 const SubContractorView = ({ classes, subContractor }) => {
     return (
-        <Card className={classes.root} title={TITLE}>
+        <Box className={classes.root} title={TITLE}>
             <Typography variant='h1' className={classes.title}>
                 {TITLE}
             </Typography>
             <Box to='#' style={{ width: '100%' }}>
-                <Grid container spacing={3} id="sub-contractor-info" className={classes.brief}>
+                <Grid container id="sub-contractor-info" className={classes.brief}>
                     <Grid item xs={12} sm={8} style={{ padding: '4px' }}>
                         <Box className={classes.email}>Email: {subContractor.email}</Box>
                     </Grid>
@@ -84,7 +82,7 @@ const SubContractorView = ({ classes, subContractor }) => {
                     )}
                 </Grid>
             </Box>
-        </Card >
+        </Box >
     )
 }
 

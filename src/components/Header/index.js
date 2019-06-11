@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import auth0Client from '../../auth0/auth';
 
 import PropTypes from 'prop-types';
@@ -94,7 +95,7 @@ class Header extends React.Component {
 
 	render() {
 		const { anchorEl, mobileMoreAnchorEl } = this.state;
-		const { classes } = this.props;
+		const { classes, profile } = this.props;
 		const isMenuOpen = Boolean(anchorEl);
 		const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -145,12 +146,12 @@ class Header extends React.Component {
 					</IconButton>
 					<p>Notifications</p>
 				</MenuItem>
-				<MenuItem onClick={this.handleProfileMenuOpen}>
+				{/* <MenuItem onClick={this.handleProfileMenuOpen}>
 					<IconButton color="inherit">
 						<EmailIcon />
 					</IconButton>
 					<p>Email</p>
-				</MenuItem>
+				</MenuItem> */}
 				<MenuItem onClick={this.handleProfileMenuOpen}>
 					<IconButton color="inherit">
 						<AccountCircle />
@@ -168,15 +169,16 @@ class Header extends React.Component {
 							<NotificationsIcon />
 						</Badge>
 					</IconButton>
-					<IconButton color="inherit">
+					{/* <IconButton color="inherit">
 						<EmailIcon />
-					</IconButton>
+					</IconButton> */}
 					<IconButton
 						aria-owns={isMenuOpen ? 'material-appbar' : undefined}
 						aria-haspopup="true"
 						onClick={this.handleProfileMenuOpen}
 						color="inherit"
 					>
+						<span style={{ fontSize: '16px' }}>{profile.email}&nbsp;&nbsp;</span>
 						<AccountCircle />
 					</IconButton>
 				</div>
@@ -210,6 +212,13 @@ class Header extends React.Component {
 
 Header.propTypes = {
 	classes: PropTypes.object.isRequired,
+	profile: PropTypes.object
 };
 
-export default withRouter(withStyles(styles)(Header));
+const mapStateToProps = (state) => ({
+	profile: state.global_data.userProfile
+})
+
+const ConnectedHeader = connect(mapStateToProps)(Header);
+
+export default withRouter(withStyles(styles)(ConnectedHeader));

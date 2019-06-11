@@ -32,9 +32,6 @@ import { ListItemText, ListItem, ListItemIcon, List } from '@material-ui/core';
 
 const styles = (theme) => ({
 	"@global": {
-		".MuiSvgIcon-root": {
-			fontSize: '1rem'
-		},
 		".MuiListItemIcon-root": {
 			minWidth: '32px'
 		},
@@ -45,15 +42,11 @@ const styles = (theme) => ({
 	},
 	root: {
 		position: 'relative',
-		width: '100%',
 		height: "calc(100vh - 64px - 48px - 36px - 16px)",
 		overflow: "auto",
 		flexGrow: 1,
-		padding: theme.spacing(1)
-	},
-	tableWrap: {
-		overflow: "auto",
-		marginTop: '20px'
+		padding: theme.spacing(2),
+		width: '100%'
 	},
 	editField: {
 		lineHeight: '1.5rem',
@@ -170,78 +163,82 @@ class ConnectedProposalDetailOverview extends Component {
 		let c_project = edit ? project : proposal.proposal.project;
 		const btnTitle = (match.url.includes('/s_cont') || (match.params.id === '-1' && this.props.proposal)) ? 'Update Proposal' : 'Submit Proposal';
 		const isGen = match.url.includes('/g_cont');
+		const style_prop_title = {
+			fontWeight: 'bold', fontSize: '24px', marginTop: '0'
+		};
+		// if (isGen) style_prop_title.marginTop = '0';
 
 		return (
 			<Paper className={classes.root}>
-				{isGen ? <SubContractorView subContractor={proposal.proposal.subContractor} /> :
-					<ProjectView project={c_project} />}
-				<Box className={classes.tableWrap}>
-					<Card id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
-						<TextField disabled={!edit}
-							label="Budget *" id="budget" type='number'
-							className={clsx(classes.margin, classes.textField)}
-							value={this.state.budget}
-							onChange={this.handleChange('budget')}
-							InputProps={{
-								endAdornment: <InputAdornment position="start">USD</InputAdornment>,
-							}}
-						/>
-						<TextField disabled={!edit}
-							label="Duration *" type='number'
-							className={clsx(classes.margin, classes.textField)}
-							value={this.state.duration}
-							onChange={this.handleChange('duration')}
-							InputProps={{
-								endAdornment: <InputAdornment position="start">days</InputAdornment>,
-							}}
-						/>
-						<FormControl fullWidth className={classes.margin}>
-							<InputLabel htmlFor="description">Description *</InputLabel>
-							<Input disabled={!edit}
-								id="description"
-								value={this.state.description}
-								onChange={this.handleChange('description')}
-								multiline={true}
-							/>
-						</FormControl>
-					</Card>
+				{!isGen && <ProjectView project={c_project} />}
 
-					<Typography variant="subtitle1" noWrap style={{ fontWeight: 'bold', fontSize: '24px', marginTop: '16px' }}>Templates</Typography>
-					{!isGen ? (
-						<Table>
-							<TableHead>
-								<TableRow>
-									<CustomTableCell>Name</CustomTableCell>
-									<CustomTableCell align="center">Discription</CustomTableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody >
-								{
-									project && project.projectTemplates.map((templ, index) => (
-										<TableRow className={classes.row} key={index} hover
-											onClick={() => this.props.templateSelected(index)}>
-											<CustomTableCell component="th" scope="row">
-												{templ.template.name}
-											</CustomTableCell>
-											<CustomTableCell align="center">{templ.template.description}</CustomTableCell>
-										</TableRow>
-									))
-								}
-							</TableBody>
-						</Table>
-					) : (
-							<List>
-								{
-									project && project.projectTemplates.map((templ, index) => (
-										<ListItem key={index}>
-											<ListItemIcon><FiberIcon /></ListItemIcon>
-											<ListItemText primary={templ.template.name} />
-										</ListItem>
-									))
-								}
-							</List>
-						)}
+				<Typography variant="subtitle1" noWrap style={style_prop_title}>Proposal</Typography>
+				<Box id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
+					<TextField disabled={!edit}
+						label="Budget *" id="budget" type='number'
+						className={clsx(classes.margin, classes.textField)}
+						value={this.state.budget}
+						onChange={this.handleChange('budget')}
+						InputProps={{
+							endAdornment: <InputAdornment position="start">USD</InputAdornment>,
+						}}
+					/>
+					<TextField disabled={!edit}
+						label="Duration *" type='number'
+						className={clsx(classes.margin, classes.textField)}
+						value={this.state.duration}
+						onChange={this.handleChange('duration')}
+						InputProps={{
+							endAdornment: <InputAdornment position="start">days</InputAdornment>,
+						}}
+					/>
+					<FormControl fullWidth className={classes.margin}>
+						<InputLabel htmlFor="description">Description *</InputLabel>
+						<Input disabled={!edit}
+							id="description"
+							value={this.state.description}
+							onChange={this.handleChange('description')}
+							multiline={true}
+						/>
+					</FormControl>
 				</Box>
+
+				{isGen && <SubContractorView subContractor={proposal.proposal.subContractor} />}
+				<Typography variant="subtitle1" noWrap style={{ fontWeight: 'bold', fontSize: '24px', marginTop: '16px' }}>Templates</Typography>
+				{!isGen ? (
+					<Table>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell>Name</CustomTableCell>
+								<CustomTableCell align="center">Discription</CustomTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody >
+							{
+								project && project.projectTemplates.map((templ, index) => (
+									<TableRow className={classes.row} key={index} hover
+										onClick={() => this.props.templateSelected(index)}>
+										<CustomTableCell component="th" scope="row">
+											{templ.template.name}
+										</CustomTableCell>
+										<CustomTableCell align="center">{templ.template.description}</CustomTableCell>
+									</TableRow>
+								))
+							}
+						</TableBody>
+					</Table>
+				) : (
+						<List>
+							{
+								project && project.projectTemplates.map((templ, index) => (
+									<ListItem key={index}>
+										<ListItemIcon><FiberIcon style={{ fontSize: '16px' }} /></ListItemIcon>
+										<ListItemText primary={templ.template.name} />
+									</ListItem>
+								))
+							}
+						</List>
+					)}
 
 				<Box style={{ textAlign: 'right', paddingTop: '16px' }}>
 					{

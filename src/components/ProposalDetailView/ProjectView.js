@@ -10,14 +10,13 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing(1)
+    padding: 0
   },
   title: {
     fontSize: "1.8em",
     textAlign: "left",
     color: "#333",
     marginTop: "0",
-    paddingLeft: theme.spacing(1),
     marginBottom: "0"
   },
   subtitle: {
@@ -25,7 +24,6 @@ const styles = theme => ({
     textAlign: "left",
     color: "#333",
     marginTop: "0",
-    paddingLeft: theme.spacing(1),
     marginBottom: "4px",
     fontWeight: "bold"
   },
@@ -38,18 +36,15 @@ const styles = theme => ({
     textAlign: "left",
     color: "#444",
     marginTop: "0",
-    paddingLeft: theme.spacing(1)
   },
   brief: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(1),
     color: "#444"
   },
   desc: {
     color: "#444",
     marginTop: "0",
-    paddingLeft: theme.spacing(1)
   },
   budget: {
     display: "inline-block",
@@ -100,10 +95,10 @@ const ProjectView = ({ classes, project }) => {
   const posttime = project.updatedAt;
   const postdate = new Date(posttime);
   return (
-    <Card className={classes.root}>
-      <Grid container spacing={3} id="project-description">
+    <Box className={classes.root}>
+      <Grid container id="project-description">
         {/* <Grid container item sm={12} md={9} spacing={2}> */}
-        <Grid container item sm={12} spacing={2}>
+        <Grid container item sm={12}>
           <Grid container item sm={12} className={classes.bottomLine}>
             <Grid item xs={12} sm={10} className="desc">
               <h1 className={classes.title}>{project.title}</h1>
@@ -143,7 +138,7 @@ const ProjectView = ({ classes, project }) => {
           <p className={classes.desc}>{project.genContractor.email}</p>
         </Grid> */}
       </Grid>
-    </Card >
+    </Box >
   );
 };
 
