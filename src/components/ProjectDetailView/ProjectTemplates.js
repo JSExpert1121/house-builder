@@ -219,53 +219,48 @@ class ConnectedProjectTemplateView extends React.Component {
 								project.projectTemplates.map(
 									row => (
 										<TableRow className={classes.row} key={row.id} hover>
-											<CustomTableCell component="th" scope="row"
-												onClick={async () => {
-													await this.props.selectProject(row.id);
-													this.props.history.push("/m_cont/project_detail");
-												}}>
+											<CustomTableCell component="th" scope="row">
 												{row.template.name ? row.template.name : "N/A"}
 											</CustomTableCell>
-											<CustomTableCell align="center"
-												onClick={async () => {
-													await this.props.selectProject(row.id);
-													this.props.history.push("/m_cont/project_detail");
-												}}>
+											<CustomTableCell align="center">
 												{row.template.description ? row.template.description : "N/A"}
 											</CustomTableCell>
-											<CustomTableCell align="center"
-												onClick={async () => {
-													await this.props.selectProject(row.id);
-													this.props.history.push("/m_cont/project_detail");
-												}}>
+											<CustomTableCell align="center">
 												{row.template.value ? row.template.value : "N/A"}
 											</CustomTableCell>
 											{editable && (
 												<CustomTableCell align="center">
-													<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
-														async () => {
-															await this.props.deleteTemplate(project.id, row.template.id, (result) => {
+													<IconButton
+														className={classes.button}
+														aria-label="Delete"
+														color="primary"
+														onClick={async () => {
+															try {
+
+																await this.props.deleteTemplate(project.id, row.template.id);
+																await this.props.getProjectData(project.id);
+
+																let curPage = this.state.currentPage;
+																if (this.state.rowsPerPage * (this.state.currentPage) < project.projectTemplates.length - 1) {
+																} else {
+																	curPage--;
+																}
+																await this.props.getTemplates(curPage, this.state.rowsPerPage);
 																this.setState({
 																	snackBar: true,
-																	snackBarContent: result ? 'delete template success' : 'please template categories'
+																	snackBarContent: 'delete template success',
+																	currentPage: curPage
 																});
-																this.props.getProjectData(project.id);
-															});
 
-															if (this.state.rowsPerPage * (this.state.currentPage) < project.projectTemplates.length - 1) {
-																await this.props.getTemplates(this.state.currentPage, this.state.rowsPerPage);
-															}
-															else {
-																const currentPage = this.state.currentPage - 1;
-
+															} catch (error) {
+																console.log(error);
 																this.setState({
-																	currentPage: currentPage
+																	snackBar: true,
+																	snackBarContent: 'delete template failed',
 																});
-
-																await this.props.getTemplates(currentPage, this.state.rowsPerPage);
 															}
 														}
-													}>
+														}>
 														<DeleteIcon />
 													</IconButton>
 												</CustomTableCell>
@@ -386,8 +381,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		getTemplates: (page, size) => dispatch(getTemplates(page, size)),
-		addTemplate: (project, template, cb) => dispatch(addTemplate(project, template, cb)),
-		deleteTemplate: (project, template, cb) => dispatch(deleteTemplate(project, template, cb)),
+		addTemplate: (project, template) => dispatch(addTemplate(project, template)),
+		deleteTemplate: (project, template) => dispatch(deleteTemplate(project, template)),
 		getProjectData: (id) => dispatch(getProjectData(id)),
 	}
 }

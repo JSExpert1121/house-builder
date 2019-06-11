@@ -20,14 +20,29 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
+import FiberIcon from '@material-ui/icons/FiberManualRecord';
 import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
 import ProjectView from './ProjectView';
+import SubContractorView from './SubContractor';
 import { ConfirmDialog } from '../../components/shared/ConfirmDialog';
 import CustomTableCell from '../../components/shared/CustomTableCell';
+import { ListItemText, ListItem, ListItemIcon, List } from '@material-ui/core';
 
 const styles = (theme) => ({
+	"@global": {
+		".MuiSvgIcon-root": {
+			fontSize: '1rem'
+		},
+		".MuiListItemIcon-root": {
+			minWidth: '32px'
+		},
+		".MuiListItem-root": {
+			paddingTop: '4px',
+			paddingBottom: '4px'
+		}
+	},
 	root: {
 		position: 'relative',
 		width: '100%',
@@ -154,10 +169,12 @@ class ConnectedProposalDetailOverview extends Component {
 
 		let c_project = edit ? project : proposal.proposal.project;
 		const btnTitle = (match.url.includes('/s_cont') || (match.params.id === '-1' && this.props.proposal)) ? 'Update Proposal' : 'Submit Proposal';
+		const isGen = match.url.includes('/g_cont');
 
 		return (
 			<Paper className={classes.root}>
-				<ProjectView project={c_project} />
+				{isGen ? <SubContractorView subContractor={proposal.proposal.subContractor} /> :
+					<ProjectView project={c_project} />}
 				<Box className={classes.tableWrap}>
 					<Card id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
 						<TextField disabled={!edit}
@@ -189,28 +206,41 @@ class ConnectedProposalDetailOverview extends Component {
 						</FormControl>
 					</Card>
 
-					<Typography variant="subtitle1" noWrap style={{ fontWeight: 'bold', fontSize: '24px', marginTop: '16px' }}>Project Templates</Typography>
-					<Table>
-						<TableHead>
-							<TableRow>
-								<CustomTableCell>Name</CustomTableCell>
-								<CustomTableCell align="center">Discription</CustomTableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody >
-							{
-								project && project.projectTemplates.map((templ, index) => (
-									<TableRow className={classes.row} key={index} hover
-										onClick={() => this.props.templateSelected(index)}>
-										<CustomTableCell component="th" scope="row">
-											{templ.template.name}
-										</CustomTableCell>
-										<CustomTableCell align="center">{templ.template.description}</CustomTableCell>
-									</TableRow>
-								))
-							}
-						</TableBody>
-					</Table>
+					<Typography variant="subtitle1" noWrap style={{ fontWeight: 'bold', fontSize: '24px', marginTop: '16px' }}>Templates</Typography>
+					{!isGen ? (
+						<Table>
+							<TableHead>
+								<TableRow>
+									<CustomTableCell>Name</CustomTableCell>
+									<CustomTableCell align="center">Discription</CustomTableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody >
+								{
+									project && project.projectTemplates.map((templ, index) => (
+										<TableRow className={classes.row} key={index} hover
+											onClick={() => this.props.templateSelected(index)}>
+											<CustomTableCell component="th" scope="row">
+												{templ.template.name}
+											</CustomTableCell>
+											<CustomTableCell align="center">{templ.template.description}</CustomTableCell>
+										</TableRow>
+									))
+								}
+							</TableBody>
+						</Table>
+					) : (
+							<List>
+								{
+									project && project.projectTemplates.map((templ, index) => (
+										<ListItem key={index}>
+											<ListItemIcon><FiberIcon /></ListItemIcon>
+											<ListItemText primary={templ.template.name} />
+										</ListItem>
+									))
+								}
+							</List>
+						)}
 				</Box>
 
 				<Box style={{ textAlign: 'right', paddingTop: '16px' }}>

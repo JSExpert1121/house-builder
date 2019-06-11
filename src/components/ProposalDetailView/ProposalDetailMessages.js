@@ -109,7 +109,7 @@ class ConnectedProposalDetailMessages extends React.Component {
 	async componentWillMount() {
 		const { proposal } = this.props;
 
-		await this.props.getProposalMessages(proposal.id, 0, this.state.pageSize, (res) => {
+		await this.props.getProposalMessages(proposal.proposal.id, 0, this.state.pageSize, (res) => {
 			let { messageList } = this.state;
 
 			messageList = messageList.concat(res.content.reverse());
@@ -138,8 +138,7 @@ class ConnectedProposalDetailMessages extends React.Component {
 			isSending: true
 		})
 
-		this.props.addMessageToProposal(
-			proposal.id,
+		this.props.addMessageToProposal(proposal.proposal.id,
 			{
 				'content': this.state.messageInput,
 				'updatedBy': userProfile.email
@@ -178,7 +177,7 @@ class ConnectedProposalDetailMessages extends React.Component {
 
 		this.setState({ isLoadingMore: true, toBottom: false });
 
-		await this.props.getProposalMessages(proposal.id, pagen, this.state.pageSize, (res) => {
+		await this.props.getProposalMessages(proposal.proposal.id, pagen, this.state.pageSize, (res) => {
 			let contents = res.content.reverse();
 
 			let i = 0;
@@ -344,7 +343,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
 	return {
 		userProfile: state.global_data.userProfile,
-		proposal: state.global_data.proposal
+		proposal: state.global_data.proposalDetail
 	};
 };
 
@@ -352,6 +351,8 @@ const ProposalDetailMessages = connect(mapStateToProps, mapDispatchToProps)(Conn
 
 ProposalDetailMessages.propTypes = {
 	classes: PropTypes.object.isRequired,
+	userProfile: PropTypes.object,
+	proposal: PropTypes.object
 };
 
 export default withRouter(withStyles(styles)(ProposalDetailMessages));

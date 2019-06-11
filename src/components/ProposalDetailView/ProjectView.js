@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 
 import Card from '@material-ui/core/Card';
@@ -73,11 +72,11 @@ const styles = theme => ({
     top: "calc(50%-10px)"
   },
   status: {
-    marginTop: theme.spacing(1),
+    margin: theme.spacing(1, 0, 0, 1),
     fontSize: "1em",
     textAlign: "left",
     fontWeight: "bold",
-    color: "#060"
+    color: theme.palette.primary.light
   },
   margin: theme.spacing(1),
   minWidth: 120,
