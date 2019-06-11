@@ -31,12 +31,12 @@ import TSnackbarContent from '../../../components/SnackBarContent';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 56px - 20px)",
+		height: "calc(100vh - 64px - 48px - 16px)",
 		margin: theme.spacing(1),
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 64px - 48px - 48px - 16px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -116,7 +116,7 @@ class ConnAllTemplateView extends Component {
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
-					<Table >
+					<Table size='small'>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell> Template Name </CustomTableCell>
@@ -184,7 +184,7 @@ class ConnAllTemplateView extends Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={templates.totalElements}

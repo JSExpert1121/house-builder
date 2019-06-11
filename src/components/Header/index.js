@@ -9,9 +9,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SettingsIcon from '@material-ui/icons/Settings';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
@@ -21,6 +18,10 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import MenuIcon from '@material-ui/icons/Menu';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SettingsIcon from '@material-ui/icons/Settings';
+import EmailIcon from '@material-ui/icons/Email';
 
 const styles = theme => ({
 	root: {
@@ -135,6 +136,7 @@ class Header extends React.Component {
 				open={isMobileMenuOpen}
 				onClose={this.handleMenuClose}
 			>
+
 				<MenuItem onClick={this.handleMobileMenuClose}>
 					<IconButton color="inherit">
 						<Badge badgeContent={11} color="secondary">
@@ -142,6 +144,12 @@ class Header extends React.Component {
 						</Badge>
 					</IconButton>
 					<p>Notifications</p>
+				</MenuItem>
+				<MenuItem onClick={this.handleProfileMenuOpen}>
+					<IconButton color="inherit">
+						<EmailIcon />
+					</IconButton>
+					<p>Email</p>
 				</MenuItem>
 				<MenuItem onClick={this.handleProfileMenuOpen}>
 					<IconButton color="inherit">
@@ -159,6 +167,9 @@ class Header extends React.Component {
 						<Badge badgeContent={17} color="secondary">
 							<NotificationsIcon />
 						</Badge>
+					</IconButton>
+					<IconButton color="inherit">
+						<EmailIcon />
 					</IconButton>
 					<IconButton
 						aria-owns={isMenuOpen ? 'material-appbar' : undefined}

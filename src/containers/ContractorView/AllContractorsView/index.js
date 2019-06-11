@@ -31,12 +31,12 @@ import TSnackbarContent from '../../../components/SnackBarContent';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 136px)",
+		height: "calc(100vh - 128px)",
 		margin: theme.spacing(1),
 	},
 	tableWrap: {
 		overflow: "auto",
-		maxHeight: "calc(100vh - 192px)",
+		maxHeight: "calc(100vh - 176px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -128,7 +128,7 @@ class ConnAllContractorView extends Component {
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
-					<Table >
+					<Table size='small'>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell> Contractor Email </CustomTableCell>

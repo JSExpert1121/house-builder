@@ -25,7 +25,7 @@ const styles = theme => ({
 
 const SpecTableView = ({ specialties, handleDelete, handleAdd, handleSelect, classes }) => {
     return (
-        <Table >
+        <Table size='small'>
             <TableHead>
                 <TableRow>
                     <CustomTableCell> Specialty Name </CustomTableCell>

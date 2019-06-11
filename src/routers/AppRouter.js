@@ -59,6 +59,13 @@ const styles = theme => ({
 		".MuiTablePagination-toolbar": {
 			minHeight: '48px',
 			height: '48px'
+		},
+		".MuiButton-root": {
+			backgroundColor: theme.palette.primary.light,
+			color: 'white',
+			"&:hover": {
+				backgroundColor: theme.palette.primary.dark
+			}
 		}
 	},
 	viewarea: {

@@ -21,7 +21,7 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: "calc(100vh -184px)",
+		height: "calc(100vh -164px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
@@ -118,7 +118,7 @@ class ConnectedContractorFiles extends React.Component {
 
 		return (
 			<div className={classes.root} >
-				<Table className={classes.table}>
+				<Table className={classes.table} size='small'>
 					<TableHead>
 						<TableRow>
 							<CustomTableCell align="center">Name</CustomTableCell>

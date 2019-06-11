@@ -20,11 +20,11 @@ const styles = theme => ({
 		position: 'relative',
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: "calc(100vh - 64px - 56px - 48px - 20px)",
+		height: "calc(100vh - 64px - 48px - 36px - 16px)",
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 56px - 57px - 56px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 64px - 48px - 36px - 48px - 16px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -150,7 +150,7 @@ class ConnectedSubmittedProView extends React.Component {
 		return (
 			<div className={classes.root}>
 				<div className={classes.tableWrap}>
-					<Table className={classes.table}>
+					<Table className={classes.table} size='small'>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell align="center">Proposal To</CustomTableCell>
@@ -185,7 +185,7 @@ class ConnectedSubmittedProView extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={proposals.totalElements}

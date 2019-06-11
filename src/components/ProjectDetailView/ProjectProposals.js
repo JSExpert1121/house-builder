@@ -134,7 +134,6 @@ class ConnectedProjectProposals extends React.Component {
 
 	handleRowSelected = (id) => {
 		const { match, history } = this.props;
-		console.log('handleRowSelected', id);
 		history.push(match.url.substring(0, 7) + "/proposal_detail/" + id);
 	}
 

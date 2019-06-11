@@ -30,20 +30,20 @@ const styles = theme => ({
 	root: {
 		position: 'relative',
 		flexGrow: 1,
-		height: "calc(100vh - 136px)",
+		height: "calc(100vh - 128px)",
 		margin: theme.spacing(1),
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
 	},
 	mainBoard: {
-		width: "90%",
+		width: "100%",
+		height: "100%",
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "90%",
 		padding: theme.spacing(2),
-		[theme.breakpoints.up('sm')]: {
-			width: 700,
-		},
+		// [theme.breakpoints.up('sm')]: {
+		// 	width: 700,
+		// },
 		display: 'flex',
 		flexDirection: "column",
 		overflow: "auto",
@@ -182,6 +182,7 @@ class connectedAddProjectView extends Component {
 						label="Price"
 						className={classes.paper_price}
 						value={this.state.price}
+						type="number"
 						onChange={(val) => this.setState({ price: val.target.value })}
 						InputProps={{ classes: { input: classes.editField } }}
 					/>

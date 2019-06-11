@@ -21,13 +21,13 @@ import CustomTableCell from '../../../components/shared/CustomTableCell';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 56px - 20px)",
+		height: "calc(100vh - 64px - 48px - 16px)",
 		margin: theme.spacing(1),
-		overflow: "scroll"
+		overflow: "hidden"
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 64px - 48px - 48px - 16px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -115,7 +115,7 @@ class connectedCurProView extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={projects.totalElements}

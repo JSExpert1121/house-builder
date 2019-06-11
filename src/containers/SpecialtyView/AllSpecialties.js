@@ -14,12 +14,12 @@ import SpecTableView from './SpecTableView';
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        height: "calc(100vh - 64px - 56px - 20px)",
+        height: "calc(100vh - 64px - 48px - 16px)",
         margin: theme.spacing(1)
     },
     tableWrap: {
-        overflow: "scroll",
-        maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)"
+        overflow: "auto",
+        maxHeight: "calc(100vh - 64px - 48px - 48px - 16px)"
     },
     relative: {
         position: "relative",
@@ -183,7 +183,7 @@ class AllSpecialties extends Component {
                         handleSelect={this.handleSelect} />
                 </div>
                 <TablePagination
-                    style={{ overflow: "scroll" }}
+                    style={{ overflow: "auto" }}
                     rowsPerPageOptions={[5, 10, 20]}
                     component="div"
                     count={totalItems}

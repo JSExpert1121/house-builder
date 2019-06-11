@@ -48,16 +48,7 @@ const styles = (theme) => ({
 	},
 });
 
-const CustomTableCell = withStyles(theme => ({
-	head: {
-		backgroundColor: theme.palette.primary.light,
-		color: theme.palette.common.white,
-	},
-	body: {
-		fontSize: 14,
-		color: theme.palette.primary.light
-	},
-}))(TableCell);
+import CustomTableCell from '../../components/shared/CustomTableCell';
 
 class ConnectedBidderListingView extends React.Component {
 	constructor(props) {

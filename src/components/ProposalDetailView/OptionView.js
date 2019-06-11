@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
     flexWrap: "wrap"
   },
   subtitle: {
+    padding: theme.spacing(1),
     fontSize: theme.typography.pxToRem(24),
     fontWeight: "bold"
   },
@@ -117,33 +118,33 @@ const OptionTableView = ({
   return (
     <>
       <Typography className={classes.subtitle}>Options</Typography>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <CustomTableCell align="left">Name</CustomTableCell>
-              <CustomTableCell align="left">Value</CustomTableCell>
-              <CustomTableCell align="left">Description</CustomTableCell>
-              <CustomTableCell align="left">Badget</CustomTableCell>
-              <CustomTableCell align="left">Duration</CustomTableCell>
-              {edit &&
-                <CustomTableCell align="left">
-                  <IconButton style={{ color: "#FFFFFF" }} onClick={handleAdd} size='small'>
-                    <NoteAddIcon />
-                  </IconButton>
-                </CustomTableCell>}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {options.map((opt, index) =>
-              editingId !== opt.id ? (
-                <OptionView
-                  edit={edit}
-                  key={index}
-                  option={opt}
-                  handleDelete={() => handleDelete(opt.id)}
-                  handleEdit={() => handleEdit(opt.id)}
-                />
-              ) : (
+      <Table className={classes.table}>
+        <TableHead>
+          <TableRow>
+            <CustomTableCell align="left">Name</CustomTableCell>
+            <CustomTableCell align="left">Value</CustomTableCell>
+            <CustomTableCell align="left">Description</CustomTableCell>
+            <CustomTableCell align="left">Badget</CustomTableCell>
+            <CustomTableCell align="left">Duration</CustomTableCell>
+            {edit &&
+              <CustomTableCell align="left">
+                <IconButton style={{ color: "#FFFFFF" }} onClick={handleAdd} size='small'>
+                  <NoteAddIcon />
+                </IconButton>
+              </CustomTableCell>}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {options.map((opt, index) =>
+            editingId !== opt.id ? (
+              <OptionView
+                edit={edit}
+                key={index}
+                option={opt}
+                handleDelete={() => handleDelete(opt.id)}
+                handleEdit={() => handleEdit(opt.id)}
+              />
+            ) : (
                 <TableRow>
                   <CustomTableCell colSpan={colcnt}>
                     <OptionEdit
@@ -153,10 +154,10 @@ const OptionTableView = ({
                     />
                   </CustomTableCell>
                 </TableRow>
-                )
-            )}
-          </TableBody>
-        </Table>
+              )
+          )}
+        </TableBody>
+      </Table>
     </>
   );
 };
