@@ -1,9 +1,15 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
+import Divider from '@material-ui/core/Divider';
+import auth0Client from '../../../auth0/auth';
 import {
 	CircularProgress,
 	Paper,
@@ -28,11 +34,7 @@ import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles';
-
-import TSnackbarContent from '../SnackBarContent';
-
-import { getProjectBiddersData, searchFilter, inviteContractor } from '../../actions';
-import { selectContractor, getSpecialties, getContrators0 } from '../../actions/cont-actions';
+import { selectContractor, getSpecialties, getContrators0 } from '../../../actions/cont-actions';
 
 const styles = theme => ({
 	root: {
@@ -116,18 +118,7 @@ const styles = theme => ({
 	},
 });
 
-const CustomTableCell = withStyles(theme => ({
-	head: {
-		backgroundColor: theme.palette.primary.light,
-		color: theme.palette.common.white,
-	},
-	body: {
-		fontSize: 14,
-		color: theme.palette.primary.light
-	},
-}))(TableCell);
-  
-  function NoOptionsMessage(props) {
+function NoOptionsMessage(props) {
 	return (
 	  <Typography
 		color="textSecondary"
@@ -234,15 +225,25 @@ const CustomTableCell = withStyles(theme => ({
 	ValueContainer,
   };
 
-class ConnectedProjectBidders extends React.Component {
+const CustomTableCell = withStyles(theme => ({
+	head: {
+		backgroundColor: theme.palette.primary.light,
+		color: theme.palette.common.white,
+	},
+	body: {
+		fontSize: 14,
+		color: theme.palette.primary.light
+	},
+}))(TableCell);
+
+
+class ConnectedBidderListingView extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			rowsPerPage: 20,
 			currentPage: 0,
-			rowsPerPage1: 20,
-			currentPage1: 0,
 			isSaving: false,
 			openCategoryForm: false,
 			name: "",
@@ -252,53 +253,30 @@ class ConnectedProjectBidders extends React.Component {
 			snackBar: false,
 			SnackBarContent: '',
 			order: 'desc',
-			projectBidders: null,
 			multi: null,
 			contractors: null,
 		}
 	}
 
 	async componentDidMount() {
-		const { project, match } = this.props;			
-		await this.props.getProjectBiddersData(project.id, 0, 20);
+		const { match } = this.props;			
 		await this.props.getSpecialties();
 		await this.props.getContrators0(0, 20);
 	}
 
-	componentWillReceiveProps({ projectBidders, contractors }) {
-		this.setState({ projectBidders: projectBidders,
-						contractors: contractors });
+	componentWillReceiveProps({ contractors }) {
+		this.setState({ contractors: contractors });
 	}
 
 	handleChangePage = (event, page) => {
-		const { project } = this.props;	
-		this.setState({ currentPage: page });
-		this.props.getProjectBiddersData(project.id, page, this.state.rowsPerPage);
-	};
-
-	handleChangePage1 = (event, page) => {
 		this.setState({ currentPage1: page });
 		this.props.getContrators0(page, this.state.rowsPerPage1);
 	};
 
 	handleChangeRowsPerPage = event => {
-		const { projectBidders } = this.state;
-		const { project } = this.props;	
-		const rowsPerPage = event.target.value;
-		const currentPage = rowsPerPage >= projectBidders.totalElements ? 0 : this.state.currentPage;
-
-		this.setState({
-			rowsPerPage: rowsPerPage,
-			currentPage: currentPage
-		});
-
-		this.props.getProjectBiddersData(project.id, currentPage, rowsPerPage);
-	};
-
-	handleChangeRowsPerPage1 = event => {
 		const { contractors } = this.state;
-		const rowsPerPage1 = event.target.value;
-		const currentPage1 = rowsPerPage1 >= contractors.totalElements ? 0 : this.state.currentPage1;
+		const rowsPerPage = event.target.value;
+		const currentPage = rowsPerPage >= contractors.totalElements ? 0 : this.state.currentPage;
 
 		this.setState({
 			rowsPerPage: rowsPerPage,
@@ -326,22 +304,9 @@ class ConnectedProjectBidders extends React.Component {
 		});
 	};
 
-	isInvited = id => {
-		const value = this.props.projectBidders.map(
-			row => {				
-				if(row.id === id)						
-						return true;					
-			}
-		)		
-		if(value.includes(true)) 
-			return true;
-		else
-			return false;
-	}
-	  
-	render() {
-		const { classes, project, theme, specialties, searchResult, match } = this.props;	
-		const { contractors, projectBidders } = this.state;
+	render() {		
+		const { classes, theme, specialties, searchResult, match, userProfile } = this.props;	
+		const { contractors } = this.state;
 		const suggestions = specialties ? specialties.content.map(specialty => ({
 			value: specialty.id,
 			label: specialty.name,
@@ -353,173 +318,29 @@ class ConnectedProjectBidders extends React.Component {
 		}),
 		};
 
-		if (projectBidders === null || contractors === null) {
+		if (contractors === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}
 
+
+		if (!userProfile.user_metadata.roles.includes("Gen") &&
+			!userProfile.user_metadata.roles.includes("GenSub") &&
+			!userProfile.user_metadata.roles.includes("SuperAdmin"))
+			return (<div> Access Forbidden </div>);
+
 		return (
-			<Paper className={classes.root}>
-				<Typography>Invited Bidders</Typography>
-				<div className={classes.tableWrap}>
-					<Table >
-						<TableHead>
-							<TableRow>	
-								<CustomTableCell align="center">Logo</CustomTableCell>							
-								<CustomTableCell align="center">Bidder Name</CustomTableCell>
-								<CustomTableCell> Bidder Email </CustomTableCell>								
-								<CustomTableCell align="center">Rating</CustomTableCell>
-								<CustomTableCell align="center">Other</CustomTableCell>		
-							</TableRow>
-						</TableHead>
-						<TableBody >
-							{
-								projectBidders.map(
-									row => (
-										<TableRow className={classes.row} key={row.id} hover>
-											<CustomTableCell 
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-											}}></CustomTableCell>											
-											<CustomTableCell align="center"
-												onClick={async () => {
-													await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-												}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
-											<CustomTableCell component="th" scope="row"
-												onClick={async () => {
-													await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-												}}>
-												{row.email ? row.email : "N/A"}
-											</CustomTableCell>
-											<CustomTableCell 
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-														this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-														this.props.history.push("/s_cont/contractor_detail");
-											}}></CustomTableCell>
-											<CustomTableCell 
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-											}}></CustomTableCell>
-										</TableRow>
-									)
-								)
-							}
-						</TableBody>
-					</Table>
+			<Card className={classes.root}>
+				<div className={classes.search} elevation={1}>
+					<IconButton className={classes.iconButton} aria-label="Menu">
+						<MenuIcon />
+					</IconButton>
+					<InputBase className={classes.input} placeholder="Search Fields" />
+					<Divider className={classes.divider} />
+					<IconButton className={classes.iconButton} aria-label="Search">
+						<SearchIcon />
+					</IconButton>
 				</div>
-				<TablePagination
-					style={{ overflow: "auto" }}
-					rowsPerPageOptions={[5, 10, 20]}
-					component="div"
-					count={projectBidders.length}
-					rowsPerPage={this.state.rowsPerPage}
-					page={this.state.currentPage}
-					backIconButtonProps={{
-						'aria-label': 'Previous Page',
-					}}
-					nextIconButtonProps={{
-						'aria-label': 'Next Page',
-					}}
-					onChangePage={this.handleChangePage}
-					onChangeRowsPerPage={this.handleChangeRowsPerPage}
-				/>
-
-				<Dialog
-					open={this.state.openCategoryForm}
-					onClose={() => this.setState({ openCategoryForm: false })}
-					aria-labelledby="form-dialog-title"
-				>
-					<DialogTitle id="form-dialog-title">create template</DialogTitle>
-					<DialogContent>
-						<DialogContentText>
-							please input the correct template information
-						</DialogContentText>
-						<TextField
-							autoFocus
-							margin="normal"
-							label="name"
-							type="email"
-							fullWidth
-							value={this.state.name}
-							onChange={(val) => this.setState({ name: val.target.value })}
-							InputProps={{ classes: { input: classes.editField } }}
-						/>
-						<TextField
-							label="detail"
-							margin="dense"
-							multiline
-							rows="10"
-							fullWidth
-							value={this.state.description}
-							onChange={(val) => this.setState({ description: val.target.value })}
-						/>
-					</DialogContent>
-					<DialogActions>
-						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
-							Cancel
-						</Button>
-						<Button disabled={this.state.isSaving} onClick={async () => {
-							this.setState({ isSaving: true });
-							const { userProfile } = this.props;
-							const data = {
-								"name": this.state.name,
-								"description": this.state.description,
-								"updatedBy": userProfile.email
-							};
-
-							await this.props.createBidder(data, (res) => {
-								this.setState({
-									snackBar: true,
-									snackBarContent: res ? 'create template success' : 'create template failed'
-								})
-							});
-							await this.props.getProjectBiddersData(project.id, 0, this.state.rowsPerPage);
-
-							this.setState({ openCategoryForm: false, isSaving: false, name: "", description: "" });
-						}} color="primary">
-							Add {
-								this.state.isSaving && <CircularProgress
-
-									size={24}
-									thickness={4} />
-							}
-						</Button>
-					</DialogActions>
-				</Dialog>
-				<Snackbar
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-					open={this.state.snackBar}
-					onClose={() => this.setState({
-						snackBar: false
-					})}
-					ContentProps={{
-						'aria-describedby': 'message-id',
-					}}
-					message={
-						<span id="message-id"> {
-							this.state.snackBarContent
-						}</span>
-					}
-				/>
-				 <TextField
+				<TextField
 					id="name"
 					label="Name"
 					className={classes.textField}
@@ -566,9 +387,9 @@ class ConnectedProjectBidders extends React.Component {
 							<TableRow>
 								<CustomTableCell> Logo </CustomTableCell>
 								<CustomTableCell align="center">Name</CustomTableCell>
-								<CustomTableCell align="center">Specialty</CustomTableCell>
+								<CustomTableCell align="center">Email</CustomTableCell>
 								<CustomTableCell align="center">Rating</CustomTableCell>								
-								<CustomTableCell align="center">Action</CustomTableCell>
+								<CustomTableCell align="center">Other</CustomTableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody >
@@ -579,27 +400,33 @@ class ConnectedProjectBidders extends React.Component {
 											<CustomTableCell component="th" scope="row"
 											onClick={async () => {
 												await this.props.selectContractor(row.id);
-												this.props.history.push("/g_cont/contractor_detail");
+												this.props.history.push("/b_list/contractor_detail");
 											}}
 												>
 											</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
-													this.props.history.push("/g_cont/contractor_detail");
+													this.props.history.push("/b_list/contractor_detail");
 												}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
-													this.props.history.push("/g_cont/contractor_detail");
-												}}></CustomTableCell>
+													this.props.history.push("/b_list/contractor_detail");
+												}}>{row.email ? row.email : "N/A"}</CustomTableCell>
 											<CustomTableCell align="center"
 											onClick={async () => {
 												await this.props.selectContractor(row.id);
-												this.props.history.push("/g_cont/contractor_detail");
+												this.props.history.push("/b_list/contractor_detail");
+											}}
+												></CustomTableCell>	
+											<CustomTableCell align="center"
+											onClick={async () => {
+												await this.props.selectContractor(row.id);
+												this.props.history.push("/b_list/contractor_detail");
 											}}
 												></CustomTableCell>		
-											<CustomTableCell align="center">																							
+											{/* <CustomTableCell align="center">																							
 														{this.isInvited(row.id) ?														
 														<IconButton className={classes.button} aria-label="Delete" color="primary">
 															<AccessAlarmIcon />	
@@ -620,7 +447,7 @@ class ConnectedProjectBidders extends React.Component {
 															Invite
 														</Button>	
 														}			
-											</CustomTableCell>
+											</CustomTableCell> */}
 										</TableRow>
 									)
 								)
@@ -632,48 +459,42 @@ class ConnectedProjectBidders extends React.Component {
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={contractors.totalElements}
-					rowsPerPage={this.state.rowsPerPage1}
-					page={this.state.currentPage1}
+					rowsPerPage={this.state.rowsPerPage}
+					page={this.state.currentPage}
 					backIconButtonProps={{
 						'aria-label': 'Previous Page',
 					}}
 					nextIconButtonProps={{
 						'aria-label': 'Next Page',
 					}}
-					onChangePage={this.handleChangePage1}
-					onChangeRowsPerPage={this.handleChangeRowsPerPage1}
+					onChangePage={this.handleChangePage}
+					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>
-			</Paper >
+			</Card >
 		);
 	}
 }
 
-const mapStateToProps = state => {
-	return {
-		projectBidders: state.global_data.projectBidders,
-		project: state.global_data.project,
-		searchResult: state.global_data.searchResult,
-		specialties: state.cont_data.specialties,	
-		contractors: state.cont_data.contractors,	
-	};
-};
-
 const mapDispatchToProps = dispatch => {
 	return {
-		getProjectBiddersData: (id, page, size) => dispatch(getProjectBiddersData(id, page, size)),	
+		getContrators0: (page, size) => dispatch(getContrators0(page, size)),		
 		selectContractor: (id) => dispatch(selectContractor(id)),
 		getSpecialties: () => dispatch(getSpecialties()),
-		searchFilter: (name, city, specialties, cb) => dispatch(searchFilter(name, city, specialties, cb)),	
-		getContrators0: (page, size) => dispatch(getContrators0(page, size)),
-		inviteContractor: (projId, subConId, cb) => dispatch(inviteContractor(projId, subConId, cb)),	
-		
+	};
+}
+
+const mapStateToProps = state => {
+	return {
+		userProfile: state.global_data.userProfile,
+		contractors: state.cont_data.contractors,
+		specialties: state.cont_data.specialties,
 	};
 };
 
-const ProjectBidders = connect(mapStateToProps, mapDispatchToProps)(ConnectedProjectBidders);
+const BidderListingView = connect(mapStateToProps, mapDispatchToProps)(ConnectedBidderListingView);
 
-ProjectBidders.propTypes = {
+BidderListingView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ProjectBidders);
+export default withStyles(styles, { withTheme: true })(BidderListingView);

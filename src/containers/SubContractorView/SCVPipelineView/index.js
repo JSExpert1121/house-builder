@@ -17,6 +17,7 @@ import { Redirect, Link, Switch, withRouter } from 'react-router-dom';
 import SubmittedProView from './SubmittedProView';
 import WonProView from './WonProView';
 import InvitedProView from './InvitedProView';
+// import ProjectDetailView from '../../../components/ProjectDetailView';
 
 const styles = theme => ({
 	root: {
@@ -70,6 +71,7 @@ class ConnectedSCVPipelineView extends React.Component {
 							<SecuredRoute path={`${match.url}/submitted`} component={SubmittedProView} />
 							<SecuredRoute path={`${match.url}/awarded`} component = {WonProView} />
 							<SecuredRoute path={`${match.url}/invited`} component = {InvitedProView} />
+							{/* <SecuredRoute path={`${match.url}/project_detail/:id`} component={ProjectDetailView} /> */}
 							<Redirect path={`${match.url}`} to={`${match.url}/submitted`} />
 						</Switch>
 					</Paper>

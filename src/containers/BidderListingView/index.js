@@ -1,63 +1,34 @@
-import React from 'react'
+import React, { Component } from 'react';
+import { Switch, Redirect, withRouter } from 'react-router-dom';
+import SecuredRoute from '../../routers/SecuredRoute';
+
+// Redux
 import { connect } from 'react-redux';
 
+// material ui
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Card from '@material-ui/core/Card';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import NoSsr from '@material-ui/core/NoSsr';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import auth0Client from '../../auth0/auth';
-import { CircularProgress } from '@material-ui/core';
+// local components
+import ContractorDetailView from './ContractorDetailView';
+import SearchBidderListView from './SearchBidderListView';
 
-const styles = (theme) => ({
+
+const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		margin: theme.spacing(1),
-		height: "calc(100vh - 64px - 20px)",
-		overflow: "auto",
 	},
-	search: {
-		padding: '2px 4px',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'flex-end',
-		width: 400,
+	toolbarstyle: {
+		backgroundColor: theme.palette.background.paper,
+		color: theme.palette.primary.dark
 	},
-
-	input: {
-		marginLeft: 8,
-		flex: 1,
-	},
-	iconButton: {
-		padding: 10,
-	},
-	divider: {
-		width: 1,
-		height: 28,
-		margin: 4,
-	},
+	waitingSpin: {
+		position: "relative",
+		left: "calc(50% - 10px)",
+		top: "calc(40vh)",
+	}
 });
-
-const CustomTableCell = withStyles(theme => ({
-	head: {
-		backgroundColor: theme.palette.primary.light,
-		color: theme.palette.common.white,
-	},
-	body: {
-		fontSize: 14,
-		color: theme.palette.primary.light
-	},
-}))(TableCell);
 
 class ConnectedBidderListingView extends React.Component {
 	constructor(props) {
@@ -65,65 +36,37 @@ class ConnectedBidderListingView extends React.Component {
 	}
 
 	render() {
-		const { classes, userProfile } = this.props;
-
+		const { classes, userProfile, match, location } = this.props;
+		
 		if (!userProfile.user_metadata.roles.includes("Gen") &&
 			!userProfile.user_metadata.roles.includes("GenSub") &&
 			!userProfile.user_metadata.roles.includes("SuperAdmin"))
 			return (<div> Access Forbidden </div>);
 
 		return (
-			<Card className={classes.root}>
-				<div className={classes.search} elevation={1}>
-					<IconButton className={classes.iconButton} aria-label="Menu">
-						<MenuIcon />
-					</IconButton>
-					<InputBase className={classes.input} placeholder="Search Fields" />
-					<Divider className={classes.divider} />
-					<IconButton className={classes.iconButton} aria-label="Search">
-						<SearchIcon />
-					</IconButton>
+			<NoSsr>
+				<div className={classes.root}>					
+					<Switch>
+						<SecuredRoute path={`${match.url}/search_bidder`} component={SearchBidderListView} />
+						<SecuredRoute path={`${match.url}/contractor_detail`} component={ContractorDetailView} />
+						<Redirect path={`${match.url}`} to={`${match.url}/search_bidder`} />
+					</Switch>
 				</div>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell align="center">Logo</CustomTableCell>
-							<CustomTableCell align="center">Name</CustomTableCell>
-							<CustomTableCell align="center">Speciality</CustomTableCell>
-							<CustomTableCell align="center">Rating</CustomTableCell>
-							<CustomTableCell align="center">Other</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						<TableRow className={classes.row} hover>
-							<CustomTableCell align="center">A</CustomTableCell>
-							<CustomTableCell align="center">A</CustomTableCell>
-							<CustomTableCell align="center">A</CustomTableCell>
-							<CustomTableCell align="center">A</CustomTableCell>
-							<CustomTableCell align="center">A</CustomTableCell>
-						</TableRow>
-					</TableBody>
-				</Table>
-			</Card >
+			</NoSsr>
 		);
 	}
 }
 
-const mapDispatchToProps = dispatch => {
-	return {
-	};
-}
-
 const mapStateToProps = state => {
 	return {
-		userProfile: state.global_data.userProfile
+		userProfile: state.global_data.userProfile,
 	};
 };
 
-const BidderListingView = connect(mapStateToProps, mapDispatchToProps)(ConnectedBidderListingView);
+const BidderListingView = connect(mapStateToProps, null)(ConnectedBidderListingView);
 
 BidderListingView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(BidderListingView);
+export default withRouter(withStyles(styles)(BidderListingView));

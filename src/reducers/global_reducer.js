@@ -2,9 +2,11 @@ import {
 	SET_USER_PROFILE, SET_SELECTED_PROPOSAL,
 	PROPOSALS_LOADED,
 	PROJECT_DETAIL_LOADED,
+	PROJECT_BIDDERS_LOADED,
 	SET_DETAIL_PROPOSAL,
 	PROPOSAL_MESSAGES_LOADED,
-	SET_PROPOSALS_COMPARE
+	SET_PROPOSALS_COMPARE,
+	SEARCH_FILTER_LOADED
 } from "../constants/global-action-types";
 
 const initialState = {
@@ -14,7 +16,8 @@ const initialState = {
 	proposal: null,
 	project: null,
 	proposalDetail: null,
-	compareProps: null
+	compareProps: null,
+	searchResult: null
 }
 
 function global_reducer(state = initialState, action) {
@@ -39,6 +42,14 @@ function global_reducer(state = initialState, action) {
 		case PROJECT_DETAIL_LOADED:
 			return Object.assign({}, state, {
 				project: action.payload
+			});
+		case PROJECT_BIDDERS_LOADED:
+			return Object.assign({}, state, {
+				projectBidders: action.payload
+			});
+		case SEARCH_FILTER_LOADED:
+			return Object.assign({}, state, {
+				searchResult: action.payload
 			});
 		case PROPOSAL_MESSAGES_LOADED:
 			return Object.assign({}, state, {

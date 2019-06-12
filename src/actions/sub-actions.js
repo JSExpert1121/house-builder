@@ -24,3 +24,17 @@ export function getProposals(cont_id, page, row, filterStr) {
 			})
 	}
 }
+
+export function getInvitedProjectsByGenId(id, page, rowSize) {
+	return function (dispatch) {
+		dispatch({ type: "CLEAR_PROJECTS" });
+		return Axios.get(process.env.PROJECT_API + "projects/invites/" + id, {
+			params: {
+				"page": page,
+				"size": rowSize
+			}
+		})
+			.then(response => dispatch({ type: "INVITED_PROJECT_LOADED", payload: response.data }))
+			.catch(err => console.log(err.message))
+	}
+}

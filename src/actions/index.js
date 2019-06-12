@@ -2,6 +2,7 @@ import {
 	SET_USER_PROFILE, SET_SELECTED_PROPOSAL,
 	SET_REDIRECT_TO, PROPOSALS_LOADED,
 	PROJECT_DETAIL_LOADED,
+	PROJECT_BIDDERS_LOADED,
 	SET_DETAIL_PROPOSAL,
 	SET_PROPOSALS_COMPARE,
 	PROPOSAL_MESSAGES_LOADED
@@ -101,6 +102,21 @@ export function getProjectData(id) {
 	}
 }
 
+export function getProjectBiddersData(id, page, size) {
+	return function (dispatch) {
+		return Axios.get(process.env.PROJECT_API + "projects/" + id + "/invites", {
+			params: {
+				"page": page,
+				"size": size
+			}
+		})
+			.then(response => {
+				dispatch({ type: PROJECT_BIDDERS_LOADED, payload: response.data })
+			})
+			.catch(err => console.log(err.message));
+	}
+}
+
 export function deleteFileFromProject(id, name, cb) {
 	return function (dispatch) {
 		return Axios.delete(process.env.PROJECT_API + "projects/" + id + "/files/" + name)
@@ -188,5 +204,36 @@ export function addFileToPropMessage(msg_id, files, cb) {
 				cb(false);
 				console.log(err.message);
 			});
+	}
+}
+
+export function searchFilter(name, city, specialties) {
+	return function (dispatch) {
+		return Axios.get(process.env.PROJECT_API + "contractors/search", {
+			data: {
+				name: "gen1",
+				// "city": city,
+				// "specialties": specialties
+			},
+			headers: {				
+				'Content-Type': 'application/json'
+			}
+		})
+			.then(response => {
+				dispatch({ type: SEARCH_FILTER_LOADED, payload: response.data })
+			})
+			.catch(err => console.log(err.message));
+	}
+}
+
+export function inviteContractor(prop_id, subId, cb) {
+	return function (dispatch) {
+		return Axios.post(process.env.PROJECT_API + "projects/" + prop_id + "/invite/" + subId
+			).then(res => {
+				cb(res.data);
+			}).catch(err => {
+				cb(false);
+				console.log(err.message);
+			})
 	}
 }

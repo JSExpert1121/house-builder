@@ -55,7 +55,6 @@ class ConnectedProjectDetailView extends React.Component {
 
 	async componentDidMount() {
 		const { match } = this.props;
-
 		await this.props.getProjectData(match.params.id);
 	}
 
@@ -63,6 +62,8 @@ class ConnectedProjectDetailView extends React.Component {
 		const { match } = this.props;
 		if (match.url.includes("g_cont"))
 			this.props.history.push("/g_cont");
+		if (match.url.includes("s_cont"))
+			this.props.history.push("/s_cont");
 		else if (match.url.includes("a_pros"))
 			this.props.history.push("/a_pros");
 	}
@@ -125,11 +126,11 @@ class ConnectedProjectDetailView extends React.Component {
 
 						<Switch>
 							<SecuredRoute path={`${match.url}/overview`} component={ProjectOverView} />
-							<SecuredRoute path={`${match.url}/bidders`} /* component={ProjectBidders} */ render={() => <div />} />
+							<SecuredRoute path={`${match.url}/bidders`} component={ProjectBidders} render={() => <div />} />
 							<SecuredRoute path={`${match.url}/files`} component={ProjectFiles} />
 							<SecuredRoute path={`${match.url}/messages`} /*component={ProjectMessages}*/ render={() => <div />} />
 							<SecuredRoute path={`${match.url}/proposals`} component={ProjectProposals} />
-							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />
+							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />							
 							{owner && <SecuredRoute path={`${match.url}/compare`} component={ProposalsCompare} />}
 							<Redirect path={`${match.url}`} to={`${match.url}/overview`} />
 						</Switch>
