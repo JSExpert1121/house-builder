@@ -43,7 +43,7 @@ const styles = theme => ({
 	},
 	tableWrap: {
 		overflow: "auto",
-		maxHeight: "calc(100vh - 192px)",
+		// maxHeight: "calc(100vh - 192px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -81,6 +81,7 @@ const styles = theme => ({
 		display: 'flex',
 		flexWrap: 'wrap',
 		flex: 1,
+		margin: '10px',
 		alignItems: 'center',
 		overflow: 'hidden'
 	},
@@ -114,6 +115,18 @@ const styles = theme => ({
 	button: {
 		margin: theme.spacing(1),
 	},
+	card: {
+		width: '100%',
+		marginBottom: '20px',
+		borderWidth: '1px',
+		borderStyle: 'solid',
+		borderColor: 'lightgrey'
+	},
+	title: {
+		padding: '20px',
+		fontSize: '21px',
+		color: 'grey'
+	}
 });
 
 const CustomTableCell = withStyles(theme => ({
@@ -265,9 +278,11 @@ class ConnectedProjectBidders extends React.Component {
 		await this.props.getContrators0(0, 20);
 	}
 
-	componentWillReceiveProps({ projectBidders, contractors }) {
+	componentWillReceiveProps({ projectBidders, contractors, searchResult }) {		
 		this.setState({ projectBidders: projectBidders,
 						contractors: contractors });
+		if(searchResult)
+			this.setState({contractors: {...contractors, content: searchResult} })
 	}
 
 	handleChangePage = (event, page) => {
@@ -301,11 +316,11 @@ class ConnectedProjectBidders extends React.Component {
 		const currentPage1 = rowsPerPage1 >= contractors.totalElements ? 0 : this.state.currentPage1;
 
 		this.setState({
-			rowsPerPage: rowsPerPage,
-			currentPage: currentPage
+			rowsPerPage1: rowsPerPage1,
+			currentPage1: currentPage1
 		});
 
-		this.props.getContrators0(currentPage, rowsPerPage);
+		this.props.getContrators0(currentPage1, rowsPerPage1);
 	};
 
 	onNameChange = e => {
@@ -340,7 +355,7 @@ class ConnectedProjectBidders extends React.Component {
 	}
 	  
 	render() {
-		const { classes, project, theme, specialties, searchResult, match } = this.props;	
+		const { classes, project, theme, specialties } = this.props;	
 		const { contractors, projectBidders } = this.state;
 		const suggestions = specialties ? specialties.content.map(specialty => ({
 			value: specialty.id,
@@ -355,11 +370,11 @@ class ConnectedProjectBidders extends React.Component {
 
 		if (projectBidders === null || contractors === null) {
 			return <CircularProgress className={classes.waitingSpin} />;
-		}
-
+		}		
 		return (
-			<Paper className={classes.root}>
-				<Typography>Invited Bidders</Typography>
+			<div className={classes.root}>
+				<Card className={classes.card}>
+				<Typography className={classes.title}>Invited Bidders</Typography>
 				<div className={classes.tableWrap}>
 					<Table >
 						<TableHead>
@@ -440,70 +455,7 @@ class ConnectedProjectBidders extends React.Component {
 					}}
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
-				/>
-
-				<Dialog
-					open={this.state.openCategoryForm}
-					onClose={() => this.setState({ openCategoryForm: false })}
-					aria-labelledby="form-dialog-title"
-				>
-					<DialogTitle id="form-dialog-title">create template</DialogTitle>
-					<DialogContent>
-						<DialogContentText>
-							please input the correct template information
-						</DialogContentText>
-						<TextField
-							autoFocus
-							margin="normal"
-							label="name"
-							type="email"
-							fullWidth
-							value={this.state.name}
-							onChange={(val) => this.setState({ name: val.target.value })}
-							InputProps={{ classes: { input: classes.editField } }}
-						/>
-						<TextField
-							label="detail"
-							margin="dense"
-							multiline
-							rows="10"
-							fullWidth
-							value={this.state.description}
-							onChange={(val) => this.setState({ description: val.target.value })}
-						/>
-					</DialogContent>
-					<DialogActions>
-						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
-							Cancel
-						</Button>
-						<Button disabled={this.state.isSaving} onClick={async () => {
-							this.setState({ isSaving: true });
-							const { userProfile } = this.props;
-							const data = {
-								"name": this.state.name,
-								"description": this.state.description,
-								"updatedBy": userProfile.email
-							};
-
-							await this.props.createBidder(data, (res) => {
-								this.setState({
-									snackBar: true,
-									snackBarContent: res ? 'create template success' : 'create template failed'
-								})
-							});
-							await this.props.getProjectBiddersData(project.id, 0, this.state.rowsPerPage);
-
-							this.setState({ openCategoryForm: false, isSaving: false, name: "", description: "" });
-						}} color="primary">
-							Add {
-								this.state.isSaving && <CircularProgress
-
-									size={24}
-									thickness={4} />
-							}
-						</Button>
-					</DialogActions>
-				</Dialog>
+				/>				
 				<Snackbar
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
 					open={this.state.snackBar}
@@ -519,6 +471,9 @@ class ConnectedProjectBidders extends React.Component {
 						}</span>
 					}
 				/>
+				</Card>
+				<Card className={classes.card}>
+				<Typography className={classes.title}> Search Field </Typography>
 				 <TextField
 					id="name"
 					label="Name"
@@ -560,8 +515,9 @@ class ConnectedProjectBidders extends React.Component {
 							this.props.updateContractor(selectedContractor.id);
 					}
 				)}>Search</Button>
-				<Typography>Search result</Typography>
-				<Table >
+				<Typography className={classes.title}>Search result</Typography>
+				<div className={classes.tableWrap}>
+					<Table >
 						<TableHead>
 							<TableRow>
 								<CustomTableCell> Logo </CustomTableCell>
@@ -627,11 +583,12 @@ class ConnectedProjectBidders extends React.Component {
 							}
 						</TableBody>
 					</Table>
+				</div>
 				<TablePagination
 					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
-					count={contractors.totalElements}
+					count={contractors.numberOfElements}
 					rowsPerPage={this.state.rowsPerPage1}
 					page={this.state.currentPage1}
 					backIconButtonProps={{
@@ -643,7 +600,8 @@ class ConnectedProjectBidders extends React.Component {
 					onChangePage={this.handleChangePage1}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage1}
 				/>
-			</Paper >
+				</Card>
+			</div >
 		);
 	}
 }

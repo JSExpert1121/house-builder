@@ -5,7 +5,8 @@ import {
 	PROJECT_BIDDERS_LOADED,
 	SET_DETAIL_PROPOSAL,
 	SET_PROPOSALS_COMPARE,
-	PROPOSAL_MESSAGES_LOADED
+	PROPOSAL_MESSAGES_LOADED,
+	SEARCH_FILTER_LOADED
 } from '../constants/global-action-types'
 
 import PropApi from '../api/proposal';
@@ -209,11 +210,11 @@ export function addFileToPropMessage(msg_id, files, cb) {
 
 export function searchFilter(name, city, specialties) {
 	return function (dispatch) {
-		return Axios.get(process.env.PROJECT_API + "contractors/search", {
+		return Axios.post(process.env.PROJECT_API + "contractors/search", {
 			data: {
-				name: "gen1",
-				// "city": city,
-				// "specialties": specialties
+				name: name,
+				city: city,
+				specialties: specialties
 			},
 			headers: {				
 				'Content-Type': 'application/json'

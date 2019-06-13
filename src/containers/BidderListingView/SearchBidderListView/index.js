@@ -34,6 +34,7 @@ import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles';
+import { searchFilter } from '../../../actions';
 import { selectContractor, getSpecialties, getContrators0 } from '../../../actions/cont-actions';
 
 const styles = theme => ({
@@ -106,12 +107,17 @@ const styles = theme => ({
 		left: 2,
 		fontSize: 16,
 	},
-	paper: {
-		position: 'absolute',
-		zIndex: 1,
-		marginTop: theme.spacing.unit,
-		left: 0,
-		right: 0,
+	card: {
+		width: '100%',
+		marginBottom: '20px',
+		borderWidth: '1px',
+		borderStyle: 'solid',
+		borderColor: 'lightgrey'
+	},
+	title: {
+		padding: '20px',
+		fontSize: '21px',
+		color: 'grey'
 	},
 	button: {
 		margin: theme.spacing(1),
@@ -264,8 +270,10 @@ class ConnectedBidderListingView extends React.Component {
 		await this.props.getContrators0(0, 20);
 	}
 
-	componentWillReceiveProps({ contractors }) {
+	componentWillReceiveProps({ contractors, searchResult }) {
 		this.setState({ contractors: contractors });
+		if(searchResult)
+			this.setState({contractors: {...contractors, content: searchResult} })
 	}
 
 	handleChangePage = (event, page) => {
@@ -329,148 +337,140 @@ class ConnectedBidderListingView extends React.Component {
 			return (<div> Access Forbidden </div>);
 
 		return (
-			<Card className={classes.root}>
-				<div className={classes.search} elevation={1}>
-					<IconButton className={classes.iconButton} aria-label="Menu">
-						<MenuIcon />
-					</IconButton>
-					<InputBase className={classes.input} placeholder="Search Fields" />
-					<Divider className={classes.divider} />
-					<IconButton className={classes.iconButton} aria-label="Search">
-						<SearchIcon />
-					</IconButton>
-				</div>
-				<TextField
-					id="name"
-					label="Name"
-					className={classes.textField}
-					value={this.state.filterName}
-					onChange={e => this.onNameChange(e)}
-					margin="normal"
-				/>
-				<TextField
-					id="city"
-					label="City"
-					className={classes.textField}
-					value={this.state.filterCity}
-					onChange={e => this.onCityChange(e)}
-					margin="normal"
-				/>
-				<Select
-					classes={classes}
-					styles={selectStyles}
-					textFieldProps={{
-					label: 'Specialty',
-					InputLabelProps: {
-						shrink: true,
-					},
-					}}
-					options={suggestions}
-					components={components}
-					value={this.state.multi}
-					onChange={this.handleChange('multi')}
-					placeholder="Select multiple specialties"
-					isMulti
-				/>
-				<Button 
-					variant="contained" 
-					color="primary" 
-					className={classes.button} 
-					onClick={() => this.props.searchFilter(this.state.filterName, this.state.filterCity, this.state.multi?this.state.multi.map(specialty => (specialty.value)):[], (result) => {
-						if (result)
-							this.props.updateContractor(selectedContractor.id);
-					}
-				)}>Search</Button>
-				<Typography>Search result</Typography>
-				<Table >
-						<TableHead>
-							<TableRow>
-								<CustomTableCell> Logo </CustomTableCell>
-								<CustomTableCell align="center">Name</CustomTableCell>
-								<CustomTableCell align="center">Email</CustomTableCell>
-								<CustomTableCell align="center">Rating</CustomTableCell>								
-								<CustomTableCell align="center">Other</CustomTableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody >
-							{
-								contractors.content.map(
-									row => (
-										<TableRow className={classes.row} key={row.id} hover>
-											<CustomTableCell component="th" scope="row"
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												this.props.history.push("/b_list/contractor_detail");
-											}}
-												>
-											</CustomTableCell>
-											<CustomTableCell align="center"
+			<div className={classes.root}>
+				<Card className={classes.card}>				
+					<TextField
+						id="name"
+						label="Name"
+						className={classes.textField}
+						value={this.state.filterName}
+						onChange={e => this.onNameChange(e)}
+						margin="normal"
+					/>
+					<TextField
+						id="city"
+						label="City"
+						className={classes.textField}
+						value={this.state.filterCity}
+						onChange={e => this.onCityChange(e)}
+						margin="normal"
+					/>
+					<Select
+						classes={classes}
+						styles={selectStyles}
+						textFieldProps={{
+						label: 'Specialty',
+						InputLabelProps: {
+							shrink: true,
+						},
+						}}
+						options={suggestions}
+						components={components}
+						value={this.state.multi}
+						onChange={this.handleChange('multi')}
+						placeholder="Select multiple specialties"
+						isMulti
+					/>
+					<Button 
+						variant="contained" 
+						color="primary" 
+						className={classes.button} 
+						onClick={() => this.props.searchFilter(this.state.filterName, this.state.filterCity, this.state.multi?this.state.multi.map(specialty => (specialty.value)):[], (result) => {
+							if (result)
+								this.props.updateContractor(selectedContractor.id);
+						}
+					)}>Search</Button>
+					<Typography className={classes.title}>Search result</Typography>
+					<Table >
+							<TableHead>
+								<TableRow>
+									<CustomTableCell> Logo </CustomTableCell>
+									<CustomTableCell align="center">Name</CustomTableCell>
+									<CustomTableCell align="center">Email</CustomTableCell>
+									<CustomTableCell align="center">Rating</CustomTableCell>								
+									<CustomTableCell align="center">Other</CustomTableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody >
+								{
+									contractors.content.map(
+										row => (
+											<TableRow className={classes.row} key={row.id} hover>
+												<CustomTableCell component="th" scope="row"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
 													this.props.history.push("/b_list/contractor_detail");
-												}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
-											<CustomTableCell align="center"
+												}}
+													>
+												</CustomTableCell>
+												<CustomTableCell align="center"
+													onClick={async () => {
+														await this.props.selectContractor(row.id);
+														this.props.history.push("/b_list/contractor_detail");
+													}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
+												<CustomTableCell align="center"
+													onClick={async () => {
+														await this.props.selectContractor(row.id);
+														this.props.history.push("/b_list/contractor_detail");
+													}}>{row.email ? row.email : "N/A"}</CustomTableCell>
+												<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
 													this.props.history.push("/b_list/contractor_detail");
-												}}>{row.email ? row.email : "N/A"}</CustomTableCell>
-											<CustomTableCell align="center"
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												this.props.history.push("/b_list/contractor_detail");
-											}}
-												></CustomTableCell>	
-											<CustomTableCell align="center"
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												this.props.history.push("/b_list/contractor_detail");
-											}}
-												></CustomTableCell>		
-											{/* <CustomTableCell align="center">																							
-														{this.isInvited(row.id) ?														
-														<IconButton className={classes.button} aria-label="Delete" color="primary">
-															<AccessAlarmIcon />	
-														</IconButton>
-														:
-														<Button className={classes.button} aria-label="Delete" color="primary" onClick={
-															async () => {
-																await this.props.inviteContractor(project.id, row.id, (result) => {																
-																	if (result)
-																	{
-																		this.props.getContrators0(this.state.currentPage1, this.state.rowsPerPage1);
-																		this.props.getProjectBiddersData(project.id, this.state.currentPage, this.state.rowsPerPage);
-																	}
-																		
-																});															
-															}
-														}>
-															Invite
-														</Button>	
-														}			
-											</CustomTableCell> */}
-										</TableRow>
+												}}
+													></CustomTableCell>	
+												<CustomTableCell align="center"
+												onClick={async () => {
+													await this.props.selectContractor(row.id);
+													this.props.history.push("/b_list/contractor_detail");
+												}}
+													></CustomTableCell>		
+												{/* <CustomTableCell align="center">																							
+															{this.isInvited(row.id) ?														
+															<IconButton className={classes.button} aria-label="Delete" color="primary">
+																<AccessAlarmIcon />	
+															</IconButton>
+															:
+															<Button className={classes.button} aria-label="Delete" color="primary" onClick={
+																async () => {
+																	await this.props.inviteContractor(project.id, row.id, (result) => {																
+																		if (result)
+																		{
+																			this.props.getContrators0(this.state.currentPage1, this.state.rowsPerPage1);
+																			this.props.getProjectBiddersData(project.id, this.state.currentPage, this.state.rowsPerPage);
+																		}
+																			
+																	});															
+																}
+															}>
+																Invite
+															</Button>	
+															}			
+												</CustomTableCell> */}
+											</TableRow>
+										)
 									)
-								)
-							}
-						</TableBody>
-					</Table>
-				<TablePagination
-					style={{ overflow: "auto" }}
-					rowsPerPageOptions={[5, 10, 20]}
-					component="div"
-					count={contractors.totalElements}
-					rowsPerPage={this.state.rowsPerPage}
-					page={this.state.currentPage}
-					backIconButtonProps={{
-						'aria-label': 'Previous Page',
-					}}
-					nextIconButtonProps={{
-						'aria-label': 'Next Page',
-					}}
-					onChangePage={this.handleChangePage}
-					onChangeRowsPerPage={this.handleChangeRowsPerPage}
-				/>
-			</Card >
+								}
+							</TableBody>
+						</Table>
+					<TablePagination
+						style={{ overflow: "auto" }}
+						rowsPerPageOptions={[5, 10, 20]}
+						component="div"
+						count={contractors.content.length}
+						rowsPerPage={this.state.rowsPerPage}
+						page={this.state.currentPage}
+						backIconButtonProps={{
+							'aria-label': 'Previous Page',
+						}}
+						nextIconButtonProps={{
+							'aria-label': 'Next Page',
+						}}
+						onChangePage={this.handleChangePage}
+						onChangeRowsPerPage={this.handleChangeRowsPerPage}
+					/>
+				</Card >
+			</div>
 		);
 	}
 }
@@ -480,6 +480,7 @@ const mapDispatchToProps = dispatch => {
 		getContrators0: (page, size) => dispatch(getContrators0(page, size)),		
 		selectContractor: (id) => dispatch(selectContractor(id)),
 		getSpecialties: () => dispatch(getSpecialties()),
+		searchFilter: (name, city, specialties, cb) => dispatch(searchFilter(name, city, specialties, cb)),	
 	};
 }
 
@@ -488,6 +489,7 @@ const mapStateToProps = state => {
 		userProfile: state.global_data.userProfile,
 		contractors: state.cont_data.contractors,
 		specialties: state.cont_data.specialties,
+		searchResult: state.global_data.searchResult,
 	};
 };
 
