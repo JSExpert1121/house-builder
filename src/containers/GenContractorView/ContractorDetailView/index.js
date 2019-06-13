@@ -48,7 +48,7 @@ class ConnectedContractorDetailView extends React.Component {
 	}
 
 	handleBack = () => {
-		this.props.history.push("/g_cont/project_detail/" + this.props.currentProjectId);		
+		this.props.history.push("/g_cont/project_detail/" + this.props.currentProjectId + '/bidders');		
 	}
 
 	render() {		
