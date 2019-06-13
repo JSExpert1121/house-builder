@@ -8,6 +8,7 @@ import {
 	SET_PROPOSALS_COMPARE,
 	SEARCH_FILTER_LOADED,
 	SET_CURRENT_PROJECT
+
 } from "../constants/global-action-types";
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
 	compareProps: null,
 	searchResult: null,
 	currentProjectId: null
+
 }
 
 function global_reducer(state = initialState, action) {
@@ -57,6 +59,7 @@ function global_reducer(state = initialState, action) {
 			return Object.assign({}, state, {
 				currentProjectId: action.payload
 			});
+
 		case PROPOSAL_MESSAGES_LOADED:
 			return Object.assign({}, state, {
 				proposalMessages: action.payload

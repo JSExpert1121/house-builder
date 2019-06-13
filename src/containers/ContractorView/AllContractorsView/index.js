@@ -128,7 +128,7 @@ class ConnAllContractorView extends Component {
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
-					<Table >
+					<Table size='small'>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell> Contractor Email </CustomTableCell>

@@ -31,7 +31,7 @@ const styles = theme => ({
 	},
 	tableWrap: {
 		overflow: "auto",
-		maxHeight: "calc(100vh - 240px)",
+		maxHeight: "calc(100vh - 240px)",b
 	},
 	row: {
 		'&:nth-of-type(odd)': {

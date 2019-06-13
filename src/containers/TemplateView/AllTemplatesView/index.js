@@ -116,7 +116,7 @@ class ConnAllTemplateView extends Component {
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap}>
-					<Table >
+					<Table size='small'>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell> Template Name </CustomTableCell>
@@ -184,7 +184,7 @@ class ConnAllTemplateView extends Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={templates.totalElements}

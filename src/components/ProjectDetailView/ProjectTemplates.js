@@ -35,12 +35,12 @@ import { getProjectData } from '../../actions';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 56px - 20px)",
+		height: "calc(100vh - 64px - 100px - 16px)",
 		margin: theme.spacing(1),
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 64px - 100px - 48px - 40px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -59,13 +59,13 @@ const styles = theme => ({
 		top: "calc(40vh)",
 	},
 	successAlert: {
-		marginBottom: "10px"
+		marginBottom: theme.spacing(1)
 	},
 	editField: {
 		lineHeight: '1.5rem',
 	},
 	template: {
-		margin: "10px",
+		margin: theme.spacing(1),
 	},
 	fab: {
 		width: "40px",
@@ -151,228 +151,221 @@ class ConnectedProjectTemplateView extends React.Component {
 
 		return (
 			<Box className={classes.root}>
-				<Paper className={classes.root}>
-					{editable && (
-						<Box className={classes.template}>
-							<Select
-								className={classes.select}
-								value={template}
-								onChange={this.handleChange}
-								name="templates"
-							>
-								<MenuItem disabled value="">
-									<em>Select a template</em>
-								</MenuItem>
-								{
-									templates && templates.content.map(
-										row => <MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>
-									)
-								}
-							</Select>
-							<Fab color="primary" aria-label="Add" className={classes.fab}
-								onClick={() => this.props.addTemplate(project.id, template, (result) => {
-									this.setState({ template: '' })
-									if (result)
-										this.props.getProjectData(project.id);
-								})}>
-								<AddIcon />
-							</Fab>
+				{editable && (
+					<Box className={classes.template}>
+						<Select
+							className={classes.select}
+							value={template}
+							onChange={this.handleChange}
+							name="templates"
+						>
+							<MenuItem disabled value="">
+								<em>Select a template</em>
+							</MenuItem>
 							{
-								templates ? templates.content.map(
-									row => (
-										row.id == template ?
-											<ul key={row.id}>
-												<li>
-													Name: {row.name}
-												</li>
-												<li>
-													Description: {row.description}
-												</li>
-											</ul>
-											:
-											null
-									)
-								) :
-									null
+								templates && templates.content.map(
+									row => <MenuItem value={row.id} key={row.id}>{row.name}</MenuItem>
+								)
 							}
-						</Box>
-					)}
-					<Box className={classes.tableWrap}>
-						<Table>
-							<TableHead>
-								<TableRow>
-									<CustomTableCell> Template Name </CustomTableCell>
-									<CustomTableCell align="center">Template Desc</CustomTableCell>
-									<CustomTableCell align="center">Template Value</CustomTableCell>
-									{editable && (
-										<CustomTableCell align="center" >
-											<IconButton className={classes.button} style={{ color: "#FFFFFF" }} onClick={
-												() => this.setState({ openCategoryForm: true })
-											}>
-												<NoteAddIcon />
-											</IconButton>
-										</CustomTableCell>
-									)}
-								</TableRow>
-							</TableHead>
-							<TableBody >
-								{
-									project.projectTemplates.map(
-										row => (
-											<TableRow className={classes.row} key={row.id} hover>
-												<CustomTableCell component="th" scope="row"
-													onClick={async () => {
-														await this.props.selectProject(row.id);
-														this.props.history.push("/m_cont/project_detail");
-													}}>
-													{row.template.name ? row.template.name : "N/A"}
-												</CustomTableCell>
-												<CustomTableCell align="center"
-													onClick={async () => {
-														await this.props.selectProject(row.id);
-														this.props.history.push("/m_cont/project_detail");
-													}}>
-													{row.template.description ? row.template.description : "N/A"}
-												</CustomTableCell>
-												<CustomTableCell align="center"
-													onClick={async () => {
-														await this.props.selectProject(row.id);
-														this.props.history.push("/m_cont/project_detail");
-													}}>
-													{row.template.value ? row.template.value : "N/A"}
-												</CustomTableCell>
-												{editable && (
-													<CustomTableCell align="center">
-														<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
-															async () => {
-																await this.props.deleteTemplate(project.id, row.template.id, (result) => {
-																	this.setState({
-																		snackBar: true,
-																		snackBarContent: result ? 'delete template success' : 'please template categories'
-																	});
-																	this.props.getProjectData(project.id);
+						</Select>
+						<Fab color="primary" aria-label="Add" className={classes.fab}
+							onClick={() => this.props.addTemplate(project.id, template, (result) => {
+								this.setState({ template: '' })
+								if (result)
+									this.props.getProjectData(project.id);
+							})}>
+							<AddIcon />
+						</Fab>
+						{
+							templates ? templates.content.map(
+								row => (
+									row.id == template ?
+										<ul key={row.id}>
+											<li>
+												Name: {row.name}
+											</li>
+											<li>
+												Description: {row.description}
+											</li>
+										</ul>
+										:
+										null
+								)
+							) :
+								null
+						}
+					</Box>
+				)}
+				<Box className={classes.tableWrap}>
+					<Table size='small'>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell> Template Name </CustomTableCell>
+								<CustomTableCell align="center">Template Desc</CustomTableCell>
+								<CustomTableCell align="center">Template Value</CustomTableCell>
+								{editable && (
+									<CustomTableCell align="center" >
+										<IconButton className={classes.button} style={{ color: "#FFFFFF" }} onClick={
+											() => this.setState({ openCategoryForm: true })
+										}>
+											<NoteAddIcon />
+										</IconButton>
+									</CustomTableCell>
+								)}
+							</TableRow>
+						</TableHead>
+						<TableBody >
+							{
+								project.projectTemplates.map(
+									row => (
+										<TableRow className={classes.row} key={row.id} hover>
+											<CustomTableCell component="th" scope="row">
+												{row.template.name ? row.template.name : "N/A"}
+											</CustomTableCell>
+											<CustomTableCell align="center">
+												{row.template.description ? row.template.description : "N/A"}
+											</CustomTableCell>
+											<CustomTableCell align="center">
+												{row.template.value ? row.template.value : "N/A"}
+											</CustomTableCell>
+											{editable && (
+												<CustomTableCell align="center">
+													<IconButton
+														className={classes.button}
+														aria-label="Delete"
+														color="primary"
+														onClick={async () => {
+															try {
+
+																await this.props.deleteTemplate(project.id, row.template.id);
+																await this.props.getProjectData(project.id);
+
+																let curPage = this.state.currentPage;
+																if (this.state.rowsPerPage * (this.state.currentPage) < project.projectTemplates.length - 1) {
+																} else {
+																	curPage--;
+																}
+																await this.props.getTemplates(curPage, this.state.rowsPerPage);
+																this.setState({
+																	snackBar: true,
+																	snackBarContent: 'delete template success',
+																	currentPage: curPage
 																});
 
-																if (this.state.rowsPerPage * (this.state.currentPage) < project.projectTemplates.length - 1) {
-																	await this.props.getTemplates(this.state.currentPage, this.state.rowsPerPage);
-																}
-																else {
-																	const currentPage = this.state.currentPage - 1;
-
-																	this.setState({
-																		currentPage: currentPage
-																	});
-
-																	await this.props.getTemplates(currentPage, this.state.rowsPerPage);
-																}
+															} catch (error) {
+																console.log(error);
+																this.setState({
+																	snackBar: true,
+																	snackBarContent: 'delete template failed',
+																});
 															}
+														}
 														}>
-															<DeleteIcon />
-														</IconButton>
-													</CustomTableCell>
-												)}
-											</TableRow>
-										)
+														<DeleteIcon />
+													</IconButton>
+												</CustomTableCell>
+											)}
+										</TableRow>
 									)
-								}
-							</TableBody>
-						</Table>
-					</Box>
-					<TablePagination
-						style={{ overflow: "scroll" }}
-						rowsPerPageOptions={[5, 10, 20]}
-						component="div"
-						count={project.projectTemplates.length}
-						rowsPerPage={this.state.rowsPerPage}
-						page={this.state.currentPage}
-						backIconButtonProps={{
-							'aria-label': 'Previous Page',
-						}}
-						nextIconButtonProps={{
-							'aria-label': 'Next Page',
-						}}
-						onChangePage={this.handleChangePage}
-						onChangeRowsPerPage={this.handleChangeRowsPerPage}
-					/>
+								)
+							}
+						</TableBody>
+					</Table>
+				</Box>
+				<TablePagination
+					style={{ overflow: "auto" }}
+					rowsPerPageOptions={[5, 10, 20]}
+					component="div"
+					count={project.projectTemplates.length}
+					rowsPerPage={this.state.rowsPerPage}
+					page={this.state.currentPage}
+					backIconButtonProps={{
+						'aria-label': 'Previous Page',
+					}}
+					nextIconButtonProps={{
+						'aria-label': 'Next Page',
+					}}
+					onChangePage={this.handleChangePage}
+					onChangeRowsPerPage={this.handleChangeRowsPerPage}
+				/>
 
-					<Dialog
-						open={this.state.openCategoryForm}
-						onClose={() => this.setState({ openCategoryForm: false })}
-						aria-labelledby="form-dialog-title"
-					>
-						<DialogTitle id="form-dialog-title">create template</DialogTitle>
-						<DialogContent>
-							<DialogContentText>
-								please input the correct template information
-						</DialogContentText>
-							<TextField
-								autoFocus
-								margin="normal"
-								label="name"
-								type="email"
-								fullWidth
-								value={this.state.name}
-								onChange={(val) => this.setState({ name: val.target.value })}
-								InputProps={{ classes: { input: classes.editField } }}
-							/>
-							<TextField
-								label="detail"
-								margin="dense"
-								multiline
-								rows="10"
-								fullWidth
-								value={this.state.description}
-								onChange={(val) => this.setState({ description: val.target.value })}
-							/>
-						</DialogContent>
-						<DialogActions>
-							<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
-								Cancel
-							</Button>
-							<Button disabled={this.state.isSaving} onClick={async () => {
-								this.setState({ isSaving: true });
-								const { userProfile } = this.props;
-								const data = {
-									"name": this.state.name,
-									"description": this.state.description,
-									"updatedBy": userProfile.email
-								};
+				<Dialog
+					open={this.state.openCategoryForm}
+					onClose={() => this.setState({ openCategoryForm: false })}
+					aria-labelledby="form-dialog-title"
+				>
+					<DialogTitle id="form-dialog-title">create template</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							please input the correct template information
+					</DialogContentText>
+						<TextField
+							autoFocus
+							margin="normal"
+							label="name"
+							type="email"
+							fullWidth
+							value={this.state.name}
+							onChange={(val) => this.setState({ name: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
+						/>
+						<TextField
+							label="detail"
+							margin="dense"
+							multiline
+							rows="10"
+							fullWidth
+							value={this.state.description}
+							onChange={(val) => this.setState({ description: val.target.value })}
+						/>
+					</DialogContent>
+					<DialogActions>
+						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">
+							Cancel
+						</Button>
+						<Button disabled={this.state.isSaving} onClick={async () => {
+							this.setState({ isSaving: true });
+							const { userProfile } = this.props;
+							const data = {
+								"name": this.state.name,
+								"description": this.state.description,
+								"updatedBy": userProfile.email
+							};
 
-								await this.props.createProject(data, (res) => {
-									this.setState({
-										snackBar: true,
-										snackBarContent: res ? 'create template success' : 'create template failed'
-									})
-								});
-								await this.props.getContrators0(0, this.state.rowsPerPage);
+							await this.props.createProject(data, (res) => {
+								this.setState({
+									snackBar: true,
+									snackBarContent: res ? 'create template success' : 'create template failed'
+								})
+							});
+							await this.props.getContrators0(0, this.state.rowsPerPage);
 
-								this.setState({ openCategoryForm: false, isSaving: false, name: "", description: "" });
-							}} color="primary">
-								Add {
-									this.state.isSaving && <CircularProgress
-										size={24}
-										thickness={4} />
-								}
-							</Button>
-						</DialogActions>
-					</Dialog>
-					<Snackbar
-						anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-						open={this.state.snackBar}
-						onClose={() => this.setState({
-							snackBar: false
-						})}
-						ContentProps={{
-							'aria-describedby': 'message-id',
-						}}
-						message={
-							<span id="message-id"> {
-								this.state.snackBarContent
-							}</span>
-						}
-					/>
-				</Paper >
-			</Box>
+							this.setState({ openCategoryForm: false, isSaving: false, name: "", description: "" });
+						}} color="primary">
+							Add {
+								this.state.isSaving && <CircularProgress
+									size={24}
+									thickness={4} />
+							}
+						</Button>
+					</DialogActions>
+				</Dialog>
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
+			</Box >
 		);
 	}
 }
@@ -388,8 +381,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		getTemplates: (page, size) => dispatch(getTemplates(page, size)),
-		addTemplate: (project, template, cb) => dispatch(addTemplate(project, template, cb)),
-		deleteTemplate: (project, template, cb) => dispatch(deleteTemplate(project, template, cb)),
+		addTemplate: (project, template) => dispatch(addTemplate(project, template)),
+		deleteTemplate: (project, template) => dispatch(deleteTemplate(project, template)),
 		getProjectData: (id) => dispatch(getProjectData(id)),
 	}
 }

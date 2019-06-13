@@ -49,7 +49,6 @@ const styles = (theme) => ({
     header: {
         fontSize: '20px',
         color: '#FFF',
-
     },
     template: {
         fontSize: '20px',

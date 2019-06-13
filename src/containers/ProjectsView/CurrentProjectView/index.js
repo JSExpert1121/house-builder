@@ -115,7 +115,7 @@ class connectedCurProView extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "scroll" }}
+					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={projects.totalElements}

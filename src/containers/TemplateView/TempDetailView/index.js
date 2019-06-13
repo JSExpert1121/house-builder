@@ -68,7 +68,7 @@ const styles = theme => ({
 		top: "calc(50vh - 10px)",
 	},
 	successAlert: {
-		margin: "10px"
+		margin: theme.spacing(1)
 	},
 	editField: {
 		lineHeight: '1.5rem'
@@ -208,7 +208,7 @@ class ConnTempDetailView extends Component {
 						</div>
 					</Paper>
 					<Paper className={classes.cateList}>
-						<Table >
+						<Table size='small'>
 							<TableHead>
 								<TableRow>
 									<CustomTableCell> Category Name </CustomTableCell>

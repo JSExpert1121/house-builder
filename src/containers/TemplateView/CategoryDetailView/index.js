@@ -238,7 +238,7 @@ class ConnCategoryDetailView extends Component {
 					</Paper>
 
 					<Paper className={classes.optList}>
-						<Table >
+						<Table size='small'>
 							<TableHead>
 								<TableRow>
 									<CustomTableCell> Option Name </CustomTableCell>

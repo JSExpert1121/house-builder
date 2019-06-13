@@ -32,7 +32,7 @@ const styles = theme => ({
 		},
 		display: 'flex',
 		flexDirection: "column",
-		overflow: "scroll"
+		overflow: "auto"
 	},
 	halfWidth: {
 		width: "calc(33% - 20px)"
@@ -49,7 +49,7 @@ const styles = theme => ({
 		},
 		display: 'flex',
 		flexDirection: "column",
-		overflow: "scroll"
+		overflow: "auto"
 	},
 	waitingSpin: {
 		position: "relative",

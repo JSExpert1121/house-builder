@@ -83,7 +83,7 @@ class ConnectedContractorInfoView extends React.Component {
 
 		return (
 			<div className={classes.root} >
-				<Table className={classes.table}>
+				<Table className={classes.table} size='small'>
 					<TableHead>
 						<TableRow>
 							<CustomTableCell align="center">Email</CustomTableCell>

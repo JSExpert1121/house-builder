@@ -26,7 +26,6 @@ const theme = createMuiTheme({
 		].join(','),
 	},
 	overrides: {
-
 	}
 
 });

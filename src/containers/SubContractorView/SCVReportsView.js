@@ -10,6 +10,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import CustomTableCell from '../../components/shared/CustomTableCell';
+
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
@@ -19,17 +21,6 @@ const styles = theme => ({
 		overflowX: "hidden"
 	},
 });
-
-const CustomTableCell = withStyles(theme => ({
-	head: {
-		backgroundColor: theme.palette.primary.light,
-		color: theme.palette.common.white,
-	},
-	body: {
-		fontSize: 14,
-		color: theme.palette.primary.light
-	},
-}))(TableCell);
 
 class ConnectedSCVReportsView extends React.Component {
 	constructor(props) {

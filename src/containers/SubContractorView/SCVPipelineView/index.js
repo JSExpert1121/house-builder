@@ -17,7 +17,6 @@ import { Redirect, Link, Switch, withRouter } from 'react-router-dom';
 import SubmittedProView from './SubmittedProView';
 import WonProView from './WonProView';
 import InvitedProView from './InvitedProView';
-// import ProjectDetailView from '../../../components/ProjectDetailView';
 
 const styles = theme => ({
 	root: {
