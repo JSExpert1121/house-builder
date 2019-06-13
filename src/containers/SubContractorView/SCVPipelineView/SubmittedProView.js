@@ -6,25 +6,24 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {
-	CircularProgress, TableRow,
-	Table, TableHead, TableBody,
+	CircularProgress,
+	Table, TableHead, TableCell, TableRow, TableBody,
 	IconButton, TablePagination,
+	Snackbar
 } from '@material-ui/core';
 
-// import { getProposals } from '../../../actions/sub-actions';
-import { deleteProposal, getProposals } from '../../../actions';
-import CustomSnackbar from '../../../components/shared/CustomSnackbar';
-import CustomTableCell from '../../../components/shared/CustomTableCell';
+import { getProposals } from '../../../actions/sub-actions';
+import { deleteProposal } from '../../../actions';
+
 const styles = theme => ({
 	root: {
-		position: 'relative',
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: "calc(100vh - 64px - 48px - 36px - 16px)",
+		height: "calc(100vh - 64px - 56px - 48px - 20px)",
 	},
 	tableWrap: {
-		overflow: "auto",
-		maxHeight: "calc(100vh - 64px - 48px - 36px - 48px - 16px)",
+		overflow: "scroll",
+		maxHeight: "calc(100vh - 64px - 56px - 57px - 56px - 20px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -48,13 +47,19 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50% - 10px)",
 		top: "calc(50% - 10px)",
-	},
-	busy: {
-		position: 'absolute',
-		left: 'calc(50% - 20px)',
-		top: 'calc(50% - 20px)',
 	}
 });
+
+const CustomTableCell = withStyles(theme => ({
+	head: {
+		backgroundColor: theme.palette.primary.light,
+		color: theme.palette.common.white,
+	},
+	body: {
+		fontSize: 14,
+		color: theme.palette.primary.light
+	},
+}))(TableCell);
 
 class ConnectedSubmittedProView extends React.Component {
 	constructor(props) {
@@ -63,10 +68,9 @@ class ConnectedSubmittedProView extends React.Component {
 		this.state = {
 			rowsPerPage: 20,
 			currentPage: 0,
-			isBusy: false,
-			showMessage: false,
-			message: '',
-			variant: 'success'
+			isSaving: false,
+			snackBar: false,
+			snackBarContent: ""
 		}
 	}
 
@@ -97,42 +101,34 @@ class ConnectedSubmittedProView extends React.Component {
 	};
 
 	handleDeleteProposal = async (id) => {
-		this.setState({ isBusy: true });
+		this.setState({
+			isSaving: true
+		})
 
-		const { userProfile, proposals } = this.props;
-		try {
-			await this.props.deleteProposal(id);
-
-			if (this.state.rowsPerPage * (this.state.currentPage) < proposals.totalElements - 1) {
-				await this.props.getProposals(userProfile.user_metadata.contractor_id, this.state.currentPage, this.state.rowsPerPage, 'SUBMITTED');
-				this.setState({
-					isBusy: false,
-					showMessage: true,
-					message: 'delete proposal success',
-					variant: 'success'
-				});
-			}
-			else {
-				const currentPage = this.state.currentPage - 1;
-				await this.props.getProposals(userProfile.user_metadata.contractor_id, currentPage, this.state.rowsPerPage, 'SUBMITTED');
-
-				this.setState({
-					isBusy: false,
-					showMessage: true,
-					message: 'delete proposal success',
-					variant: 'success',
-					currentPage
-				});
-			}
-		} catch (error) {
-			console.log(error);
+		await this.props.deleteProposal(id, (res) => {
 			this.setState({
-				isBusy: false,
-				showMessage: true,
-				message: 'delete proposal failed',
-				variant: 'error'
+				isSaving: false,
+				snackBar: true,
+				snackBarContent: res ? 'delete proposal success' : "delete proposal failed"
 			});
-		}
+
+			if (res) {
+				const { userProfile, proposals } = this.props;
+
+				if (this.state.rowsPerPage * (this.state.currentPage) < proposals.totalElements - 1) {
+					this.props.getProposals(userProfile.user_metadata.contractor_id, this.state.currentPage, this.state.rowsPerPage, 'SUBMITTED');
+				}
+				else {
+					const currentPage = this.state.currentPage - 1;
+
+					this.setState({
+						currentPage: currentPage
+					});
+
+					this.props.getProposals(userProfile.user_metadata.contractor_id, currentPage, this.state.rowsPerPage, 'SUBMITTED');
+				}
+			}
+		})
 	}
 
 	handleSelectProposal = (id) => {
@@ -150,7 +146,7 @@ class ConnectedSubmittedProView extends React.Component {
 		return (
 			<div className={classes.root}>
 				<div className={classes.tableWrap}>
-					<Table className={classes.table} size='small'>
+					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell align="center">Proposal To</CustomTableCell>
@@ -185,7 +181,7 @@ class ConnectedSubmittedProView extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "auto" }}
+					style={{ overflow: "scroll" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={proposals.totalElements}
@@ -200,12 +196,21 @@ class ConnectedSubmittedProView extends React.Component {
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>
-				<CustomSnackbar
-					open={this.state.showMessage}
-					variant={this.state.variant}
-					message={this.state.message}
-					handleClose={() => this.setState({ showMessage: false })} />
-				{this.state.isBusy && <CircularProgress className={classes.busy} open={this.state.isBusy} />}
+				<Snackbar
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					open={this.state.snackBar}
+					onClose={() => this.setState({
+						snackBar: false
+					})}
+					ContentProps={{
+						'aria-describedby': 'message-id',
+					}}
+					message={
+						<span id="message-id"> {
+							this.state.snackBarContent
+						}</span>
+					}
+				/>
 			</div >
 		);
 	}

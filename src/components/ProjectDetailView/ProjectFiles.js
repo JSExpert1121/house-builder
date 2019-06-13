@@ -21,7 +21,7 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: "calc(100vh - 64px - 100px)",
+		height: "calc(100vh - 64px - 48px - 56px - 20px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},
@@ -89,7 +89,7 @@ class ConnectedProjectFiles extends React.Component {
 
 		return (
 			<div className={classes.root} >
-				<Table className={classes.table} size='small'>
+				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
 							<CustomTableCell align="center">Name</CustomTableCell>

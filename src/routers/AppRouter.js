@@ -32,7 +32,7 @@ import SecuredRoute from './SecuredRoute';
 const styles = theme => ({
 	"@global": {
 		".MuiTab-labelIcon": {
-			margin: '6px 0px',
+			margin: '0px',
 			lineHeight: '1',
 			padding: '0px',
 			minHeight: '56px',
@@ -42,31 +42,6 @@ const styles = theme => ({
 				}
 			}
 		},
-		".MuiTab-root": {
-			fontSize: '0.8125rem',
-			minWidth: '120px',
-			maxWidth: '200px',
-			lineHeight: '1',
-			minHeight: '36px',
-			maxHeight: '48px'
-		},
-		".MuiTabs-root": {
-			minHeight: '36px'
-		},
-		".MuiIconButton-root": {
-			padding: '6px 8px'
-		},
-		".MuiTablePagination-toolbar": {
-			minHeight: '48px',
-			height: '48px'
-		},
-		".MuiButton-root": {
-			backgroundColor: theme.palette.primary.light,
-			color: 'white',
-			"&:hover": {
-				backgroundColor: theme.palette.primary.dark
-			}
-		}
 	},
 	viewarea: {
 		width: "calc(100% - 60px)",

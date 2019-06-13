@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -27,11 +28,11 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: 'calc(100vh - 64px - 100px)'
+		height: "calc(100vh - 64px - 48px - 56px - 20px)",
 	},
 	tableWrap: {
 		overflowX: "hidden",
-		maxHeight: "calc(100vh - 64px - 100px - 48px - 16px)",
+		maxHeight: "calc(100vh - 64px - 48px - 20px - 56px - 52px - 56px - 16px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -134,6 +135,7 @@ class ConnectedProjectProposals extends React.Component {
 
 	handleRowSelected = (id) => {
 		const { match, history } = this.props;
+		console.log('handleRowSelected', id);
 		history.push(match.url.substring(0, 7) + "/proposal_detail/" + id);
 	}
 
@@ -168,7 +170,7 @@ class ConnectedProjectProposals extends React.Component {
 
 		return (
 			<div className={classes.root}>
-				{/* {
+				{
 					match.url.includes('/g_cont') && (
 						<Box style={{ textAlign: 'right', paddingRight: '10px' }}>
 							<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.handleCompare}>
@@ -176,7 +178,7 @@ class ConnectedProjectProposals extends React.Component {
 							</Button>
 						</Box>
 					)
-				} */}
+				}
 				<div className={classes.tableWrap}>
 					{
 						match.url.includes('/a_pros') &&
@@ -187,7 +189,7 @@ class ConnectedProjectProposals extends React.Component {
 							}
 						}> Submit Proposal </Button>
 					}
-					<Table className={classes.table} size='small'>
+					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
 								{
@@ -231,14 +233,18 @@ class ConnectedProjectProposals extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					style={{ overflow: "auto" }}
+					style={{ overflow: "scroll" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
 					count={proposals.totalElements}
 					rowsPerPage={this.state.rowsPerPage}
 					page={this.state.currentPage}
-					backIconButtonProps={{ 'aria-label': 'Previous Page' }}
-					nextIconButtonProps={{ 'aria-label': 'Next Page' }}
+					backIconButtonProps={{
+						'aria-label': 'Previous Page',
+					}}
+					nextIconButtonProps={{
+						'aria-label': 'Next Page',
+					}}
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>

@@ -19,6 +19,7 @@ import DoneAllIcon from '@material-ui/icons/DoneAll';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
 // local components
+import ContractorDetailView from './ContractorDetailView';
 import CurrentProjectView from './CurrentProjectView';
 import AddProjectView from './AddProjectView'
 import ProjectDetailView from '../../components/ProjectDetailView';
@@ -83,6 +84,7 @@ class ConnectedGenContView extends React.Component {
 						<SecuredRoute path={`${match.url}/add_project`} component={AddProjectView} />
 						<SecuredRoute path={`${match.url}/proposal_detail/:id`} component={ProposalDetailView} />
 						<SecuredRoute path={`${match.url}/project_detail/:id`} component={ProjectDetailView} />
+						<SecuredRoute path={`${match.url}/contractor_detail`} component={ContractorDetailView} />
 						<Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
 					</Switch>
 				</div>

@@ -118,7 +118,7 @@ class ConnectedContractorFiles extends React.Component {
 
 		return (
 			<div className={classes.root} >
-				<Table className={classes.table} size='small'>
+				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
 							<CustomTableCell align="center">Name</CustomTableCell>

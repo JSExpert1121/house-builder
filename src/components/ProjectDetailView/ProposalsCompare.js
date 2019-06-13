@@ -23,7 +23,7 @@ const styles = (theme) => ({
     root: {
         position: 'relative',
         width: '100%',
-        height: "calc(100vh - 64px - 100px)",
+        height: "calc(100vh - 64px - 56px - 48px - 24px)",
         overflow: "auto",
         padding: theme.spacing(1)
     },
@@ -34,7 +34,7 @@ const styles = (theme) => ({
         color: theme.palette.primary.dark,
         margin: theme.spacing(2, 1, 1, 1),
         textAlign: 'center',
-        fontSize: '28px',
+        fontSize: '32px',
         color: '#333',
         fontWeight: '700'
     },
@@ -49,17 +49,14 @@ const styles = (theme) => ({
     header: {
         fontSize: '20px',
         color: '#FFF',
-        fontWeight: '400',
-        padding: '8px 16px'
     },
     template: {
-        fontSize: '16px',
+        fontSize: '20px',
         color: '#FFF',
         backgroundColor: '#1c0168'
     },
     span: {
-        fontSize: '18px',
-        fontWeight: '500',
+        fontSize: '20px',
         backgroundColor: '#EEE',
         border: '1px solid, #CCC',
     }
@@ -287,7 +284,7 @@ class ProposalsCompare extends React.Component {
                     Project: {project.title}
                 </Typography>
                 <Box className={classes.table}>
-                    <Table size='small'>
+                    <Table>
                         {
                             data.length === 2 &&
                             <colgroup>
@@ -314,7 +311,7 @@ class ProposalsCompare extends React.Component {
                             <TableRow>
                                 <CustomTableCell className={classes.header}>Categories</CustomTableCell>
                                 {data && data.map(proposal => (
-                                    <CustomTableCell colSpan={2} className={classes.header}>{proposal.mail}</CustomTableCell>
+                                    <CustomTableCell colSpan={2} style={{ fontSize: '24px' }}>{proposal.mail}</CustomTableCell>
                                 ))}
                             </TableRow>
                         </TableHead>

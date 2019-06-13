@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 // Redux
 import { connect } from 'react-redux';
 import { getProjectsByGenId } from '../../../actions/gen-actions';
-import { deleteProject } from '../../../actions';
+import { deleteProject, setCurrentProject } from '../../../actions';
 
 import PropTypes from 'prop-types';
 
@@ -135,7 +135,7 @@ class connectedCurProView extends React.Component {
 
 	handleSelectProject = async (id) => {
 		const { match } = this.props;
-
+		this.props.setCurrentProject(id);
 		this.props.history.push("/g_cont/project_detail/" + id);
 	}
 
@@ -251,6 +251,7 @@ const mapDispatchToProps = dispatch => {
 	return {
 		getProjectsByGenId: (id, page, rowSize) => dispatch(getProjectsByGenId(id, page, rowSize)),
 		deleteProject: (id, cb) => dispatch(deleteProject(id, cb)),
+		setCurrentProject: (id) => dispatch(setCurrentProject(id)),
 	};
 };
 

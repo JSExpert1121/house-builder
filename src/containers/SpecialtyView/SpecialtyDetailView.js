@@ -15,10 +15,10 @@ import {
 
 const styles = theme => ({
     root: {
-        width: '400px',
-        [theme.breakpoints.up('sm')]: {
-            width: '540px',
-        },
+        width: '300px',
+		[theme.breakpoints.up('sm')]: {
+            width: '400px',
+		},
         position: "relative"
     },
     waitingSpin: {
@@ -32,8 +32,7 @@ const styles = theme => ({
         top: "calc(50% - 16px)"
     },
     btnWidth: {
-        width: "calc(33% - 20px)",
-        margin: theme.spacing(0, 2)
+        width: "calc(33% - 20px)"
     },
     descTag: {
         padding: theme.spacing(1),
@@ -42,13 +41,13 @@ const styles = theme => ({
         whiteSpace: 'nowrap',
         margin: theme.spacing(1),
         borderBottom: "5px solid " + theme.palette.primary.light,
-        height: "calc(100vh - 64px - 48px - 16px)",
+        height: "calc((100vh - 64px - 56px - 20px) / 2)",
         [theme.breakpoints.up('md')]: {
-            height: "calc(100vh - 64px - 48px - 16px)",
+            height: "calc(100vh - 64px - 56px - 20px)",
         },
         display: 'flex',
         flexDirection: "column",
-        overflow: "auto"
+        overflow: "scroll"
     }
 });
 

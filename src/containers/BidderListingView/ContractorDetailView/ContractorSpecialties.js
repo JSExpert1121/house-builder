@@ -31,7 +31,7 @@ const styles = theme => ({
 	},
 	tableWrap: {
 		overflow: "auto",
-		maxHeight: "calc(100vh - 240px)",b
+		maxHeight: "calc(100vh - 240px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -209,21 +209,21 @@ class ConnectedContractorInfoView extends React.Component {
 												<CustomTableCell component="th" scope="row"
 													onClick={async () => {
 														await this.props.selectContractor(row.id);
-														this.props.history.push("/m_cont/contractor_detail");
+														this.props.history.push("/b_list/contractor_detail");
 													}}>
 													{row.specialty.name ? row.specialty.name : "N/A"}
 												</CustomTableCell>
 												<CustomTableCell align="center"
 													onClick={async () => {
 														await this.props.selectContractor(row.id);
-														this.props.history.push("/m_cont/contractor_detail");
+														this.props.history.push("/b_list/contractor_detail");
 													}}>
 													{row.specialty.description ? row.specialty.description : "N/A"}
 												</CustomTableCell>
 												<CustomTableCell align="center"
 													onClick={async () => {
 														await this.props.selectContractor(row.id);
-														this.props.history.push("/m_cont/contractor_detail");
+														this.props.history.push("/b_list/contractor_detail");
 													}}>
 													{row.specialty.value ? row.specialty.value : "N/A"}
 												</CustomTableCell>

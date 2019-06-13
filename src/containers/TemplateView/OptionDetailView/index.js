@@ -26,9 +26,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 48px - 16px) / 2)",
+		height: "calc((100vh - 64px - 56px - 20px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 48px - 16px)",
+			height: "calc(100vh - 64px - 56px - 20px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -43,9 +43,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 48px - 16px) / 2)",
+		height: "calc((100vh - 64px - 56px - 40px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 48px - 16px)",
+			height: "calc(100vh - 64px - 56px - 20px)",
 		},
 		display: 'flex',
 		flexDirection: "column",

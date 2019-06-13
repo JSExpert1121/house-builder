@@ -83,7 +83,7 @@ class ConnectedContractorInfoView extends React.Component {
 
 		return (
 			<div className={classes.root} >
-				<Table className={classes.table} size='small'>
+				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
 							<CustomTableCell align="center">Email</CustomTableCell>
@@ -113,7 +113,7 @@ class ConnectedContractorInfoView extends React.Component {
 						</TableRow>
 					</TableBody>
 				</Table>
-				<br />
+				{/* <br />
 				Approve/Reject Reason
 				<br /><br />
 				<TextField
@@ -121,7 +121,7 @@ class ConnectedContractorInfoView extends React.Component {
 					multiline={true}
 					rows={4}
 					className={classes.textField}
-				/>
+				/> */}
 				<DropzoneDialog
 					open={this.state.openUploadForm}
 					onSave={this.handleUploadFiles}
@@ -147,7 +147,7 @@ class ConnectedContractorInfoView extends React.Component {
 						}</span>
 					}
 				/>
-				<div className={classes.buttons}>
+				{/* <div className={classes.buttons}>
 					<Button variant="contained" color="primary" className={classes.button} onClick={() => this.props.approveContractor(selectedContractor.id, { "status": "ACTIVE" }, (result) => {
 						if (result)
 							this.props.updateContractor(selectedContractor.id);
@@ -158,7 +158,7 @@ class ConnectedContractorInfoView extends React.Component {
 							this.props.updateContractor(selectedContractor.id);
 					}
 					)}>Reject</Button>
-				</div>
+				</div> */}
 			</div>
 		);
 	}

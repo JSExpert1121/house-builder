@@ -8,12 +8,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Card, TextField, Button, FormLabel, IconButton } from '@material-ui/core';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import DeleteIcon from '@material-ui/icons/Delete';
-
-import { addFilesToProject, addProject } from '../../../actions';
-import CustomSnackbar from '../../../components/shared/CustomSnackbar';
+import { Card, TextField, Button } from '@material-ui/core';
+import { DropzoneArea } from 'material-ui-dropzone';
+import { addProject } from '../../../actions/gen-actions';
+import { addFilesToProject } from '../../../actions';
 
 const styles = theme => ({
 	"@global": {
@@ -30,7 +28,7 @@ const styles = theme => ({
 	root: {
 		position: 'relative',
 		flexGrow: 1,
-		height: "calc(100vh - 128px)",
+		height: "calc(100vh - 136px)",
 		margin: theme.spacing(1),
 		display: "flex",
 		justifyContent: "center",
@@ -40,13 +38,18 @@ const styles = theme => ({
 		width: "100%",
 		height: "100%",
 		borderBottom: "5px solid " + theme.palette.primary.light,
+		height: "90%",
 		padding: theme.spacing(2),
-		// [theme.breakpoints.up('sm')]: {
-		// 	width: 700,
-		// },
+		[theme.breakpoints.up('sm')]: {
+			width: 700,
+		},
 		display: 'flex',
 		flexDirection: "column",
 		overflow: "auto",
+	},
+	paper_title_price: {
+		display: 'flex',
+		alignItems: "stretch",
 	},
 	paper_title: {
 		width: '100%'
@@ -218,17 +221,17 @@ class connectedAddProjectView extends Component {
 							</span>
 						))}
 					</div>
-					<div style={{ width: '100%', textAlign: 'center' }}>
-						<Button disabled={this.state.isBusy} className={classes.submitButton} onClick={this.handleAddProject}>
-							Add Project
-						</Button>
-					</div>
-					{this.state.isBusy && <CircularProgress className={classes.busy} />}
-					<CustomSnackbar
-						open={this.state.showMessage}
-						variant={this.state.variant}
-						message={this.state.message}
-						handleClose={() => this.setState({ showMessage: false })} />
+					<Button disabled={this.state.isSaving} className={classes.submitButton} onClick={this.handleAddProject}>
+						Add Project
+							{
+							this.state.isSaving &&
+							<CircularProgress
+
+								size={24}
+								thickness={4}
+							/>
+						}
+					</Button>
 				</Card>
 			</Paper >
 		);
@@ -237,8 +240,8 @@ class connectedAddProjectView extends Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		addProject: (id, data) => dispatch(addProject(id, data)),
-		addFiles: (id, files) => dispatch(addFilesToProject(id, files))
+		addProject: (id, data, cb) => dispatch(addProject(id, data, cb)),
+		addFiles: (id, files, cb) => dispatch(addFilesToProject(id, files, cb))
 	};
 };
 

@@ -1,45 +1,49 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+// Redux
 import { connect } from 'react-redux';
+import { getInvitedProjectsByGenId } from '../../../actions/sub-actions';
+import { deleteProject, setCurrentProject } from '../../../actions';
 
 import PropTypes from 'prop-types';
+
+// material ui
 import { withStyles } from '@material-ui/core/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
+import Paper from '@material-ui/core/Paper';
 import {
 	CircularProgress,
 	Table, TableHead, TableCell, TableRow, TableBody,
 	IconButton, TablePagination,
-	Snackbar
+	Button,
+	Snackbar,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	DialogActions
 } from '@material-ui/core';
-
-import { getProposals } from '../../../actions/sub-actions';
-import { deleteProposal } from '../../../actions';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: theme.spacing(1),
-		height: "calc(100vh - 64px - 48px - 36px - 16px)",
+		height: "calc(100vh - 136px)",
+		margin: theme.spacing(1),
+		overflow: "auto",
 	},
 	tableWrap: {
 		overflow: "auto",
-		maxHeight: "calc(100vh - 64px - 48px - 36px - 48px - 16px)",
+		maxHeight: "calc(100vh - 192px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
 			backgroundColor: theme.palette.background.default,
 		},
 	},
-	btnSubmitProposal: {
-		marginBottom: 5,
-		backgroundColor: theme.palette.primary.light,
-		color: "#FFF",
-		borderRadius: 0
-	},
 	waitingSpin: {
 		position: "relative",
 		left: "calc(50% - 10px)",
-		top: "calc(50% - 10px)",
+		top: "calc(40vh)",
 	}
 });
 
@@ -54,7 +58,7 @@ const CustomTableCell = withStyles(theme => ({
 	},
 }))(TableCell);
 
-class ConnectedSubmittedProView extends React.Component {
+class ConnectedInvitedProView extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -63,53 +67,57 @@ class ConnectedSubmittedProView extends React.Component {
 			currentPage: 0,
 			isSaving: false,
 			snackBar: false,
-			snackBarContent: ""
-		}
+			snackBarContent: '',
+			alertConfirm: false,
+			proId: 0
+		};
 	}
 
 	componentDidMount() {
 		const { userProfile } = this.props;
-		this.props.getProposals(userProfile.user_metadata.contractor_id, 0, 0, 'INVITED');
+		this.props.getInvitedProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
 	}
 
 	handleChangePage = (event, page) => {
 		const { userProfile } = this.props;
 		this.setState({ currentPage: page });
 
-		this.props.getProposals(userProfile.user_metadata.contractor_id, page, this.state.rowsPerPage, 'INVITED');
+		this.props.getInvitedProjectsByGenId(userProfile.user_metadata.contractor_id, page, this.state.rowsPerPage);
 	};
 
 	handleChangeRowsPerPage = event => {
-		const { proposals, userProfile } = this.props;
+		const { projects, userProfile } = this.props;
 
 		const rowsPerPage = event.target.value;
-		const currentPage = rowsPerPage >= proposals.totalElements ? 0 : this.state.currentPage;
+		const currentPage = rowsPerPage >= projects.totalElements ? 0 : this.state.currentPage;
 
 		this.setState({
 			rowsPerPage: rowsPerPage,
 			currentPage: currentPage
 		});
 
-		this.props.getProposals(userProfile.user_metadata.contractor_id, currentPage, rowsPerPage, 'INVITED');
+		this.props.getInvitedProjectsByGenId(userProfile.user_metadata.contractor_id, currentPage, rowsPerPage);
 	};
 
-	handleDeleteProposal = async (id) => {
+	handleDeleteProject = async (id) => {
 		this.setState({
-			isSaving: true
+			isSaving: true,
+			alertConfirm: false
 		})
 
-		await this.props.deleteProposal(id, (res) => {
+		await this.props.deleteProject(this.state.proId, (res) => {
 			this.setState({
 				isSaving: false,
 				snackBar: true,
-				snackBarContent: res ? 'delete proposal success' : "delete proposal failed"
+				snackBarContent: res ? 'delete project success' : "delete project failed"
 			});
 
 			if (res) {
-				const { userProfile, proposals } = this.props;
+				const { userProfile, projects } = this.props;
 
-				if (this.state.rowsPerPage * (this.state.currentPage) < proposals.totalElements - 1) {
-					this.props.getProposals(userProfile.user_metadata.contractor_id, this.state.currentPage, this.state.rowsPerPage, 'INVITED');
+				if (this.state.rowsPerPage * (this.state.currentPage) < projects.totalElements - 1) {
+					this.props.getInvitedProjectsByGenId(userProfile.user_metadata.contractor_id,
+						this.state.currentPage, this.state.rowsPerPage);
 				}
 				else {
 					const currentPage = this.state.currentPage - 1;
@@ -118,60 +126,65 @@ class ConnectedSubmittedProView extends React.Component {
 						currentPage: currentPage
 					});
 
-					this.props.getProposals(userProfile.user_metadata.contractor_id, currentPage, this.state.rowsPerPage, 'INVITED');
+					this.props.getInvitedProjectsByGenId(userProfile.user_metadata.contractor_id,
+						currentPage, this.state.rowsPerPage);
 				}
 			}
 		})
 	}
 
-	handleSelectProposal = (id) => {
-		const { location } = this.props;
-
-		this.props.history.push(`/s_cont/proposal_detail/${id}`);
+	handleSelectProject = async (id) => {
+		const { match } = this.props;
+		this.props.setCurrentProject(id);
+		this.props.history.push("/s_cont/project_detail/" + id);
 	}
 
 	render() {
-		const { classes, proposals } = this.props;
+		const { classes, projects } = this.props;
 
-		return <div className={classes.root}></div>;
-
-		if (proposals === null)
-			return <div className={classes.root}> <CircularProgress className={classes.waitingSpin} /> </div>;
-
+		if (projects === null) {
+			return <CircularProgress className={classes.waitingSpin} />;
+		}
 		return (
-			<div className={classes.root}>
-				<div className={classes.tableWrap}>
-					<Table className={classes.table} size='small'>
+			<Paper className={classes.root}>
+				<div className={classes.tableWrap} >
+					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
-								<CustomTableCell align="center">Proposal To</CustomTableCell>
-								<CustomTableCell align="center">Price($)</CustomTableCell>
-								<CustomTableCell align="center">Duration</CustomTableCell>
-								<CustomTableCell align="center">Status</CustomTableCell>
-								<CustomTableCell align="center">Description</CustomTableCell>
-								<CustomTableCell align="center">Actions</CustomTableCell>
+								<CustomTableCell> Project Title </CustomTableCell>
+								<CustomTableCell align="center">Budget</CustomTableCell>
+								<CustomTableCell align="center">Discription</CustomTableCell>
+								<CustomTableCell align="center">Action</CustomTableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{proposals.content.map(row => (
-								<TableRow className={classes.row} key={row.id} hover>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
-										component="th" scope="row" align="center">{row.project.title}</CustomTableCell>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
-										component="th" scope="row" align="center">{row.budget}</CustomTableCell>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
-										component="th" scope="row" align="center">{row.duration}</CustomTableCell>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)}
-										component="th" scope="row" align="center">{row.status}</CustomTableCell>
-									<CustomTableCell onClick={() => this.handleSelectProposal(row.id)} align="center">{row.description.length > 40 ? row.description.slice(0, 40) + "..." : row.description}</CustomTableCell>
-									<CustomTableCell align="center">
-										<IconButton className={classes.button} aria-label="Delete" color="primary"
-											onClick={() => this.handleDeleteProposal(row.id)}>
-											<DeleteIcon />
-										</IconButton>
-									</CustomTableCell>
-								</TableRow>
-							))}
+							{
+								projects.content.map(
+									row => (
+										<TableRow className={classes.row} key={row.id} hover>
+											<CustomTableCell component="th" scope="row"
+												onClick={() => this.handleSelectProject(row.id)}>
+												{row.title}
+											</CustomTableCell>
+											<CustomTableCell align="center"
+												onClick={() => this.handleSelectProject(row.id)}>{row.budget}</CustomTableCell>
+											<CustomTableCell align="center"
+												onClick={() => this.handleSelectProject(row.id)}>{row.description}</CustomTableCell>
+											<CustomTableCell align="center">
+												<IconButton aria-label="Delete" color="primary"
+													onClick={() => {
+														this.setState({
+															alertConfirm: true,
+															proId: row.id
+														})
+													}}>
+													<DeleteIcon />
+												</IconButton>
+											</CustomTableCell>
+										</TableRow>
+									)
+								)
+							}
 						</TableBody>
 					</Table>
 				</div>
@@ -179,7 +192,7 @@ class ConnectedSubmittedProView extends React.Component {
 					style={{ overflow: "auto" }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
-					count={proposals.totalElements}
+					count={projects.totalElements}
 					rowsPerPage={this.state.rowsPerPage}
 					page={this.state.currentPage}
 					backIconButtonProps={{
@@ -206,29 +219,51 @@ class ConnectedSubmittedProView extends React.Component {
 						}</span>
 					}
 				/>
-			</div >
+				<Dialog
+					open={this.state.alertConfirm}
+					onClose={() => this.setState({ alertConfirm: false })}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">{"Delete Project?"}</DialogTitle>
+					<DialogContent>
+						<DialogContentText id="alert-dialog-description">
+							Do you want to delete this project?
+          				</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={() => this.setState({ alertConfirm: false })} color="primary">
+							No
+          				</Button>
+						<Button onClick={() => this.handleDeleteProject()} color="primary" autoFocus>
+							Yes
+          				</Button>
+					</DialogActions>
+				</Dialog>
+			</Paper >
 		);
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProposals: (id, page, row, filterStr) => dispatch(getProposals(id, page, row, filterStr)),
-		deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
+		getInvitedProjectsByGenId: (id, page, rowSize) => dispatch(getInvitedProjectsByGenId(id, page, rowSize)),
+		deleteProject: (id, cb) => dispatch(deleteProject(id, cb)),
+		setCurrentProject: (id) => dispatch(setCurrentProject(id)),
 	};
-}
+};
 
 const mapStateToProps = state => {
 	return {
-		proposals: state.sub_data.proposals,
+		projects: state.sub_data.projects,
 		userProfile: state.global_data.userProfile
 	};
 };
 
-const SubmittedProView = connect(mapStateToProps, mapDispatchToProps)(ConnectedSubmittedProView);
+const InvitedProView = connect(mapStateToProps, mapDispatchToProps)(ConnectedInvitedProView);
 
-SubmittedProView.propTypes = {
+InvitedProView.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(withStyles(styles)(SubmittedProView));
+export default withRouter(withStyles(styles)(InvitedProView));

@@ -24,13 +24,14 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 48px - 36px - 16px)",
+		height: "calc(100vh - 64px - 56px - 48px - 20px)",
+
 		display: 'flex',
 		flexDirection: 'column'
 	},
 	listRoot: {
-		padding: theme.spacing(1),
-		overflow: 'auto',
+		padding: "10px",
+		overflow: 'scroll',
 		flexGrow: 1
 	},
 	waitingSpin: {
@@ -42,13 +43,13 @@ const styles = theme => ({
 		display: 'inline',
 	},
 	inputArea: {
-		padding: theme.spacing(1, 1, 0, 1),
+		padding: '10px',
 		display: 'flex',
 		borderTop: "1px solid #AAAAAA",
 	},
 	bottomSection: {
 		backgroundColor: "#FBFBFB",
-		padding: theme.spacing(1),
+		padding: '10px',
 		display: 'flex',
 		flexDirection: "column"
 	},
@@ -59,7 +60,7 @@ const styles = theme => ({
 	editField: {
 		lineHeight: '1.5rem',
 		underline: 'none',
-		padding: theme.spacing(0, 1)
+		padding: '0 10px 0 10px'
 	},
 	backBtn: {
 		width: 39,
@@ -67,16 +68,16 @@ const styles = theme => ({
 	},
 	fileCard: {
 		borderRadius: 0,
-		marginBottom: theme.spacing(1)
+		marginBottom: 5
 	},
 	sendBtn: {
 		border: "1px solid #4a148c",
 		borderRadius: 0,
 		backgroundColor: theme.palette.primary.light,
 		color: "#FFFFFF",
+		marginLeft: 10,
 		height: 39,
 		width: 100,
-		margin: 12,
 		'&:hover': {
 			backgroundColor: theme.palette.primary.dark
 		},
@@ -109,7 +110,7 @@ class ConnectedProposalDetailMessages extends React.Component {
 	async componentWillMount() {
 		const { proposal } = this.props;
 
-		await this.props.getProposalMessages(proposal.proposal.id, 0, this.state.pageSize, (res) => {
+		await this.props.getProposalMessages(proposal.id, 0, this.state.pageSize, (res) => {
 			let { messageList } = this.state;
 
 			messageList = messageList.concat(res.content.reverse());
@@ -138,7 +139,8 @@ class ConnectedProposalDetailMessages extends React.Component {
 			isSending: true
 		})
 
-		this.props.addMessageToProposal(proposal.proposal.id,
+		this.props.addMessageToProposal(
+			proposal.id,
 			{
 				'content': this.state.messageInput,
 				'updatedBy': userProfile.email
@@ -177,7 +179,7 @@ class ConnectedProposalDetailMessages extends React.Component {
 
 		this.setState({ isLoadingMore: true, toBottom: false });
 
-		await this.props.getProposalMessages(proposal.proposal.id, pagen, this.state.pageSize, (res) => {
+		await this.props.getProposalMessages(proposal.id, pagen, this.state.pageSize, (res) => {
 			let contents = res.content.reverse();
 
 			let i = 0;
@@ -343,7 +345,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
 	return {
 		userProfile: state.global_data.userProfile,
-		proposal: state.global_data.proposalDetail
+		proposal: state.global_data.proposal
 	};
 };
 
@@ -351,8 +353,6 @@ const ProposalDetailMessages = connect(mapStateToProps, mapDispatchToProps)(Conn
 
 ProposalDetailMessages.propTypes = {
 	classes: PropTypes.object.isRequired,
-	userProfile: PropTypes.object,
-	proposal: PropTypes.object
 };
 
 export default withRouter(withStyles(styles)(ProposalDetailMessages));

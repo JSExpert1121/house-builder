@@ -48,18 +48,17 @@ class ConnectedContractorDetailView extends React.Component {
 	}
 
 	handleBack = () => {
-		this.props.history.push("/m_cont");
+		this.props.history.push("/g_cont/project_detail/" + this.props.currentProjectId + '/bidders');		
 	}
 
-	render() {
-		const { classes, selectedContractor } = this.props;
+	render() {		
+		const { classes, selectedContractor } = this.props;		
 		const curDetailTab = this.state.curDetailTab;
 
 		if (selectedContractor === null)
 			return (
 				<div> no project is selected </div>
 			);
-
 		return (
 
 			<NoSsr>
@@ -94,7 +93,9 @@ class ConnectedContractorDetailView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		selectedContractor: state.cont_data.selectedContractor
+		selectedContractor: state.cont_data.selectedContractor,
+		currentProjectId: state.global_data.currentProjectId,
+		
 	};
 };
 

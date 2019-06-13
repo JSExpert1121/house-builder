@@ -10,8 +10,7 @@ const styles = theme => ({
   root: {
     padding: theme.spacing(1),
     display: "block",
-    borderTop: "1px solid #CCC",
-    height: '100%'
+    border: "1px solid #CCC"
   },
   options: {
     padding: theme.spacing(1)
@@ -87,25 +86,27 @@ class CategoryEdit extends React.Component {
 
     return (
       <div className={classes.root}>
-        {this.state.adding && (
-          <OptionEdit
-            option={this.state.addingOption}
-            handleSave={this.handleSave}
-            handleCancel={this.handleCancel}
-          />
-        )}
-        {options && (
-          <OptionTableView
-            edit={edit}
-            options={options}
-            editingId={this.state.editingId}
-            handleAdd={this.handleAdd}
-            handleSave={this.handleSave}
-            handleCancel={this.handleCancel}
-            handleDelete={this.handleDelete}
-            handleEdit={this.handleEdit}
-          />
-        )}
+        <div className={classes.options}>
+          {this.state.adding && (
+            <OptionEdit
+              option={this.state.addingOption}
+              handleSave={this.handleSave}
+              handleCancel={this.handleCancel}
+            />
+          )}
+          {options && (
+            <OptionTableView
+              edit={edit}
+              options={options}
+              editingId={this.state.editingId}
+              handleAdd={this.handleAdd}
+              handleSave={this.handleSave}
+              handleCancel={this.handleCancel}
+              handleDelete={this.handleDelete}
+              handleEdit={this.handleEdit}
+            />
+          )}
+        </div>
       </div>
     );
   }
