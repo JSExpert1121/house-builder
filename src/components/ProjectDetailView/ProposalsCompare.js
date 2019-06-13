@@ -34,7 +34,7 @@ const styles = (theme) => ({
         color: theme.palette.primary.dark,
         margin: theme.spacing(2, 1, 1, 1),
         textAlign: 'center',
-        fontSize: '32px',
+        fontSize: '28px',
         color: '#333',
         fontWeight: '700'
     },
@@ -49,15 +49,17 @@ const styles = (theme) => ({
     header: {
         fontSize: '20px',
         color: '#FFF',
-
+        fontWeight: '400',
+        padding: '8px 16px'
     },
     template: {
-        fontSize: '20px',
+        fontSize: '16px',
         color: '#FFF',
         backgroundColor: '#1c0168'
     },
     span: {
-        fontSize: '20px',
+        fontSize: '18px',
+        fontWeight: '500',
         backgroundColor: '#EEE',
         border: '1px solid, #CCC',
     }
@@ -285,7 +287,7 @@ class ProposalsCompare extends React.Component {
                     Project: {project.title}
                 </Typography>
                 <Box className={classes.table}>
-                    <Table>
+                    <Table size='small'>
                         {
                             data.length === 2 &&
                             <colgroup>
@@ -312,7 +314,7 @@ class ProposalsCompare extends React.Component {
                             <TableRow>
                                 <CustomTableCell className={classes.header}>Categories</CustomTableCell>
                                 {data && data.map(proposal => (
-                                    <CustomTableCell colSpan={2} style={{ fontSize: '24px' }}>{proposal.mail}</CustomTableCell>
+                                    <CustomTableCell colSpan={2} className={classes.header}>{proposal.mail}</CustomTableCell>
                                 ))}
                             </TableRow>
                         </TableHead>

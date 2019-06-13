@@ -50,7 +50,7 @@ const styles = theme => ({
     display: "inline-block",
     fontSize: "1em",
     textAlign: "left",
-    fontWeight: "bold",
+    fontWeight: "600",
     color: "#666"
   },
   posttime: {
@@ -67,10 +67,10 @@ const styles = theme => ({
     top: "calc(50%-10px)"
   },
   status: {
-    margin: theme.spacing(1, 0, 0, 1),
+    margin: theme.spacing(1, 0, 0, 0),
     fontSize: "1em",
     textAlign: "left",
-    fontWeight: "bold",
+    fontWeight: "600",
     color: theme.palette.primary.light
   },
   margin: theme.spacing(1),
@@ -98,45 +98,35 @@ const ProjectView = ({ classes, project }) => {
     <Box className={classes.root}>
       <Grid container id="project-description">
         {/* <Grid container item sm={12} md={9} spacing={2}> */}
-        <Grid container item sm={12}>
-          <Grid container item sm={12} className={classes.bottomLine}>
-            <Grid item xs={12} sm={10} className="desc">
-              <h1 className={classes.title}>{project.title}</h1>
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <p className={classes.status}>
-                {project.status && project.status.toUpperCase()}
-              </p>
-            </Grid>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Box className={classes.brief}>
-              <Typography className={classes.budget}>Budget: {project.budget}</Typography>
-              <Typography className={classes.posttime}>Posted: {postdate.toDateString()}</Typography>
-            </Box>
-            <Box className={classes.brief}>
-              <Typography style={{ fontWeight: '700' }}> Description:  </Typography>
-              <Typography className={classes.desc}>
-                {project.description}
-              </Typography>
-            </Box>
-            <Box className={classes.brief}>
-              {project.projectFiles && project.projectFiles.length > 0 && (
-                <>
-                  <Typography style={{ fontWeight: '700' }}> Files </Typography>
-                  {project.projectFiles.map(file => <Typography className={classes.desc} key={file.id}>{file.name}</Typography>)}
-                </>
-              )}
-            </Box>
-          </Grid>
+        <Grid item xs={12} sm={10} className="desc">
+          <h1 className={classes.title}>{project.title}</h1>
         </Grid>
-        {/* <Grid item sm={12} md={3}>
-          <Grid container item sm={12} className={classes.bottomLine}>
-            <p className={classes.subtitle}>Client Information</p>
-          </Grid>
-          <p className={classes.desc}>{project.genContractor.email}</p>
-        </Grid> */}
+        <Grid item xs={12} sm={2}>
+          <p className={classes.status}>
+            {project.status && project.status.toUpperCase()}
+          </p>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Box className={classes.brief}>
+            <Typography className={classes.budget}>Budget: {project.budget}</Typography>
+            <Typography className={classes.posttime}>Posted: {postdate.toDateString()}</Typography>
+          </Box>
+          <Box className={classes.brief}>
+            <Typography style={{ fontWeight: '700' }}> Description:  </Typography>
+            <Typography className={classes.desc}>
+              {project.description}
+            </Typography>
+          </Box>
+          <Box className={classes.brief}>
+            {project.projectFiles && project.projectFiles.length > 0 && (
+              <>
+                <Typography style={{ fontWeight: '700' }}> Files </Typography>
+                {project.projectFiles.map(file => <Typography className={classes.desc} key={file.id}>{file.name}</Typography>)}
+              </>
+            )}
+          </Box>
+        </Grid>
       </Grid>
     </Box >
   );

@@ -14,10 +14,9 @@ const styles = theme => ({
         paddingTop: theme.spacing(2)
     },
     title: {
-        fontSize: "1.2em",
+        fontSize: "20px",
         fontWeight: '600',
         textAlign: "left",
-        color: "#333",
         marginTop: "0",
         marginBottom: "0",
         lineHeight: '2'
@@ -49,8 +48,7 @@ const styles = theme => ({
         textDecoration: "none"
     },
     status: {
-        marginLeft: theme.spacing(1),
-        fontSize: "1em",
+        fontSize: "16px",
         textAlign: "left",
         fontWeight: "600",
         color: theme.palette.primary.light,
@@ -61,16 +59,16 @@ const styles = theme => ({
 const TITLE = 'SubContractor Information';
 const SubContractorView = ({ classes, subContractor }) => {
     return (
-        <Box className={classes.root} title={TITLE}>
-            <Typography variant='h1' className={classes.title}>
+        <Box className={classes.root}>
+            <Typography variant='subtitle1' className={classes.title}>
                 {TITLE}
             </Typography>
-            <Box to='#' style={{ width: '100%' }}>
+            <Box style={{ width: '100%' }}>
                 <Grid container id="sub-contractor-info" className={classes.brief}>
-                    <Grid item xs={12} sm={8} style={{ padding: '4px' }}>
+                    <Grid item xs={12} sm={10} style={{ padding: '4px' }}>
                         <Box className={classes.email}>Email: {subContractor.email}</Box>
                     </Grid>
-                    <Grid item xs={12} sm={4} style={{ padding: '4px' }}>
+                    <Grid item xs={12} sm={2} style={{ padding: '4px' }}>
                         <Box className={classes.status}>{subContractor.status}</Box>
                     </Grid>
                     {subContractor.address && (

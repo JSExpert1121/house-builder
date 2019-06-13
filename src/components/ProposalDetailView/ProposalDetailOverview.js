@@ -14,21 +14,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-import FiberIcon from '@material-ui/icons/FiberManualRecord';
+import { ListItemText, ListItem, ListItemIcon, List } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import FiberIcon from '@material-ui/icons/FiberManualRecord';
 
 import ProjectView from './ProjectView';
-import SubContractorView from './SubContractor';
+import SubContractorView from '../Contractor/SubContractor';
 import { ConfirmDialog } from '../../components/shared/ConfirmDialog';
 import CustomTableCell from '../../components/shared/CustomTableCell';
-import { ListItemText, ListItem, ListItemIcon, List } from '@material-ui/core';
+import ProposalView from './ProposalView';
 
 const styles = (theme) => ({
 	"@global": {
@@ -164,7 +164,7 @@ class ConnectedProposalDetailOverview extends Component {
 		const btnTitle = (match.url.includes('/s_cont') || (match.params.id === '-1' && this.props.proposal)) ? 'Update Proposal' : 'Submit Proposal';
 		const isGen = match.url.includes('/g_cont');
 		const style_prop_title = {
-			fontWeight: 'bold', fontSize: '24px', marginTop: '0'
+			fontWeight: '600', fontSize: '20px', marginTop: '0'
 		};
 		// if (isGen) style_prop_title.marginTop = '0';
 
@@ -172,39 +172,43 @@ class ConnectedProposalDetailOverview extends Component {
 			<Paper className={classes.root}>
 				{!isGen && <ProjectView project={c_project} />}
 
-				<Typography variant="subtitle1" noWrap style={style_prop_title}>Proposal</Typography>
-				<Box id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
-					<TextField disabled={!edit}
-						label="Budget *" id="budget" type='number'
-						className={clsx(classes.margin, classes.textField)}
-						value={this.state.budget}
-						onChange={this.handleChange('budget')}
-						InputProps={{
-							endAdornment: <InputAdornment position="start">USD</InputAdornment>,
-						}}
-					/>
-					<TextField disabled={!edit}
-						label="Duration *" type='number'
-						className={clsx(classes.margin, classes.textField)}
-						value={this.state.duration}
-						onChange={this.handleChange('duration')}
-						InputProps={{
-							endAdornment: <InputAdornment position="start">days</InputAdornment>,
-						}}
-					/>
-					<FormControl fullWidth className={classes.margin}>
-						<InputLabel htmlFor="description">Description *</InputLabel>
-						<Input disabled={!edit}
-							id="description"
-							value={this.state.description}
-							onChange={this.handleChange('description')}
-							multiline={true}
-						/>
-					</FormControl>
-				</Box>
+				{(!edit || isGen) ? <ProposalView proposal={proposal.proposal} /> : (
+					<>
+						<Typography variant="subtitle1" noWrap style={style_prop_title}>Proposal</Typography>
+						<Box id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
+							<TextField disabled={!edit}
+								label="Budget *" id="budget" type='number'
+								className={clsx(classes.margin, classes.textField)}
+								value={this.state.budget}
+								onChange={this.handleChange('budget')}
+								InputProps={{
+									endAdornment: <InputAdornment position="start">USD</InputAdornment>,
+								}}
+							/>
+							<TextField disabled={!edit}
+								label="Duration *" type='number'
+								className={clsx(classes.margin, classes.textField)}
+								value={this.state.duration}
+								onChange={this.handleChange('duration')}
+								InputProps={{
+									endAdornment: <InputAdornment position="start">days</InputAdornment>,
+								}}
+							/>
+							<FormControl fullWidth className={classes.margin}>
+								<InputLabel htmlFor="description">Description *</InputLabel>
+								<Input disabled={!edit}
+									id="description"
+									value={this.state.description}
+									onChange={this.handleChange('description')}
+									multiline={true}
+								/>
+							</FormControl>
+						</Box>
+					</>
+				)}
 
 				{isGen && <SubContractorView subContractor={proposal.proposal.subContractor} />}
-				<Typography variant="subtitle1" noWrap style={{ fontWeight: 'bold', fontSize: '24px', marginTop: '16px' }}>Templates</Typography>
+				<Typography variant="subtitle1" noWrap style={{ fontWeight: '600', fontSize: '20px', marginTop: '16px' }}>Templates</Typography>
 				{!isGen ? (
 					<Table>
 						<TableHead>
