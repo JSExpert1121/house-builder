@@ -48,7 +48,7 @@ class ConnectedContractorDetailView extends React.Component {
 	}
 
 	handleBack = () => {
-		this.props.history.push("/s_cont");
+		this.props.history.push("/s_cont/project_detail/" + this.props.currentProjectId);	
 	}
 
 	render() {		
@@ -93,7 +93,8 @@ class ConnectedContractorDetailView extends React.Component {
 
 const mapStateToProps = state => {
 	return {
-		selectedContractor: state.cont_data.selectedContractor
+		selectedContractor: state.cont_data.selectedContractor,
+		currentProjectId: state.global_data.currentProjectId,
 	};
 };
 

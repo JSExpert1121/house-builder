@@ -42,8 +42,7 @@ const styles = theme => ({
 		overflow: "scroll"
 	},
 	tableWrap: {
-		overflow: "auto",
-		// maxHeight: "calc(100vh - 192px)",
+		overflow: "auto",		
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -355,7 +354,7 @@ class ConnectedProjectBidders extends React.Component {
 	}
 	  
 	render() {
-		const { classes, project, theme, specialties } = this.props;	
+		const { classes, project, theme, specialties, match } = this.props;	
 		const { contractors, projectBidders } = this.state;
 		const suggestions = specialties ? specialties.content.map(specialty => ({
 			value: specialty.id,
@@ -535,24 +534,36 @@ class ConnectedProjectBidders extends React.Component {
 											<CustomTableCell component="th" scope="row"
 											onClick={async () => {
 												await this.props.selectContractor(row.id);
-												this.props.history.push("/g_cont/contractor_detail");
+												if (match.url.includes("g_cont"))
+													this.props.history.push("/g_cont/contractor_detail");
+												if (match.url.includes("s_cont"))
+													this.props.history.push("/s_cont/contractor_detail");
 											}}
 												>
 											</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
+													if (match.url.includes("g_cont"))
 													this.props.history.push("/g_cont/contractor_detail");
+												if (match.url.includes("s_cont"))
+													this.props.history.push("/s_cont/contractor_detail");
 												}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={async () => {
 													await this.props.selectContractor(row.id);
+													if (match.url.includes("g_cont"))
 													this.props.history.push("/g_cont/contractor_detail");
+												if (match.url.includes("s_cont"))
+													this.props.history.push("/s_cont/contractor_detail");
 												}}></CustomTableCell>
 											<CustomTableCell align="center"
 											onClick={async () => {
 												await this.props.selectContractor(row.id);
-												this.props.history.push("/g_cont/contractor_detail");
+												if (match.url.includes("g_cont"))
+													this.props.history.push("/g_cont/contractor_detail");
+												if (match.url.includes("s_cont"))
+													this.props.history.push("/s_cont/contractor_detail");
 											}}
 												></CustomTableCell>		
 											<CustomTableCell align="center">																							

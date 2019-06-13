@@ -6,7 +6,8 @@ import {
 	SET_DETAIL_PROPOSAL,
 	SET_PROPOSALS_COMPARE,
 	PROPOSAL_MESSAGES_LOADED,
-	SEARCH_FILTER_LOADED
+	SEARCH_FILTER_LOADED,
+	SET_CURRENT_PROJECT
 } from '../constants/global-action-types'
 
 import PropApi from '../api/proposal';
@@ -236,5 +237,11 @@ export function inviteContractor(prop_id, subId, cb) {
 				cb(false);
 				console.log(err.message);
 			})
+	}
+}
+
+export function setCurrentProject(id) {
+	return function (dispatch) {
+		dispatch({ type: SET_CURRENT_PROJECT, payload: id })
 	}
 }
