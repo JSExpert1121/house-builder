@@ -31,7 +31,10 @@ const styles = theme => ({
 			margin: '8px 0 4px'
 		},
 		".MuiFormControl-root": {
-			margin: '4px 0'
+			margin: '16px 0'
+		},
+		".CodeMirror": {
+			height: 'calc(100% - 81px)'
 		}
 	},
 	root: {
@@ -70,8 +73,6 @@ const styles = theme => ({
 		top: "calc(40vh)",
 	},
 	submitButton: {
-		border: "1px solid " + theme.palette.primary.light,
-		marginTop: theme.spacing(1),
 		width: 120,
 		[theme.breakpoints.up('sm')]: {
 			width: 170,
@@ -93,7 +94,8 @@ const styles = theme => ({
 	},
 	fileUpload: {
 		display: 'flex',
-		flexWrap: 'wrap'
+		flexWrap: 'wrap',
+		margin: '16px 0'
 	},
 	fileItem: {
 		margin: '6px',
@@ -197,7 +199,7 @@ class connectedAddProjectView extends Component {
 						InputProps={{ classes: { input: classes.editField } }}
 					/>
 					<SimpleMDE
-						style={{ height: '209px', overflow: 'auto', marginBottom: '8px' }}
+						style={{ height: 'calc(100% - 274px)', overflow: 'auto' }}
 						value={this.state.description}
 						onChange={this.handleDescChange}
 						options={{
@@ -228,7 +230,7 @@ class connectedAddProjectView extends Component {
 							</span>
 						))}
 					</Box>
-					<Box style={{ width: '100%', textAlign: 'center' }}>
+					<Box style={{ width: '100%', textAlign: 'center', margin: '16px 0' }}>
 						<Button disabled={this.state.isBusy} className={classes.submitButton} onClick={this.handleAddProject}>
 							Add Project
 						</Button>
