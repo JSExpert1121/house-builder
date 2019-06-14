@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-// Redux
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -8,10 +7,20 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Card, TextField, Button } from '@material-ui/core';
-import { DropzoneArea } from 'material-ui-dropzone';
-import { addProject } from '../../../actions/gen-actions';
-import { addFilesToProject } from '../../../actions';
+import Card from '@material-ui/core/Card';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
+
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import SimpleMDE from 'react-simplemde-editor';
+import "easymde/dist/easymde.min.css"
+
+import { addFilesToProject, addProject } from '../../../actions';
+import CustomSnackbar from '../../../components/shared/CustomSnackbar';
 
 const styles = theme => ({
 	"@global": {
@@ -28,7 +37,7 @@ const styles = theme => ({
 	root: {
 		position: 'relative',
 		flexGrow: 1,
-		height: "calc(100vh - 136px)",
+		height: "calc(100vh - 128px)",
 		margin: theme.spacing(1),
 		display: "flex",
 		justifyContent: "center",
@@ -38,18 +47,13 @@ const styles = theme => ({
 		width: "100%",
 		height: "100%",
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "90%",
 		padding: theme.spacing(2),
-		[theme.breakpoints.up('sm')]: {
-			width: 700,
-		},
+		// [theme.breakpoints.up('sm')]: {
+		// 	width: 700,
+		// },
 		display: 'flex',
 		flexDirection: "column",
 		overflow: "auto",
-	},
-	paper_title_price: {
-		display: 'flex',
-		alignItems: "stretch",
 	},
 	paper_title: {
 		width: '100%'
@@ -149,9 +153,8 @@ class connectedAddProjectView extends Component {
 	}
 
 	handleFileChange = (e) => {
-		this.setState({ files: [...this.state.files, ...e.target.files] }, () => {
-			console.log(this.state.files);
-		})
+		console.log(this.state.files, e.target.files);
+		this.setState({ files: [...this.state.files, ...e.target.files] })
 	}
 
 	handleRemove = (file) => {
@@ -165,6 +168,10 @@ class connectedAddProjectView extends Component {
 		}
 
 		this.setState({ files: [...files] });
+	}
+
+	handleDescChange = (value) => {
+		this.setState({ description: value });
 	}
 
 	render() {
@@ -189,15 +196,15 @@ class connectedAddProjectView extends Component {
 						onChange={(val) => this.setState({ price: val.target.value })}
 						InputProps={{ classes: { input: classes.editField } }}
 					/>
-					<TextField
-						label="Detail"
-						multiline
-						rows="10"
-						className={classes.paper_job_detail}
+					<SimpleMDE
+						style={{ height: '209px', overflow: 'auto', marginBottom: '8px' }}
 						value={this.state.description}
-						onChange={(val) => this.setState({ description: val.target.value })}
+						onChange={this.handleDescChange}
+						options={{
+							placeholder: 'Description here'
+						}}
 					/>
-					<div className={classes.fileUpload}>
+					<Box className={classes.fileUpload}>
 						<input
 							accept="text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*"
 							id="upload-file"
@@ -220,18 +227,18 @@ class connectedAddProjectView extends Component {
 								</IconButton>
 							</span>
 						))}
-					</div>
-					<Button disabled={this.state.isSaving} className={classes.submitButton} onClick={this.handleAddProject}>
-						Add Project
-							{
-							this.state.isSaving &&
-							<CircularProgress
-
-								size={24}
-								thickness={4}
-							/>
-						}
-					</Button>
+					</Box>
+					<Box style={{ width: '100%', textAlign: 'center' }}>
+						<Button disabled={this.state.isBusy} className={classes.submitButton} onClick={this.handleAddProject}>
+							Add Project
+						</Button>
+					</Box>
+					{this.state.isBusy && <CircularProgress className={classes.busy} />}
+					<CustomSnackbar
+						open={this.state.showMessage}
+						variant={this.state.variant}
+						message={this.state.message}
+						handleClose={() => this.setState({ showMessage: false })} />
 				</Card>
 			</Paper >
 		);
@@ -240,8 +247,8 @@ class connectedAddProjectView extends Component {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		addProject: (id, data, cb) => dispatch(addProject(id, data, cb)),
-		addFiles: (id, files, cb) => dispatch(addFilesToProject(id, files, cb))
+		addProject: (id, data) => dispatch(addProject(id, data)),
+		addFiles: (id, files) => dispatch(addFilesToProject(id, files))
 	};
 };
 
@@ -253,8 +260,9 @@ const mapStateToProps = state => {
 
 const AddProjectView = connect(mapStateToProps, mapDispatchToProps)(connectedAddProjectView);
 
-AddProjectView.propTypes = {
+connectedAddProjectView.propTypes = {
 	classes: PropTypes.object.isRequired,
+	userProfile: PropTypes.object.isRequired
 };
 
 export default withRouter(withStyles(styles)(AddProjectView));

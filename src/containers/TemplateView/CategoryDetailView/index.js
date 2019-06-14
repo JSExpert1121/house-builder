@@ -23,6 +23,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import SimpleMDE from 'react-simplemde-editor';
+import "easymde/dist/easymde.min.css"
 
 // Redux
 import { connect } from 'react-redux';
@@ -37,9 +39,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 56px - 20px) / 2)",
+		height: "calc((100vh - 64px - 48px - 16px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 56px - 20px)",
+			height: "calc(100vh - 64px - 48px - 16px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -54,9 +56,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 56px - 40px) / 2)",
+		height: "calc((100vh - 64px - 48px - 16px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 56px - 20px)",
+			height: "calc(100vh - 64px - 48px - 16px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -168,7 +170,15 @@ class ConnCategoryDetailView extends Component {
 							onChange={(val) => this.setState({ value: val.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
-						<TextField
+						<SimpleMDE
+							style={{ height: '209px', overflow: 'auto', marginBottom: '8px', textAlign: 'left' }}
+							value={this.state.description}
+							onChange={(val) => this.setState({ description: val })}
+							options={{
+								placeholder: 'Description here'
+							}} />
+
+						{/* <TextField
 							label="detail"
 							multiline
 							rows="10"
@@ -178,7 +188,7 @@ class ConnCategoryDetailView extends Component {
 							}}
 							value={this.state.description}
 							onChange={(val) => this.setState({ description: val.target.value })}
-						/>
+						/> */}
 						<div>
 							<Button className={classes.halfWidth} disabled={this.state.isSaving} onClick={() => this.props.history.push("/m_temp/template_detail")} color="primary">
 								Cancel
@@ -326,7 +336,15 @@ class ConnCategoryDetailView extends Component {
 							onChange={(val) => this.setState({ ovalue: val.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
-						<TextField
+						<SimpleMDE
+							style={{ height: '209px', overflow: 'auto', marginBottom: '8px', textAlign: 'left' }}
+							value={this.state.odescription}
+							onChange={(val) => this.setState({ odescription: val })}
+							options={{
+								placeholder: 'Description here'
+							}} />
+
+						{/* <TextField
 							label="detail"
 							margin="dense"
 							multiline
@@ -334,7 +352,7 @@ class ConnCategoryDetailView extends Component {
 							fullWidth
 							value={this.state.odescription}
 							onChange={(val) => this.setState({ odescription: val.target.value })}
-						/>
+						/> */}
 					</DialogContent>
 					<DialogActions>
 						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">

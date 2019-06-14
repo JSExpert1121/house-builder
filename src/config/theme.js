@@ -27,7 +27,6 @@ const theme = createMuiTheme({
 	},
 	overrides: {
 	}
-
 });
 
 

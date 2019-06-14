@@ -17,6 +17,8 @@ import { Paper, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { selectOption, editOption, selectTemplate, selectCategory, deleteOption } from '../../../actions/tem-actions';
 import SplitPane from 'react-split-pane';
+import SimpleMDE from 'react-simplemde-editor';
+import "easymde/dist/easymde.min.css"
 
 const styles = theme => ({
 	descTag: {
@@ -26,9 +28,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 56px - 20px) / 2)",
+		height: "calc((100vh - 64px - 48px - 16px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 56px - 20px)",
+			height: "calc(100vh - 64px - 48px - 16px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -43,9 +45,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 56px - 40px) / 2)",
+		height: "calc((100vh - 64px - 48px - 16px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 56px - 20px)",
+			height: "calc(100vh - 64px - 48px - 16px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -142,7 +144,15 @@ class ConnOptionDetailView extends Component {
 							onChange={(val) => this.setState({ value: val.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
-						<TextField
+						<SimpleMDE
+							style={{ height: '209px', overflow: 'auto', marginBottom: '8px', textAlign: 'left' }}
+							value={this.state.description}
+							onChange={(val) => this.setState({ description: val })}
+							options={{
+								placeholder: 'Description here'
+							}} />
+
+						{/* <TextField
 							label="detail"
 							multiline
 							rows="10"
@@ -152,7 +162,7 @@ class ConnOptionDetailView extends Component {
 							}}
 							value={this.state.description}
 							onChange={(val) => this.setState({ description: val.target.value })}
-						/>
+						/> */}
 						<div>
 							<Button className={classes.halfWidth} onClick={() => this.props.history.push("/m_temp/category_detail")} color="primary">
 								Cancel

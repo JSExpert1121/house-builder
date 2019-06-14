@@ -6,6 +6,8 @@ import {
 } from "../constants/gen-action-types";
 import Axios from "axios";
 
+import ProjApi from '../api/project';
+
 export function awardProject(id, cb) {
 	return function (dispatch) {
 		return Axios.put(process.env.PROJECT_API + "proposals/" + id, {
@@ -23,7 +25,7 @@ export function awardProject(id, cb) {
 
 export function getProjectsByGenId(id, page, rowSize) {
 	return function (dispatch) {
-		dispatch({ type: "CLEAR_PROJECTS" });
+		// dispatch({ type: "CLEAR_PROJECTS" });
 		return Axios.get(process.env.PROJECT_API + "contractors/" + id + "/projects", {
 			params: {
 				"page": page,
@@ -80,30 +82,8 @@ export function getTemplates(page, size) {
 	}
 }
 
-export function addTemplate(projectId, templateId, cb) {
-	return function (dispatch) {
-		return Axios.post(process.env.PROJECT_API + "projects/" + projectId + "/templates/" + templateId)
-			.then(response => {
-				cb(true);
-			}).catch(err => {
-				cb(false);
-				console.log(err.message);
-			})
-	}
-}
-
-export function deleteTemplate(projectId, templateId, cb) {
-	return function (dispatch) {
-		return Axios.delete(process.env.PROJECT_API + "projects/" + projectId + "/templates/" + templateId)
-			.then(response => {
-				cb(true);
-			})
-			.catch(err => {
-				cb(false);
-				console.log(err.message)
-			})
-	}
-}
+export const addTemplate = (proj_id, templ_id) => dispatch => ProjApi.addTemplate(proj_id, templ_id);
+export const deleteTemplate = (proj_id, templ_id) => dispatch => ProjApi.deleteTemplate(proj_id, templ_id);
 
 export function updateProject(id) {
 	return function (dispatch) {

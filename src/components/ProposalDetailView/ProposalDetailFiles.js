@@ -23,7 +23,7 @@ const styles = theme => ({
 	root: {
 		flexGrow: 1,
 		padding: theme.spacing(1),
-		height: "calc(100vh - 64px - 56px - 48px - 24px)",
+		height: "calc(100vh - 64px - 48px - 36px - 16px)",
 		overflow: "auto",
 		overflowX: "hidden"
 	},

@@ -21,7 +21,7 @@ import InvitedProView from './InvitedProView';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		padding: "10px"
+		padding: theme.spacing(1)
 	},
 	toolbarstyle: {
 		backgroundColor: theme.palette.background.paper,
@@ -68,9 +68,8 @@ class ConnectedSCVPipelineView extends React.Component {
 
 						<Switch>
 							<SecuredRoute path={`${match.url}/submitted`} component={SubmittedProView} />
-							<SecuredRoute path={`${match.url}/awarded`} component = {WonProView} />
-							<SecuredRoute path={`${match.url}/invited`} component = {InvitedProView} />
-							{/* <SecuredRoute path={`${match.url}/project_detail/:id`} component={ProjectDetailView} /> */}
+							<SecuredRoute path={`${match.url}/awarded`} component={WonProView} />
+							<SecuredRoute path={`${match.url}/invited`} component={InvitedProView} />
 							<Redirect path={`${match.url}`} to={`${match.url}/submitted`} />
 						</Switch>
 					</Paper>

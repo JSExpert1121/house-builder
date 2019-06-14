@@ -14,21 +14,19 @@ import NoSsr from '@material-ui/core/NoSsr';
 import ProjectOverView from './ProjectOverView';
 import ProjectBidders from './ProjectBidders';
 import ProjectFiles from './ProjectFiles';
-import ProjectMessages from './ProjectMessages';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
 
 import { getProjectData } from '../../actions';
-import { dispatch } from 'rxjs/internal/observable/range';
 import { IconButton } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 56px - 20px)",
-		margin: "10px",
+		height: "calc(100vh - 64px - 48px - 16px)",
+		margin: theme.spacing(1),
 	},
 	backBtn: {
 		color: theme.palette.primary.dark
@@ -74,11 +72,10 @@ class ConnectedProjectDetailView extends React.Component {
 
 		const tabNo = [
 			match.url + '/overview',
-			match.url + '/bidders',
 			match.url + '/files',
-			match.url + '/messages',
-			match.url + '/proposals',
 			match.url + '/templates',
+			match.url + '/proposals',
+			match.url + '/bidders',
 			match.url + '/compare'
 		];
 
@@ -101,7 +98,7 @@ class ConnectedProjectDetailView extends React.Component {
 
 			<NoSsr>
 				<div className={classes.root}>
-					<Paper square >
+					<Paper square style={{ height: '100%' }}>
 						<div style={{ display: 'flex' }}>
 							<IconButton className={classes.backBtn} onClick={this.handleBack}>
 								<ArrowBackIcon />
@@ -115,22 +112,20 @@ class ConnectedProjectDetailView extends React.Component {
 								className={classes.toolbarstyle}
 							>
 								<Tab component={Link} to={`${match.url}/overview`} label="Overview" />
-								<Tab component={Link} to={`${match.url}/bidders`} label="Bidders" />
 								<Tab component={Link} to={`${match.url}/files`} label="Files" />
-								<Tab component={Link} to={`${match.url}/messages`} label="Messages" />
-								<Tab component={Link} to={`${match.url}/proposals`} label="Proposals" />
 								<Tab component={Link} to={`${match.url}/templates`} label="Templates" />
+								<Tab component={Link} to={`${match.url}/proposals`} label="Proposals" />
+								<Tab component={Link} to={`${match.url}/bidders`} label="Bidders" />
 								{owner && <Tab component={Link} to={`${match.url}/compare`} label="Compare" />}
 							</Tabs>
 						</div>
 
 						<Switch>
 							<SecuredRoute path={`${match.url}/overview`} component={ProjectOverView} />
-							<SecuredRoute path={`${match.url}/bidders`} component={ProjectBidders} render={() => <div />} />
 							<SecuredRoute path={`${match.url}/files`} component={ProjectFiles} />
-							<SecuredRoute path={`${match.url}/messages`} /*component={ProjectMessages}*/ render={() => <div />} />
+							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />
 							<SecuredRoute path={`${match.url}/proposals`} component={ProjectProposals} />
-							<SecuredRoute path={`${match.url}/templates`} component={ProjectTemplates} />							
+							<SecuredRoute path={`${match.url}/bidders`} component={ProjectBidders} />
 							{owner && <SecuredRoute path={`${match.url}/compare`} component={ProposalsCompare} />}
 							<Redirect path={`${match.url}`} to={`${match.url}/overview`} />
 						</Switch>

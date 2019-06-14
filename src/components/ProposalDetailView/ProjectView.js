@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 
 import Card from '@material-ui/core/Card';
@@ -8,17 +7,17 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { withStyles } from "@material-ui/core/styles";
+import ReactMarkdown from 'react-markdown';
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing(1)
+    padding: 0
   },
   title: {
     fontSize: "1.8em",
     textAlign: "left",
     color: "#333",
     marginTop: "0",
-    paddingLeft: theme.spacing(1),
     marginBottom: "0"
   },
   subtitle: {
@@ -26,7 +25,6 @@ const styles = theme => ({
     textAlign: "left",
     color: "#333",
     marginTop: "0",
-    paddingLeft: theme.spacing(1),
     marginBottom: "4px",
     fontWeight: "bold"
   },
@@ -39,24 +37,24 @@ const styles = theme => ({
     textAlign: "left",
     color: "#444",
     marginTop: "0",
-    paddingLeft: theme.spacing(1)
   },
   brief: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    paddingLeft: theme.spacing(1),
     color: "#444"
   },
   desc: {
     color: "#444",
     marginTop: "0",
-    paddingLeft: theme.spacing(1)
+    "& > p": {
+      margin: theme.spacing(1, 0)
+    }
   },
   budget: {
     display: "inline-block",
     fontSize: "1em",
     textAlign: "left",
-    fontWeight: "bold",
+    fontWeight: "600",
     color: "#666"
   },
   posttime: {
@@ -73,11 +71,11 @@ const styles = theme => ({
     top: "calc(50%-10px)"
   },
   status: {
-    marginTop: theme.spacing(1),
+    margin: theme.spacing(1, 0, 0, 0),
     fontSize: "1em",
     textAlign: "left",
-    fontWeight: "bold",
-    color: "#060"
+    fontWeight: "600",
+    color: theme.palette.primary.light
   },
   margin: theme.spacing(1),
   minWidth: 120,
@@ -97,36 +95,32 @@ const styles = theme => ({
   }
 });
 
-const ProjectView = ({ classes, project }) => {
+const ProjectView = ({ classes, project, showFiles = true }) => {
   const posttime = project.updatedAt;
   const postdate = new Date(posttime);
   return (
-    <Card className={classes.root}>
-      <Grid container spacing={3} id="project-description">
+    <Box className={classes.root}>
+      <Grid container id="project-description">
         {/* <Grid container item sm={12} md={9} spacing={2}> */}
-        <Grid container item sm={12} spacing={2}>
-          <Grid container item sm={12} className={classes.bottomLine}>
-            <Grid item xs={12} sm={10} className="desc">
-              <h1 className={classes.title}>{project.title}</h1>
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <p className={classes.status}>
-                {project.status && project.status.toUpperCase()}
-              </p>
-            </Grid>
-          </Grid>
+        <Grid item xs={12} sm={10} className="desc">
+          <h1 className={classes.title}>{project.title}</h1>
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <p className={classes.status}>
+            {project.status && project.status.toUpperCase()}
+          </p>
+        </Grid>
 
-          <Grid item xs={12}>
-            <Box className={classes.brief}>
-              <Typography className={classes.budget}>Budget: {project.budget}</Typography>
-              <Typography className={classes.posttime}>Posted: {postdate.toDateString()}</Typography>
-            </Box>
-            <Box className={classes.brief}>
-              <Typography style={{ fontWeight: '700' }}> Description:  </Typography>
-              <Typography className={classes.desc}>
-                {project.description}
-              </Typography>
-            </Box>
+        <Grid item xs={12}>
+          <Box className={classes.brief}>
+            <Typography className={classes.budget}>Budget: {project.budget}</Typography>
+            <Typography className={classes.posttime}>Posted: {postdate.toDateString()}</Typography>
+          </Box>
+          <Box className={classes.brief}>
+            <Typography style={{ fontWeight: '700' }}> Description:  </Typography>
+            <ReactMarkdown source={project.description} className={classes.desc} />
+          </Box>
+          {showFiles && (
             <Box className={classes.brief}>
               {project.projectFiles && project.projectFiles.length > 0 && (
                 <>
@@ -135,16 +129,10 @@ const ProjectView = ({ classes, project }) => {
                 </>
               )}
             </Box>
-          </Grid>
+          )}
         </Grid>
-        {/* <Grid item sm={12} md={3}>
-          <Grid container item sm={12} className={classes.bottomLine}>
-            <p className={classes.subtitle}>Client Information</p>
-          </Grid>
-          <p className={classes.desc}>{project.genContractor.email}</p>
-        </Grid> */}
       </Grid>
-    </Card >
+    </Box >
   );
 };
 

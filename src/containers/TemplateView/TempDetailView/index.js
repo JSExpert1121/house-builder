@@ -22,6 +22,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SimpleMDE from 'react-simplemde-editor';
+import "easymde/dist/easymde.min.css"
 
 // Redux
 import { connect } from 'react-redux';
@@ -37,9 +39,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 56px - 20px) / 2)",
+		height: "calc((100vh - 64px - 48px - 16px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 56px - 20px)",
+			height: "calc(100vh - 64px - 48px - 16px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -54,9 +56,9 @@ const styles = theme => ({
 		whiteSpace: 'nowrap',
 		margin: theme.spacing(1),
 		borderBottom: "5px solid " + theme.palette.primary.light,
-		height: "calc((100vh - 64px - 56px - 40px) / 2)",
+		height: "calc((100vh - 64px - 48px - 16px) / 2)",
 		[theme.breakpoints.up('md')]: {
-			height: "calc(100vh - 64px - 56px - 20px)",
+			height: "calc(100vh - 64px - 48px - 16px)",
 		},
 		display: 'flex',
 		flexDirection: "column",
@@ -142,7 +144,15 @@ class ConnTempDetailView extends Component {
 							onChange={(val) => this.setState({ name: val.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
-						<TextField
+						<SimpleMDE
+							style={{ height: '209px', overflow: 'auto', marginBottom: '8px', textAlign: 'left' }}
+							value={this.state.description}
+							onChange={(val) => this.setState({ description: val })}
+							options={{
+								placeholder: 'Description here'
+							}} />
+
+						{/* <TextField
 							label="detail"
 							multiline
 							rows="10"
@@ -152,7 +162,7 @@ class ConnTempDetailView extends Component {
 							}}
 							value={this.state.description}
 							onChange={(val) => this.setState({ description: val.target.value })}
-						/>
+						/> */}
 						<div>
 							<Button disabled={this.state.isSaving} className={classes.halfWidth} onClick={() => this.props.history.push("/m_temp")} color="primary">
 								Cancel
@@ -306,15 +316,13 @@ class ConnTempDetailView extends Component {
 							onChange={(val) => this.setState({ cvalue: val.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
-						<TextField
-							label="detail"
-							margin="dense"
-							multiline
-							rows="10"
-							fullWidth
+						<SimpleMDE
+							style={{ height: '209px', overflow: 'auto', marginBottom: '8px', textAlign: 'left' }}
 							value={this.state.cdescription}
-							onChange={(val) => this.setState({ cdescription: val.target.value })}
-						/>
+							onChange={(val) => this.setState({ cdescription: val })}
+							options={{
+								placeholder: 'Description here'
+							}} />
 					</DialogContent>
 					<DialogActions>
 						<Button disabled={this.state.isAdding} onClick={() => this.setState({ openCategoryForm: false })} color="primary">

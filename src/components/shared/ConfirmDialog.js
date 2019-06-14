@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export const ConfirmDialog = ({ open, busy, onYes, onCancel, title = 'Confirm', message = '' }) => {
+const ConfirmDialog = ({ open, busy = false, onYes, onCancel, title = 'Confirm', message = '' }) => {
 
     const classes = useStyles();
 
@@ -55,9 +55,10 @@ export const ConfirmDialog = ({ open, busy, onYes, onCancel, title = 'Confirm', 
 ConfirmDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     busy: PropTypes.bool,
-    onYes: PropTypes.func.isRequired,
+    onYes: PropTypes.func,
     onCancel: PropTypes.func,
     title: PropTypes.string,
     message: PropTypes.string
 };
 
+export default ConfirmDialog;

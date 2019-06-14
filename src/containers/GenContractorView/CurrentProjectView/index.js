@@ -1,42 +1,45 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-// Redux
 import { connect } from 'react-redux';
-import { getProjectsByGenId } from '../../../actions/gen-actions';
-import { deleteProject, setCurrentProject } from '../../../actions';
-
 import PropTypes from 'prop-types';
 
 // material ui
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import {
-	CircularProgress,
-	Table, TableHead, TableCell, TableRow, TableBody,
-	IconButton, TablePagination,
-	Button,
-	Snackbar,
-	Dialog,
-	DialogTitle,
-	DialogContent,
-	DialogContentText,
-	DialogActions
-} from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import IconButton from '@material-ui/core/IconButton';
+import TablePagination from '@material-ui/core/TablePagination';
+import Typography from '@material-ui/core/Typography';
+// mui icons
 import DeleteIcon from '@material-ui/icons/Delete';
+
+// 3rd party and custom components
+import removeMd from 'remove-markdown';
+import CustomTableCell from '../../../components/shared/CustomTableCell';
+import CustomSnackbar from '../../../components/shared/CustomSnackbar';
+import ConfirmDialog from '../../../components/shared/ConfirmDialog';
+
+import { getProjectsByGenId } from '../../../actions/gen-actions';
+import { deleteProject, setCurrentProject } from '../../../actions';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 136px)",
+		height: "calc(100vh - 128px)",
 		margin: theme.spacing(1),
 		overflow: "auto",
+		position: "relative"
 	},
 	tableWrap: {
 		overflow: "auto",
-		maxHeight: "calc(100vh - 192px)",
+		maxHeight: "calc(100vh - 184px)",
 	},
 	row: {
-		'&:nth-of-type(odd)': {
+		"&:nth-of-type(odd)": {
 			backgroundColor: theme.palette.background.default,
 		},
 	},
@@ -44,19 +47,20 @@ const styles = theme => ({
 		position: "relative",
 		left: "calc(50% - 10px)",
 		top: "calc(40vh)",
+	},
+	desc: {
+		color: "#444",
+		marginTop: "0",
+		"& > p": {
+			margin: theme.spacing(0, 0)
+		}
+	},
+	busy: {
+		position: "absolute",
+		left: "calc(50% - 20px)",
+		top: "calc(50% - 20px)"
 	}
 });
-
-const CustomTableCell = withStyles(theme => ({
-	head: {
-		backgroundColor: theme.palette.primary.light,
-		color: theme.palette.common.white,
-	},
-	body: {
-		fontSize: 14,
-		color: theme.palette.primary.light
-	},
-}))(TableCell);
 
 class connectedCurProView extends React.Component {
 	constructor(props) {
@@ -65,10 +69,11 @@ class connectedCurProView extends React.Component {
 		this.state = {
 			rowsPerPage: 20,
 			currentPage: 0,
-			isSaving: false,
-			snackBar: false,
-			snackBarContent: '',
-			alertConfirm: false,
+			isBusy: false,
+			showMessage: false,
+			message: '',
+			variant: 'success',
+			showConfirm: false,
 			proId: 0
 		};
 	}
@@ -78,62 +83,60 @@ class connectedCurProView extends React.Component {
 		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
 	}
 
-	handleChangePage = (event, page) => {
+	handleChangePage = async (event, page) => {
 		const { userProfile } = this.props;
-		this.setState({ currentPage: page });
-
-		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, page, this.state.rowsPerPage);
+		this.setState({ currentPage: page, isBusy: true });
+		try {
+			await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, page, this.state.rowsPerPage);
+		} catch (error) {
+			console.log('CurrentProjectView.handleChangePage', error);
+		}
+		this.setState({ isBusy: false });
 	};
 
-	handleChangeRowsPerPage = event => {
+	handleChangeRowsPerPage = async event => {
 		const { projects, userProfile } = this.props;
 
 		const rowsPerPage = event.target.value;
 		const currentPage = rowsPerPage >= projects.totalElements ? 0 : this.state.currentPage;
 
-		this.setState({
-			rowsPerPage: rowsPerPage,
-			currentPage: currentPage
-		});
-
-		this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, currentPage, rowsPerPage);
+		this.setState({ rowsPerPage, currentPage });
+		try {
+			await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, currentPage, rowsPerPage);
+		} catch (error) {
+			console.log('CurrentProjectView.handleChangeRowsPerPage', error);
+		}
+		this.setState({ isBusy: false });
 	};
 
 	handleDeleteProject = async (id) => {
-		this.setState({
-			isSaving: true,
-			alertConfirm: false
-		})
+		const { userProfile, projects } = this.props;
+		let msg = 'delete project success';
 
-		await this.props.deleteProject(this.state.proId, (res) => {
+		this.setState({ isBusy: true, showConfirm: false });
+		try {
+			await this.props.deleteProject(this.state.proId);
+			const curPage = this.state.currentPage;
+			if (this.state.rowsPerPage * (this.state.currentPage) >= projects.totalElements - 1) curPage--;
+			await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, curPage, this.state.rowsPerPage);
 			this.setState({
-				isSaving: false,
-				snackBar: true,
-				snackBarContent: res ? 'delete project success' : "delete project failed"
+				isBusy: false,
+				showMessage: true,
+				message: msg,
+				currentPage: curPage
 			});
-
-			if (res) {
-				const { userProfile, projects } = this.props;
-
-				if (this.state.rowsPerPage * (this.state.currentPage) < projects.totalElements - 1) {
-					this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id,
-						this.state.currentPage, this.state.rowsPerPage);
-				}
-				else {
-					const currentPage = this.state.currentPage - 1;
-
-					this.setState({
-						currentPage: currentPage
-					});
-
-					this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id,
-						currentPage, this.state.rowsPerPage);
-				}
-			}
-		})
+		} catch (error) {
+			console.log(error);
+			msg = 'delete project failed';
+			this.setState({
+				isBusy: false,
+				showMessage: true,
+				message: msg
+			});
+		}
 	}
 
-	handleSelectProject = async (id) => {
+	handleSelectProject = (id) => {
 		const { match } = this.props;
 		this.props.setCurrentProject(id);
 		this.props.history.push("/g_cont/project_detail/" + id);
@@ -149,7 +152,7 @@ class connectedCurProView extends React.Component {
 		return (
 			<Paper className={classes.root}>
 				<div className={classes.tableWrap} >
-					<Table className={classes.table}>
+					<Table className={classes.table} size='small'>
 						<TableHead>
 							<TableRow>
 								<CustomTableCell> Project Title </CustomTableCell>
@@ -165,20 +168,17 @@ class connectedCurProView extends React.Component {
 										<TableRow className={classes.row} key={row.id} hover>
 											<CustomTableCell component="th" scope="row"
 												onClick={() => this.handleSelectProject(row.id)}>
-												{row.title}
+												<Typography className='nowrap'>{row.title}</Typography>
 											</CustomTableCell>
 											<CustomTableCell align="center"
 												onClick={() => this.handleSelectProject(row.id)}>{row.budget}</CustomTableCell>
 											<CustomTableCell align="center"
-												onClick={() => this.handleSelectProject(row.id)}>{row.description}</CustomTableCell>
+												onClick={() => this.handleSelectProject(row.id)}>
+												<Typography className='nowrap'>{removeMd(row.description)}</Typography>
+											</CustomTableCell>
 											<CustomTableCell align="center">
 												<IconButton aria-label="Delete" color="primary"
-													onClick={() => {
-														this.setState({
-															alertConfirm: true,
-															proId: row.id
-														})
-													}}>
+													onClick={() => this.setState({ showConfirm: true, proId: row.id })}>
 													<DeleteIcon />
 												</IconButton>
 											</CustomTableCell>
@@ -196,51 +196,24 @@ class connectedCurProView extends React.Component {
 					count={projects.totalElements}
 					rowsPerPage={this.state.rowsPerPage}
 					page={this.state.currentPage}
-					backIconButtonProps={{
-						'aria-label': 'Previous Page',
-					}}
-					nextIconButtonProps={{
-						'aria-label': 'Next Page',
-					}}
+					backIconButtonProps={{ 'aria-label': 'Previous Page' }}
+					nextIconButtonProps={{ 'aria-label': 'Next Page' }}
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>
-				<Snackbar
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-					open={this.state.snackBar}
-					onClose={() => this.setState({
-						snackBar: false
-					})}
-					ContentProps={{
-						'aria-describedby': 'message-id',
-					}}
-					message={
-						<span id="message-id"> {
-							this.state.snackBarContent
-						}</span>
-					}
+				<CustomSnackbar
+					open={this.state.showMessage}
+					variant={this.state.variant}
+					message={this.state.message}
+					handleClose={() => this.setState({ showMessage: false })}
 				/>
-				<Dialog
-					open={this.state.alertConfirm}
-					onClose={() => this.setState({ alertConfirm: false })}
-					aria-labelledby="alert-dialog-title"
-					aria-describedby="alert-dialog-description"
-				>
-					<DialogTitle id="alert-dialog-title">{"Delete Project?"}</DialogTitle>
-					<DialogContent>
-						<DialogContentText id="alert-dialog-description">
-							Do you want to delete this project?
-          				</DialogContentText>
-					</DialogContent>
-					<DialogActions>
-						<Button onClick={() => this.setState({ alertConfirm: false })} color="primary">
-							No
-          				</Button>
-						<Button onClick={() => this.handleDeleteProject()} color="primary" autoFocus>
-							Yes
-          				</Button>
-					</DialogActions>
-				</Dialog>
+				<ConfirmDialog
+					open={this.state.showConfirm}
+					onYes={this.handleDeleteProject}
+					onCancel={() => this.setState({ showConfirm: false })}
+					message='Do you want to delete this project?'
+				/>
+				{this.state.isBusy && <CircularProgress className='busy' />}
 			</Paper >
 		);
 	}
@@ -262,10 +235,11 @@ const mapStateToProps = state => {
 	};
 };
 
-const CurrentProjectView = connect(mapStateToProps, mapDispatchToProps)(connectedCurProView);
-
-CurrentProjectView.propTypes = {
+connectedCurProView.propTypes = {
 	classes: PropTypes.object.isRequired,
+	projects: PropTypes.object,
+	userProfile: PropTypes.object
 };
 
+const CurrentProjectView = connect(mapStateToProps, mapDispatchToProps)(connectedCurProView);
 export default withRouter(withStyles(styles)(CurrentProjectView));

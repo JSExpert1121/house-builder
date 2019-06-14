@@ -81,7 +81,7 @@ const GenContractorView = ({ classes, contractor, fullview = false }) => {
                                     <Box className={classes.email}>Email: {contractor.email}</Box>
                                 </Grid>
                                 <Grid item xs={12} style={{ padding: '4px' }}>
-                                    <Box className={classes.email}>{"Status: "}</Box>
+                                    <Box className={classes.email}>Status:&nbsp;</Box>
                                     <Box className={classes.status}>{contractor.status}</Box>
                                 </Grid>
                             </>

@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { withStyles } from "@material-ui/core/styles";
+import ReactMarkdown from 'react-markdown';
 
 const styles = theme => ({
     root: {
@@ -36,6 +37,9 @@ const styles = theme => ({
     desc: {
         color: "#444",
         marginTop: "0",
+        "& > p": {
+            margin: theme.spacing(1, 0)
+        }
     },
     briefdesc: {
         display: "inline-block",
@@ -50,7 +54,7 @@ const styles = theme => ({
         top: "calc(50%-10px)"
     },
     status: {
-        margin: theme.spacing(1, 0, 0, 0),
+        margin: 0,
         fontSize: "1em",
         textAlign: "left",
         fontWeight: "600",
@@ -92,9 +96,7 @@ const ProposalView = ({ classes, proposal }) => {
                 <Grid item xs={12}>
                     <Box className={classes.brief}>
                         <Typography style={{ fontWeight: '700' }}> Description:  </Typography>
-                        <Typography className={classes.desc}>
-                            {proposal.description}
-                        </Typography>
+                        <ReactMarkdown source={proposal.description} className={classes.desc} />
                     </Box>
                     <Box className={classes.brief}>
                         {proposal.proposalFiles && proposal.proposalFiles.length > 0 && (

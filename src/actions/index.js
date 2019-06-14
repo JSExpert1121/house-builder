@@ -12,6 +12,7 @@ import {
 
 import PropApi from '../api/proposal';
 import ProjApi from '../api/project';
+import ContApi from '../api/contractor';
 import Axios from 'axios';
 
 export function setUserProfile(payload) {
@@ -41,21 +42,27 @@ export const setProposals4Compare = (proposals) => (
 
 export function getProposalData(id) {
 	return function (dispatch) {
-		dispatch({ type: "CLEAR_SELECTED_PROPOSAL" });
+	dispatch({ type: "CLEAR_SELECTED_PROPOSAL" });
 
-		return Axios.get(process.env.PROJECT_API + 'proposals/' + id)
-			.then(res => {
-				dispatch({ type: SET_SELECTED_PROPOSAL, payload: res.data });
-			})
-			.catch(err => {
-				console.log(err.message);
-			})
-	}
+	return Axios.get(process.env.PROJECT_API + 'proposals/' + id)
+		.then(res => {
+			dispatch({ type: SET_SELECTED_PROPOSAL, payload: res.data });
+		})
+		.catch(err => {
+			console.log(err.message);
+		})
+}
 }
 
 export const submitProposal = (cont_id, pro_id, proposal) => dispatch => PropApi.submit(cont_id, pro_id, proposal);
 export const updateProposal = (prop_id, proposal) => dispatch => PropApi.update(prop_id, proposal);
 export const deleteProposal = (prop_id) => dispatch => PropApi.delete(prop_id);
+
+export const getProposals = (cont_id, page, size, status) => dispatch => {
+	ContApi.getProposals(cont_id, page, size, status).then(data => {
+		dispatch({ type: PROPOSALS_LOADED, payload: data });
+	});
+}
 
 export const addFilesToProposal = (id, files) => dispatch => PropApi.addFiles(id, files);
 export const deleteProposalFile = (id, name) => dispatch => PropApi.deleteFile(id, name);
@@ -72,26 +79,15 @@ export function getProposalsByProjectId(id, page, size) {
 				"page": page,
 				"size": size
 			}
-		})
-			.then((response) => {
-				dispatch({ type: PROPOSALS_LOADED, payload: response.data });
-			})
-			.catch(err => console.log(err.message))
+		}).then((response) => {
+			dispatch({ type: PROPOSALS_LOADED, payload: response.data });
+		}).catch(err => console.log(err.message))
 	}
 }
 
-export function deleteProject(id, cb) {
-	return function (dispatch) {
-		return Axios.delete(process.env.PROJECT_API + "projects/" + id)
-			.then(response => {
-				cb(true);
-			})
-			.catch(err => {
-				cb(false);
-				console.log(err.message);
-			})
-	}
-}
+export const addProject = (cont_id, project) => dispatch => ContApi.addProject(cont_id, project).then(data => data.id);
+export const addFilesToProject = (id, files) => dispatch => ProjApi.addFiles(id, files);
+export const deleteProject = (id) => dispatch => ProjApi.delete(id);;
 
 export function getProjectData(id) {
 	return function (dispatch) {
@@ -129,29 +125,6 @@ export function deleteFileFromProject(id, name, cb) {
 				cb(false);
 				console.log(err.message);
 			})
-	}
-}
-
-export function addFilesToProject(id, files, cb) {
-	return function (dispatch) {
-		const formData = new FormData();
-		files.forEach(async (file) => {
-			await formData.append('file', file);
-		});
-
-		return Axios.post(process.env.PROJECT_API + "projects/" + id + "/files/upload/multiple",
-			formData,
-			{
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			})
-			.then((response) => {
-				cb(true);
-			}).catch(err => {
-				cb(false);
-				console.log(err.message);
-			});
 	}
 }
 

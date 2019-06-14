@@ -14,31 +14,42 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
+import { ListItemText, ListItem, ListItemIcon, List } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import FiberIcon from '@material-ui/icons/FiberManualRecord';
 
 import ProjectView from './ProjectView';
-import { ConfirmDialog } from '../../components/shared/ConfirmDialog';
+import SubContractorView from '../Contractor/SubContractor';
+import ConfirmDialog from '../../components/shared/ConfirmDialog';
 import CustomTableCell from '../../components/shared/CustomTableCell';
+import ProposalView from './ProposalView';
+import SimpleMDE from 'react-simplemde-editor';
+import "easymde/dist/easymde.min.css"
+
 
 const styles = (theme) => ({
+	"@global": {
+		".MuiListItemIcon-root": {
+			minWidth: '32px'
+		},
+		".MuiListItem-root": {
+			paddingTop: '4px',
+			paddingBottom: '4px'
+		}
+	},
 	root: {
 		position: 'relative',
-		width: '100%',
-		height: "calc(100vh - 64px - 56px - 48px - 24px)",
+		height: "calc(100vh - 64px - 48px - 36px - 16px)",
 		overflow: "auto",
 		flexGrow: 1,
-		padding: theme.spacing(1)
-	},
-	tableWrap: {
-		overflow: "auto",
-		marginTop: '20px'
+		padding: theme.spacing(2),
+		width: '100%'
 	},
 	editField: {
 		lineHeight: '1.5rem',
@@ -154,42 +165,62 @@ class ConnectedProposalDetailOverview extends Component {
 
 		let c_project = edit ? project : proposal.proposal.project;
 		const btnTitle = (match.url.includes('/s_cont') || (match.params.id === '-1' && this.props.proposal)) ? 'Update Proposal' : 'Submit Proposal';
+		const isGen = match.url.includes('/g_cont');
+		const style_prop_title = {
+			fontWeight: '600', fontSize: '20px', marginTop: '0'
+		};
+		// if (isGen) style_prop_title.marginTop = '0';
 
 		return (
 			<Paper className={classes.root}>
-				<ProjectView project={c_project} />
-				<Box className={classes.tableWrap}>
-					<Card id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
-						<TextField disabled={!edit}
-							label="Budget *" id="budget" type='number'
-							className={clsx(classes.margin, classes.textField)}
-							value={this.state.budget}
-							onChange={this.handleChange('budget')}
-							InputProps={{
-								endAdornment: <InputAdornment position="start">USD</InputAdornment>,
-							}}
-						/>
-						<TextField disabled={!edit}
-							label="Duration *" type='number'
-							className={clsx(classes.margin, classes.textField)}
-							value={this.state.duration}
-							onChange={this.handleChange('duration')}
-							InputProps={{
-								endAdornment: <InputAdornment position="start">days</InputAdornment>,
-							}}
-						/>
-						<FormControl fullWidth className={classes.margin}>
-							<InputLabel htmlFor="description">Description *</InputLabel>
-							<Input disabled={!edit}
-								id="description"
-								value={this.state.description}
-								onChange={this.handleChange('description')}
-								multiline={true}
-							/>
-						</FormControl>
-					</Card>
+				{!isGen && <ProjectView project={c_project} />}
 
-					<Typography variant="subtitle1" noWrap style={{ fontWeight: 'bold', fontSize: '24px', marginTop: '16px' }}>Project Templates</Typography>
+				{(!edit || isGen) ? <ProposalView proposal={proposal.proposal} /> : (
+					<>
+						<Typography variant="subtitle1" noWrap style={style_prop_title}>Proposal</Typography>
+						<Box id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
+							<TextField disabled={!edit}
+								label="Budget *" id="budget" type='number'
+								className={clsx(classes.margin, classes.textField)}
+								value={this.state.budget}
+								onChange={this.handleChange('budget')}
+								InputProps={{
+									endAdornment: <InputAdornment position="start">USD</InputAdornment>,
+								}}
+							/>
+							<TextField disabled={!edit}
+								label="Duration *" type='number'
+								className={clsx(classes.margin, classes.textField)}
+								value={this.state.duration}
+								onChange={this.handleChange('duration')}
+								InputProps={{
+									endAdornment: <InputAdornment position="start">days</InputAdornment>,
+								}}
+							/>
+							<SimpleMDE
+								style={{ height: '209px', overflow: 'auto', margin: '8px 0', textAlign: 'left', width: '100%' }}
+								value={this.state.description}
+								onChange={(val) => this.setState({ description: val })}
+								options={{
+									placeholder: 'Description here'
+								}} />
+
+							{/* <FormControl fullWidth className={classes.margin}>
+								<InputLabel htmlFor="description">Description *</InputLabel>
+								<Input disabled={!edit}
+									id="description"
+									value={this.state.description}
+									onChange={this.handleChange('description')}
+									multiline={true}
+								/>
+							</FormControl> */}
+						</Box>
+					</>
+				)}
+
+				{isGen && <SubContractorView subContractor={proposal.proposal.subContractor} />}
+				<Typography variant="subtitle1" noWrap style={{ fontWeight: '600', fontSize: '20px', marginTop: '16px' }}>Templates</Typography>
+				{!isGen ? (
 					<Table>
 						<TableHead>
 							<TableRow>
@@ -211,7 +242,18 @@ class ConnectedProposalDetailOverview extends Component {
 							}
 						</TableBody>
 					</Table>
-				</Box>
+				) : (
+						<List>
+							{
+								project && project.projectTemplates.map((templ, index) => (
+									<ListItem key={index} onClick={() => this.props.templateSelected(index)} style={{ cursor: 'pointer' }}>
+										<ListItemIcon><FiberIcon style={{ fontSize: '16px' }} /></ListItemIcon>
+										<ListItemText primary={templ.template.name} />
+									</ListItem>
+								))
+							}
+						</List>
+					)}
 
 				<Box style={{ textAlign: 'right', paddingTop: '16px' }}>
 					{

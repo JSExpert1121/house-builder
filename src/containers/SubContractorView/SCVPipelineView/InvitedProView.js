@@ -27,13 +27,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 136px)",
+		height: "calc(100vh - 164px)",
 		margin: theme.spacing(1),
 		overflow: "auto",
 	},
 	tableWrap: {
 		overflow: "auto",
-		maxHeight: "calc(100vh - 192px)",
+		maxHeight: "calc(100vh - 212px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {

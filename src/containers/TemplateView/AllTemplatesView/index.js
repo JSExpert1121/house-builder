@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 // material ui
 import PropTypes from 'prop-types';
@@ -20,23 +20,23 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-// Redux
-import { connect } from 'react-redux';
+import SimpleMDE from 'react-simplemde-editor';
+import "easymde/dist/easymde.min.css"
 
 // actions
+import removeMd from 'remove-markdown';
 import { getTemplatesO, selectTemplate, deleteTemplate, createTemplate } from '../../../actions/tem-actions';
 import TSnackbarContent from '../../../components/SnackBarContent';
 
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
-		height: "calc(100vh - 64px - 56px - 20px)",
+		height: "calc(100vh - 64px - 48px - 16px)",
 		margin: theme.spacing(1),
 	},
 	tableWrap: {
-		overflow: "scroll",
-		maxHeight: "calc(100vh - 64px - 56px - 57px - 20px)",
+		overflow: "auto",
+		maxHeight: "calc(100vh - 64px - 48px - 48px - 16px)",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -146,7 +146,9 @@ class ConnAllTemplateView extends Component {
 												onClick={async () => {
 													await this.props.selectTemplate(row.id);
 													this.props.history.push("/m_temp/template_detail");
-												}}>{row.description}</CustomTableCell>
+												}}>
+												{removeMd(row.description)}
+											</CustomTableCell>
 
 											<CustomTableCell align="center">
 												<IconButton className={classes.button} aria-label="Delete" color="primary" onClick={
@@ -220,15 +222,13 @@ class ConnAllTemplateView extends Component {
 							onChange={(val) => this.setState({ name: val.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
-						<TextField
-							label="detail"
-							margin="dense"
-							multiline
-							rows="10"
-							fullWidth
+						<SimpleMDE
+							style={{ height: '209px', overflow: 'auto', marginBottom: '8px' }}
 							value={this.state.description}
-							onChange={(val) => this.setState({ description: val.target.value })}
-						/>
+							onChange={(val) => this.setState({ description: val })}
+							options={{
+								placeholder: 'Description here'
+							}} />
 					</DialogContent>
 					<DialogActions>
 						<Button disabled={this.state.isSaving} onClick={() => this.setState({ openCategoryForm: false })} color="primary">

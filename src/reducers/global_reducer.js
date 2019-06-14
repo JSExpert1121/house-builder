@@ -8,7 +8,6 @@ import {
 	SET_PROPOSALS_COMPARE,
 	SEARCH_FILTER_LOADED,
 	SET_CURRENT_PROJECT
-
 } from "../constants/global-action-types";
 
 const initialState = {
@@ -21,7 +20,6 @@ const initialState = {
 	compareProps: null,
 	searchResult: null,
 	currentProjectId: null
-
 }
 
 function global_reducer(state = initialState, action) {

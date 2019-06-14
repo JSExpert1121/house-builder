@@ -9,28 +9,33 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 
 import { withStyles } from "@material-ui/core/styles";
 import CategoryEditView from './CategoryEdit';
+
+import SplitPane from 'react-split-pane';
 
 const menuWidth = 180;
 const barHeight = 80;
 const styles = theme => ({
   root: {
-    margin: theme.spacing(1),
+    // margin: theme.spacing(1),
     overflow: "auto",
     display: 'flex',
-    height: "calc(100vh - 224px)",
-    border: '1px solid #CCC'
+    height: "calc(100vh - 64px - 48px - 16px - 36px)"
   },
-  menubar: {
-    display: 'inline-block',
-    height: '100%',
-    width: menuWidth,
-    [theme.breakpoints.up('sm')]: {
-      width: menuWidth,
-      flexShrink: 0,
-    },
+  pane: {
+    margin: theme.spacing(1),
+    height: "calc(100vh - 64px - 48px - 16px - 36px - 16px)",
+    border: '1px solid #CCC',
+    overflow: 'auto'
+    // width: '100%',
+    // width: menuWidth,
+    // [theme.breakpoints.up('sm')]: {
+    //   width: menuWidth,
+    //   flexShrink: 0,
+    // },
   },
   header: {
     height: `${barHeight}px`,
@@ -41,14 +46,8 @@ const styles = theme => ({
     justifyContent: 'center',
     textAlign: 'center',
     fontSize: '20px',
-    fontWeight: '700'
-  },
-  content: {
-    width: `calc(100% - ${menuWidth}px)`,
-    borderLeft: '1px solid #CCC',
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${menuWidth}px)`,
-    },
+    fontWeight: '700',
+    padding: theme.spacing(2)
   },
   busy: {
     position: "absolute",
@@ -129,53 +128,55 @@ class ProposalEditView extends React.Component {
 
     return (
       <Box className={classes.root}>
-        <Box className={classes.menubar}>
-          <Typography className={classes.header}>
-            {proposal && proposal.name}
-          </Typography>
-          <List style={{ borderTop: '1px solid #CCC' }}>
-            {keys && keys.map((key, index) => (key !== 'id' && key !== 'name' &&
-              <React.Fragment key={index}>
-                <ListItem button onClick={() => this.categoryChange(key)} className={(key === this.state.category) ? classes.active : undefined}>
-                  <ListItemText primary={proposal[key].name} />
-                </ListItem>
-                <Divider key={index + 1000} />
-              </React.Fragment>
-            ))}
-          </List>
-        </Box>
+        <SplitPane split="vertical" minSize={50} defaultSize={180} style={{ position: 'relative' }}>
+          <Paper className={classes.pane}>
+            <Typography className={classes.header}>
+              {proposal && proposal.name}
+            </Typography>
+            <List style={{ borderTop: '1px solid #CCC' }}>
+              {keys && keys.map((key, index) => (key !== 'id' && key !== 'name' &&
+                <React.Fragment key={index}>
+                  <ListItem button onClick={() => this.categoryChange(key)} className={(key === this.state.category) ? classes.active : undefined}>
+                    <ListItemText primary={proposal[key].name} />
+                  </ListItem>
+                  <Divider key={index + 1000} />
+                </React.Fragment>
+              ))}
+            </List>
+          </Paper>
 
-        <Box className={classes.content}>
-          <Box id='category-info' className={classes.header} style={{ paddingLeft: '16px', borderLeft: '1px solid #CCC', marginLeft: '-1px' }}>
-            <Grid container>
-              <Grid item xs={12} sm={6}>
-                <Typography variant='subtitle1' align='left' noWrap>
-                  Type: {current.type}
-                </Typography>
+          <Paper className={classes.pane}>
+            <Box id='category-info' className={classes.header}>
+              <Grid container>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant='subtitle1' align='left' noWrap>
+                    Type: {current.type}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant='subtitle1' align='left' noWrap>
+                    Value: {current.value}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant='body1' align='left' noWrap>
+                    Description: {current.description}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant='subtitle1' align='left' noWrap>
-                  Value: {current.value}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant='body1' align='left' noWrap>
-                  Description: {current.description}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
+            </Box>
 
-          <Box id='main-content' style={{ padding: '16px', borderLeft: '1px solid #CCC', borderTop: '1px solid #CCC', marginLeft: '-1px' }}>
-            {current.id && <CategoryEditView
-              edit={edit}
-              category={current}
-              handleAdd={this.props.handleAdd}
-              handleUpdate={this.props.handleUpdate}
-              handleDelete={this.props.handleDelete}
-            />}
-          </Box>
-        </Box>
+            <Box id='main-content'>
+              {current.id && <CategoryEditView
+                edit={edit}
+                category={current}
+                handleAdd={this.props.handleAdd}
+                handleUpdate={this.props.handleUpdate}
+                handleDelete={this.props.handleDelete}
+              />}
+            </Box>
+          </Paper>
+        </SplitPane>
       </Box >
     );
   }

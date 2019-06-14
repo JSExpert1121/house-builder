@@ -13,6 +13,7 @@ import TableBody from '@material-ui/core/TableBody';
 import IconButton from '@material-ui/core/IconButton';
 import TablePagination from '@material-ui/core/TablePagination';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Select from '@material-ui/core/Select';
@@ -28,6 +29,8 @@ import Box from '@material-ui/core/Box';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
+
+import removeMd from 'remove-markdown';
 
 import { getTemplates, addTemplate, deleteTemplate, selectProject } from '../../actions/gen-actions';
 import { getProjectData } from '../../actions';
@@ -124,6 +127,7 @@ class ConnectedProjectTemplateView extends React.Component {
 
 		this.props.getTemplates(currentPage, rowsPerPage);
 	};
+
 	createSortHandler = () => {
 		let order = 'desc';
 
@@ -223,7 +227,9 @@ class ConnectedProjectTemplateView extends React.Component {
 												{row.template.name ? row.template.name : "N/A"}
 											</CustomTableCell>
 											<CustomTableCell align="center">
-												{row.template.description ? row.template.description : "N/A"}
+												<Typography className='nowrap'>
+													{row.template.description ? removeMd(row.template.description) : "N/A"}
+												</Typography>
 											</CustomTableCell>
 											<CustomTableCell align="center">
 												{row.template.value ? row.template.value : "N/A"}
@@ -279,12 +285,8 @@ class ConnectedProjectTemplateView extends React.Component {
 					count={project.projectTemplates.length}
 					rowsPerPage={this.state.rowsPerPage}
 					page={this.state.currentPage}
-					backIconButtonProps={{
-						'aria-label': 'Previous Page',
-					}}
-					nextIconButtonProps={{
-						'aria-label': 'Next Page',
-					}}
+					backIconButtonProps={{ 'aria-label': 'Previous Page' }}
+					nextIconButtonProps={{ 'aria-label': 'Next Page' }}
 					onChangePage={this.handleChangePage}
 					onChangeRowsPerPage={this.handleChangeRowsPerPage}
 				/>
