@@ -1,35 +1,32 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-
+import React, {Component} from 'react';
+import {withRouter}       from 'react-router-dom';
+import {connect}          from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import Box from '@material-ui/core/Box';
+import Paper          from '@material-ui/core/Paper';
+import TextField      from '@material-ui/core/TextField';
+import Button         from '@material-ui/core/Button';
+import Typography     from '@material-ui/core/Typography';
+import Table          from '@material-ui/core/Table';
+import TableHead      from '@material-ui/core/TableHead';
+import TableRow       from '@material-ui/core/TableRow';
+import TableBody      from '@material-ui/core/TableBody';
+import Box            from '@material-ui/core/Box';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 
-import { ListItemText, ListItem, ListItemIcon, List } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import FiberIcon from '@material-ui/icons/FiberManualRecord';
+import {List, ListItem, ListItemIcon, ListItemText}    from '@material-ui/core';
+import {withStyles}                                    from '@material-ui/core/styles';
+import clsx                                            from 'clsx';
+import FiberIcon                                       from '@material-ui/icons/FiberManualRecord';
+import {deleteProposal, getProposalData} from '../../actions'
+import { awardProject } from '../../actions/gen-actions'
 
-import ProjectView from './ProjectView';
+import ProjectView       from './ProjectView';
 import SubContractorView from '../Contractor/SubContractor';
-import ConfirmDialog from '../../components/shared/ConfirmDialog';
-import CustomTableCell from '../../components/shared/CustomTableCell';
-import ProposalView from './ProposalView';
-import SimpleMDE from 'react-simplemde-editor';
+import ConfirmDialog     from '../../components/shared/ConfirmDialog';
+import CustomTableCell   from '../../components/shared/CustomTableCell';
+import ProposalView      from './ProposalView';
+import SimpleMDE         from 'react-simplemde-editor';
 import "easymde/dist/easymde.min.css"
 
 
@@ -101,11 +98,15 @@ class ConnectedProposalDetailOverview extends Component {
 	}
 
 	handleChange = name => event => {
-		this.setState({ [name]: event.target.value });
+		this.setState({[name]: event.target.value});
 	};
 
 	componentWillUnmount() {
-		this.props.handleOverviewChange({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
+		this.props.handleOverviewChange({
+			budget: this.state.budget,
+			duration: this.state.duration,
+			description: this.state.description
+		});
 	}
 
 	submit = () => {
@@ -117,9 +118,13 @@ class ConnectedProposalDetailOverview extends Component {
 	}
 
 	handleSubmit = async () => {
-		this.setState({ showConfirm: false, isSaving: true });
-		await this.props.handleSubmit({ budget: this.state.budget, duration: this.state.duration, description: this.state.description });
-		this.setState({ isSaving: false });
+		this.setState({showConfirm: false, isSaving: true});
+		await this.props.handleSubmit({
+			budget: this.state.budget,
+			duration: this.state.duration,
+			description: this.state.description
+		});
+		this.setState({isSaving: false});
 	}
 
 	delete = () => {
@@ -131,9 +136,9 @@ class ConnectedProposalDetailOverview extends Component {
 	}
 
 	handleDelete = async () => {
-		this.setState({ showConfirm: false, isSaving: true });
+		this.setState({showConfirm: false, isSaving: true});
 		await this.props.handleDelete(this.props.proposal.id);
-		this.setState({ isSaving: false });
+		this.setState({isSaving: false});
 	}
 
 	award = () => {
@@ -145,23 +150,23 @@ class ConnectedProposalDetailOverview extends Component {
 	}
 
 	handleAward = async () => {
-		this.setState({ showConfirm: false, isSaving: true });
+		this.setState({showConfirm: false, isSaving: true});
 		await this.props.handleAward(this.props.proposal.id);
-		this.setState({ isSaving: false });
+		this.setState({isSaving: false});
 	}
 
 	closeConfirm = () => {
-		this.setState({ showConfirm: false });
+		this.setState({showConfirm: false});
 	}
 
 	render() {
-		const { classes, match, proposal, edit } = this.props;
+		const {classes, match, proposal, edit} = this.props;
 
 		// let edit = match.params.id === '-1';
 		const project = (edit && !match.url.includes('/s_cont')) ? this.props.project : proposal.proposal.project;
 
-		if (!project) return <div className={classes.root} />;
-		if (!edit && !proposal) return <div className={classes.root} />;
+		if (!project) return <div className={classes.root}/>;
+		if (!edit && !proposal) return <div className={classes.root}/>;
 
 		let c_project = edit ? project : proposal.proposal.project;
 		const btnTitle = (match.url.includes('/s_cont') || (match.params.id === '-1' && this.props.proposal)) ? 'Update Proposal' : 'Submit Proposal';
@@ -173,37 +178,37 @@ class ConnectedProposalDetailOverview extends Component {
 
 		return (
 			<Paper className={classes.root}>
-				{!isGen && <ProjectView project={c_project} />}
+				{!isGen && <ProjectView project={c_project}/>}
 
-				{(!edit || isGen) ? <ProposalView proposal={proposal.proposal} /> : (
+				{(!edit || isGen) ? <ProposalView proposal={proposal.proposal}/> : (
 					<>
 						<Typography variant="subtitle1" noWrap style={style_prop_title}>Proposal</Typography>
-						<Box id='brief-desc' style={{ display: 'flex', flexWrap: 'wrap' }}>
+						<Box id='brief-desc' style={{display: 'flex', flexWrap: 'wrap'}}>
 							<TextField disabled={!edit}
-								label="Budget *" id="budget" type='number'
-								className={clsx(classes.margin, classes.textField)}
-								value={this.state.budget}
-								onChange={this.handleChange('budget')}
-								InputProps={{
-									endAdornment: <InputAdornment position="start">USD</InputAdornment>,
-								}}
+							           label="Budget *" id="budget" type='number'
+							           className={clsx(classes.margin, classes.textField)}
+							           value={this.state.budget}
+							           onChange={this.handleChange('budget')}
+							           InputProps={{
+								           endAdornment: <InputAdornment position="start">USD</InputAdornment>,
+							           }}
 							/>
 							<TextField disabled={!edit}
-								label="Duration *" type='number'
-								className={clsx(classes.margin, classes.textField)}
-								value={this.state.duration}
-								onChange={this.handleChange('duration')}
-								InputProps={{
-									endAdornment: <InputAdornment position="start">days</InputAdornment>,
-								}}
+							           label="Duration *" type='number'
+							           className={clsx(classes.margin, classes.textField)}
+							           value={this.state.duration}
+							           onChange={this.handleChange('duration')}
+							           InputProps={{
+								           endAdornment: <InputAdornment position="start">days</InputAdornment>,
+							           }}
 							/>
 							<SimpleMDE
-								style={{ height: '209px', overflow: 'auto', margin: '8px 0', textAlign: 'left', width: '100%' }}
+								style={{height: '209px', overflow: 'auto', margin: '8px 0', textAlign: 'left', width: '100%'}}
 								value={this.state.description}
-								onChange={(val) => this.setState({ description: val })}
+								onChange={(val) => this.setState({description: val})}
 								options={{
 									placeholder: 'Description here'
-								}} />
+								}}/>
 
 							{/* <FormControl fullWidth className={classes.margin}>
 								<InputLabel htmlFor="description">Description *</InputLabel>
@@ -218,8 +223,9 @@ class ConnectedProposalDetailOverview extends Component {
 					</>
 				)}
 
-				{isGen && <SubContractorView subContractor={proposal.proposal.subContractor} />}
-				<Typography variant="subtitle1" noWrap style={{ fontWeight: '600', fontSize: '20px', marginTop: '16px' }}>Templates</Typography>
+				{isGen && <SubContractorView subContractor={proposal.proposal.subContractor}/>}
+				<Typography variant="subtitle1" noWrap
+				            style={{fontWeight: '600', fontSize: '20px', marginTop: '16px'}}>Templates</Typography>
 				{!isGen ? (
 					<Table>
 						<TableHead>
@@ -228,11 +234,11 @@ class ConnectedProposalDetailOverview extends Component {
 								<CustomTableCell align="center">Discription</CustomTableCell>
 							</TableRow>
 						</TableHead>
-						<TableBody >
+						<TableBody>
 							{
 								project && project.projectTemplates.map((templ, index) => (
 									<TableRow className={classes.row} key={index} hover
-										onClick={() => this.props.templateSelected(index)}>
+									          onClick={() => this.props.templateSelected(index)}>
 										<CustomTableCell component="th" scope="row">
 											{templ.template.name}
 										</CustomTableCell>
@@ -243,19 +249,19 @@ class ConnectedProposalDetailOverview extends Component {
 						</TableBody>
 					</Table>
 				) : (
-						<List>
-							{
-								project && project.projectTemplates.map((templ, index) => (
-									<ListItem key={index} onClick={() => this.props.templateSelected(index)} style={{ cursor: 'pointer' }}>
-										<ListItemIcon><FiberIcon style={{ fontSize: '16px' }} /></ListItemIcon>
-										<ListItemText primary={templ.template.name} />
-									</ListItem>
-								))
-							}
-						</List>
-					)}
+					<List>
+						{
+							project && project.projectTemplates.map((templ, index) => (
+								<ListItem key={index} onClick={() => this.props.templateSelected(index)} style={{cursor: 'pointer'}}>
+									<ListItemIcon><FiberIcon style={{fontSize: '16px'}}/></ListItemIcon>
+									<ListItemText primary={templ.template.name}/>
+								</ListItem>
+							))
+						}
+					</List>
+				)}
 
-				<Box style={{ textAlign: 'right', paddingTop: '16px' }}>
+				<Box style={{textAlign: 'right', paddingTop: '16px'}}>
 					{
 						match.url.includes('/s_cont') &&
 						<Button disabled={this.state.isSaving} className={classes.submitBtn} onClick={this.delete}>
@@ -264,7 +270,8 @@ class ConnectedProposalDetailOverview extends Component {
 					}
 					{
 						match.url.includes('/g_cont') &&
-						<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn} onClick={this.award}>
+						<Button disabled={this.state.isSaving || proposal.status === 'AWARDED'} className={classes.submitBtn}
+						        onClick={this.award}>
 							Award Project
 						</Button>
 					}
@@ -277,7 +284,8 @@ class ConnectedProposalDetailOverview extends Component {
 				</Box>
 
 				{/* {this.state.isSaving && <CircularProgress className={classes.busy} />} */}
-				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.state.handleOK} onCancel={this.closeConfirm} />
+				<ConfirmDialog open={this.state.showConfirm} message={this.state.message} onYes={this.state.handleOK}
+				               onCancel={this.closeConfirm}/>
 			</Paper>
 		);
 	}

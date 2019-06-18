@@ -1,35 +1,44 @@
 import React, { Component } from 'react';
 
 import { withRouter } from 'react-router-dom';
-import TSnackbarContent from '../../../components/SnackBarContent';
 // material ui
-import PropTypes from 'prop-types';
+import PropTypes      from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-	CircularProgress,
-	Table, TableHead, TableCell, TableRow, TableBody,
-	IconButton,
 	Button,
+	CircularProgress,
+	IconButton,
 	Link,
-	Snackbar
-} from '@material-ui/core';
-import { Paper, TextField } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import DeleteIcon from '@material-ui/icons/Delete';
+	Paper,
+	Snackbar,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+	TextField
+}                     from '@material-ui/core';
+import NoteAddIcon    from '@material-ui/icons/NoteAdd';
+import DeleteIcon     from '@material-ui/icons/Delete';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
+import Dialog            from '@material-ui/core/Dialog';
+import DialogActions     from '@material-ui/core/DialogActions';
+import DialogContent     from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import SimpleMDE from 'react-simplemde-editor';
+import DialogTitle       from '@material-ui/core/DialogTitle';
+import SimpleMDE         from 'react-simplemde-editor';
 import "easymde/dist/easymde.min.css"
-
-// Redux
-import { connect } from 'react-redux';
-import { selectCategory, addOption, deleteOption, editCategory, selectOption, selectTemplate, deleteCategory } from '../../../actions/tem-actions';
-import SplitPane from 'react-split-pane';
+import { connect }       from 'react-redux';
+import {
+	addOption,
+	deleteCategory,
+	deleteOption,
+	editCategory,
+	selectCategory,
+	selectOption,
+	selectTemplate,
+}                        from '../../../actions/tem-actions';
+import SplitPane         from 'react-split-pane';
 
 const styles = theme => ({
 	descTag: {
@@ -422,7 +431,7 @@ const mapDispatchToProps = dispatch => {
 		addOption: (id, data, cb) => dispatch(addOption(id, data, cb)),
 		editCategory: (id, data, cb) => dispatch(editCategory(id, data, cb)),
 		selectOption: (id) => dispatch(selectOption(id)),
-		getTemplateById: (id, cb) => dispatch(getTemplateById(id, cb)),
+		// getTemplateById: (id, cb) => dispatch(getTemplateById(id, cb)),
 		deleteCategory: (id, cb) => dispatch(deleteCategory(id, cb))
 	};
 }

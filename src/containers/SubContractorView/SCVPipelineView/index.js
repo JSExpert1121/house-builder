@@ -12,11 +12,11 @@ import NoSsr from '@material-ui/core/NoSsr';
 //import DoneIcon from '@material-ui/icons/Done';
 //import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
-import SecuredRoute from '../../../routers/SecuredRoute';
+import SecuredRoute                           from '../../../routers/SecuredRoute';
 import { Redirect, Link, Switch, withRouter } from 'react-router-dom';
-import SubmittedProView from './SubmittedProView';
-import WonProView from './WonProView';
-import InvitedProView from './InvitedProView';
+import SubmittedProView                       from './SubmittedProView';
+import WonProView                             from './WonProView';
+import InvitedProView                         from './InvitedProView';
 
 const styles = theme => ({
 	root: {

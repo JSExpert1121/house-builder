@@ -1,6 +1,6 @@
-import React from 'react';
+import React                                         from 'react';
 import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
-import SecuredRoute from '../../routers/SecuredRoute';
+import SecuredRoute                                  from '../../routers/SecuredRoute';
 
 import { connect } from 'react-redux';
 

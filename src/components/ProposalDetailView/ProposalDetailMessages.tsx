@@ -1,25 +1,23 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React          from 'react';
+import { connect }    from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
+import PropTypes      from 'prop-types';
 import { withStyles } from '@material-ui/styles';
-import Card from '@material-ui/core/Card';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
+import Card           from '@material-ui/core/Card';
+import ListItem       from '@material-ui/core/ListItem';
+import Divider        from '@material-ui/core/Divider';
+import ListItemText   from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
-import LinkIcon from '@material-ui/icons/link';
-import LinkOffIcon from '@material-ui/icons/linkoff';
+import Avatar         from '@material-ui/core/Avatar';
+import LinkIcon       from '@material-ui/icons/Link';
+import LinkOffIcon    from '@material-ui/icons/LinkOff';
 
 import InfiniteScroll from 'react-infinite-scroller';
 
-import { CircularProgress, IconButton, Snackbar, ListItemSecondaryAction, TextField, Button } from '@material-ui/core';
-import { getProposalMessages, addMessageToProposal, addFileToPropMessage } from '../../actions';
-import { DropzoneDialog } from 'material-ui-dropzone';
+import { Button, CircularProgress, IconButton, ListItemSecondaryAction, TextField } from '@material-ui/core';
+import { addFileToPropMessage, addMessageToProposal, getProposalMessages }          from '../../actions';
+import { DropzoneDialog }                                                           from 'material-ui-dropzone';
 
 const styles = theme => ({
 	root: {

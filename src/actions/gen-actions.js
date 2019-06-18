@@ -91,7 +91,7 @@ export function updateProject(id) {
 		return Axios.get(process.env.PROJECT_API + "projects/" + id)
 			.then(response => {
 				dispatch({
-					type: PROJECT_DETAIL_LOADED,
+					type: 'PROJECT_DETAIL_LOADED',
 					payload: response.data
 				})
 			})

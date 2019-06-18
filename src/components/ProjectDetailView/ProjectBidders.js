@@ -1,38 +1,33 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React     from 'react';
+import {connect} from 'react-redux';
 
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
+import PropTypes               from 'prop-types';
+import {emphasize, withStyles} from '@material-ui/core/styles';
 import {
-	CircularProgress,
-	Paper,
-	Table, TableHead, TableCell, TableRow, TableBody, TableSortLabel,
-	IconButton, TablePagination, TextField,
 	Button,
+	Card,
+	CircularProgress,
+	IconButton,
+	Paper,
 	Snackbar,
-	Typography,	
-	Card
-} from '@material-ui/core';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import classNames from 'classnames';
-import Select from 'react-select';
-import NoSsr from '@material-ui/core/NoSsr';
-import Chip from '@material-ui/core/Chip';
-import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { emphasize } from '@material-ui/core/styles';
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TablePagination,
+	TableRow,
+	TextField,
+	Typography
+}                              from '@material-ui/core';
+import AccessAlarmIcon         from '@material-ui/icons/AccessAlarm';
+import classNames              from 'classnames';
+import Select                  from 'react-select';
+import Chip                    from '@material-ui/core/Chip';
+import MenuItem                from '@material-ui/core/MenuItem';
+import CancelIcon              from '@material-ui/icons/Cancel';
 
-import TSnackbarContent from '../SnackBarContent';
-
-import { getProjectBiddersData, searchFilter, inviteContractor } from '../../actions';
-import { selectContractor, getSpecialties, getContrators0 } from '../../actions/cont-actions';
+import {getProjectBiddersData, inviteContractor, searchFilter} from '../../actions';
+import {getContrators0, getSpecialties, selectContractor}      from '../../actions/cont-actions';
 
 const styles = theme => ({
 	root: {
@@ -42,7 +37,7 @@ const styles = theme => ({
 		overflow: "scroll"
 	},
 	tableWrap: {
-		overflow: "auto",		
+		overflow: "auto",
 	},
 	row: {
 		'&:nth-of-type(odd)': {
@@ -66,7 +61,9 @@ const styles = theme => ({
 		lineHeight: '1.5rem',
 	},
 	title: {
-		fontSize: 14,
+		padding: '20px',
+		fontSize: '21px',
+		color: 'grey'
 	},
 	pos: {
 		marginBottom: 12,
@@ -120,11 +117,6 @@ const styles = theme => ({
 		borderWidth: '1px',
 		borderStyle: 'solid',
 		borderColor: 'lightgrey'
-	},
-	title: {
-		padding: '20px',
-		fontSize: '21px',
-		color: 'grey'
 	}
 });
 
@@ -138,104 +130,104 @@ const CustomTableCell = withStyles(theme => ({
 		color: theme.palette.primary.light
 	},
 }))(TableCell);
-  
-  function NoOptionsMessage(props) {
+
+function NoOptionsMessage(props) {
 	return (
-	  <Typography
-		color="textSecondary"
-		className={props.selectProps.classes.noOptionsMessage}
-		{...props.innerProps}
-	  >
-		{props.children}
-	  </Typography>
+		<Typography
+			color="textSecondary"
+			className={props.selectProps.classes.noOptionsMessage}
+			{...props.innerProps}
+		>
+			{props.children}
+		</Typography>
 	);
-  }
-  
-  function inputComponent({ inputRef, ...props }) {
+}
+
+function inputComponent({inputRef, ...props}) {
 	return <div ref={inputRef} {...props} />;
-  }
-  
-  function Control(props) {
+}
+
+function Control(props) {
 	return (
-	  <TextField
-		fullWidth
-		InputProps={{
-		  inputComponent,
-		  inputProps: {
-			className: props.selectProps.classes.input,
-			inputRef: props.innerRef,
-			children: props.children,
-			...props.innerProps,
-		  },
-		}}
-		{...props.selectProps.textFieldProps}
-	  />
+		<TextField
+			fullWidth
+			InputProps={{
+				inputComponent,
+				inputProps: {
+					className: props.selectProps.classes.input,
+					inputRef: props.innerRef,
+					children: props.children,
+					...props.innerProps,
+				},
+			}}
+			{...props.selectProps.textFieldProps}
+		/>
 	);
-  }
-  
-  function Option(props) {
+}
+
+function Option(props) {
 	return (
-	  <MenuItem
-		buttonRef={props.innerRef}
-		selected={props.isFocused}
-		component="div"
-		style={{
-		  fontWeight: props.isSelected ? 500 : 400,
-		}}
-		{...props.innerProps}
-	  >
-		{props.children}
-	  </MenuItem>
+		<MenuItem
+			buttonRef={props.innerRef}
+			selected={props.isFocused}
+			component="div"
+			style={{
+				fontWeight: props.isSelected ? 500 : 400,
+			}}
+			{...props.innerProps}
+		>
+			{props.children}
+		</MenuItem>
 	);
-  }
-  
-  function Placeholder(props) {
+}
+
+function Placeholder(props) {
 	return (
-	  <Typography
-		color="textSecondary"
-		className={props.selectProps.classes.placeholder}
-		{...props.innerProps}
-	  >
-		{props.children}
-	  </Typography>
+		<Typography
+			color="textSecondary"
+			className={props.selectProps.classes.placeholder}
+			{...props.innerProps}
+		>
+			{props.children}
+		</Typography>
 	);
-  }
-  
-  function SingleValue(props) {
+}
+
+function SingleValue(props) {
 	return (
-	  <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
-		{props.children}
-	  </Typography>
+		<Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
+			{props.children}
+		</Typography>
 	);
-  }
-  
-  function ValueContainer(props) {
+}
+
+function ValueContainer(props) {
 	return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
-  }
-  
-  function MultiValue(props) {
+}
+
+function MultiValue(props) {
 	return (
-	  <Chip
-		tabIndex={-1}
-		label={props.children}
-		className={classNames(props.selectProps.classes.chip, {
-		  [props.selectProps.classes.chipFocused]: props.isFocused,
-		})}
-		onDelete={props.removeProps.onClick}
-		deleteIcon={<CancelIcon {...props.removeProps} />}
-	  />
+		<Chip
+			tabIndex={-1}
+			label={props.children}
+			className={classNames(props.selectProps.classes.chip, {
+				[props.selectProps.classes.chipFocused]: props.isFocused,
+			})}
+			onDelete={props.removeProps.onClick}
+			deleteIcon={<CancelIcon {...props.removeProps} />}
+		/>
 	);
-  }
-  
-  function Menu(props) {
+}
+
+function Menu(props) {
 	return (
-	  <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
-		{props.children}
-	  </Paper>
+		<Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
+			{props.children}
+		</Paper>
 	);
-  }
-  
-  const components = {
+}
+
+const components = {
 	Control,
 	Menu,
 	MultiValue,
@@ -244,7 +236,7 @@ const CustomTableCell = withStyles(theme => ({
 	Placeholder,
 	SingleValue,
 	ValueContainer,
-  };
+};
 
 class ConnectedProjectBidders extends React.Component {
 	constructor(props) {
@@ -271,33 +263,45 @@ class ConnectedProjectBidders extends React.Component {
 	}
 
 	async componentDidMount() {
-		const { project, match } = this.props;			
+		const {project, match} = this.props;
 		await this.props.getProjectBiddersData(project.id, 0, 20);
 		await this.props.getSpecialties();
 		await this.props.getContrators0(0, 20);
 	}
 
-	componentWillReceiveProps({ projectBidders, contractors, searchResult }) {		
-		this.setState({ projectBidders: projectBidders,
-						contractors: contractors });
-		if(searchResult)
-			this.setState({contractors: {...contractors, content: searchResult} })
+	componentWillReceiveProps({projectBidders, contractors, searchResult}) {
+		this.setState({
+			projectBidders: projectBidders,
+			contractors: contractors
+		});
+		if (searchResult)
+			this.setState({contractors: {...contractors, content: searchResult}})
+	}
+
+	handleSearch = () => {
+		const multi = this.state.multi ? this.state.multi.map(specialty => (specialty.value)) : [];
+		this.props.searchFilter(this.state.filterName, this.state.filterCity, multi , (result) => {
+				if (result) {
+					// this.props.updateContractor(selectedContractor.id);
+				}
+			}
+		)
 	}
 
 	handleChangePage = (event, page) => {
-		const { project } = this.props;	
-		this.setState({ currentPage: page });
+		const {project} = this.props;
+		this.setState({currentPage: page});
 		this.props.getProjectBiddersData(project.id, page, this.state.rowsPerPage);
 	};
 
 	handleChangePage1 = (event, page) => {
-		this.setState({ currentPage1: page });
+		this.setState({currentPage1: page});
 		this.props.getContrators0(page, this.state.rowsPerPage1);
 	};
 
 	handleChangeRowsPerPage = event => {
-		const { projectBidders } = this.state;
-		const { project } = this.props;	
+		const {projectBidders} = this.state;
+		const {project} = this.props;
 		const rowsPerPage = event.target.value;
 		const currentPage = rowsPerPage >= projectBidders.totalElements ? 0 : this.state.currentPage;
 
@@ -310,7 +314,7 @@ class ConnectedProjectBidders extends React.Component {
 	};
 
 	handleChangeRowsPerPage1 = event => {
-		const { contractors } = this.state;
+		const {contractors} = this.state;
 		const rowsPerPage1 = event.target.value;
 		const currentPage1 = rowsPerPage1 >= contractors.totalElements ? 0 : this.state.currentPage1;
 
@@ -331,288 +335,283 @@ class ConnectedProjectBidders extends React.Component {
 	};
 
 	handleChangeMulti = (value) => {
-		setMulti(value);
+		// setMulti(value);
 	};
 
 	handleChange = name => value => {
 		this.setState({
-		  [name]: value,
+			[name]: value,
 		});
 	};
 
 	isInvited = id => {
 		const value = this.props.projectBidders.map(
-			row => {				
-				if(row.id === id)						
-						return true;					
+			row => {
+				if (row.id === id)
+					return true;
 			}
-		)		
-		if(value.includes(true)) 
+		)
+		if (value.includes(true))
 			return true;
 		else
 			return false;
 	}
-	  
+
 	render() {
-		const { classes, project, theme, specialties, match } = this.props;	
-		const { contractors, projectBidders } = this.state;
+		const {classes, project, theme, specialties, match} = this.props;
+		const {contractors, projectBidders} = this.state;
 		const suggestions = specialties ? specialties.content.map(specialty => ({
 			value: specialty.id,
 			label: specialty.name,
-		  })): [];
+		})) : [];
 		const selectStyles = {
-		input: base => ({
-			...base,
-			color: theme.palette.text.primary,								
-		}),
+			input: base => ({
+				...base,
+				color: theme.palette.text.primary,
+			}),
 		};
 
 		if (projectBidders === null || contractors === null) {
-			return <CircularProgress className={classes.waitingSpin} />;
-		}		
+			return <CircularProgress className={classes.waitingSpin}/>;
+		}
 		return (
 			<div className={classes.root}>
 				<Card className={classes.card}>
-				<Typography className={classes.title}>Invited Bidders</Typography>
-				<div className={classes.tableWrap}>
-					<Table >
-						<TableHead>
-							<TableRow>	
-								<CustomTableCell align="center">Logo</CustomTableCell>							
-								<CustomTableCell align="center">Bidder Name</CustomTableCell>
-								<CustomTableCell> Bidder Email </CustomTableCell>								
-								<CustomTableCell align="center">Rating</CustomTableCell>
-								<CustomTableCell align="center">Other</CustomTableCell>		
-							</TableRow>
-						</TableHead>
-						<TableBody >
-							{
-								projectBidders.map(
-									row => (
-										<TableRow className={classes.row} key={row.id} hover>
-											<CustomTableCell 
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-											}}></CustomTableCell>											
-											<CustomTableCell align="center"
-												onClick={async () => {
-													await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-												}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
-											<CustomTableCell component="th" scope="row"
-												onClick={async () => {
-													await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-												}}>
-												{row.email ? row.email : "N/A"}
-											</CustomTableCell>
-											<CustomTableCell 
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-														this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-														this.props.history.push("/s_cont/contractor_detail");
-											}}></CustomTableCell>
-											<CustomTableCell 
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-											}}></CustomTableCell>
-										</TableRow>
+					<Typography className={classes.title}>Invited Bidders</Typography>
+					<div className={classes.tableWrap}>
+						<Table>
+							<TableHead>
+								<TableRow>
+									<CustomTableCell align="center">Logo</CustomTableCell>
+									<CustomTableCell align="center">Bidder Name</CustomTableCell>
+									<CustomTableCell> Bidder Email </CustomTableCell>
+									<CustomTableCell align="center">Rating</CustomTableCell>
+									<CustomTableCell align="center">Other</CustomTableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{
+									projectBidders.map(
+										row => (
+											<TableRow className={classes.row} key={row.id} hover>
+												<CustomTableCell
+													onClick={async () => {
+														await this.props.selectContractor(row.id);
+														if (match.url.includes("g_cont"))
+															this.props.history.push("/g_cont/contractor_detail");
+														if (match.url.includes("s_cont"))
+															this.props.history.push("/s_cont/contractor_detail");
+													}}></CustomTableCell>
+												<CustomTableCell align="center"
+												                 onClick={async () => {
+													                 await this.props.selectContractor(row.id);
+													                 if (match.url.includes("g_cont"))
+														                 this.props.history.push("/g_cont/contractor_detail");
+													                 if (match.url.includes("s_cont"))
+														                 this.props.history.push("/s_cont/contractor_detail");
+												                 }}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
+												<CustomTableCell component="th" scope="row"
+												                 onClick={async () => {
+													                 await this.props.selectContractor(row.id);
+													                 if (match.url.includes("g_cont"))
+														                 this.props.history.push("/g_cont/contractor_detail");
+													                 if (match.url.includes("s_cont"))
+														                 this.props.history.push("/s_cont/contractor_detail");
+												                 }}>
+													{row.email ? row.email : "N/A"}
+												</CustomTableCell>
+												<CustomTableCell
+													onClick={async () => {
+														await this.props.selectContractor(row.id);
+														if (match.url.includes("g_cont"))
+															this.props.history.push("/g_cont/contractor_detail");
+														if (match.url.includes("s_cont"))
+															this.props.history.push("/s_cont/contractor_detail");
+													}}></CustomTableCell>
+												<CustomTableCell
+													onClick={async () => {
+														await this.props.selectContractor(row.id);
+														if (match.url.includes("g_cont"))
+															this.props.history.push("/g_cont/contractor_detail");
+														if (match.url.includes("s_cont"))
+															this.props.history.push("/s_cont/contractor_detail");
+													}}></CustomTableCell>
+											</TableRow>
+										)
 									)
-								)
-							}
-						</TableBody>
-					</Table>
-				</div>
-				<TablePagination
-					style={{ overflow: "auto" }}
-					rowsPerPageOptions={[5, 10, 20]}
-					component="div"
-					count={projectBidders.length}
-					rowsPerPage={this.state.rowsPerPage}
-					page={this.state.currentPage}
-					backIconButtonProps={{
-						'aria-label': 'Previous Page',
-					}}
-					nextIconButtonProps={{
-						'aria-label': 'Next Page',
-					}}
-					onChangePage={this.handleChangePage}
-					onChangeRowsPerPage={this.handleChangeRowsPerPage}
-				/>				
-				<Snackbar
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-					open={this.state.snackBar}
-					onClose={() => this.setState({
-						snackBar: false
-					})}
-					ContentProps={{
-						'aria-describedby': 'message-id',
-					}}
-					message={
-						<span id="message-id"> {
-							this.state.snackBarContent
-						}</span>
-					}
-				/>
+								}
+							</TableBody>
+						</Table>
+					</div>
+					<TablePagination
+						style={{overflow: "auto"}}
+						rowsPerPageOptions={[5, 10, 20]}
+						component="div"
+						count={projectBidders.length}
+						rowsPerPage={this.state.rowsPerPage}
+						page={this.state.currentPage}
+						backIconButtonProps={{
+							'aria-label': 'Previous Page',
+						}}
+						nextIconButtonProps={{
+							'aria-label': 'Next Page',
+						}}
+						onChangePage={this.handleChangePage}
+						onChangeRowsPerPage={this.handleChangeRowsPerPage}
+					/>
+					<Snackbar
+						anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+						open={this.state.snackBar}
+						onClose={() => this.setState({
+							snackBar: false
+						})}
+						ContentProps={{
+							'aria-describedby': 'message-id',
+						}}
+						message={
+							<span id="message-id"> {
+								this.state.snackBarContent
+							}</span>
+						}
+					/>
 				</Card>
 				<Card className={classes.card}>
-				<Typography className={classes.title}> Search Field </Typography>
-				 <TextField
-					id="name"
-					label="Name"
-					className={classes.textField}
-					value={this.state.filterName}
-					onChange={e => this.onNameChange(e)}
-					margin="normal"
-				/>
-				<TextField
-					id="city"
-					label="City"
-					className={classes.textField}
-					value={this.state.filterCity}
-					onChange={e => this.onCityChange(e)}
-					margin="normal"
-				/>
-				<Select
-					classes={classes}
-					styles={selectStyles}
-					textFieldProps={{
-					label: 'Specialty',
-					InputLabelProps: {
-						shrink: true,
-					},
-					}}
-					options={suggestions}
-					components={components}
-					value={this.state.multi}
-					onChange={this.handleChange('multi')}
-					placeholder="Select multiple specialties"
-					isMulti
-				/>
-				<Button 
-					variant="contained" 
-					color="primary" 
-					className={classes.button} 
-					onClick={() => this.props.searchFilter(this.state.filterName, this.state.filterCity, this.state.multi?this.state.multi.map(specialty => (specialty.value)):[], (result) => {
-						if (result)
-							this.props.updateContractor(selectedContractor.id);
-					}
-				)}>Search</Button>
-				<Typography className={classes.title}>Search result</Typography>
-				<div className={classes.tableWrap}>
-					<Table >
-						<TableHead>
-							<TableRow>
-								<CustomTableCell> Logo </CustomTableCell>
-								<CustomTableCell align="center">Name</CustomTableCell>
-								<CustomTableCell align="center">Specialty</CustomTableCell>
-								<CustomTableCell align="center">Rating</CustomTableCell>								
-								<CustomTableCell align="center">Action</CustomTableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody >
-							{
-								contractors.content.map(
-									row => (
-										<TableRow className={classes.row} key={row.id} hover>
-											<CustomTableCell component="th" scope="row"
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-											}}
+					<Typography className={classes.title}> Search Field </Typography>
+					<TextField
+						id="name"
+						label="Name"
+						className={classes.textField}
+						value={this.state.filterName}
+						onChange={e => this.onNameChange(e)}
+						margin="normal"
+					/>
+					<TextField
+						id="city"
+						label="City"
+						className={classes.textField}
+						value={this.state.filterCity}
+						onChange={e => this.onCityChange(e)}
+						margin="normal"
+					/>
+					<Select
+						classes={classes}
+						styles={selectStyles}
+						textFieldProps={{
+							label: 'Specialty',
+							InputLabelProps: {
+								shrink: true,
+							},
+						}}
+						options={suggestions}
+						components={components}
+						value={this.state.multi}
+						onChange={this.handleChange('multi')}
+						placeholder="Select multiple specialties"
+						isMulti
+					/>
+					<Button
+						variant="contained"
+						color="primary"
+						className={classes.button}
+						onClick={this.handleSearch}>Search</Button>
+					<Typography className={classes.title}>Search result</Typography>
+					<div className={classes.tableWrap}>
+						<Table>
+							<TableHead>
+								<TableRow>
+									<CustomTableCell> Logo </CustomTableCell>
+									<CustomTableCell align="center">Name</CustomTableCell>
+									<CustomTableCell align="center">Specialty</CustomTableCell>
+									<CustomTableCell align="center">Rating</CustomTableCell>
+									<CustomTableCell align="center">Action</CustomTableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{
+									contractors.content.map(
+										row => (
+											<TableRow className={classes.row} key={row.id} hover>
+												<CustomTableCell component="th" scope="row"
+												                 onClick={async () => {
+													                 await this.props.selectContractor(row.id);
+													                 if (match.url.includes("g_cont"))
+														                 this.props.history.push("/g_cont/contractor_detail");
+													                 if (match.url.includes("s_cont"))
+														                 this.props.history.push("/s_cont/contractor_detail");
+												                 }}
 												>
-											</CustomTableCell>
-											<CustomTableCell align="center"
-												onClick={async () => {
-													await this.props.selectContractor(row.id);
-													if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-												}}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
-											<CustomTableCell align="center"
-												onClick={async () => {
-													await this.props.selectContractor(row.id);
-													if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-												}}></CustomTableCell>
-											<CustomTableCell align="center"
-											onClick={async () => {
-												await this.props.selectContractor(row.id);
-												if (match.url.includes("g_cont"))
-													this.props.history.push("/g_cont/contractor_detail");
-												if (match.url.includes("s_cont"))
-													this.props.history.push("/s_cont/contractor_detail");
-											}}
-												></CustomTableCell>		
-											<CustomTableCell align="center">																							
-														{this.isInvited(row.id) ?														
+												</CustomTableCell>
+												<CustomTableCell align="center"
+												                 onClick={async () => {
+													                 await this.props.selectContractor(row.id);
+													                 if (match.url.includes("g_cont"))
+														                 this.props.history.push("/g_cont/contractor_detail");
+													                 if (match.url.includes("s_cont"))
+														                 this.props.history.push("/s_cont/contractor_detail");
+												                 }}>{row.address ? row.address.name : "N/A"}</CustomTableCell>
+												<CustomTableCell align="center"
+												                 onClick={async () => {
+													                 await this.props.selectContractor(row.id);
+													                 if (match.url.includes("g_cont"))
+														                 this.props.history.push("/g_cont/contractor_detail");
+													                 if (match.url.includes("s_cont"))
+														                 this.props.history.push("/s_cont/contractor_detail");
+												                 }}></CustomTableCell>
+												<CustomTableCell align="center"
+												                 onClick={async () => {
+													                 await this.props.selectContractor(row.id);
+													                 if (match.url.includes("g_cont"))
+														                 this.props.history.push("/g_cont/contractor_detail");
+													                 if (match.url.includes("s_cont"))
+														                 this.props.history.push("/s_cont/contractor_detail");
+												                 }}
+												></CustomTableCell>
+												<CustomTableCell align="center">
+													{this.isInvited(row.id) ?
 														<IconButton className={classes.button} aria-label="Delete" color="primary">
-															<AccessAlarmIcon />	
+															<AccessAlarmIcon/>
 														</IconButton>
 														:
 														<Button className={classes.button} aria-label="Delete" color="primary" onClick={
 															async () => {
-																await this.props.inviteContractor(project.id, row.id, (result) => {																
-																	if (result)
-																	{
+																await this.props.inviteContractor(project.id, row.id, (result) => {
+																	if (result) {
 																		this.props.getContrators0(this.state.currentPage1, this.state.rowsPerPage1);
 																		this.props.getProjectBiddersData(project.id, this.state.currentPage, this.state.rowsPerPage);
 																	}
-																		
-																});															
+
+																});
 															}
 														}>
 															Invite
-														</Button>	
-														}			
-											</CustomTableCell>
-										</TableRow>
+														</Button>
+													}
+												</CustomTableCell>
+											</TableRow>
+										)
 									)
-								)
-							}
-						</TableBody>
-					</Table>
-				</div>
-				<TablePagination
-					style={{ overflow: "auto" }}
-					rowsPerPageOptions={[5, 10, 20]}
-					component="div"
-					count={contractors.numberOfElements}
-					rowsPerPage={this.state.rowsPerPage1}
-					page={this.state.currentPage1}
-					backIconButtonProps={{
-						'aria-label': 'Previous Page',
-					}}
-					nextIconButtonProps={{
-						'aria-label': 'Next Page',
-					}}
-					onChangePage={this.handleChangePage1}
-					onChangeRowsPerPage={this.handleChangeRowsPerPage1}
-				/>
+								}
+							</TableBody>
+						</Table>
+					</div>
+					<TablePagination
+						style={{overflow: "auto"}}
+						rowsPerPageOptions={[5, 10, 20]}
+						component="div"
+						count={contractors.numberOfElements}
+						rowsPerPage={this.state.rowsPerPage1}
+						page={this.state.currentPage1}
+						backIconButtonProps={{
+							'aria-label': 'Previous Page',
+						}}
+						nextIconButtonProps={{
+							'aria-label': 'Next Page',
+						}}
+						onChangePage={this.handleChangePage1}
+						onChangeRowsPerPage={this.handleChangeRowsPerPage1}
+					/>
 				</Card>
-			</div >
+			</div>
 		);
 	}
 }
@@ -622,20 +621,20 @@ const mapStateToProps = state => {
 		projectBidders: state.global_data.projectBidders,
 		project: state.global_data.project,
 		searchResult: state.global_data.searchResult,
-		specialties: state.cont_data.specialties,	
-		contractors: state.cont_data.contractors,	
+		specialties: state.cont_data.specialties,
+		contractors: state.cont_data.contractors,
 	};
 };
 
 const mapDispatchToProps = dispatch => {
 	return {
-		getProjectBiddersData: (id, page, size) => dispatch(getProjectBiddersData(id, page, size)),	
+		getProjectBiddersData: (id, page, size) => dispatch(getProjectBiddersData(id, page, size)),
 		selectContractor: (id) => dispatch(selectContractor(id)),
 		getSpecialties: () => dispatch(getSpecialties()),
-		searchFilter: (name, city, specialties, cb) => dispatch(searchFilter(name, city, specialties, cb)),	
+		searchFilter: (name, city, specialties, cb) => dispatch(searchFilter(name, city, specialties, cb)),
 		getContrators0: (page, size) => dispatch(getContrators0(page, size)),
-		inviteContractor: (projId, subConId, cb) => dispatch(inviteContractor(projId, subConId, cb)),	
-		
+		inviteContractor: (projId, subConId, cb) => dispatch(inviteContractor(projId, subConId, cb)),
+
 	};
 };
 
@@ -645,4 +644,4 @@ ProjectBidders.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ProjectBidders);
+export default withStyles(styles, {withTheme: true})(ProjectBidders);

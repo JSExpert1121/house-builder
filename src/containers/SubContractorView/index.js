@@ -1,7 +1,7 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React                                         from 'react';
+import { connect }                                   from 'react-redux';
 import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
-import SecuredRoute from '../../routers/SecuredRoute';
+import SecuredRoute                                  from '../../routers/SecuredRoute';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';

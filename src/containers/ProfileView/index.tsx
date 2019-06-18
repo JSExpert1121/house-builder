@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React                        from 'react';
 import { Link, Switch, withRouter } from 'react-router-dom';
-import SecuredRoute from '../../routers/SecuredRoute';
-import PropTypes from 'prop-types';
+import SecuredRoute                 from '../../routers/SecuredRoute';
+import PropTypes                    from 'prop-types';
 
 // material ui
 import { withStyles } from '@material-ui/core/styles';

@@ -14,11 +14,11 @@ import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import ProposalDetailFiles from './ProposalDetailFiles';
+import ProposalDetailFiles    from './ProposalDetailFiles';
 import ProposalDetailOverview from './ProposalDetailOverview';
 import ProposalDetailMessages from './ProposalDetailMessages';
-import ProposalEditView from './ProposalEditView';
-import ConfirmDialog from '../../components/shared/ConfirmDialog';
+import ProposalEditView       from './ProposalEditView';
+import ConfirmDialog          from '../../components/shared/ConfirmDialog';
 
 import {
 	getProposalDetails,

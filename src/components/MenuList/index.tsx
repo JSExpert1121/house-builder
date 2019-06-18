@@ -1,24 +1,23 @@
-import React from 'react'
+import React                from 'react'
 import { Link, withRouter } from 'react-router-dom';
+import { connect }          from 'react-redux';
 
-import { connect } from 'react-redux';
-
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
+import List         from '@material-ui/core/List';
+import Divider      from '@material-ui/core/Divider';
+import ListItem     from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
-import MessageIcon from '@material-ui/icons/Message';
-import PagesIcon from '@material-ui/icons/Pages';
-import Card from '@material-ui/core/Card';
-import WidgetsIcon from '@material-ui/icons/widgets';
+import HomeIcon     from '@material-ui/icons/Home';
+import MessageIcon  from '@material-ui/icons/Message';
+import PagesIcon    from '@material-ui/icons/Pages';
+import Card         from '@material-ui/core/Card';
+import WidgetsIcon  from '@material-ui/icons/Widgets';
 
-import PropTypes from 'prop-types';
-import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
-import ServiceIcon from '@material-ui/icons/GroupWork';
-import HelpIcon from '@material-ui/icons/Help';
+import ServiceIcon  from '@material-ui/icons/GroupWork';
+import HelpIcon     from '@material-ui/icons/Help';
 import SettingsIcon from '@material-ui/icons/Settings';
 
 import auth0Client from '../../auth0/auth';
@@ -48,7 +47,6 @@ const styles = theme => ({
 class ConnectedMenuList extends React.Component {
 	constructor(props) {
 		super(props);
-
 	}
 	render() {
 		const { classes, userProfile, location } = this.props;

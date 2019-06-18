@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component }                          from 'react';
 import { Route, Link, Switch, Redirect, withRouter } from 'react-router-dom';
-import SecuredRoute from '../../routers/SecuredRoute';
+import SecuredRoute                                  from '../../routers/SecuredRoute';
 
 // Redux
 import { connect } from 'react-redux';
@@ -20,10 +20,10 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
 // local components
-import AllTemplatesView from './AllTemplatesView';
-import TempDetailView from './TempDetailView';
+import AllTemplatesView   from './AllTemplatesView';
+import TempDetailView     from './TempDetailView';
 import CategoryDetailView from './CategoryDetailView';
-import OptionDetailView from './OptionDetailView';
+import OptionDetailView   from './OptionDetailView';
 
 // local components
 
