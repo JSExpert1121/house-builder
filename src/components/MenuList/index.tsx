@@ -14,7 +14,7 @@ import PagesIcon from '@material-ui/icons/Pages';
 import Card from '@material-ui/core/Card';
 import WidgetsIcon from '@material-ui/icons/Widgets';
 
-import {Theme, withStyles} from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 import ServiceIcon from '@material-ui/icons/GroupWork';
 import HelpIcon from '@material-ui/icons/Help';
@@ -22,28 +22,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 
 import auth0Client from '../../auth0/auth';
 import {UserProfile} from '../../types/global';
-
-const styles = (theme: Theme) => ({
-  list: {
-    width: '60px',
-    float: 'left',
-    borderRadius: '0',
-    height: 'calc(100vh - 64px)',
-    [theme.breakpoints.up('md')]: {
-      width: '15%',
-    },
-  },
-  listItemText: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  selectedStyle: {
-    borderLeft: '5px solid ' + theme.palette.primary.light,
-    color: theme.palette.primary.light,
-  },
-});
+import styles from './MenuList.style'
 
 interface ConnectedMenuListProps {
   classes: any;
@@ -233,14 +212,12 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({
+  userProfile: state.global_data.userProfile,
+});
 
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  withStyles({ ...styles })
+  withStyles(styles)
 )(MenuList);

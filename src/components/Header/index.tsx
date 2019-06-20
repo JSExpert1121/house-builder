@@ -1,63 +1,31 @@
-import React, {MouseEvent} from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-import auth0Client from '../../auth0/auth';
-import {History} from 'history';
+import React, { MouseEvent } from 'react';
+import { Link, withRouter }  from 'react-router-dom';
+import { connect }           from 'react-redux';
+import { compose }           from 'redux';
+import auth0Client           from '../../auth0/auth';
+import { History }           from 'history';
 
-import {Theme, withStyles} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar         from '@material-ui/core/AppBar';
+import Toolbar        from '@material-ui/core/Toolbar';
+import Typography     from '@material-ui/core/Typography';
+import Button         from '@material-ui/core/Button';
+import IconButton     from '@material-ui/core/IconButton';
+import ListItemIcon   from '@material-ui/core/ListItemIcon';
+import ListItemText   from '@material-ui/core/ListItemText';
 
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SettingsIcon from '@material-ui/icons/Settings';
-import {UserProfile} from '../../types/global';
+import Badge                             from '@material-ui/core/Badge';
+import MenuItem                          from '@material-ui/core/MenuItem';
+import Menu                              from '@material-ui/core/Menu';
+import AccountCircle                     from '@material-ui/icons/AccountCircle';
+import NotificationsIcon                 from '@material-ui/icons/Notifications';
+import MoreIcon                          from '@material-ui/icons/MoreVert';
+import ExitToAppIcon                     from '@material-ui/icons/ExitToApp';
+import SettingsIcon                      from '@material-ui/icons/Settings';
+import { MaterialThemeHOC, UserProfile } from '../../types/global';
+import styles                            from './Header.style';
 
-const styles = (theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-    fontWeight: 600,
-    fontSize: '2.1rem',
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  appbarstyle: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-  profilemenu: {
-    top: '50px',
-  },
-});
-
-interface HeaderProps {
-  classes: any;
+interface HeaderProps extends MaterialThemeHOC {
   profile: UserProfile;
   history: History;
 }
@@ -77,20 +45,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   handleProfileMenuOpen = (event: MouseEvent) => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({anchorEl: event.currentTarget});
   };
 
   handleMenuClose = () => {
-    this.setState({ anchorEl: null });
+    this.setState({anchorEl: null});
     this.handleMobileMenuClose();
   };
 
   handleMobileMenuOpen = (event: MouseEvent) => {
-    this.setState({ mobileMoreAnchorEl: event.currentTarget });
+    this.setState({mobileMoreAnchorEl: event.currentTarget});
   };
 
   handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
+    this.setState({mobileMoreAnchorEl: null});
   };
 
   handleUserLogIn = () => {
@@ -100,12 +68,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   handleUserLogOut = () => {
     auth0Client.signOut();
     this.handleMenuClose();
-    // this.props.history.replace('/');
   };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes, profile } = this.props;
+    const {anchorEl, mobileMoreAnchorEl} = this.state;
+    const {classes, profile} = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -113,8 +80,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       <Menu
         className={classes.profilemenu}
         anchorEl={anchorEl as Element}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+        transformOrigin={{vertical: 'top', horizontal: 'right'}}
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
@@ -125,9 +92,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           onClick={this.handleMenuClose}
         >
           <ListItemIcon className={classes.icon}>
-            <AccountCircle />
+            <AccountCircle/>
           </ListItemIcon>
-          <ListItemText inset primary="Profile" />
+          <ListItemText inset primary="Profile"/>
         </MenuItem>
         <MenuItem
           className={classes.menuItem}
@@ -136,15 +103,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           onClick={this.handleMenuClose}
         >
           <ListItemIcon className={classes.icon}>
-            <SettingsIcon />
+            <SettingsIcon/>
           </ListItemIcon>
-          <ListItemText inset primary="Settings" />
+          <ListItemText inset primary="Settings"/>
         </MenuItem>
         <MenuItem className={classes.menuItem} onClick={this.handleUserLogOut}>
           <ListItemIcon className={classes.icon}>
-            <ExitToAppIcon />
+            <ExitToAppIcon/>
           </ListItemIcon>
-          <ListItemText inset primary="LogOut" />
+          <ListItemText inset primary="LogOut"/>
         </MenuItem>
       </Menu>
     );
@@ -152,22 +119,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     const renderMobileMenu = (
       <Menu
         anchorEl={mobileMoreAnchorEl as Element}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+        transformOrigin={{vertical: 'top', horizontal: 'right'}}
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
         <MenuItem onClick={this.handleMobileMenuClose}>
           <IconButton color="inherit">
             <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
+              <NotificationsIcon/>
             </Badge>
           </IconButton>
           <p>Notifications</p>
         </MenuItem>
         <MenuItem onClick={this.handleProfileMenuOpen}>
           <IconButton color="inherit">
-            <AccountCircle />
+            <AccountCircle/>
           </IconButton>
           <p>Profile</p>
         </MenuItem>
@@ -179,7 +146,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         <div className={classes.sectionDesktop}>
           <IconButton color="inherit">
             <Badge badgeContent={17} color="secondary">
-              <NotificationsIcon />
+              <NotificationsIcon/>
             </Badge>
           </IconButton>
           <IconButton
@@ -188,10 +155,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={this.handleProfileMenuOpen}
             color="inherit"
           >
-            <span style={{ fontSize: '16px' }}>
+            <span style={{fontSize: '16px'}}>
               {profile.email}&nbsp;&nbsp;
             </span>
-            <AccountCircle />
+            <AccountCircle/>
           </IconButton>
         </div>
         <div className={classes.sectionMobile}>
@@ -200,7 +167,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={this.handleMobileMenuOpen}
             color="inherit"
           >
-            <MoreIcon />
+            <MoreIcon/>
           </IconButton>
         </div>
       </div>
@@ -232,6 +199,8 @@ const mapStateToProps = (state: any) => ({
   profile: state.global_data.userProfile,
 });
 
-const ConnectedRouter = withRouter(Header);
-const ConnectedHeader = connect(mapStateToProps)(ConnectedRouter);
-export default withStyles({ ...styles })(ConnectedHeader);
+export default compose(
+  withStyles(styles),
+  withRouter,
+  connect(mapStateToProps)
+)(Header);

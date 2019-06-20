@@ -22,7 +22,9 @@ const theme = createMuiTheme({
     useNextVariants: true,
     fontFamily: ['Niramit', 'Arial'].join(','),
   },
-  overrides: {},
+  overrides: {
+
+  },
 });
 
 export default theme;
