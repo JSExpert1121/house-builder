@@ -59,28 +59,28 @@ const theme = createMuiTheme({
     },
     MuiTabs: {
       root: {
-      minHeight: '36px',
-      }
+        minHeight: '36px',
+      },
     },
     MuiIconButton: {
       root: {
-      padding: '6px 8px',
-      }
+        padding: '6px 8px',
+      },
     },
     MuiTablePagination: {
       toolbar: {
-      minHeight: '48px',
-      height: '48px',
-      }
+        minHeight: '48px',
+        height: '48px',
+      },
     },
     MuiButton: {
       root: {
-      backgroundColor: '#7c43bd',
-      color: 'white',
+        backgroundColor: '#7c43bd',
+        color: 'white',
         '&:hover': {
           backgroundColor: '#12005e',
         },
-      }
+      },
     },
   },
 });
