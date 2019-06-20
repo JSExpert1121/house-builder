@@ -42,6 +42,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint:fix": "eslint --ext .jsx --ext .tsx --ext .js src/ --fix",
     "deploy": "aws --profile bc s3 sync dist/ s3://bcfe"
   },
   "eslintConfig": {
@@ -60,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
     "prettier": "1.18.2"
   }
 }

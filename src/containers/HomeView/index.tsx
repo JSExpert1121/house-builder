@@ -1,9 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import React, {FunctionComponent} from 'react';
 
-const HomeView: FunctionComponent = () => (
-		<div>
-			Welcome Home
-		</div>
-);
+const HomeView: FunctionComponent = () => <div>Welcome Home</div>;
 
 export default HomeView;
