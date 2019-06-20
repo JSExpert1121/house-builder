@@ -1,4 +1,4 @@
-import React                from 'react';
+import React, { MouseEvent }                from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect }          from 'react-redux';
 import auth0Client          from '../../auth0/auth';
@@ -21,7 +21,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon          from '@material-ui/icons/MoreVert';
 import ExitToAppIcon     from '@material-ui/icons/ExitToApp';
 import SettingsIcon      from '@material-ui/icons/Settings';
-import styled            from "@material-ui/core/styles/styled";
+import { UserProfile }   from "../../types/global";
 
 const styles = (theme: Theme) => ({
 	root: {
@@ -58,12 +58,12 @@ const styles = (theme: Theme) => ({
 
 interface HeaderProps {
 	classes: any,
-	profile: object,
+	profile: UserProfile,
 	history: History,
 }
 
 interface HeaderState {
-	anchorEl: React.ReactElement,
+	anchorEl: Element | EventTarget,
 	mobileMoreAnchorEl: React.ReactNode,
 }
 
@@ -76,7 +76,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		}
 	}
 
-	handleProfileMenuOpen = (event: Event) => {
+	handleProfileMenuOpen = (event: MouseEvent) => {
 		this.setState({anchorEl: event.currentTarget});
 	};
 
@@ -85,7 +85,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		this.handleMobileMenuClose();
 	};
 
-	handleMobileMenuOpen = (event: Event) => {
+	handleMobileMenuOpen = (event: MouseEvent) => {
 		this.setState({mobileMoreAnchorEl: event.currentTarget});
 	};
 
@@ -100,7 +100,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 	handleUserLogOut = () => {
 		auth0Client.signOut();
 		this.handleMenuClose();
-		this.props.history.replace('/');
+		// this.props.history.replace('/');
 	}
 
 	render() {
@@ -111,12 +111,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 		const renderMenu = (
 				<Menu
-						className={classes.profilemenu}
-						anchorEl={anchorEl}
-						anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-						transformOrigin={{vertical: 'top', horizontal: 'right'}}
-						open={isMenuOpen}
-						onClose={this.handleMenuClose}>
+					className={classes.profilemenu}
+					anchorEl={anchorEl as Element}
+					anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+					transformOrigin={{vertical: 'top', horizontal: 'right'}}
+					open={isMenuOpen}
+					onClose={this.handleMenuClose} >
 
 					<MenuItem className={classes.menuItem} component={Link} to='/profile' onClick={this.handleMenuClose}>
 						<ListItemIcon className={classes.icon}>
@@ -141,7 +141,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
 		const renderMobileMenu = (
 				<Menu
-						anchorEl={mobileMoreAnchorEl}
+						anchorEl={mobileMoreAnchorEl as Element}
 						anchorOrigin={{vertical: 'top', horizontal: 'right'}}
 						transformOrigin={{vertical: 'top', horizontal: 'right'}}
 						open={isMobileMenuOpen}
@@ -225,5 +225,4 @@ const mapStateToProps = (state: any) => ({
 })
 
 const ConnectedHeader = connect(mapStateToProps)(Header);
-
-export default withRouter(withStyles(styles)(ConnectedHeader));
+export default withStyles(styles)(ConnectedHeader);

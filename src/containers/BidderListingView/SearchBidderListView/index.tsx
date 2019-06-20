@@ -24,6 +24,7 @@ import MenuItem                                             from '@material-ui/c
 import CancelIcon                                           from '@material-ui/icons/Cancel';
 import { searchFilter }                                     from '../../../actions';
 import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
+import { match }                                            from "react-router";
 
 const styles = theme => ({
 	root: {
@@ -58,7 +59,9 @@ const styles = theme => ({
 		lineHeight: '1.5rem',
 	},
 	title: {
-		fontSize: 14,
+		padding: '20px',
+		fontSize: '21px',
+		color: 'grey'
 	},
 	pos: {
 		marginBottom: 12,
@@ -101,11 +104,6 @@ const styles = theme => ({
 		borderWidth: '1px',
 		borderStyle: 'solid',
 		borderColor: 'lightgrey'
-	},
-	title: {
-		padding: '20px',
-		fontSize: '21px',
-		color: 'grey'
 	},
 	button: {
 		margin: theme.spacing(1),
@@ -230,8 +228,30 @@ const CustomTableCell = withStyles(theme => ({
 	},
 }))(TableCell);
 
+interface BidderListingProps {
+	match: match
+	getSpecialties: any
+	getContrators0: any
+}
 
-class ConnectedBidderListingView extends React.Component {
+interface BidderListingState {
+	rowsPerPage: any
+	currentPage: any
+	isSaving: any
+	openCategoryForm: any
+	name: any
+	filterName: any
+	filterCity: any
+	description: any
+	snackBar: any
+	SnackBarContent: any
+	order: any
+	multi: any
+	contractors: any
+	rowsPerPage1: any
+}
+
+class ConnectedBidderListingView extends React.Component<BidderListingProps, BidderListingState> {
 	constructor(props) {
 		super(props);
 
@@ -249,11 +269,11 @@ class ConnectedBidderListingView extends React.Component {
 			order: 'desc',
 			multi: null,
 			contractors: null,
+			rowsPerPage1: null
 		}
 	}
 
 	async componentDidMount() {
-		const {match} = this.props;
 		await this.props.getSpecialties();
 		await this.props.getContrators0(0, 20);
 	}
