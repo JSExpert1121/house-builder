@@ -22,20 +22,6 @@ import {addFilesToProject, addProject} from '../../../actions';
 import CustomSnackbar                  from '../../../components/shared/CustomSnackbar';
 
 const styles = theme => ({
-  '@global': {
-    '.MuiInputBase-input': {
-      padding: '2px 0 3px',
-    },
-    '.MuiFormControl-marginNormal': {
-      margin: '8px 0 4px',
-    },
-    '.MuiFormControl-root': {
-      margin: '16px 0',
-    },
-    '.CodeMirror': {
-      height: 'calc(100% - 81px)',
-    },
-  },
   root: {
     position: 'relative',
     flexGrow: 1,

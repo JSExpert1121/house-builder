@@ -64,6 +64,28 @@ code {
 .Resizer.disabled:hover {
   border-color: transparent;
 }
+
+.CodeMirror {
+  height: calc(100% - 81px)
+}
+
+/*.nowrap {
+   fontSize: '14px';
+   lineHeight: '1.5';
+   maxHeight: '42px';
+   overflow: 'hidden';
+   textOverflow: 'ellipsis';
+   lineClamp: '2';
+   boxOrient: 'vertical';
+   display: 'box';
+}
+
+.busy  {
+ position: 'absolute';
+ left: 'calc(50% - 20px)';
+ top: 'calc(50% - 20px)';
+}*/
+
 li {
   list-style-type: none;
 }
