@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const CONT_API_PATH = process.env.PROJECT_API + 'contractors/';
+const CONT_API_PATH = process.env.REACT_APP_PROJECT_API + 'contractors/';
 
 export default {
   getProjects: (id, page, size) =>

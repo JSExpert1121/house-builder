@@ -208,7 +208,7 @@ class ProfileFileView extends React.Component<
                   <a
                     download={row.name}
                     href={
-                      process.env.PROJECT_API +
+                      process.env.REACT_APP_PROJECT_API +
                       '/contractors/' +
                       user.user_metadata.contractor_id +
                       '/files/' +

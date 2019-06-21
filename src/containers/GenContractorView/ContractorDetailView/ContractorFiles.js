@@ -138,7 +138,7 @@ class ConnectedContractorFiles extends React.Component {
                   <a
                     download={row.name}
                     href={
-                      process.env.PROJECT_API +
+                      process.env.REACT_APP_PROJECT_API +
                       '/contractors/' +
                       selectedContractor.id +
                       '/files/' +

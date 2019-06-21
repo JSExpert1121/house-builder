@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const TEMPL_API_PATH = process.env.PROJECT_API + 'templates/';
+const TEMPL_API_PATH = process.env.REACT_APP_PROJECT_API + 'templates/';
 
 export default {
   get: (page, size) =>

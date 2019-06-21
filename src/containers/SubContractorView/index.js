@@ -1,51 +1,32 @@
-import React                                from 'react';
-import {connect}                            from 'react-redux';
-import {Link, Redirect, Switch, withRouter} from 'react-router-dom';
-import SecuredRoute                         from '../../routers/SecuredRoute';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link, Redirect, Switch } from 'react-router-dom';
+import SecuredRoute from '../../routers/SecuredRoute';
 
-import PropTypes         from 'prop-types';
-import {withStyles}      from '@material-ui/core/styles';
-import AppBar            from '@material-ui/core/AppBar';
-import Tabs              from '@material-ui/core/Tabs';
-import NoSsr             from '@material-ui/core/NoSsr';
-import Tab               from '@material-ui/core/Tab';
-import TableChartIcon    from '@material-ui/icons/TableChart';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import NoSsr from '@material-ui/core/NoSsr';
+import Tab from '@material-ui/core/Tab';
+import TableChartIcon from '@material-ui/icons/TableChart';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import TuneIcon          from '@material-ui/icons/Tune';
-import AssignmentIcon    from '@material-ui/icons/Assignment';
-import SettingsIcon      from '@material-ui/icons/Settings';
+import TuneIcon from '@material-ui/icons/Tune';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import SettingsIcon from '@material-ui/icons/Settings';
 
-import SCVPipelineView      from './SCVPipelineView/index';
-import SCVCalendarView      from './SCVCalendarView';
-import SCVReportsView       from './SCVReportsView';
-import SCVAnalyticsView     from './SCVAnalyticsView';
-import SCVSettingsView      from './SCVSettingsView';
-import ProposalDetailView   from '../../components/ProposalDetailView';
-import ProjectDetailView    from '../../components/ProjectDetailView';
+import SCVPipelineView from './SCVPipelineView/index';
+import SCVCalendarView from './SCVCalendarView';
+import SCVReportsView from './SCVReportsView';
+import SCVAnalyticsView from './SCVAnalyticsView';
+import SCVSettingsView from './SCVSettingsView';
+import ProposalDetailView from '../../components/ProposalDetailView';
+import ProjectDetailView from '../../components/ProjectDetailView';
 import ContractorDetailView from './ContractorDetailView';
 
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  toolbarstyle: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.dark,
-    maxHeight: '56px',
-  },
-  buttonAdditional: {
-    position: 'absolute',
-    float: 'right',
-    right: '0',
-  },
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
-  },
-});
+import style from './index.style';
+import { compose } from 'redux';
 
-class ConnectedSubContView extends React.Component {
+class SubContView extends React.Component {
   render() {
     const { classes, match, userProfile, location } = this.props;
 
@@ -158,23 +139,11 @@ class ConnectedSubContView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({
+  userProfile: state.global_data.userProfile,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
-const SubContractorView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedSubContView);
-
-SubContractorView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(SubContractorView));
+export default compose(
+  connect(mapStateToProps),
+  withStyles(style)
+)(SubContView);

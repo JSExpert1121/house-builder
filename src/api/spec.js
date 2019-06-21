@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const SPEC_API_PATH = process.env.PROJECT_API + 'specialties/';
+const SPEC_API_PATH = process.env.REACT_APP_PROJECT_API + 'specialties/';
 
 export default {
   loadPage: (pageNo, pageSize) => {

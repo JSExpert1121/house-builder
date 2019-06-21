@@ -142,7 +142,7 @@ class ConnectedProposalDetailFiles extends React.Component {
                     <a
                       download={row.name}
                       href={
-                        process.env.PROJECT_API +
+                        process.env.REACT_APP_PROJECT_API +
                         '/proposals/' +
                         proposal.proposal.id +
                         '/files/' +

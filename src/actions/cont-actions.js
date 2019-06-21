@@ -1,5 +1,3 @@
-import Axios from 'axios';
-
 import {
   ALL_CONTRACTORS_LOADED,
   CONTRACTOR_DETAIL_LOADED,
@@ -8,6 +6,7 @@ import {
   SET_SELECTED_OPTION,
   SPECIALTIES_LOADED,
 } from '../constants/cont-action-types';
+import restAPI from '../services';
 
 export const uploadFiles = (id, files) => dispatch => {
   const formData = new FormData();
@@ -15,14 +14,11 @@ export const uploadFiles = (id, files) => dispatch => {
     formData.append('file', file);
   });
 
-  const API_URL = process.env.PROJECT_API + 'contractors/';
-  return Axios.post(API_URL + id + '/files/upload/multiple', formData, {
+  const API_URL = 'contractors/';
+  return restAPI.post(API_URL + id + '/files/upload/multiple', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-  }).then(response => {
-    return true;
-    // console.log(response);
   });
 };
 
@@ -30,13 +26,13 @@ export function createContractor(contractor, cb) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_ALL_CONTRACTORS' });
 
-    return Axios.post(process.env.PROJECT_API + 'contractors', contractor)
+    return restAPI
+      .post('contractors', contractor)
       .then(response => {
         cb(true);
       })
       .catch(err => {
         cb(false);
-        console.log(err.message);
       });
   };
 }
@@ -45,20 +41,19 @@ export function selectContractor(id) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_SELECTED_CONTRACTOR' });
 
-    return Axios.get(process.env.PROJECT_API + 'contractors/' + id)
-      .then(response => {
-        dispatch({
-          type: SET_SELECTED_CONTRACTOR,
-          payload: response.data,
-        });
-      })
-      .catch(err => console.log(err.message));
+    return restAPI.get('contractors/' + id).then(response => {
+      dispatch({
+        type: SET_SELECTED_CONTRACTOR,
+        payload: response.data,
+      });
+    });
   };
 }
 
 export function updateContractor(id) {
   return function(dispatch) {
-    return Axios.get(process.env.PROJECT_API + 'contractors/' + id)
+    return restAPI
+      .get('contractors/' + id)
       .then(response => {
         dispatch({
           type: SET_SELECTED_CONTRACTOR,
@@ -73,7 +68,8 @@ export function selectOption(id) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_SELECTED_OPTION' });
 
-    return Axios.get(process.env.PROJECT_API + 'options/' + id)
+    return restAPI
+      .get('options/' + id)
       .then(response => {
         dispatch({
           type: SET_SELECTED_OPTION,
@@ -88,7 +84,8 @@ export function selectCategory(id) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_SELECTED_CATEGORY' });
 
-    return Axios.get(process.env.PROJECT_API + 'categories/' + id)
+    return restAPI
+      .get('categories/' + id)
       .then(response => {
         dispatch({
           type: SET_SELECTED_CATEGORY,
@@ -103,12 +100,13 @@ export function getContrators0(page, size) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_ALL_CONTRACTORS' });
 
-    return Axios.get(process.env.PROJECT_API + 'contractors', {
-      params: {
-        page: page,
-        size: size,
-      },
-    })
+    return restAPI
+      .get('contractors', {
+        params: {
+          page: page,
+          size: size,
+        },
+      })
       .then(response => {
         dispatch({ type: ALL_CONTRACTORS_LOADED, payload: response.data });
       })
@@ -118,7 +116,8 @@ export function getContrators0(page, size) {
 
 export function deleteContractor(id, cb) {
   return function(dispatch) {
-    return Axios.delete(process.env.PROJECT_API + 'contractors/' + id)
+    return restAPI
+      .delete('contractors/' + id)
       .then(response => {
         cb(true);
       })
@@ -131,7 +130,8 @@ export function deleteContractor(id, cb) {
 
 export function deleteCategory(id, cb) {
   return function(dispatch) {
-    return Axios.delete(process.env.PROJECT_API + 'categories/' + id)
+    return restAPI
+      .delete('categories/' + id)
       .then(response => {
         cb(true);
       })
@@ -144,7 +144,8 @@ export function deleteCategory(id, cb) {
 
 export function deleteOption(id, cb) {
   return function(dispatch) {
-    return Axios.delete(process.env.PROJECT_API + 'options/' + id)
+    return restAPI
+      .delete('options/' + id)
       .then(response => {
         cb(true);
       })
@@ -157,10 +158,8 @@ export function deleteOption(id, cb) {
 
 export function addCategory(id, data, cb) {
   return function(dispatch) {
-    return Axios.post(
-      process.env.PROJECT_API + 'contractors/' + id + '/categories',
-      data
-    )
+    return restAPI
+      .post('contractors/' + id + '/categories', data)
       .then(response => {
         cb(true);
       })
@@ -173,10 +172,8 @@ export function addCategory(id, data, cb) {
 
 export function addOption(id, data, cb) {
   return function(dispatch) {
-    return Axios.post(
-      process.env.PROJECT_API + 'categories/' + id + '/options',
-      data
-    )
+    return restAPI
+      .post('categories/' + id + '/options', data)
       .then(response => {
         cb(true);
       })
@@ -189,7 +186,8 @@ export function addOption(id, data, cb) {
 
 export function editOption(id, data, cb) {
   return function(dispatch) {
-    return Axios.put(process.env.PROJECT_API + 'options/' + id, data)
+    return restAPI
+      .put('options/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -202,7 +200,8 @@ export function editOption(id, data, cb) {
 
 export function editCategory(id, data, cb) {
   return function(dispatch) {
-    return Axios.put(process.env.PROJECT_API + 'categories/' + id, data)
+    return restAPI
+      .put('categories/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -215,7 +214,8 @@ export function editCategory(id, data, cb) {
 
 export function editContractor(id, data, cb) {
   return function(dispatch) {
-    return Axios.put(process.env.PROJECT_API + 'contractors/' + id, data)
+    return restAPI
+      .put('contractors/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -232,15 +232,12 @@ export function addFiles(id, files, cb) {
     files.forEach(async file => {
       await formData.append('file', file);
     });
-    return Axios.post(
-      process.env.PROJECT_API + 'contractors/' + id + '/files/upload/multiple',
-      formData,
-      {
+    return restAPI
+      .post('contractors/' + id + '/files/upload/multiple', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      }
-    )
+      })
       .then(response => {
         cb(true);
         console.log(response);
@@ -253,19 +250,16 @@ export function addFiles(id, files, cb) {
 }
 
 export const getContractorDetailById = id => dispatch => {
-  return Axios.get(process.env.PROJECT_API + 'contractors/' + id).then(
-    response => {
-      console.log(response.data);
-      dispatch({ type: CONTRACTOR_DETAIL_LOADED, payload: response.data });
-    }
-  );
+  return restAPI.get('contractors/' + id).then(response => {
+    console.log(response.data);
+    dispatch({ type: CONTRACTOR_DETAIL_LOADED, payload: response.data });
+  });
 };
 
 export function deleteFile(id, name, cb) {
   return function(dispatch) {
-    return Axios.delete(
-      process.env.PROJECT_API + 'contractors/' + id + '/files/' + name
-    )
+    return restAPI
+      .delete('contractors/' + id + '/files/' + name)
       .then(response => {
         cb(true);
       })
@@ -277,14 +271,13 @@ export function deleteFile(id, name, cb) {
 }
 
 export const removeFile = (id, name) => dispatch => {
-  return Axios.delete(
-    process.env.PROJECT_API + 'contractors/' + id + '/files/' + name
-  );
+  return restAPI.delete('contractors/' + id + '/files/' + name);
 };
 
 export function approveContractor(id, data, cb) {
   return function(dispatch) {
-    return Axios.post(process.env.PROJECT_API + 'contractors/' + id, data)
+    return restAPI
+      .post('contractors/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -297,7 +290,8 @@ export function approveContractor(id, data, cb) {
 
 export function rejectContractor(id, data, cb) {
   return function(dispatch) {
-    return Axios.post(process.env.PROJECT_API + 'contractors/' + id, data)
+    return restAPI
+      .post('contractors/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -312,12 +306,13 @@ export function getSpecialties(page, size) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_SPECIALTIES' });
 
-    return Axios.get(process.env.PROJECT_API + 'specialties', {
-      params: {
-        page: page,
-        size: size,
-      },
-    })
+    return restAPI
+      .get('specialties', {
+        params: {
+          page: page,
+          size: size,
+        },
+      })
       .then(response => {
         dispatch({ type: SPECIALTIES_LOADED, payload: response.data });
       })
@@ -327,13 +322,8 @@ export function getSpecialties(page, size) {
 
 export function addSpecialty(contractorId, specialtyId, cb) {
   return function(dispatch) {
-    return Axios.post(
-      process.env.PROJECT_API +
-        'contractors/' +
-        contractorId +
-        '/specialties/' +
-        specialtyId
-    )
+    return restAPI
+      .post('contractors/' + contractorId + '/specialties/' + specialtyId)
       .then(response => {
         cb(true);
       })
@@ -346,13 +336,8 @@ export function addSpecialty(contractorId, specialtyId, cb) {
 
 export function deleteSpecialty(contractorId, specialtyId, cb) {
   return function(dispatch) {
-    return Axios.delete(
-      process.env.PROJECT_API +
-        'contractors/' +
-        contractorId +
-        '/specialties/' +
-        specialtyId
-    )
+    return restAPI
+      .delete('contractors/' + contractorId + '/specialties/' + specialtyId)
       .then(response => {
         cb(true);
       })

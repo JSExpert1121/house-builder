@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const PROJ_API_PATH = process.env.PROJECT_API + 'projects/';
+const PROJ_API_PATH = process.env.REACT_APP_PROJECT_API + 'projects/';
 
 export default {
   addFiles: (id, files) => {

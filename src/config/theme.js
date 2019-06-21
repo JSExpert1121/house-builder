@@ -36,7 +36,7 @@ const theme = createMuiTheme({
         margin: '8px 0 4px',
       },
     },
-    MuiTable: {
+    Muit: {
       root: {
         fontSize: '0.8125rem',
         minWidth: '120px',

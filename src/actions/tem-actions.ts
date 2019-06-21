@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import restAPI from '../services';
 
 import {
   ALL_TEMPLATES_LOADED,
@@ -6,13 +6,14 @@ import {
   SET_SELECTED_OPTION,
   SET_SELECTED_TEMPLATE,
 } from '../constants/tem-action-types';
-import {Dispatch} from 'redux';
+import { Dispatch } from 'redux';
 
 export function createTemplate(template, cb) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_ALL_TEMPLATES' });
 
-    return Axios.post(process.env.PROJECT_API + 'templates', template)
+    return restAPI
+      .post('templates', template)
       .then(response => {
         cb(true);
       })
@@ -27,7 +28,8 @@ export function selectTemplate(id) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_SELECTED_TEMPLATE' });
 
-    return Axios.get(process.env.PROJECT_API + 'templates/' + id)
+    return restAPI
+      .get('templates/' + id)
       .then(response => {
         dispatch({
           type: SET_SELECTED_TEMPLATE,
@@ -42,7 +44,8 @@ export function selectOption(id: number) {
   return function(dispatch: Dispatch) {
     dispatch({ type: 'CLEAR_SELECTED_OPTION' });
 
-    return Axios.get(process.env.PROJECT_API + 'options/' + id)
+    return restAPI
+      .get('options/' + id)
       .then(response => {
         dispatch({
           type: SET_SELECTED_OPTION,
@@ -57,7 +60,8 @@ export function selectCategory(id) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_SELECTED_CATEGORY' });
 
-    return Axios.get(process.env.PROJECT_API + 'categories/' + id)
+    return restAPI
+      .get('categories/' + id)
       .then(response => {
         dispatch({
           type: SET_SELECTED_CATEGORY,
@@ -72,12 +76,13 @@ export function getTemplatesO(page, size) {
   return function(dispatch) {
     dispatch({ type: 'CLEAR_ALL_TEMPLATES' });
 
-    return Axios.get(process.env.PROJECT_API + 'templates', {
-      params: {
-        page: page,
-        size: size,
-      },
-    })
+    return restAPI
+      .get('templates', {
+        params: {
+          page: page,
+          size: size,
+        },
+      })
       .then(response => {
         dispatch({ type: ALL_TEMPLATES_LOADED, payload: response.data });
       })
@@ -87,7 +92,8 @@ export function getTemplatesO(page, size) {
 
 export function deleteTemplate(id, cb) {
   return function(dispatch) {
-    return Axios.delete(process.env.PROJECT_API + 'templates/' + id)
+    return restAPI
+      .delete('templates/' + id)
       .then(response => {
         cb(true);
       })
@@ -100,7 +106,8 @@ export function deleteTemplate(id, cb) {
 
 export function deleteCategory(id, cb) {
   return function(dispatch) {
-    return Axios.delete(process.env.PROJECT_API + 'categories/' + id)
+    return restAPI
+      .delete('categories/' + id)
       .then(response => {
         cb(true);
       })
@@ -113,7 +120,8 @@ export function deleteCategory(id, cb) {
 
 export function deleteOption(id, cb) {
   return function(dispatch) {
-    return Axios.delete(process.env.PROJECT_API + 'options/' + id)
+    return restAPI
+      .delete('options/' + id)
       .then(response => {
         cb(true);
       })
@@ -126,10 +134,8 @@ export function deleteOption(id, cb) {
 
 export function addCategory(id, data, cb) {
   return function(dispatch) {
-    return Axios.post(
-      process.env.PROJECT_API + 'templates/' + id + '/categories',
-      data
-    )
+    return restAPI
+      .post('templates/' + id + '/categories', data)
       .then(response => {
         cb(true);
       })
@@ -142,10 +148,8 @@ export function addCategory(id, data, cb) {
 
 export function addOption(id, data, cb) {
   return function(dispatch) {
-    return Axios.post(
-      process.env.PROJECT_API + 'categories/' + id + '/options',
-      data
-    )
+    return restAPI
+      .post('categories/' + id + '/options', data)
       .then(response => {
         cb(true);
       })
@@ -158,7 +162,8 @@ export function addOption(id, data, cb) {
 
 export function editOption(id, data, cb) {
   return function(dispatch) {
-    return Axios.put(process.env.PROJECT_API + 'options/' + id, data)
+    return restAPI
+      .put('options/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -171,7 +176,8 @@ export function editOption(id, data, cb) {
 
 export function editCategory(id, data, cb) {
   return function(dispatch) {
-    return Axios.put(process.env.PROJECT_API + 'categories/' + id, data)
+    return restAPI
+      .put('categories/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -184,7 +190,8 @@ export function editCategory(id, data, cb) {
 
 export function editTemplate(id, data, cb) {
   return function(dispatch) {
-    return Axios.put(process.env.PROJECT_API + 'templates/' + id, data)
+    return restAPI
+      .put('templates/' + id, data)
       .then(response => {
         cb(true);
       })

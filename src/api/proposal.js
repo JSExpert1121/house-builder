@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const PROP_API_PATH = process.env.PROJECT_API + 'proposals/';
+const PROP_API_PATH = process.env.REACT_APP_PROJECT_API + 'proposals/';
 
 export default {
   addFiles: (id, files) => {
@@ -25,7 +25,7 @@ export default {
   delete: id => Axios.delete(PROP_API_PATH + id).then(res => res.data),
   submit: (contId, projId, desc) =>
     Axios.post(
-      process.env.PROJECT_API +
+      process.env.REACT_APP_PROJECT_API +
         'contractors/' +
         contId +
         '/projects/' +

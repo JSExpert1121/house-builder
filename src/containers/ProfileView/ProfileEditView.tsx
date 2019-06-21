@@ -175,7 +175,7 @@ class ProfileEditView extends Component<
 
     try {
       let res = await axios.get(
-        process.env.PROJECT_API +
+        process.env.REACT_APP_PROJECT_API +
           'contractors/' +
           userProfile.user_metadata.contractor_id
       );
@@ -236,7 +236,7 @@ class ProfileEditView extends Component<
     let cont_id = userProfile.user_metadata.contractor_id;
     // let addr;
     await axios
-      .get(process.env.PROJECT_API + 'contractors/' + cont_id)
+      .get(process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id)
       .then(response => {
         // addr = response.data.address;
       })
@@ -251,7 +251,7 @@ class ProfileEditView extends Component<
       phone: this.state.phone,
     };
 
-    await axios.post(process.env.PROJECT_API + 'contractors/' + cont_id, {
+    await axios.post(process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id, {
       email: userProfile.user_metadata.email,
       updatedBy: userProfile.user_metadata.email,
       address: addressData,

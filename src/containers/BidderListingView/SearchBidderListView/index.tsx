@@ -1,7 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {History} from 'history';
-import {emphasize, Theme, withStyles} from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { History } from 'history';
+import { withStyles } from '@material-ui/core/styles';
 import {
   Button,
   Card,
@@ -21,99 +21,17 @@ import Select from 'react-select';
 import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
-import {searchFilter} from '../../../actions';
-import {getContrators0, getSpecialties, selectContractor,} from '../../../actions/cont-actions';
-import {match} from 'react-router';
-import {MaterialThemeHOC, UserProfile} from '../../../types/global';
-import {DisplayProperty, FlexWrapProperty, PositionProperty} from 'csstype';
+import { searchFilter } from '../../../actions';
+import {
+  getContrators0,
+  getSpecialties,
+  selectContractor,
+} from '../../../actions/cont-actions';
+import { match } from 'react-router';
+import { MaterialThemeHOC, UserProfile } from '../../../types/global';
 
-const styles = (theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 136px)',
-    margin: theme.spacing(1),
-    overflow: 'scroll',
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 192px)',
-  },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
-  },
-  input: {
-    display: 'flex',
-    padding: 0,
-    height: 'auto',
-  },
-  waitingSpin: {
-    position: 'relative' as PositionProperty,
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
-  },
-  successAlert: {
-    marginBottom: '10px',
-  },
-  editField: {
-    lineHeight: '1.5rem',
-  },
-  title: {
-    padding: '20px',
-    fontSize: '21px',
-    color: 'grey',
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-  },
-  valueContainer: {
-    display: 'flex' as DisplayProperty,
-    flexWrap: 'wrap' as FlexWrapProperty,
-    flex: 1,
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  chip: {
-    // margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
-    margin: theme.spacing(1, 2),
-  },
-  chipFocused: {
-    backgroundColor: emphasize(
-      theme.palette.type === 'light'
-        ? theme.palette.grey[300]
-        : theme.palette.grey[700],
-      0.08
-    ),
-  },
-  noOptionsMessage: {
-    // padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-    padding: theme.spacing(1, 2),
-  },
-  singleValue: {
-    fontSize: 16,
-  },
-  placeholder: {
-    position: 'absolute' as PositionProperty,
-    left: 2,
-    fontSize: 16,
-  },
-  card: {
-    width: '100%',
-    marginBottom: '20px',
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: 'lightgrey',
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-});
+import style       from './SearchBidderList.style';
+import { compose } from "redux";
 
 function NoOptionsMessage(props) {
   return (
@@ -275,7 +193,7 @@ interface BidderListingState {
   currentPage1: any;
 }
 
-class ConnectedBidderListingView extends React.Component<
+class BidderListingView extends React.Component<
   BidderListingProps,
   BidderListingState
 > {
@@ -337,11 +255,6 @@ class ConnectedBidderListingView extends React.Component<
   onCityChange = e => {
     this.setState({ filterCity: e.target.value });
   };
-
-  handleChangeMulti = value => {
-    // setMulti(value);
-  };
-
   handleSearch = () => {
     const multi = this.state.multi
       ? this.state.multi.map(specialty => specialty.value)
@@ -353,7 +266,6 @@ class ConnectedBidderListingView extends React.Component<
       multi,
       result => {
         if (result) {
-          // this.props.updateContractor(selectedContractor.id);
         }
       }
     );
@@ -423,7 +335,9 @@ class ConnectedBidderListingView extends React.Component<
             options={suggestions}
             components={components}
             value={this.state.multi}
-            onChange={this.handleChange('multi')}
+            onChange={() => {
+              this.handleChange('multi');
+            }}
             placeholder="Select multiple specialties"
             isMulti
           />
@@ -523,18 +437,17 @@ const mapDispatchToProps = dispatch => ({
     dispatch(searchFilter(name, city, specialties)),
 });
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-    contractors: state.cont_data.contractors,
-    specialties: state.cont_data.specialties,
-    searchResult: state.global_data.searchResult,
-  };
-};
+const mapStateToProps = state => ({
+  userProfile: state.global_data.userProfile,
+  contractors: state.cont_data.contractors,
+  specialties: state.cont_data.specialties,
+  searchResult: state.global_data.searchResult,
+});
 
-const BidderListingView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedBidderListingView);
-
-export default withStyles(styles, { withTheme: true })(BidderListingView);
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+  withStyles(style, { withTheme: true })
+)(BidderListingView);
