@@ -1,21 +1,15 @@
-import React     from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-
-import Paper                                from '@material-ui/core/Paper';
-import Tabs                                 from '@material-ui/core/Tabs';
-import Tab                                  from '@material-ui/core/Tab';
-import NoSsr                                from '@material-ui/core/NoSsr';
-import SecuredRoute                         from '../../../routers/SecuredRoute';
-import {Link, Redirect, Switch, withRouter} from 'react-router-dom';
-import SubmittedProView                     from './SubmittedProView';
-import WonProView                           from './WonProView';
-import InvitedProView                       from './InvitedProView';
-//import DoneAllIcon from '@material-ui/icons/DoneAll';
-//import DoneIcon from '@material-ui/icons/Done';
-//import ControlCameraIcon from '@material-ui/icons/ControlCamera';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import NoSsr from '@material-ui/core/NoSsr';
+import SecuredRoute from '../../../routers/SecuredRoute';
+import { Link, Redirect, Switch } from 'react-router-dom';
+import SubmittedProView from './SubmittedProView';
+import WonProView from './WonProView';
+import InvitedProView from './InvitedProView';
 
 const styles = theme => ({
   root: {
@@ -28,13 +22,7 @@ const styles = theme => ({
   },
 });
 
-class ConnectedSCVPipelineView extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
+class SCVPipelineView extends React.Component {
   render() {
     const { classes, match, location } = this.props;
     const tabNo = {
@@ -93,14 +81,4 @@ class ConnectedSCVPipelineView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {};
-};
-
-const SCVPipelineView = connect(mapStateToProps)(ConnectedSCVPipelineView);
-
-SCVPipelineView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(SCVPipelineView));
+export default withStyles(styles)(SCVPipelineView);
