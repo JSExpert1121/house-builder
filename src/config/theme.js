@@ -51,11 +51,11 @@ const theme = createMuiTheme({
         padding: '0px',
         minHeight: '56px',
       },
-      wrapper: {
+      /*wrapper: {
         '& > *:first-child': {
           marginBottom: '0px',
         },
-      },
+      },*/
     },
     MuiTabs: {
       root: {
