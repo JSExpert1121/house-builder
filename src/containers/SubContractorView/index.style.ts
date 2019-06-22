@@ -8,7 +8,6 @@ export default (theme: Theme) =>
     toolbarstyle: {
       backgroundColor: theme.palette.background.paper,
       color: theme.palette.primary.dark,
-      maxHeight: '56px',
     },
     buttonAdditional: {
       position: 'absolute',
@@ -19,5 +18,8 @@ export default (theme: Theme) =>
       position: 'relative',
       left: 'calc(50% - 10px)',
       top: 'calc(40vh)',
+    },
+    mainWrapper: {
+      marginTop: theme.spacing(1)
     },
   });

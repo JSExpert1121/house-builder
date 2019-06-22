@@ -10,16 +10,12 @@ import { Link, Redirect, Switch } from 'react-router-dom';
 import SubmittedProView           from './SubmittedProView';
 import WonProView                 from './WonProView';
 import InvitedProView             from './InvitedProView';
+import AppBar                     from '@material-ui/core/AppBar';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(1),
-  },
-  toolbarstyle: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.dark,
-  },
+  }
 });
 
 class SCVPipelineView extends React.Component {
@@ -37,14 +33,14 @@ class SCVPipelineView extends React.Component {
     return (
       <NoSsr>
         <div className={classes.root}>
-          <Paper square>
+          <AppBar position="static" color="default">
             <Tabs
               value={curTabPos}
               variant="scrollable"
               indicatorColor="primary"
               textColor="primary"
-              scrollButtons="on"
-              className={classes.toolbarstyle}
+              scrollButtons="auto"
+              onChange={() => ({})}
             >
               <Tab
                 component={Link}
@@ -58,7 +54,9 @@ class SCVPipelineView extends React.Component {
                 label="Invited"
               />
             </Tabs>
+          </AppBar>
 
+          <Paper square>
             <Switch>
               <SecuredRoute
                 path={`${match.url}/submitted`}

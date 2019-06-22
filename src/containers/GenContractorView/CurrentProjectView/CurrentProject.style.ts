@@ -5,7 +5,7 @@ export default (theme: Theme) =>
     root: {
       flexGrow: 1,
       height: 'calc(100vh - 128px)',
-      margin: theme.spacing(1),
+      marginTop: theme.spacing(1),
       overflow: 'auto',
       position: 'relative',
     },

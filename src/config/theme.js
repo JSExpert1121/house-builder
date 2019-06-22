@@ -23,19 +23,6 @@ const theme = createMuiTheme({
     fontFamily: ['Niramit', 'Arial'].join(','),
   },
   overrides: {
-    MuiInputBase: {
-      input: {
-        padding: '2px 0 3px',
-      },
-    },
-    MuiFormControl: {
-      root: {
-        margin: '16px 0',
-      },
-      marginNormal: {
-        margin: '8px 0 4px',
-      },
-    },
     Muit: {
       root: {
         fontSize: '0.8125rem',

@@ -97,42 +97,43 @@ class SubContractorView extends React.Component {
               />
             </Tabs>
           </AppBar>
-
-          <Switch>
-            <SecuredRoute
-              path={`${match.url}/pipeline`}
-              component={SCVPipelineView}
-            />
-            <SecuredRoute
-              path={`${match.url}/calendar`}
-              component={SCVCalendarView}
-            />
-            <SecuredRoute
-              path={`${match.url}/analytics`}
-              component={SCVAnalyticsView}
-            />
-            <SecuredRoute
-              path={`${match.url}/reports`}
-              component={SCVReportsView}
-            />
-            <SecuredRoute
-              path={`${match.url}/settings`}
-              component={SCVSettingsView}
-            />
-            <SecuredRoute
-              path={`${match.url}/proposal_detail/:id`}
-              component={ProposalDetailView}
-            />
-            <SecuredRoute
-              path={`${match.url}/project_detail/:id`}
-              component={ProjectDetailView}
-            />
-            <SecuredRoute
-              path={`${match.url}/contractor_detail`}
-              component={ContractorDetailView}
-            />
-            <Redirect path="/s_cont" to={`${match.url}/pipeline`} />
-          </Switch>
+          <main className={classes.mainWrapper}>
+            <Switch>
+              <SecuredRoute
+                path={`${match.url}/pipeline`}
+                component={SCVPipelineView}
+              />
+              <SecuredRoute
+                path={`${match.url}/calendar`}
+                component={SCVCalendarView}
+              />
+              <SecuredRoute
+                path={`${match.url}/analytics`}
+                component={SCVAnalyticsView}
+              />
+              <SecuredRoute
+                path={`${match.url}/reports`}
+                component={SCVReportsView}
+              />
+              <SecuredRoute
+                path={`${match.url}/settings`}
+                component={SCVSettingsView}
+              />
+              <SecuredRoute
+                path={`${match.url}/proposal_detail/:id`}
+                component={ProposalDetailView}
+              />
+              <SecuredRoute
+                path={`${match.url}/project_detail/:id`}
+                component={ProjectDetailView}
+              />
+              <SecuredRoute
+                path={`${match.url}/contractor_detail`}
+                component={ContractorDetailView}
+              />
+              <Redirect path="/s_cont" to={`${match.url}/pipeline`} />
+            </Switch>
+          </main>
         </div>
       </NoSsr>
     );

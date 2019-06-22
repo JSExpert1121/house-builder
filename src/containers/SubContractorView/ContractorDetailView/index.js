@@ -20,7 +20,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     height: 'calc(100vh - 136px)',
-    margin: theme.spacing(1),
   },
   toolbarstyle: {
     backgroundColor: theme.palette.background.paper,

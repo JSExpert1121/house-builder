@@ -34,7 +34,6 @@ import { awardProject } from '../../actions/gen-actions';
 const styles = theme => ({
   root: {
     height: 'calc(100vh - 112px)',
-    padding: theme.spacing(1),
     overflowY: 'auto',
     position: 'relative',
   },

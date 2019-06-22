@@ -13,7 +13,6 @@ import CustomTableCell from '../../components/shared/CustomTableCell';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    margin: theme.spacing(1),
     height: 'calc(100vh - 64px - 48px - 16px)',
     overflow: 'auto',
     overflowX: 'hidden',

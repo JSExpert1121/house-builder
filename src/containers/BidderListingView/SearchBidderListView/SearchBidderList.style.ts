@@ -5,7 +5,6 @@ export default (theme: Theme) =>
     root: {
       flexGrow: 1,
       height: 'calc(100vh - 136px)',
-      margin: theme.spacing(1),
       overflow: 'scroll',
     },
     tableWrap: {
@@ -33,18 +32,8 @@ export default (theme: Theme) =>
     editField: {
       lineHeight: '1.5rem',
     },
-    title: {
-      padding: '20px',
-      fontSize: '21px',
-      color: 'grey',
-    },
     pos: {
       marginBottom: 12,
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
     },
     valueContainer: {
       display: 'flex',
@@ -54,7 +43,6 @@ export default (theme: Theme) =>
       overflow: 'hidden',
     },
     chip: {
-      // margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
       margin: theme.spacing(1, 2),
     },
     chipFocused: {
@@ -66,7 +54,6 @@ export default (theme: Theme) =>
       ),
     },
     noOptionsMessage: {
-      // padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
       padding: theme.spacing(1, 2),
     },
     singleValue: {
@@ -80,11 +67,13 @@ export default (theme: Theme) =>
     card: {
       width: '100%',
       marginBottom: '20px',
-      borderWidth: '1px',
-      borderStyle: 'solid',
-      borderColor: 'lightgrey',
+      padding: theme.spacing(1)
     },
     button: {
       margin: theme.spacing(1),
     },
+    btnSearchWrapper: {
+      textAlign: 'end',
+      alignSelf: 'center'
+    }
   });

@@ -1,15 +1,12 @@
-import React                            from 'react';
-import { Redirect, Switch, withRouter } from 'react-router-dom';
-import SecuredRoute                     from '../../routers/SecuredRoute';
-// Redux
-import { connect }                      from 'react-redux';
-// material ui
-import PropTypes                        from 'prop-types';
-import { withStyles }                   from '@material-ui/core/styles';
-import NoSsr                            from '@material-ui/core/NoSsr';
-// local components
-import ContractorDetailView             from './ContractorDetailView';
-import SearchBidderListView             from './SearchBidderListView';
+import React                from 'react';
+import { Redirect, Switch } from 'react-router-dom';
+import SecuredRoute         from '../../routers/SecuredRoute';
+import { connect }          from 'react-redux';
+import { withStyles }       from '@material-ui/core/styles';
+import NoSsr                from '@material-ui/core/NoSsr';
+import ContractorDetailView from './ContractorDetailView';
+import SearchBidderListView from './SearchBidderListView';
+import { compose }          from 'redux';
 
 const styles = theme => ({
   root: {
@@ -26,7 +23,7 @@ const styles = theme => ({
   },
 });
 
-class ConnectedBidderListingView extends React.Component {
+class BidderListingView extends React.Component {
   render() {
     const { classes, userProfile, match } = this.props;
 
@@ -57,19 +54,11 @@ class ConnectedBidderListingView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({userProfile: state.global_data.userProfile});
 
-const BidderListingView = connect(
-  mapStateToProps,
-  null
-)(ConnectedBidderListingView);
-
-BidderListingView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(BidderListingView));
+export default compose(
+  connect(
+    mapStateToProps
+  ),
+  withStyles(styles)
+)(BidderListingView)

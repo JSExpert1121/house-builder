@@ -1,33 +1,32 @@
-import React                                                 from 'react';
-import { connect }                                           from 'react-redux';
-import { History }                                           from 'history';
-import { withStyles }                                        from '@material-ui/core/styles';
-import {
-  Button,
-  Card,
-  CircularProgress,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-  Typography,
-}                                                            from '@material-ui/core';
-import classNames                                            from 'classnames';
-import Select                                                from 'react-select';
-import Chip                                                  from '@material-ui/core/Chip';
-import MenuItem                                              from '@material-ui/core/MenuItem';
-import CancelIcon                                            from '@material-ui/icons/Cancel';
-import { searchFilter }                                      from '../../../actions';
+import React                                                from 'react';
+import { connect }                                          from 'react-redux';
+import { History }                                          from 'history';
+import { withStyles }                                       from '@material-ui/core/styles';
+import Card                                                 from '@material-ui/core/Card';
+import CircularProgress                                     from '@material-ui/core/CircularProgress';
+import Paper                                                from '@material-ui/core/Paper';
+import Table                                                from '@material-ui/core/Table';
+import TableBody                                            from '@material-ui/core/TableBody';
+import TableCell                                            from '@material-ui/core/TableCell';
+import TableHead                                            from '@material-ui/core/TableHead';
+import TablePagination                                      from '@material-ui/core/TablePagination';
+import TableRow                                             from '@material-ui/core/TableRow';
+import TextField                                            from '@material-ui/core/TextField';
+import Typography                                           from '@material-ui/core/Typography';
+import Chip                                                 from '@material-ui/core/Chip';
+import Grid                                                 from '@material-ui/core/Grid';
+import classNames                                           from 'classnames';
+import Select                                               from 'react-select';
+import MenuItem                                             from '@material-ui/core/MenuItem';
+import CancelIcon                                           from '@material-ui/icons/Cancel';
+import { searchFilter }                                     from '../../../actions';
 import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
-import { match }                                             from 'react-router';
-import { MaterialThemeHOC, UserProfile }                     from '../../../types/global';
+import { match }                                            from 'react-router';
+import { MaterialThemeHOC, UserProfile }                    from '../../../types/global';
 
 import style       from './SearchBidderList.style';
 import { compose } from 'redux';
+import { Button }  from '@material-ui/core';
 
 function NoOptionsMessage(props) {
   return (
@@ -267,11 +266,11 @@ class BidderListingView extends React.Component<
     );
   };
 
-  handleChange = (value: any) => {
+  handleChange = (name: any) => (value: any) => {
     this.setState({
       multi: value,
-    });
-  };
+    })
+  }
 
   render() {
     const { classes, theme, specialties, userProfile } = this.props;
@@ -303,49 +302,46 @@ class BidderListingView extends React.Component<
     return (
       <div className={classes.root}>
         <Card className={classes.card}>
-          <TextField
-            id="name"
-            label="Name"
-            className={classes.textField}
-            value={this.state.filterName}
-            onChange={e => this.onNameChange(e)}
-            margin="normal"
-          />
-          <TextField
-            id="city"
-            label="City"
-            className={classes.textField}
-            value={this.state.filterCity}
-            onChange={e => this.onCityChange(e)}
-            margin="normal"
-          />
-          <Select
-            classes={classes}
-            styles={selectStyles}
-            textFieldProps={{
-              label: 'Specialty',
-              InputLabelProps: {
-                shrink: true,
-              },
-            }}
-            options={suggestions}
-            components={components}
-            value={this.state.multi}
-            onChange={() => {
-              this.handleChange('multi');
-            }}
-            placeholder="Select multiple specialties"
-            isMulti
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={this.handleSearch}
-          >
-            Search
-          </Button>
-          <Typography className={classes.title}>Search result</Typography>
+          <Grid container>
+            <Grid item xs={3}>
+              <TextField
+                id="name"
+                label="Name"
+                value={this.state.filterName}
+                onChange={e => this.onNameChange(e)}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField
+                id="city"
+                label="City"
+                value={this.state.filterCity}
+                onChange={e => this.onCityChange(e)}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Select
+                classes={classes}
+                styles={selectStyles}
+                options={suggestions}
+                components={components}
+                value={this.state.multi}
+                onChange={this.handleChange('multi')}
+                placeholder="Select multiple specialties"
+                isMulti
+              />
+            </Grid>
+            <Grid item xs={3} className={classes.btnSearchWrapper}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={this.handleSearch}
+              >
+                Search
+              </Button>
+            </Grid>
+          </Grid>
           <Table>
             <TableHead>
               <TableRow>
