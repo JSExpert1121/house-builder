@@ -1,5 +1,5 @@
-import React from 'react';
-import {Route} from 'react-router-dom';
+import React       from 'react';
+import { Route }   from 'react-router-dom';
 import auth0Client from '../auth0/auth';
 
 const SecuredRoute = ({ component: Component, ...rest }) => {

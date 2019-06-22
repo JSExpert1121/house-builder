@@ -1,15 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import {BrowserRouter} from 'react-router-dom';
-// import local
-import App from './App';
-import store from './store';
-// Global Styles
 import './styles/index.scss';
-// Extra Modules
-import WebFont from 'webfontloader';
 
+import React             from 'react';
+import ReactDOM          from 'react-dom';
+import { Provider }      from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import WebFont           from 'webfontloader';
+
+import App                from './App';
+import store              from './store';
 import * as serviceWorker from './serviceWorker';
 
 WebFont.load({

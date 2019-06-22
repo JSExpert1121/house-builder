@@ -1,9 +1,9 @@
-import React        from 'react';
-import {withRouter} from 'react-router-dom';
-import {connect}    from 'react-redux';
+import React          from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect }    from 'react-redux';
 
 import PropTypes        from 'prop-types';
-import {withStyles}     from '@material-ui/core/styles';
+import { withStyles }   from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Table            from '@material-ui/core/Table';
 import TableHead        from '@material-ui/core/TableHead';
@@ -18,8 +18,8 @@ import Checkbox         from '@material-ui/core/Checkbox';
 import CompareIcon      from '@material-ui/icons/Compare';
 import ConfirmDialog    from '../shared/ConfirmDialog';
 
-import removeMd                                                                               from 'remove-markdown';
-import {clearProposalDetail, getProposalData, getProposalsByProjectId, setProposals4Compare,} from '../../actions';
+import removeMd                                                                                 from 'remove-markdown';
+import { clearProposalDetail, getProposalData, getProposalsByProjectId, setProposals4Compare } from '../../actions';
 
 const MAX_COMPARE = 3;
 const styles = theme => ({
@@ -199,7 +199,7 @@ class ConnectedProjectProposals extends React.Component {
           <Table className={classes.table} size="small">
             <TableHead>
               <TableRow>
-                {match.url.includes('/g_cont') && (
+                {match.url.includes('/gen-contractor') && (
                   <CustomTableCell align="center">
                     <IconButton
                       className={classes.button}
@@ -221,7 +221,7 @@ class ConnectedProjectProposals extends React.Component {
             <TableBody>
               {proposals.content.map(row => (
                 <TableRow className={classes.row} key={row.id} hover>
-                  {match.url.includes('/g_cont') && (
+                  {match.url.includes('/gen-contractor') && (
                     <CustomTableCell align="center">
                       <Checkbox
                         onChange={() => this.handleChecked(row.id)}

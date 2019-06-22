@@ -1,4 +1,4 @@
-import {INVITED_PROJECT_LOADED, PROPOSALS_LOADED} from '../constants/sub-action-types';
+import { INVITED_PROJECT_LOADED, PROPOSALS_LOADED } from '../constants/sub-action-types';
 
 const initialState = {
   proposals: null,

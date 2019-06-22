@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {withRouter}       from 'react-router-dom';
-import auth0Client        from '../auth0/auth';
+import React, { Component } from 'react';
+import { withRouter }       from 'react-router-dom';
+import auth0Client          from '../auth0/auth';
 
-import {connect}          from 'react-redux';
-import {setUserProfile}   from '../actions';
-import {CircularProgress} from '@material-ui/core/es';
+import { connect }          from 'react-redux';
+import { setUserProfile }   from '../actions';
+import { CircularProgress } from '@material-ui/core/es';
 
 class connectedCallback extends Component {
   async componentDidMount() {

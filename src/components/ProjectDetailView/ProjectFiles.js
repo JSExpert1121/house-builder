@@ -1,20 +1,20 @@
-import React     from 'react';
-import {connect} from 'react-redux';
+import React       from 'react';
+import { connect } from 'react-redux';
 
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import Table        from '@material-ui/core/Table';
-import TableBody    from '@material-ui/core/TableBody';
-import TableCell    from '@material-ui/core/TableCell';
-import TableHead    from '@material-ui/core/TableHead';
-import TableRow     from '@material-ui/core/TableRow';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Table          from '@material-ui/core/Table';
+import TableBody      from '@material-ui/core/TableBody';
+import TableCell      from '@material-ui/core/TableCell';
+import TableHead      from '@material-ui/core/TableHead';
+import TableRow       from '@material-ui/core/TableRow';
 
-import {IconButton, Snackbar} from '@material-ui/core';
-import DeleteIcon             from '@material-ui/icons/Delete';
-import NoteAddIcon            from '@material-ui/icons/NoteAdd';
-import {DropzoneDialog}       from 'material-ui-dropzone';
+import { IconButton, Snackbar } from '@material-ui/core';
+import DeleteIcon               from '@material-ui/icons/Delete';
+import NoteAddIcon              from '@material-ui/icons/NoteAdd';
+import { DropzoneDialog }       from 'material-ui-dropzone';
 
-import {addFilesToProject, deleteFileFromProject, getProjectData,} from '../../actions';
+import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../actions';
 
 const styles = theme => ({
   root: {

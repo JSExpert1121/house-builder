@@ -1,9 +1,9 @@
-import React     from 'react';
-import {connect} from 'react-redux';
+import React       from 'react';
+import { connect } from 'react-redux';
 
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import {blue}       from '@material-ui/core/colors';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { blue }       from '@material-ui/core/colors';
 
 const styles = theme => ({
   root: {

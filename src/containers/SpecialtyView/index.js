@@ -1,12 +1,12 @@
-import React, {Component}                       from 'react';
-import PropTypes                                from 'prop-types';
-import {Link, Redirect, Switch, withRouter}     from 'react-router-dom';
-import {connect}                                from 'react-redux';
-import {AppBar, NoSsr, Tab, Tabs, withStyles}   from '@material-ui/core';
-import {Apps as AppsIcon, Ballot as BallotIcon} from '@material-ui/icons';
-import SecuredRoute                             from '../../routers/SecuredRoute';
-import AllSpecialties                           from './AllSpecialties';
-import SpecialtyDetailView                      from './SpecialtyDetailView';
+import React, { Component }                       from 'react';
+import PropTypes                                  from 'prop-types';
+import { Link, Redirect, Switch, withRouter }     from 'react-router-dom';
+import { connect }                                from 'react-redux';
+import { AppBar, NoSsr, Tab, Tabs, withStyles }   from '@material-ui/core';
+import { Apps as AppsIcon, Ballot as BallotIcon } from '@material-ui/icons';
+import SecuredRoute                               from '../../routers/SecuredRoute';
+import AllSpecialties                             from './AllSpecialties';
+import SpecialtyDetailView                        from './SpecialtyDetailView';
 
 const styles = theme => ({
   root: {

@@ -1,15 +1,15 @@
-import React                          from 'react';
-import {Redirect, Switch, withRouter} from 'react-router-dom';
-import SecuredRoute                   from '../../routers/SecuredRoute';
+import React                            from 'react';
+import { Redirect, Switch, withRouter } from 'react-router-dom';
+import SecuredRoute                     from '../../routers/SecuredRoute';
 // Redux
-import {connect}                      from 'react-redux';
+import { connect }                      from 'react-redux';
 // material ui
-import PropTypes                      from 'prop-types';
-import {withStyles}                   from '@material-ui/core/styles';
-import NoSsr                          from '@material-ui/core/NoSsr';
+import PropTypes                        from 'prop-types';
+import { withStyles }                   from '@material-ui/core/styles';
+import NoSsr                            from '@material-ui/core/NoSsr';
 // local components
-import ContractorDetailView           from './ContractorDetailView';
-import SearchBidderListView           from './SearchBidderListView';
+import ContractorDetailView             from './ContractorDetailView';
+import SearchBidderListView             from './SearchBidderListView';
 
 const styles = theme => ({
   root: {

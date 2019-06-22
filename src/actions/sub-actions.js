@@ -1,5 +1,5 @@
 import { PROPOSALS_LOADED } from '../constants/sub-action-types';
-import restAPI from '../services';
+import restAPI              from '../services';
 
 export function getProposals(cont_id, page, row, filterStr) {
   return function(dispatch) {
@@ -15,7 +15,7 @@ export function getProposals(cont_id, page, row, filterStr) {
       .then(res => {
         const result = res.data;
         dispatch({ type: PROPOSALS_LOADED, payload: result });
-      })
+      });
   };
 }
 
@@ -31,6 +31,6 @@ export function getInvitedProjectsByGenId(id, page, rowSize) {
       })
       .then(response =>
         dispatch({ type: 'INVITED_PROJECT_LOADED', payload: response.data })
-      )
+      );
   };
 }

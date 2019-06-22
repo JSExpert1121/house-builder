@@ -1,7 +1,7 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { History } from 'history';
-import { withStyles } from '@material-ui/core/styles';
+import React                                                 from 'react';
+import { connect }                                           from 'react-redux';
+import { History }                                           from 'history';
+import { withStyles }                                        from '@material-ui/core/styles';
 import {
   Button,
   Card,
@@ -15,23 +15,19 @@ import {
   TableRow,
   TextField,
   Typography,
-} from '@material-ui/core';
-import classNames from 'classnames';
-import Select from 'react-select';
-import Chip from '@material-ui/core/Chip';
-import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { searchFilter } from '../../../actions';
-import {
-  getContrators0,
-  getSpecialties,
-  selectContractor,
-} from '../../../actions/cont-actions';
-import { match } from 'react-router';
-import { MaterialThemeHOC, UserProfile } from '../../../types/global';
+}                                                            from '@material-ui/core';
+import classNames                                            from 'classnames';
+import Select                                                from 'react-select';
+import Chip                                                  from '@material-ui/core/Chip';
+import MenuItem                                              from '@material-ui/core/MenuItem';
+import CancelIcon                                            from '@material-ui/icons/Cancel';
+import { searchFilter }                                      from '../../../actions';
+import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
+import { match }                                             from 'react-router';
+import { MaterialThemeHOC, UserProfile }                     from '../../../types/global';
 
 import style       from './SearchBidderList.style';
-import { compose } from "redux";
+import { compose } from 'redux';
 
 function NoOptionsMessage(props) {
   return (

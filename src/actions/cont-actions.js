@@ -5,7 +5,7 @@ import {
   SET_SELECTED_CONTRACTOR,
   SET_SELECTED_OPTION,
   SPECIALTIES_LOADED,
-} from '../constants/cont-action-types';
+}              from '../constants/cont-action-types';
 import restAPI from '../services';
 
 export const uploadFiles = (id, files) => dispatch => {

@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {withRouter}                                                            from 'react-router-dom';
+import { withRouter }                                                            from 'react-router-dom';
 // material ui
-import PropTypes                                                               from 'prop-types';
-import {withStyles}                                                            from '@material-ui/core/styles';
+import PropTypes                                                                 from 'prop-types';
+import { withStyles }                                                            from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -18,18 +18,18 @@ import {
   TableRow,
   TableSortLabel,
   TextField,
-}                                                                              from '@material-ui/core';
-import DeleteIcon                                                              from '@material-ui/icons/Delete';
-import Dialog                                                                  from '@material-ui/core/Dialog';
-import DialogActions                                                           from '@material-ui/core/DialogActions';
-import DialogContent                                                           from '@material-ui/core/DialogContent';
+}                                                                                from '@material-ui/core';
+import DeleteIcon                                                                from '@material-ui/icons/Delete';
+import Dialog                                                                    from '@material-ui/core/Dialog';
+import DialogActions                                                             from '@material-ui/core/DialogActions';
+import DialogContent                                                             from '@material-ui/core/DialogContent';
 import DialogContentText
-                                                                               from '@material-ui/core/DialogContentText';
-import DialogTitle                                                             from '@material-ui/core/DialogTitle';
+                                                                                 from '@material-ui/core/DialogContentText';
+import DialogTitle                                                               from '@material-ui/core/DialogTitle';
 // Redux
-import {connect}                                                               from 'react-redux';
+import { connect }                                                               from 'react-redux';
 // actions
-import {createContractor, deleteContractor, getContrators0, selectContractor,} from '../../../actions/cont-actions';
+import { createContractor, deleteContractor, getContrators0, selectContractor } from '../../../actions/cont-actions';
 
 const styles = theme => ({
   root: {

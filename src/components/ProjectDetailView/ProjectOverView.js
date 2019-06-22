@@ -1,10 +1,10 @@
-import React     from 'react';
-import {connect} from 'react-redux';
+import React       from 'react';
+import { connect } from 'react-redux';
 
-import PropTypes    from 'prop-types';
-import Box          from '@material-ui/core/Box';
-import Grid         from '@material-ui/core/Grid';
-import {withStyles} from '@material-ui/core/styles';
+import PropTypes      from 'prop-types';
+import Box            from '@material-ui/core/Box';
+import Grid           from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 
 import ProjectView   from '../ProposalDetailView/ProjectView';
 import GenContractor from '../Contractor/GenContractor';

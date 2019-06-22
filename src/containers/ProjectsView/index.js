@@ -1,20 +1,20 @@
-import React                                from 'react';
-import {Link, Redirect, Switch, withRouter} from 'react-router-dom';
-import SecuredRoute                         from '../../routers/SecuredRoute';
+import React                                  from 'react';
+import { Link, Redirect, Switch, withRouter } from 'react-router-dom';
+import SecuredRoute                           from '../../routers/SecuredRoute';
 // Redux
-import {connect}                            from 'react-redux';
+import { connect }                            from 'react-redux';
 // material ui
-import PropTypes                            from 'prop-types';
-import {withStyles}                         from '@material-ui/core/styles';
-import AppBar                               from '@material-ui/core/AppBar';
-import Tabs                                 from '@material-ui/core/Tabs';
-import NoSsr                                from '@material-ui/core/NoSsr';
-import Tab                                  from '@material-ui/core/Tab';
-import AppsIcon                             from '@material-ui/icons/Apps';
+import PropTypes                              from 'prop-types';
+import { withStyles }                         from '@material-ui/core/styles';
+import AppBar                                 from '@material-ui/core/AppBar';
+import Tabs                                   from '@material-ui/core/Tabs';
+import NoSsr                                  from '@material-ui/core/NoSsr';
+import Tab                                    from '@material-ui/core/Tab';
+import AppsIcon                               from '@material-ui/icons/Apps';
 // local components
-import CurrentProjectView                   from './CurrentProjectView/index';
-import ProjectDetailView                    from '../../components/ProjectDetailView';
-import ProposalDetailView                   from '../../components/ProposalDetailView';
+import CurrentProjectView                     from './CurrentProjectView/index';
+import ProjectDetailView                      from '../../components/ProjectDetailView';
+import ProposalDetailView                     from '../../components/ProposalDetailView';
 
 const styles = theme => ({
   root: {
@@ -71,18 +71,18 @@ class ConnectedGenContView extends React.Component {
 
           <Switch>
             <SecuredRoute
-              path="/a_pros/current_pros"
+              path="/projects/current"
               component={CurrentProjectView}
             />
             <SecuredRoute
-              path="/a_pros/proposal_detail/:id"
+              path="/projects/proposal_detail/:id"
               component={ProposalDetailView}
             />
             <SecuredRoute
-              path="/a_pros/project_detail/:id"
+              path="/projects/project_detail/:id"
               component={ProjectDetailView}
             />
-            <Redirect path="/a_pros" to={`/a_pros/current_pros`} />
+            <Redirect path="/projects" to={`/projects/current`} />
           </Switch>
         </div>
       </NoSsr>

@@ -1,7 +1,7 @@
 import React     from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles }                      from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
@@ -12,11 +12,8 @@ import {
   Grid,
   IconButton,
   TextField,
-}                   from '@material-ui/core';
-import {
-  Done as DoneIcon,
-  NotInterested
-}                   from '@material-ui/icons';
+}                                          from '@material-ui/core';
+import { Done as DoneIcon, NotInterested } from '@material-ui/icons';
 
 const styles = theme => ({
   root: {

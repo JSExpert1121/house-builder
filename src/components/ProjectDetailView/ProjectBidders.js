@@ -1,8 +1,8 @@
-import React     from 'react';
-import {connect} from 'react-redux';
+import React       from 'react';
+import { connect } from 'react-redux';
 
-import PropTypes               from 'prop-types';
-import {emphasize, withStyles} from '@material-ui/core/styles';
+import PropTypes                 from 'prop-types';
+import { emphasize, withStyles } from '@material-ui/core/styles';
 import {
   Button,
   Card,
@@ -18,16 +18,16 @@ import {
   TableRow,
   TextField,
   Typography,
-}                              from '@material-ui/core';
-import AccessAlarmIcon         from '@material-ui/icons/AccessAlarm';
-import classNames              from 'classnames';
-import Select                  from 'react-select';
-import Chip                    from '@material-ui/core/Chip';
-import MenuItem                from '@material-ui/core/MenuItem';
-import CancelIcon              from '@material-ui/icons/Cancel';
+}                                from '@material-ui/core';
+import AccessAlarmIcon           from '@material-ui/icons/AccessAlarm';
+import classNames                from 'classnames';
+import Select                    from 'react-select';
+import Chip                      from '@material-ui/core/Chip';
+import MenuItem                  from '@material-ui/core/MenuItem';
+import CancelIcon                from '@material-ui/icons/Cancel';
 
-import {getProjectBiddersData, inviteContractor, searchFilter,} from '../../actions';
-import {getContrators0, getSpecialties, selectContractor,}      from '../../actions/cont-actions';
+import { getProjectBiddersData, inviteContractor, searchFilter } from '../../actions';
+import { getContrators0, getSpecialties, selectContractor }      from '../../actions/cont-actions';
 
 const styles = theme => ({
   root: {
@@ -413,8 +413,10 @@ class ConnectedProjectBidders extends React.Component {
                     <CustomTableCell
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -423,8 +425,10 @@ class ConnectedProjectBidders extends React.Component {
                       align="center"
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -436,8 +440,10 @@ class ConnectedProjectBidders extends React.Component {
                       scope="row"
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -447,8 +453,10 @@ class ConnectedProjectBidders extends React.Component {
                     <CustomTableCell
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -456,8 +464,10 @@ class ConnectedProjectBidders extends React.Component {
                     <CustomTableCell
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -559,8 +569,10 @@ class ConnectedProjectBidders extends React.Component {
                       scope="row"
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -569,8 +581,10 @@ class ConnectedProjectBidders extends React.Component {
                       align="center"
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -581,8 +595,10 @@ class ConnectedProjectBidders extends React.Component {
                       align="center"
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
@@ -591,8 +607,10 @@ class ConnectedProjectBidders extends React.Component {
                       align="center"
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
-                        if (match.url.includes('g_cont'))
-                          this.props.history.push('/g_cont/contractor_detail');
+                        if (match.url.includes('gen-contractor'))
+                          this.props.history.push(
+                            '/gen-contractor/contractor_detail'
+                          );
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}

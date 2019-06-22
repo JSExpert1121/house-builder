@@ -1,20 +1,20 @@
-import React        from 'react';
-import {withRouter} from 'react-router-dom';
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import auth0Client  from '../../auth0/auth';
-import Table        from '@material-ui/core/Table';
-import TableBody    from '@material-ui/core/TableBody';
-import TableCell    from '@material-ui/core/TableCell';
-import TableHead    from '@material-ui/core/TableHead';
-import TableRow     from '@material-ui/core/TableRow';
-import Card         from '@material-ui/core/Card';
+import React          from 'react';
+import { withRouter } from 'react-router-dom';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import auth0Client    from '../../auth0/auth';
+import Table          from '@material-ui/core/Table';
+import TableBody      from '@material-ui/core/TableBody';
+import TableCell      from '@material-ui/core/TableCell';
+import TableHead      from '@material-ui/core/TableHead';
+import TableRow       from '@material-ui/core/TableRow';
+import Card           from '@material-ui/core/Card';
 
-import {Button, Checkbox, CircularProgress, Divider, FormControl, MenuItem, Radio, Select,} from '@material-ui/core';
-import TSnackbarContent                                                                     from '../SnackBarContent';
+import { Button, Checkbox, CircularProgress, Divider, FormControl, MenuItem, Radio, Select } from '@material-ui/core';
+import TSnackbarContent                                                                       from '../SnackBarContent';
 
-import {connect}        from 'react-redux';
-import {setUserProfile} from '../../actions';
+import { connect }        from 'react-redux';
+import { setUserProfile } from '../../actions';
 
 const styles = theme => ({
   root: {

@@ -1,18 +1,18 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
-import {History} from 'history';
-import {Theme, withStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import {Avatar, Box, Button, Card, CircularProgress} from '@material-ui/core';
+import React, { Component }                            from 'react';
+import { withRouter }                                  from 'react-router-dom';
+import { History }                                     from 'history';
+import { Theme, withStyles }                           from '@material-ui/core/styles';
+import TextField                                       from '@material-ui/core/TextField';
+import { Avatar, Box, Button, Card, CircularProgress } from '@material-ui/core';
 
 import auth0Client from '../../auth0/auth';
 
 import TSnackbarContent from '../../components/SnackBarContent';
-import axios from 'axios';
+import axios            from 'axios';
 
-import {connect} from 'react-redux';
-import {setUserProfile} from '../../actions';
-import {MaterialThemeHOC, UserProfile} from '../../types/global';
+import { connect }                       from 'react-redux';
+import { setUserProfile }                from '../../actions';
+import { MaterialThemeHOC, UserProfile } from '../../types/global';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -251,11 +251,14 @@ class ProfileEditView extends Component<
       phone: this.state.phone,
     };
 
-    await axios.post(process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id, {
-      email: userProfile.user_metadata.email,
-      updatedBy: userProfile.user_metadata.email,
-      address: addressData,
-    });
+    await axios.post(
+      process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id,
+      {
+        email: userProfile.user_metadata.email,
+        updatedBy: userProfile.user_metadata.email,
+        address: addressData,
+      }
+    );
 
     const new_prof = {
       user_metadata: {

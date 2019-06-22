@@ -1,21 +1,21 @@
-import React         from 'react';
-import {connect}     from 'react-redux';
-import {withRouter,} from 'react-router-dom';
+import React          from 'react';
+import { connect }    from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
-import CircularProgress     from '@material-ui/core/CircularProgress';
-import Box                  from '@material-ui/core/Box';
-import Table                from '@material-ui/core/Table';
-import TableHead            from '@material-ui/core/TableHead';
-import TableRow             from '@material-ui/core/TableRow';
-import TableBody            from '@material-ui/core/TableBody';
-import Typography           from '@material-ui/core/Typography';
-import Radio                from '@material-ui/core/Radio';
+import CircularProgress       from '@material-ui/core/CircularProgress';
+import Box                    from '@material-ui/core/Box';
+import Table                  from '@material-ui/core/Table';
+import TableHead              from '@material-ui/core/TableHead';
+import TableRow               from '@material-ui/core/TableRow';
+import TableBody              from '@material-ui/core/TableBody';
+import Typography             from '@material-ui/core/Typography';
+import Radio                  from '@material-ui/core/Radio';
 // customized components
-import CustomTableCell      from '../shared/CustomTableCell';
-import {getProposalDetails} from '../../actions/index';
+import CustomTableCell        from '../shared/CustomTableCell';
+import { getProposalDetails } from '../../actions/index';
 
 const styles = theme => ({
   root: {
@@ -444,7 +444,7 @@ class ProposalsCompare extends React.Component {
                             );
                           }
                         }
-                        return null
+                        return null;
                       })}
                     </TableRow>
                   </>

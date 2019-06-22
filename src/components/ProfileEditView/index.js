@@ -1,18 +1,18 @@
-import React, {Component} from 'react';
-import {withRouter}       from 'react-router-dom';
+import React, { Component } from 'react';
+import { withRouter }       from 'react-router-dom';
 
-import PropTypes                                from 'prop-types';
-import {withStyles}                             from '@material-ui/core/styles';
-import TextField                                from '@material-ui/core/TextField';
-import {Avatar, Button, Card, CircularProgress} from '@material-ui/core';
+import PropTypes                                  from 'prop-types';
+import { withStyles }                             from '@material-ui/core/styles';
+import TextField                                  from '@material-ui/core/TextField';
+import { Avatar, Button, Card, CircularProgress } from '@material-ui/core';
 
 import auth0Client from '../../auth0/auth';
 
 import TSnackbarContent from '../SnackBarContent';
 import axios            from 'axios';
 
-import {connect}        from 'react-redux';
-import {setUserProfile} from '../../actions';
+import { connect }        from 'react-redux';
+import { setUserProfile } from '../../actions';
 
 const styles = theme => ({
   root: {
@@ -262,11 +262,14 @@ class connectedProfileView extends Component {
       phone: this.state.phone,
     };
 
-    await axios.post(process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id, {
-      email: userProfile.user_metadata.email,
-      updatedBy: userProfile.user_metadata.email,
-      address: addressData,
-    });
+    await axios.post(
+      process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id,
+      {
+        email: userProfile.user_metadata.email,
+        updatedBy: userProfile.user_metadata.email,
+        address: addressData,
+      }
+    );
 
     /*let userRole = [];
 		if (this.state.isGenChecked)

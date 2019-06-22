@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {Theme, withStyles} from '@material-ui/core/styles';
-import {Button, CircularProgress, Link, Paper, Snackbar, TextField,} from '@material-ui/core';
-import {connect} from 'react-redux';
-import {deleteOption, editOption, selectCategory, selectOption, selectTemplate,} from '../../../actions/tem-actions';
-import SplitPane from 'react-split-pane';
-import SimpleMDE from 'react-simplemde-editor';
+import React, { Component }                                                        from 'react';
+import { Theme, withStyles }                                                       from '@material-ui/core/styles';
+import { Button, CircularProgress, Link, Paper, Snackbar, TextField }             from '@material-ui/core';
+import { connect }                                                                 from 'react-redux';
+import { deleteOption, editOption, selectCategory, selectOption, selectTemplate } from '../../../actions/tem-actions';
+import SplitPane                                                                   from 'react-split-pane';
+import SimpleMDE                                                                   from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import {MaterialThemeHOC, UserProfile} from '../../../types/global';
-import {History} from 'history';
+import { MaterialThemeHOC, UserProfile }                                           from '../../../types/global';
+import { History }                                                                 from 'history';
 
 const styles = (theme: Theme) => ({
   descTag: {

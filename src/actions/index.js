@@ -113,12 +113,15 @@ export function getProjectData(id) {
 
 export function getProjectBiddersData(id, page, size) {
   return function(dispatch) {
-    return Axios.get(process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/invites', {
-      params: {
-        page: page,
-        size: size,
-      },
-    })
+    return Axios.get(
+      process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/invites',
+      {
+        params: {
+          page: page,
+          size: size,
+        },
+      }
+    )
       .then(response => {
         dispatch({ type: PROJECT_BIDDERS_LOADED, payload: response.data });
       })
@@ -190,7 +193,10 @@ export function addFileToPropMessage(msg_id, files, cb) {
 
     console.log('MESSAGE_ID', msg_id);
     return Axios.post(
-      process.env.REACT_APP_PROJECT_API + 'messages/' + msg_id + '/files/upload/multiple',
+      process.env.REACT_APP_PROJECT_API +
+        'messages/' +
+        msg_id +
+        '/files/upload/multiple',
       formData,
       {
         headers: {
@@ -210,16 +216,19 @@ export function addFileToPropMessage(msg_id, files, cb) {
 
 export function searchFilter(name, city, specialties) {
   return function(dispatch) {
-    return Axios.post(process.env.REACT_APP_PROJECT_API + 'contractors/search', {
-      data: {
-        name: name,
-        city: city,
-        specialties: specialties,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    return Axios.post(
+      process.env.REACT_APP_PROJECT_API + 'contractors/search',
+      {
+        data: {
+          name: name,
+          city: city,
+          specialties: specialties,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
       .then(response => {
         dispatch({ type: SEARCH_FILTER_LOADED, payload: response.data });
       })
@@ -230,7 +239,11 @@ export function searchFilter(name, city, specialties) {
 export function inviteContractor(prop_id, subId, cb) {
   return function(dispatch) {
     return Axios.post(
-      process.env.REACT_APP_PROJECT_API + 'projects/' + prop_id + '/invite/' + subId
+      process.env.REACT_APP_PROJECT_API +
+        'projects/' +
+        prop_id +
+        '/invite/' +
+        subId
     )
       .then(res => {
         cb(res.data);

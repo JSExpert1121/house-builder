@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import PropTypes          from 'prop-types';
-import {connect}          from 'react-redux';
-import {withRouter}       from 'react-router-dom';
+import React, { Component } from 'react';
+import PropTypes            from 'prop-types';
+import { connect }          from 'react-redux';
+import { withRouter }       from 'react-router-dom';
 
-import {LoadSpec, UpdateSpec} from '../../actions/spec-actions';
+import { LoadSpec, UpdateSpec } from '../../actions/spec-actions';
 
 import {
   Button,

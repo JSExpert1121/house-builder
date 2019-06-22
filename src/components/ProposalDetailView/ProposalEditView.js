@@ -9,7 +9,7 @@ import Grid         from '@material-ui/core/Grid';
 import Box          from '@material-ui/core/Box';
 import Paper        from '@material-ui/core/Paper';
 
-import {withStyles}     from '@material-ui/core/styles';
+import { withStyles }   from '@material-ui/core/styles';
 import CategoryEditView from './CategoryEdit';
 
 import SplitPane from 'react-split-pane';

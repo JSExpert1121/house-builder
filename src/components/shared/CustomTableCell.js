@@ -1,5 +1,5 @@
-import {withStyles} from '@material-ui/core/styles';
-import {TableCell}  from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { TableCell }  from '@material-ui/core';
 
 const CustomTableCell = withStyles(theme => ({
   head: {

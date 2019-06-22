@@ -1,7 +1,7 @@
-import React, {Component}                               from 'react';
-import {connect}                                        from 'react-redux';
-import {withRouter}                                     from 'react-router-dom';
-import PropTypes                                        from 'prop-types';
+import React, { Component }                               from 'react';
+import { connect }                                        from 'react-redux';
+import { withRouter }                                     from 'react-router-dom';
+import PropTypes                                          from 'prop-types';
 import {
   Button,
   CircularProgress,
@@ -15,9 +15,9 @@ import {
   TablePagination,
   TextField,
   withStyles,
-}                                                       from '@material-ui/core';
-import {CreateSpec, DeleteSpec, LoadSpecs, SelectSpec,} from '../../actions/spec-actions';
-import SpecTableView                                    from './SpecTableView';
+}                                                         from '@material-ui/core';
+import { CreateSpec, DeleteSpec, LoadSpecs, SelectSpec } from '../../actions/spec-actions';
+import SpecTableView                                      from './SpecTableView';
 
 const styles = theme => ({
   root: {

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import PropTypes    from 'prop-types';
-import Card         from '@material-ui/core/Card';
-import {withStyles} from '@material-ui/core/styles';
+import PropTypes      from 'prop-types';
+import Card           from '@material-ui/core/Card';
+import { withStyles } from '@material-ui/core/styles';
 
-import {Line}         from 'react-chartjs-2';
-import {MDBContainer} from 'mdbreact';
+import { Line }         from 'react-chartjs-2';
+import { MDBContainer } from 'mdbreact';
 
 const styles = theme => ({
   root: {

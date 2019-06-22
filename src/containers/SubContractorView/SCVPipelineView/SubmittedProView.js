@@ -1,17 +1,24 @@
-import React        from 'react';
-import {withRouter} from 'react-router-dom';
-import {connect}    from 'react-redux';
+import React          from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect }    from 'react-redux';
 
-import PropTypes                                                                               from 'prop-types';
-import {withStyles}                                                                            from '@material-ui/core/styles';
-import DeleteIcon
-                                                                                               from '@material-ui/icons/Delete';
-import {CircularProgress, IconButton, Table, TableBody, TableHead, TablePagination, TableRow,} from '@material-ui/core';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import DeleteIcon     from '@material-ui/icons/Delete';
+import {
+  CircularProgress,
+  IconButton,
+  Table,
+  TableBody,
+  TableHead,
+  TablePagination,
+  TableRow,
+}                     from '@material-ui/core';
 
-import removeMd                       from 'remove-markdown';
-import {deleteProposal, getProposals} from '../../../actions';
-import CustomSnackbar                 from '../../../components/shared/CustomSnackbar';
-import CustomTableCell                from '../../../components/shared/CustomTableCell';
+import removeMd                         from 'remove-markdown';
+import { deleteProposal, getProposals } from '../../../actions';
+import CustomSnackbar                   from '../../../components/shared/CustomSnackbar';
+import CustomTableCell                  from '../../../components/shared/CustomTableCell';
 
 const styles = theme => ({
   root: {

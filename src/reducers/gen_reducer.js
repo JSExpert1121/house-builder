@@ -1,4 +1,4 @@
-import {ALL_PROJECT_LOADED, PROJECT_LOADED, TEMPLATES_LOADED,} from '../constants/gen-action-types';
+import { ALL_PROJECT_LOADED, PROJECT_LOADED, TEMPLATES_LOADED } from '../constants/gen-action-types';
 
 const initialState = {
   messages: [],

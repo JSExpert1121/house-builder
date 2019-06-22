@@ -1,7 +1,7 @@
 import React     from 'react';
 import PropTypes from 'prop-types';
 
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import OptionTableView from './OptionView';
 import OptionEdit      from './OptionEdit';
@@ -37,7 +37,8 @@ class CategoryEdit extends React.Component {
     const options = this.props.category.options;
     let id = 0;
     while (options.length > 0 && 1) {
-      if (options.some(opt => this.compareOpt(opt, id))) { // eslint-disable-line no-loop-func
+      // eslint-disable-line no-loop-func
+      if (options.some(opt => this.compareOpt(opt, id))) {
         id++;
         continue;
       }

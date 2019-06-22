@@ -1,18 +1,18 @@
-import React        from 'react';
-import {connect}    from 'react-redux';
-import TextField    from '@material-ui/core/TextField';
-import Button       from '@material-ui/core/Button';
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import Table        from '@material-ui/core/Table';
-import TableBody    from '@material-ui/core/TableBody';
-import TableCell    from '@material-ui/core/TableCell';
-import TableHead    from '@material-ui/core/TableHead';
-import TableRow     from '@material-ui/core/TableRow';
+import React          from 'react';
+import { connect }    from 'react-redux';
+import TextField      from '@material-ui/core/TextField';
+import Button         from '@material-ui/core/Button';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Table          from '@material-ui/core/Table';
+import TableBody      from '@material-ui/core/TableBody';
+import TableCell      from '@material-ui/core/TableCell';
+import TableHead      from '@material-ui/core/TableHead';
+import TableRow       from '@material-ui/core/TableRow';
 
-import {CircularProgress, Snackbar}                             from '@material-ui/core';
-import {DropzoneDialog}                                         from 'material-ui-dropzone';
-import {approveContractor, rejectContractor, updateContractor,} from '../../../actions/cont-actions';
+import { CircularProgress, Snackbar }                             from '@material-ui/core';
+import { DropzoneDialog }                                         from 'material-ui-dropzone';
+import { approveContractor, rejectContractor, updateContractor } from '../../../actions/cont-actions';
 
 const styles = theme => ({
   root: {

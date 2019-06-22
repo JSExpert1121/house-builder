@@ -1,14 +1,14 @@
-import React            from 'react';
-import {withRouter}     from 'react-router-dom';
+import React              from 'react';
+import { withRouter }     from 'react-router-dom';
 // Redux
-import {connect}        from 'react-redux';
-import {getAllProjects} from '../../../actions/gen-actions';
+import { connect }        from 'react-redux';
+import { getAllProjects } from '../../../actions/gen-actions';
 
-import PropTypes                                                                   from 'prop-types';
+import PropTypes                                                                     from 'prop-types';
 // material ui
-import {withStyles}                                                                from '@material-ui/core/styles';
-import Paper                                                                       from '@material-ui/core/Paper';
-import {CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow,} from '@material-ui/core';
+import { withStyles }                                                                from '@material-ui/core/styles';
+import Paper                                                                         from '@material-ui/core/Paper';
+import { CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow } from '@material-ui/core';
 
 import CustomTableCell from '../../../components/shared/CustomTableCell';
 

@@ -1,7 +1,7 @@
-import React                                                              from 'react';
-import {connect}                                                          from 'react-redux';
-import PropTypes                                                          from 'prop-types';
-import {withStyles}                                                       from '@material-ui/core/styles';
+import React                                                                from 'react';
+import { connect }                                                          from 'react-redux';
+import PropTypes                                                            from 'prop-types';
+import { withStyles }                                                       from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -16,17 +16,17 @@ import {
   TablePagination,
   TableRow,
   TextField,
-}                                                                         from '@material-ui/core';
-import NoteAddIcon                                                        from '@material-ui/icons/NoteAdd';
-import DeleteIcon                                                         from '@material-ui/icons/Delete';
-import Dialog                                                             from '@material-ui/core/Dialog';
-import DialogActions                                                      from '@material-ui/core/DialogActions';
-import DialogContent                                                      from '@material-ui/core/DialogContent';
-import DialogContentText                                                  from '@material-ui/core/DialogContentText';
-import DialogTitle                                                        from '@material-ui/core/DialogTitle';
-import Fab                                                                from '@material-ui/core/Fab';
-import AddIcon                                                            from '@material-ui/icons/Add';
-import {addSpecialty, deleteSpecialty, getSpecialties, updateContractor,} from '../../../actions/cont-actions';
+}                                                                           from '@material-ui/core';
+import NoteAddIcon                                                          from '@material-ui/icons/NoteAdd';
+import DeleteIcon                                                           from '@material-ui/icons/Delete';
+import Dialog                                                               from '@material-ui/core/Dialog';
+import DialogActions                                                        from '@material-ui/core/DialogActions';
+import DialogContent                                                        from '@material-ui/core/DialogContent';
+import DialogContentText                                                    from '@material-ui/core/DialogContentText';
+import DialogTitle                                                          from '@material-ui/core/DialogTitle';
+import Fab                                                                  from '@material-ui/core/Fab';
+import AddIcon                                                              from '@material-ui/icons/Add';
+import { addSpecialty, deleteSpecialty, getSpecialties, updateContractor } from '../../../actions/cont-actions';
 
 const styles = theme => ({
   root: {

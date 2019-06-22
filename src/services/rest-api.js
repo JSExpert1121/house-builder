@@ -64,7 +64,7 @@ export default class RestAPI {
       url,
       ...rest,
     })
-        .then((resp) => resp)
-        .catch(this.catchError);
+      .then(resp => resp)
+      .catch(this.catchError);
   }
 }

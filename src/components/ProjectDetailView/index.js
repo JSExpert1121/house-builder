@@ -1,15 +1,15 @@
-import React                                from 'react';
-import {Link, Redirect, Switch, withRouter} from 'react-router-dom';
-import SecuredRoute                         from '../../routers/SecuredRoute';
+import React                                  from 'react';
+import { Link, Redirect, Switch, withRouter } from 'react-router-dom';
+import SecuredRoute                           from '../../routers/SecuredRoute';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-import PropTypes    from 'prop-types';
-import Paper        from '@material-ui/core/Paper';
-import {withStyles} from '@material-ui/core/styles';
-import Tabs         from '@material-ui/core/Tabs';
-import Tab          from '@material-ui/core/Tab';
-import NoSsr        from '@material-ui/core/NoSsr';
+import PropTypes      from 'prop-types';
+import Paper          from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Tabs           from '@material-ui/core/Tabs';
+import Tab            from '@material-ui/core/Tab';
+import NoSsr          from '@material-ui/core/NoSsr';
 
 import ProjectOverView  from './ProjectOverView';
 import ProjectBidders   from './ProjectBidders';
@@ -18,9 +18,9 @@ import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
 
-import {getProjectData} from '../../actions';
-import {IconButton}     from '@material-ui/core';
-import ArrowBackIcon    from '@material-ui/icons/ArrowBack';
+import { getProjectData } from '../../actions';
+import { IconButton }     from '@material-ui/core';
+import ArrowBackIcon      from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
   root: {
@@ -57,14 +57,15 @@ class ConnectedProjectDetailView extends React.Component {
 
   handleBack = () => {
     const { match } = this.props;
-    if (match.url.includes('g_cont')) this.props.history.push('/g_cont');
+    if (match.url.includes('gen-contractor'))
+      this.props.history.push('/gen-contractor');
     if (match.url.includes('s_cont')) this.props.history.push('/s_cont');
     else if (match.url.includes('a_pros')) this.props.history.push('/a_pros');
   };
 
   render() {
     const { classes, match, project, location } = this.props;
-    const owner = match.url.includes('/g_cont');
+    const owner = match.url.includes('/gen-contractor');
 
     const tabNo = [
       match.url + '/overview',

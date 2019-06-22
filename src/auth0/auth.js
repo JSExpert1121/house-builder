@@ -27,7 +27,9 @@ class Auth {
       };
 
       axios
-        .get(process.env.REACT_APP_AUTH_AUDIENCE + 'users/' + user_id, { headers })
+        .get(process.env.REACT_APP_AUTH_AUDIENCE + 'users/' + user_id, {
+          headers,
+        })
         .then(response => {
           this.userProfile = response.data;
           cb(this.userProfile);

@@ -1,4 +1,4 @@
-import {ALL_PROJECT_LOADED, TEMPLATES_LOADED,} from '../constants/gen-action-types';
+import { ALL_PROJECT_LOADED, TEMPLATES_LOADED } from '../constants/gen-action-types';
 
 import ProjApi from '../api/project';
 import restAPI from '../services';
@@ -21,7 +21,7 @@ export function getProjectsByGenId(id, page, rowSize) {
         },
       })
       .then(response => {
-        dispatch({ type: 'PROJECT_LOADED', payload: response.data })
+        dispatch({ type: 'PROJECT_LOADED', payload: response.data });
       });
   };
 }

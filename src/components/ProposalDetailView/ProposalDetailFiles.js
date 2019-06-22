@@ -1,13 +1,13 @@
-import React     from 'react';
-import {connect} from 'react-redux';
+import React       from 'react';
+import { connect } from 'react-redux';
 
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/styles';
-import Table        from '@material-ui/core/Table';
-import TableBody    from '@material-ui/core/TableBody';
-import TableHead    from '@material-ui/core/TableHead';
-import TableRow     from '@material-ui/core/TableRow';
-import IconButton   from '@material-ui/core/IconButton';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/styles';
+import Table          from '@material-ui/core/Table';
+import TableBody      from '@material-ui/core/TableBody';
+import TableHead      from '@material-ui/core/TableHead';
+import TableRow       from '@material-ui/core/TableRow';
+import IconButton     from '@material-ui/core/IconButton';
 
 import DeleteIcon  from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
@@ -15,8 +15,8 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import CustomTableCell     from '../shared/CustomTableCell';
 import CustomizedSnackbars from '../shared/CustomSnackbar';
 
-import {DropzoneDialog}                                              from 'material-ui-dropzone';
-import {addFilesToProposal, deleteProposalFile, getProposalDetails,} from '../../actions/index';
+import { DropzoneDialog }                                              from 'material-ui-dropzone';
+import { addFilesToProposal, deleteProposalFile, getProposalDetails } from '../../actions/index';
 
 const styles = theme => ({
   root: {

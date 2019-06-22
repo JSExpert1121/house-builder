@@ -1,4 +1,4 @@
-import { Theme, createStyles } from '@material-ui/core/styles';
+import { createStyles, Theme } from '@material-ui/core/styles';
 
 export default (theme: Theme) =>
   createStyles({
@@ -20,5 +20,8 @@ export default (theme: Theme) =>
     selectedStyle: {
       borderLeft: '5px solid ' + theme.palette.primary.light,
       color: theme.palette.primary.light,
+    },
+    nested: {
+      paddingLeft: theme.spacing(4),
     },
   });

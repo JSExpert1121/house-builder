@@ -1,13 +1,12 @@
-import React     from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
 
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import Card         from '@material-ui/core/Card';
-import Table        from '@material-ui/core/Table';
-import TableBody    from '@material-ui/core/TableBody';
-import TableHead    from '@material-ui/core/TableHead';
-import TableRow     from '@material-ui/core/TableRow';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Card           from '@material-ui/core/Card';
+import Table          from '@material-ui/core/Table';
+import TableBody      from '@material-ui/core/TableBody';
+import TableHead      from '@material-ui/core/TableHead';
+import TableRow       from '@material-ui/core/TableRow';
 
 import CustomTableCell from '../../components/shared/CustomTableCell';
 
@@ -21,15 +20,7 @@ const styles = theme => ({
   },
 });
 
-class ConnectedSCVReportsView extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
-  componentDidMount() {}
-
+class SCVReportsView extends React.Component {
   render() {
     const { classes } = this.props;
 
@@ -59,19 +50,6 @@ class ConnectedSCVReportsView extends React.Component {
     );
   }
 }
-
-const mapStateToProps = state => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
-const SCVReportsView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedSCVReportsView);
 
 SCVReportsView.propTypes = {
   classes: PropTypes.object.isRequired,

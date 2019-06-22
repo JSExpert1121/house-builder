@@ -1,15 +1,15 @@
-import React from 'react';
+import React          from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import NoSsr from '@material-ui/core/NoSsr';
-import SecuredRoute from '../../../routers/SecuredRoute';
+import Paper                      from '@material-ui/core/Paper';
+import Tabs                       from '@material-ui/core/Tabs';
+import Tab                        from '@material-ui/core/Tab';
+import NoSsr                      from '@material-ui/core/NoSsr';
+import SecuredRoute               from '../../../routers/SecuredRoute';
 import { Link, Redirect, Switch } from 'react-router-dom';
-import SubmittedProView from './SubmittedProView';
-import WonProView from './WonProView';
-import InvitedProView from './InvitedProView';
+import SubmittedProView           from './SubmittedProView';
+import WonProView                 from './WonProView';
+import InvitedProView             from './InvitedProView';
 
 const styles = theme => ({
   root: {

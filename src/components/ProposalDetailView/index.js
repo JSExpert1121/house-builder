@@ -1,6 +1,6 @@
-import React        from 'react';
-import {connect}    from 'react-redux';
-import {withRouter} from 'react-router-dom';
+import React          from 'react';
+import { connect }    from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes        from 'prop-types';
 import Paper            from '@material-ui/core/Paper';
@@ -11,8 +11,8 @@ import NoSsr            from '@material-ui/core/NoSsr';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton       from '@material-ui/core/IconButton';
 
-import {withStyles}  from '@material-ui/core/styles';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { withStyles } from '@material-ui/core/styles';
+import ArrowBackIcon  from '@material-ui/icons/ArrowBack';
 
 import ProposalDetailFiles    from './ProposalDetailFiles';
 import ProposalDetailOverview from './ProposalDetailOverview';
@@ -28,8 +28,8 @@ import {
   submitProposal,
   updateOption,
   updateProposal,
-}                     from '../../actions/index';
-import {awardProject} from '../../actions/gen-actions';
+}                       from '../../actions/index';
+import { awardProject } from '../../actions/gen-actions';
 
 const styles = theme => ({
   root: {
@@ -183,9 +183,11 @@ class ConnectedProposalDetailView extends React.Component {
 
   handleBack = () => {
     const { match, proposal, project } = this.props;
-    if (match.url.includes('g_cont'))
+    if (match.url.includes('gen-contractor'))
       this.props.history.push(
-        '/g_cont/project_detail/' + proposal.proposal.project.id + '/proposals'
+        '/gen-contractor/project_detail/' +
+          proposal.proposal.project.id +
+          '/proposals'
       );
     else if (match.url.includes('s_cont'))
       this.props.history.push(
@@ -334,8 +336,8 @@ class ConnectedProposalDetailView extends React.Component {
       await this.props.deleteProposal(id);
       this.setState({ busy: false });
       this.handleBack();
-      // if (match.url.includes("g_cont"))
-      // 	this.props.history.push("/g_cont/project_detail/" + proposal.proposal.project.id + "/proposals");
+      // if (match.url.includes("gen-contractor"))
+      // 	this.props.history.push("/gen-contractor/project_detail/" + proposal.proposal.project.id + "/proposals");
       // else if (match.url.includes("s_cont"))
       // 	this.props.history.push('/s_cont/pipeline/' + proposal.proposal.status.toLowerCase());
       // else if (match.url.includes("a_pros"))
@@ -491,7 +493,7 @@ class ConnectedProposalDetailView extends React.Component {
                 <Tab label="Templates" />
                 <Tab label="Files" />
                 {match.params.id !== '-1' &&
-                  (match.url.includes('/g_cont') ||
+                  (match.url.includes('/gen-contractor') ||
                     (match.url.includes('/s_cont') &&
                       (status === 'SUBMITTED' || status === 'AWARDED'))) && (
                     <Tab label="Messages" />

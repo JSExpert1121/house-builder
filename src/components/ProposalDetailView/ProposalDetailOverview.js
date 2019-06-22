@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {withRouter}       from 'react-router-dom';
-import {connect}          from 'react-redux';
-import PropTypes          from 'prop-types';
+import React, { Component } from 'react';
+import { withRouter }       from 'react-router-dom';
+import { connect }          from 'react-redux';
+import PropTypes            from 'prop-types';
 
 import Paper          from '@material-ui/core/Paper';
 import TextField      from '@material-ui/core/TextField';
@@ -14,12 +14,12 @@ import TableBody      from '@material-ui/core/TableBody';
 import Box            from '@material-ui/core/Box';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-import {List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
-import {withStyles}                                 from '@material-ui/core/styles';
-import clsx                                         from 'clsx';
-import FiberIcon                                    from '@material-ui/icons/FiberManualRecord';
-import {deleteProposal, getProposalData}            from '../../actions';
-import {awardProject}                               from '../../actions/gen-actions';
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { withStyles }                                 from '@material-ui/core/styles';
+import clsx                                           from 'clsx';
+import FiberIcon                                      from '@material-ui/icons/FiberManualRecord';
+import { deleteProposal, getProposalData }            from '../../actions';
+import { awardProject }                               from '../../actions/gen-actions';
 
 import ProjectView       from './ProjectView';
 import SubContractorView from '../Contractor/SubContractor';
@@ -176,7 +176,7 @@ class ConnectedProposalDetailOverview extends Component {
       (match.params.id === '-1' && this.props.proposal)
         ? 'Update Proposal'
         : 'Submit Proposal';
-    const isGen = match.url.includes('/g_cont');
+    const isGen = match.url.includes('/gen-contractor');
     const style_prop_title = {
       fontWeight: '600',
       fontSize: '20px',
@@ -316,7 +316,7 @@ class ConnectedProposalDetailOverview extends Component {
               Delete Proposal
             </Button>
           )}
-          {match.url.includes('/g_cont') && (
+          {match.url.includes('/gen-contractor') && (
             <Button
               disabled={this.state.isSaving || proposal.status === 'AWARDED'}
               className={classes.submitBtn}

@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {withStyles} from '@material-ui/core/styles';
+import React, { Component }                                               from 'react';
+import { withRouter }                                                     from 'react-router-dom';
+import { connect }                                                        from 'react-redux';
+import { withStyles }                                                     from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -15,21 +15,21 @@ import {
   TablePagination,
   TableRow,
   TextField,
-} from '@material-ui/core';
-import {History} from 'history';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import SimpleMDE from 'react-simplemde-editor';
+}                                                                         from '@material-ui/core';
+import { History }                                                        from 'history';
+import NoteAddIcon                                                        from '@material-ui/icons/NoteAdd';
+import DeleteIcon                                                         from '@material-ui/icons/Delete';
+import Dialog                                                             from '@material-ui/core/Dialog';
+import DialogActions                                                      from '@material-ui/core/DialogActions';
+import DialogContent                                                      from '@material-ui/core/DialogContent';
+import DialogContentText                                                  from '@material-ui/core/DialogContentText';
+import DialogTitle                                                        from '@material-ui/core/DialogTitle';
+import SimpleMDE                                                          from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 // actions
-import removeMd from 'remove-markdown';
-import {createTemplate, deleteTemplate, getTemplatesO, selectTemplate,} from '../../../actions/tem-actions';
-import {MaterialThemeHOC, UserProfile} from '../../../types/global';
+import removeMd                                                           from 'remove-markdown';
+import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from '../../../actions/tem-actions';
+import { MaterialThemeHOC, UserProfile }                                  from '../../../types/global';
 
 const styles = theme => ({
   root: {

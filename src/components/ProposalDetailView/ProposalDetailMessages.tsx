@@ -1,22 +1,22 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import {match} from 'react-router-dom';
-import {withStyles} from '@material-ui/styles';
-import Card from '@material-ui/core/Card';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
+import React          from 'react';
+import { connect }    from 'react-redux';
+import { match }      from 'react-router-dom';
+import { withStyles } from '@material-ui/styles';
+import Card           from '@material-ui/core/Card';
+import ListItem       from '@material-ui/core/ListItem';
+import Divider        from '@material-ui/core/Divider';
+import ListItemText   from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import LinkIcon from '@material-ui/icons/Link';
-import LinkOffIcon from '@material-ui/icons/LinkOff';
+import Avatar         from '@material-ui/core/Avatar';
+import LinkIcon       from '@material-ui/icons/Link';
+import LinkOffIcon    from '@material-ui/icons/LinkOff';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import {Button, CircularProgress, IconButton, ListItemSecondaryAction, TextField, Theme,} from '@material-ui/core';
-import {addFileToPropMessage, addMessageToProposal, getProposalMessages,} from '../../actions';
-import {DropzoneDialog} from 'material-ui-dropzone';
-import {UserProfile} from '../../types/global';
-import {FlexDirectionProperty, PositionProperty} from 'csstype';
+import { Button, CircularProgress, IconButton, ListItemSecondaryAction, TextField, Theme } from '@material-ui/core';
+import { addFileToPropMessage, addMessageToProposal, getProposalMessages }                 from '../../actions';
+import { DropzoneDialog }                                                                   from 'material-ui-dropzone';
+import { UserProfile }                                                                      from '../../types/global';
+import { FlexDirectionProperty, PositionProperty }                                          from 'csstype';
 
 const styles = (theme: Theme) => ({
   root: {

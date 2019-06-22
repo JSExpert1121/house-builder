@@ -1,7 +1,7 @@
-import React        from 'react';
-import {connect}    from 'react-redux';
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import React          from 'react';
+import { connect }    from 'react-redux';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
 import CircularProgress  from '@material-ui/core/CircularProgress';
 import Table             from '@material-ui/core/Table';
@@ -31,8 +31,8 @@ import AddIcon     from '@material-ui/icons/Add';
 
 import removeMd from 'remove-markdown';
 
-import {addTemplate, deleteTemplate, getTemplates} from '../../actions/gen-actions';
-import {getProjectData}                            from '../../actions';
+import { addTemplate, deleteTemplate, getTemplates } from '../../actions/gen-actions';
+import { getProjectData }                             from '../../actions';
 
 const styles = theme => ({
   root: {
@@ -148,7 +148,7 @@ class ConnectedProjectTemplateView extends React.Component {
   render() {
     const { classes, templates, project, match } = this.props;
     const { template } = this.state;
-    const editable = match.url.includes('/g_cont');
+    const editable = match.url.includes('/gen-contractor');
 
     if (project === null) {
       return <CircularProgress className={classes.waitingSpin} />;

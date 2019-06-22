@@ -1,31 +1,31 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React       from 'react';
+import { connect } from 'react-redux';
 
-import {Theme, withStyles} from '@material-ui/core/styles';
+import { Theme, withStyles } from '@material-ui/core/styles';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
+import Table             from '@material-ui/core/Table';
+import TableBody         from '@material-ui/core/TableBody';
+import TableHead         from '@material-ui/core/TableHead';
+import TableRow          from '@material-ui/core/TableRow';
+import CircularProgress  from '@material-ui/core/CircularProgress';
+import IconButton        from '@material-ui/core/IconButton';
+import Dialog            from '@material-ui/core/Dialog';
+import DialogActions     from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+import DialogTitle       from '@material-ui/core/DialogTitle';
+import DialogContent     from '@material-ui/core/DialogContent';
+import Button            from '@material-ui/core/Button';
+import Paper             from '@material-ui/core/Paper';
 
-import {DropzoneDialog} from 'material-ui-dropzone';
+import { DropzoneDialog } from 'material-ui-dropzone';
 
 import CustomizedSnackbars from '../../components/shared/CustomSnackbar';
-import DeleteIcon from '@material-ui/icons/Delete';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import CustomTableCell from '../../components/shared/CustomTableCell';
+import DeleteIcon          from '@material-ui/icons/Delete';
+import NoteAddIcon         from '@material-ui/icons/NoteAdd';
+import CustomTableCell     from '../../components/shared/CustomTableCell';
 
-import {getContractorDetailById, removeFile, uploadFiles,} from '../../actions/cont-actions';
-import {File, MaterialThemeHOC, UserProfile} from '../../types/global';
+import { getContractorDetailById, removeFile, uploadFiles } from '../../actions/cont-actions';
+import { File, MaterialThemeHOC, UserProfile }               from '../../types/global';
 
 const styles = (theme: Theme) => ({
   root: {

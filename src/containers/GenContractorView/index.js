@@ -1,23 +1,23 @@
-import React                                from 'react';
-import {Link, Redirect, Switch, withRouter} from 'react-router-dom';
-import SecuredRoute                         from '../../routers/SecuredRoute';
+import React                                  from 'react';
+import { Link, Redirect, Switch, withRouter } from 'react-router-dom';
+import SecuredRoute                           from '../../routers/SecuredRoute';
 // Redux
-import {connect}                            from 'react-redux';
+import { connect }                            from 'react-redux';
 // material ui
-import PropTypes                            from 'prop-types';
-import {withStyles}                         from '@material-ui/core/styles';
-import AppBar                               from '@material-ui/core/AppBar';
-import Tabs                                 from '@material-ui/core/Tabs';
-import NoSsr                                from '@material-ui/core/NoSsr';
-import Tab                                  from '@material-ui/core/Tab';
-import AppsIcon                             from '@material-ui/icons/Apps';
-import PlaylistAddIcon                      from '@material-ui/icons/PlaylistAdd';
+import PropTypes                              from 'prop-types';
+import { withStyles }                         from '@material-ui/core/styles';
+import AppBar                                 from '@material-ui/core/AppBar';
+import Tabs                                   from '@material-ui/core/Tabs';
+import NoSsr                                  from '@material-ui/core/NoSsr';
+import Tab                                    from '@material-ui/core/Tab';
+import AppsIcon                               from '@material-ui/icons/Apps';
+import PlaylistAddIcon                        from '@material-ui/icons/PlaylistAdd';
 // local components
-import ContractorDetailView                 from './ContractorDetailView';
-import CurrentProjectView                   from './CurrentProjectView';
-import AddProjectView                       from './AddProjectView';
-import ProjectDetailView                    from '../../components/ProjectDetailView';
-import ProposalDetailView                   from '../../components/ProposalDetailView';
+import ContractorDetailView                   from './ContractorDetailView';
+import CurrentProjectView                     from './CurrentProjectView';
+import AddProjectView                         from './AddProjectView';
+import ProjectDetailView                      from '../../components/ProjectDetailView';
+import ProposalDetailView                     from '../../components/ProposalDetailView';
 
 const styles = theme => ({
   root: {
@@ -40,9 +40,9 @@ class ConnectedGenContView extends React.Component {
     const { classes, userProfile, match, location } = this.props;
 
     const tabNo = {
-      '/g_cont': 0,
-      '/g_cont/current_pros': 0,
-      '/g_cont/add_project': 1,
+      '/gen-contractor': 0,
+      '/gen-contractor/current_pros': 0,
+      '/gen-contractor/add_project': 1,
     };
 
     let curTabPos = tabNo[location.pathname];

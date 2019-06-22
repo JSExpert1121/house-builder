@@ -1,10 +1,10 @@
-import React        from 'react';
-import {withRouter} from 'react-router-dom';
-import {connect}    from 'react-redux';
+import React          from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect }    from 'react-redux';
 
-import PropTypes    from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import DeleteIcon   from '@material-ui/icons/Delete';
+import PropTypes      from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import DeleteIcon     from '@material-ui/icons/Delete';
 import {
   CircularProgress,
   IconButton,
@@ -15,11 +15,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-}                   from '@material-ui/core';
+}                     from '@material-ui/core';
 
-import removeMd         from 'remove-markdown';
-import {getProposals}   from '../../../actions/sub-actions';
-import {deleteProposal} from '../../../actions';
+import removeMd           from 'remove-markdown';
+import { getProposals }   from '../../../actions/sub-actions';
+import { deleteProposal } from '../../../actions';
 
 const styles = theme => ({
   root: {

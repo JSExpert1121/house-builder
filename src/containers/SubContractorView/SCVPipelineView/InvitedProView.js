@@ -1,14 +1,14 @@
-import React                              from 'react';
-import {withRouter}                       from 'react-router-dom';
+import React                                from 'react';
+import { withRouter }                       from 'react-router-dom';
 // Redux
-import {connect}                          from 'react-redux';
-import {getInvitedProjectsByGenId}        from '../../../actions/sub-actions';
-import {deleteProject, setCurrentProject} from '../../../actions';
+import { connect }                          from 'react-redux';
+import { getInvitedProjectsByGenId }        from '../../../actions/sub-actions';
+import { deleteProject, setCurrentProject } from '../../../actions';
 
-import PropTypes    from 'prop-types';
+import PropTypes      from 'prop-types';
 // material ui
-import {withStyles} from '@material-ui/core/styles';
-import Paper        from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Paper          from '@material-ui/core/Paper';
 import {
   Button,
   CircularProgress,
@@ -25,8 +25,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-}                   from '@material-ui/core';
-import DeleteIcon   from '@material-ui/icons/Delete';
+}                     from '@material-ui/core';
+import DeleteIcon     from '@material-ui/icons/Delete';
 
 const styles = theme => ({
   root: {

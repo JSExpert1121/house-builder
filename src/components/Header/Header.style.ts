@@ -1,21 +1,47 @@
-import { Theme, createStyles } from '@material-ui/core/styles';
+import { createStyles, Theme } from '@material-ui/core/styles';
+
+const drawerWidth = 240;
 
 export default (theme: Theme) =>
   createStyles({
-    root: {
-      flexGrow: 1,
-    },
     grow: {
       flexGrow: 1,
       fontWeight: 600,
       fontSize: '2.1rem',
     },
     menuButton: {
-      marginLeft: -12,
-      marginRight: 20,
+      marginRight: 36,
     },
-    appbarstyle: {
-      backgroundColor: theme.palette.primary.main,
+    menuButtonHidden: {
+      display: 'none',
+    },
+    toolbar: {
+      paddingRight: 24, // keep right padding when drawer closed
+    },
+    title: {
+      flexGrow: 1,
+    },
+    toolbarIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: '0 8px',
+      ...theme.mixins.toolbar,
+    },
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
     sectionDesktop: {
       display: 'none',
@@ -31,5 +57,25 @@ export default (theme: Theme) =>
     },
     profilemenu: {
       top: '50px',
+    },
+    drawerPaper: {
+      position: 'relative',
+      whiteSpace: 'nowrap',
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    drawerPaperClose: {
+      overflowX: 'hidden',
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      width: theme.spacing(7),
+      [theme.breakpoints.up('sm')]: {
+        width: theme.spacing(9),
+      },
     },
   });

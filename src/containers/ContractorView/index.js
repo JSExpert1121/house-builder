@@ -1,19 +1,19 @@
-import React                                from 'react';
-import {Link, Redirect, Switch, withRouter} from 'react-router-dom';
-import SecuredRoute                         from '../../routers/SecuredRoute';
+import React                                  from 'react';
+import { Link, Redirect, Switch, withRouter } from 'react-router-dom';
+import SecuredRoute                           from '../../routers/SecuredRoute';
 // Redux
-import {connect}                            from 'react-redux';
+import { connect }                            from 'react-redux';
 // material ui
-import PropTypes                            from 'prop-types';
-import {withStyles}                         from '@material-ui/core/styles';
-import AppBar                               from '@material-ui/core/AppBar';
-import Tabs                                 from '@material-ui/core/Tabs';
-import NoSsr                                from '@material-ui/core/NoSsr';
-import Tab                                  from '@material-ui/core/Tab';
-import AppsIcon                             from '@material-ui/icons/Apps';
+import PropTypes                              from 'prop-types';
+import { withStyles }                         from '@material-ui/core/styles';
+import AppBar                                 from '@material-ui/core/AppBar';
+import Tabs                                   from '@material-ui/core/Tabs';
+import NoSsr                                  from '@material-ui/core/NoSsr';
+import Tab                                    from '@material-ui/core/Tab';
+import AppsIcon                               from '@material-ui/icons/Apps';
 // local components
-import AllContractorsView                   from './AllContractorsView';
-import ContractorDetailView                 from './ContractorDetailView';
+import AllContractorsView                     from './AllContractorsView';
+import ContractorDetailView                   from './ContractorDetailView';
 // import CategoryDetailView from './CategoryDetailView';
 // import OptionDetailView from './OptionDetailView';
 

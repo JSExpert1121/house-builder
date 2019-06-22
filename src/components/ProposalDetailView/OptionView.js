@@ -1,11 +1,11 @@
 import React     from 'react';
 import PropTypes from 'prop-types';
 
-import {makeStyles}                                                      from '@material-ui/core/styles';
-import {IconButton, Table, TableBody, TableHead, TableRow, Typography,}  from '@material-ui/core';
-import {Delete as DeleteIcon, Edit as EditIcon, NoteAdd as NoteAddIcon,} from '@material-ui/icons';
-import CustomTableCell                                                   from '../shared/CustomTableCell';
-import OptionEdit                                                        from './OptionEdit';
+import { makeStyles }                                                      from '@material-ui/core/styles';
+import { IconButton, Table, TableBody, TableHead, TableRow, Typography }  from '@material-ui/core';
+import { Delete as DeleteIcon, Edit as EditIcon, NoteAdd as NoteAddIcon } from '@material-ui/icons';
+import CustomTableCell                                                     from '../shared/CustomTableCell';
+import OptionEdit                                                          from './OptionEdit';
 
 const useStyles = makeStyles(theme => ({
   root: {

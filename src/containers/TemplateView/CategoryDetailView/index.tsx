@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
-import {Theme, withStyles} from '@material-ui/core/styles';
+import React, { Component }  from 'react';
+import { withRouter }        from 'react-router-dom';
+import { Theme, withStyles } from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -14,19 +14,19 @@ import {
   TableHead,
   TableRow,
   TextField,
-} from '@material-ui/core';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import DeleteIcon from '@material-ui/icons/Delete';
+}                            from '@material-ui/core';
+import NoteAddIcon           from '@material-ui/icons/NoteAdd';
+import DeleteIcon            from '@material-ui/icons/Delete';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
+import Dialog            from '@material-ui/core/Dialog';
+import DialogActions     from '@material-ui/core/DialogActions';
+import DialogContent     from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import SimpleMDE from 'react-simplemde-editor';
+import DialogTitle       from '@material-ui/core/DialogTitle';
+import SimpleMDE         from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import {connect} from 'react-redux';
-import {History} from 'history';
+import { connect }       from 'react-redux';
+import { History }       from 'history';
 import {
   addOption,
   deleteCategory,
@@ -35,9 +35,12 @@ import {
   selectCategory,
   selectOption,
   selectTemplate,
-} from '../../../actions/tem-actions';
-import SplitPane from 'react-split-pane';
-import {MaterialThemeHOC, UserProfile} from '../../../types/global';
+}                        from '../../../actions/tem-actions';
+import SplitPane         from 'react-split-pane';
+import {
+  MaterialThemeHOC,
+  UserProfile,
+}                        from '../../../types/global';
 
 const styles = (theme: Theme) => ({
   descTag: {

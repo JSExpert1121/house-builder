@@ -1,20 +1,20 @@
-import React from 'react';
-import {Link, Redirect, Switch} from 'react-router-dom';
-import SecuredRoute from '../../routers/SecuredRoute';
-import {connect} from 'react-redux';
-import {Theme, withStyles} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import NoSsr from '@material-ui/core/NoSsr';
-import Tab from '@material-ui/core/Tab';
-import AppsIcon from '@material-ui/icons/Apps';
-import BallotIcon from '@material-ui/icons/Ballot';
-import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
-import AllTemplatesView from './AllTemplatesView';
-import TempDetailView from './TempDetailView';
-import CategoryDetailView from './CategoryDetailView';
-import OptionDetailView from './OptionDetailView';
-import {MaterialThemeHOC, UserProfile} from '../../types/global';
+import React                             from 'react';
+import { Link, Redirect, Switch }        from 'react-router-dom';
+import SecuredRoute                      from '../../routers/SecuredRoute';
+import { connect }                       from 'react-redux';
+import { Theme, withStyles }             from '@material-ui/core/styles';
+import AppBar                            from '@material-ui/core/AppBar';
+import Tabs                              from '@material-ui/core/Tabs';
+import NoSsr                             from '@material-ui/core/NoSsr';
+import Tab                               from '@material-ui/core/Tab';
+import AppsIcon                          from '@material-ui/icons/Apps';
+import BallotIcon                        from '@material-ui/icons/Ballot';
+import ViewHeadlineIcon                  from '@material-ui/icons/ViewHeadline';
+import AllTemplatesView                  from './AllTemplatesView';
+import TempDetailView                    from './TempDetailView';
+import CategoryDetailView                from './CategoryDetailView';
+import OptionDetailView                  from './OptionDetailView';
+import { MaterialThemeHOC, UserProfile } from '../../types/global';
 
 const styles = (theme: Theme) => ({
   root: {

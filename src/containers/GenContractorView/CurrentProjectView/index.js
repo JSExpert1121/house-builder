@@ -1,24 +1,24 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import React            from 'react';
+import { connect }      from 'react-redux';
+import { compose }      from 'redux';
+import PropTypes        from 'prop-types';
+import { withStyles }   from '@material-ui/core/styles';
+import Paper            from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import IconButton from '@material-ui/core/IconButton';
-import TablePagination from '@material-ui/core/TablePagination';
-import Typography from '@material-ui/core/Typography';
-import DeleteIcon from '@material-ui/icons/Delete';
-import removeMd from 'remove-markdown';
-import CustomTableCell from '../../../components/shared/CustomTableCell';
-import CustomSnackbar from '../../../components/shared/CustomSnackbar';
-import ConfirmDialog from '../../../components/shared/ConfirmDialog';
+import Table            from '@material-ui/core/Table';
+import TableHead        from '@material-ui/core/TableHead';
+import TableRow         from '@material-ui/core/TableRow';
+import TableBody        from '@material-ui/core/TableBody';
+import IconButton       from '@material-ui/core/IconButton';
+import TablePagination  from '@material-ui/core/TablePagination';
+import Typography       from '@material-ui/core/Typography';
+import DeleteIcon       from '@material-ui/icons/Delete';
+import removeMd         from 'remove-markdown';
+import CustomTableCell  from '../../../components/shared/CustomTableCell';
+import CustomSnackbar   from '../../../components/shared/CustomSnackbar';
+import ConfirmDialog    from '../../../components/shared/ConfirmDialog';
 
-import { getProjectsByGenId } from '../../../actions/gen-actions';
+import { getProjectsByGenId }               from '../../../actions/gen-actions';
 import { deleteProject, setCurrentProject } from '../../../actions';
 
 import style from './CurrentProject.style.ts';
@@ -120,7 +120,7 @@ class CurrentProject extends React.Component {
 
   handleSelectProject = id => {
     this.props.setCurrentProject(id);
-    this.props.history.push('/g_cont/project_detail/' + id);
+    this.props.history.push('/gen-contractor/project_detail/' + id);
   };
 
   render() {

@@ -1,7 +1,7 @@
-import React                                         from 'react';
-import PropTypes                                     from 'prop-types';
-import clsx                                          from 'clsx';
-import {Fade, IconButton, Snackbar, SnackbarContent} from '@material-ui/core';
+import React                                           from 'react';
+import PropTypes                                       from 'prop-types';
+import clsx                                            from 'clsx';
+import { Fade, IconButton, Snackbar, SnackbarContent } from '@material-ui/core';
 
 import {
   CheckCircle as CheckCircleIcon,
@@ -11,7 +11,7 @@ import {
   Warning as WarningIcon,
 } from '@material-ui/icons';
 
-import {amber, green} from '@material-ui/core/colors';
+import { amber, green } from '@material-ui/core/colors';
 // import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 // import ErrorIcon from '@material-ui/icons/Error';
 // import InfoIcon from '@material-ui/icons/Info';
@@ -19,7 +19,7 @@ import {amber, green} from '@material-ui/core/colors';
 // import green from '@material-ui/core/colors/green';
 // import amber from '@material-ui/core/colors/amber';
 // import WarningIcon from '@material-ui/icons/Warning';
-import {makeStyles}   from '@material-ui/styles';
+import { makeStyles }   from '@material-ui/styles';
 
 const variantIcon = {
   success: CheckCircleIcon,

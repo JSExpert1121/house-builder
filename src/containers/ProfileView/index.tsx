@@ -1,18 +1,18 @@
-import React from 'react';
-import {Link, Switch} from 'react-router-dom';
-import SecuredRoute from '../../routers/SecuredRoute';
-import {Theme, withStyles} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import NoSsr from '@material-ui/core/NoSsr';
-import Tab from '@material-ui/core/Tab';
+import React                 from 'react';
+import { Link, Switch }      from 'react-router-dom';
+import SecuredRoute          from '../../routers/SecuredRoute';
+import { Theme, withStyles } from '@material-ui/core/styles';
+import AppBar                from '@material-ui/core/AppBar';
+import Tabs                  from '@material-ui/core/Tabs';
+import NoSsr                 from '@material-ui/core/NoSsr';
+import Tab                   from '@material-ui/core/Tab';
 
-import BallotIcon from '@material-ui/icons/Ballot';
+import BallotIcon        from '@material-ui/icons/Ballot';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import ProfileEditView from './ProfileEditView';
-import ProfileFileView from './ProfileFileView';
-import {MaterialThemeHOC} from '../../types/global';
+import ProfileEditView      from './ProfileEditView';
+import ProfileFileView      from './ProfileFileView';
+import { MaterialThemeHOC } from '../../types/global';
 
 const styles = (theme: Theme) => ({
   root: {

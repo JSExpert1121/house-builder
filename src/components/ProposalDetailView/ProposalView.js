@@ -5,8 +5,8 @@ import Grid       from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box        from '@material-ui/core/Box';
 
-import {withStyles}  from '@material-ui/core/styles';
-import ReactMarkdown from 'react-markdown';
+import { withStyles } from '@material-ui/core/styles';
+import ReactMarkdown  from 'react-markdown';
 
 const styles = theme => ({
   root: {

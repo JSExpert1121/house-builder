@@ -5,7 +5,7 @@ import {
   SET_SELECTED_CATEGORY,
   SET_SELECTED_OPTION,
   SET_SELECTED_TEMPLATE,
-} from '../constants/tem-action-types';
+}                   from '../constants/tem-action-types';
 import { Dispatch } from 'redux';
 
 export function createTemplate(template, cb) {
