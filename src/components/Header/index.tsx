@@ -1,11 +1,11 @@
 import React, { MouseEvent } from 'react';
 import clsx                  from 'clsx';
 
-import { withRouter } from 'react-router-dom';
-import { connect }    from 'react-redux';
-import { compose }    from 'redux';
-import auth0Client    from '../../auth0/auth';
-import { History }    from 'history';
+import { Link, NavLink, withRouter } from 'react-router-dom';
+import { connect }                   from 'react-redux';
+import { compose }                   from 'redux';
+import auth0Client                   from '../../auth0/auth';
+import { History }                   from 'history';
 
 import { withStyles }  from '@material-ui/core/styles';
 import AppBar          from '@material-ui/core/AppBar';
@@ -22,9 +22,52 @@ import Badge                             from '@material-ui/core/Badge';
 import AccountCircle                     from '@material-ui/icons/AccountCircle';
 import NotificationsIcon                 from '@material-ui/icons/Notifications';
 import MoreIcon                          from '@material-ui/icons/MoreVert';
+import SettingsIcon from '@material-ui/icons/Settings';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
+
+
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
 import { MaterialThemeHOC, UserProfile } from '../../types/global';
 import styles                            from './Header.style';
 import MenuList                          from '../MenuList';
+import { Menu, MenuItem }                from '@material-ui/core';
+import { MenuProps }                     from '@material-ui/core/Menu';
+import ListItemIcon                      from '@material-ui/core/ListItemIcon';
+import ListItemText                      from '@material-ui/core/ListItemText';
+
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props: MenuProps) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles(theme => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
 
 interface HeaderProps extends MaterialThemeHOC {
   profile: UserProfile;
@@ -32,7 +75,7 @@ interface HeaderProps extends MaterialThemeHOC {
 }
 
 interface HeaderState {
-  anchorEl: Element | EventTarget;
+  anchorEl: null | HTMLElement;
   mobileMoreAnchorEl: React.ReactNode;
   open: boolean;
 }
@@ -47,7 +90,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
 
-  handleProfileMenuOpen = (event: MouseEvent) => {
+  handleProfileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
@@ -56,7 +99,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.handleMobileMenuClose();
   };
 
-  handleMobileMenuOpen = (event: MouseEvent) => {
+  handleMobileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     this.setState({ mobileMoreAnchorEl: event.currentTarget });
   };
 
@@ -83,6 +126,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       open: false,
     });
 
+  handleClose = () =>
+    this.setState({
+      anchorEl: null,
+    });
+
   render() {
     const { anchorEl, open } = this.state;
     const { classes, profile } = this.props;
@@ -96,15 +144,39 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <NotificationsIcon />
             </Badge>
           </IconButton>
+          <StyledMenu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={this.handleClose}
+          >
+            <MenuItem component={Link} to={"/profile"}>
+              <ListItemIcon>
+                <SendIcon />
+              </ListItemIcon>
+              <ListItemText primary="Profile" />
+            </MenuItem>
+            <MenuItem component={Link} to={"/settings"}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </MenuItem>
+            <MenuItem onClick={this.handleUserLogOut}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </MenuItem>
+          </StyledMenu>
           <IconButton
             aria-owns={isMenuOpen ? 'material-appbar' : undefined}
             aria-haspopup="true"
+            aria-controls="simple-menu"
             onClick={this.handleProfileMenuOpen}
             color="inherit"
           >
-            <span style={{ fontSize: '16px' }}>
-              {profile.email}&nbsp;&nbsp;
-            </span>
             <AccountCircle />
           </IconButton>
         </div>
@@ -138,7 +210,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               onClick={this.handleDrawerOpen}
               className={clsx(
                 classes.menuButton,
-                this.state.open && classes.menuButtonHidden
+                this.state.open && classes.menuButtonHidden,
               )}
             >
               <MenuIcon />
@@ -182,5 +254,5 @@ const mapStateToProps = (state: any) => ({
 export default compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps)
+  connect(mapStateToProps),
 )(Header);

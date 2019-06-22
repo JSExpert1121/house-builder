@@ -15,9 +15,10 @@ import {
   transition,
   warningColor,
   whiteColor,
-} from 'assets/jss/material-dashboard-pro-react.jsx';
+}                 from 'assets/jss/material-dashboard-pro-react.jsx';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
-const sidebarStyle = theme => ({
+const sidebarStyle = (theme) => makeStyles({
   drawerPaperRTL: {
     [theme.breakpoints.up('md')]: {
       left: 'auto !important',
