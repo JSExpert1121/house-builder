@@ -23,7 +23,6 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     height: 'calc(100vh - 64px - 48px - 16px)',
-    margin: theme.spacing(1),
   },
   tableWrap: {
     overflow: 'auto',

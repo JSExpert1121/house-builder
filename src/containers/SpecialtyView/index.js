@@ -1,5 +1,4 @@
 import React, { Component }                       from 'react';
-import PropTypes                                  from 'prop-types';
 import { Link, Redirect, Switch, withRouter }     from 'react-router-dom';
 import { connect }                                from 'react-redux';
 import { AppBar, NoSsr, Tab, Tabs, withStyles }   from '@material-ui/core';
@@ -11,6 +10,9 @@ import SpecialtyDetailView                        from './SpecialtyDetailView';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  contentWrapper: {
+    marginTop: theme.spacing(1)
   },
   toolbarstyle: {
     backgroundColor: theme.palette.background.paper,
@@ -24,17 +26,6 @@ const styles = theme => ({
 });
 
 export class SpecialtyView extends Component {
-  static propTypes = {
-    userProfile: PropTypes.shape({
-      user_metadata: PropTypes.shape({
-        roles: PropTypes.arrayOf(PropTypes.string),
-      }),
-    }).isRequired,
-    location: PropTypes.shape({
-      pathname: PropTypes.string.isRequired,
-    }).isRequired,
-  };
-
   state = {};
 
   render() {
@@ -71,17 +62,19 @@ export class SpecialtyView extends Component {
             </Tabs>
           </AppBar>
 
-          <Switch>
-            <SecuredRoute
-              path="/m_spec/all_specialties"
-              component={AllSpecialties}
-            />
-            <SecuredRoute
-              path="/m_spec/specialty_detail"
-              component={SpecialtyDetailView}
-            />
-            <Redirect path="/m_spec" to={`/m_spec/all_specialties`} />
-          </Switch>
+          <main className={classes.contentWrapper}>
+            <Switch>
+              <SecuredRoute
+                path="/m_spec/all_specialties"
+                component={AllSpecialties}
+              />
+              <SecuredRoute
+                path="/m_spec/specialty_detail"
+                component={SpecialtyDetailView}
+              />
+              <Redirect path="/m_spec" to={`/m_spec/all_specialties`} />
+            </Switch>
+          </main>
         </div>
       </NoSsr>
     );

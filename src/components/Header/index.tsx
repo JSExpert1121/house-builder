@@ -169,7 +169,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           </div>
           <Divider />
           <MenuList />
-          <Divider />
         </Drawer>
       </>
     );

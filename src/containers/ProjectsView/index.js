@@ -20,6 +20,9 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  contentWrapper: {
+    marginTop: theme.spacing(1),
+  },
   toolbarstyle: {
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.primary.dark,
@@ -69,21 +72,23 @@ class ConnectedGenContView extends React.Component {
             </Tabs>
           </AppBar>
 
-          <Switch>
-            <SecuredRoute
-              path="/projects/current"
-              component={CurrentProjectView}
-            />
-            <SecuredRoute
-              path="/projects/proposal_detail/:id"
-              component={ProposalDetailView}
-            />
-            <SecuredRoute
-              path="/projects/project_detail/:id"
-              component={ProjectDetailView}
-            />
-            <Redirect path="/projects" to={`/projects/current`} />
-          </Switch>
+          <main className={classes.contentWrapper}>
+            <Switch>
+              <SecuredRoute
+                path="/projects/current"
+                component={CurrentProjectView}
+              />
+              <SecuredRoute
+                path="/projects/proposal_detail/:id"
+                component={ProposalDetailView}
+              />
+              <SecuredRoute
+                path="/projects/project_detail/:id"
+                component={ProjectDetailView}
+              />
+              <Redirect path="/projects" to={`/projects/current`} />
+            </Switch>
+          </main>
         </div>
       </NoSsr>
     );
