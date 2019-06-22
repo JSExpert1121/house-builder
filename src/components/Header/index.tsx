@@ -219,6 +219,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           open={open}
         >
           <div className={classes.toolbarIcon}>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.title}
+            >
+              LOGO
+            </Typography>
             <IconButton onClick={this.handleDrawerClose}>
               <ChevronLeftIcon />
             </IconButton>
