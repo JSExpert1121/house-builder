@@ -1,11 +1,10 @@
-import React, { MouseEvent } from 'react';
-import clsx                  from 'clsx';
-
-import { Link, NavLink, withRouter } from 'react-router-dom';
-import { connect }                   from 'react-redux';
-import { compose }                   from 'redux';
-import auth0Client                   from '../../auth0/auth';
-import { History }                   from 'history';
+import React                from 'react';
+import clsx                 from 'clsx';
+import { Link, withRouter } from 'react-router-dom';
+import { connect }          from 'react-redux';
+import { compose }          from 'redux';
+import auth0Client          from '../../auth0/auth';
+import { History }          from 'history';
 
 import { withStyles }  from '@material-ui/core/styles';
 import AppBar          from '@material-ui/core/AppBar';
@@ -18,17 +17,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button          from '@material-ui/core/Button';
 import IconButton      from '@material-ui/core/IconButton';
 
-import Badge                             from '@material-ui/core/Badge';
-import AccountCircle                     from '@material-ui/icons/AccountCircle';
-import NotificationsIcon                 from '@material-ui/icons/Notifications';
-import MoreIcon                          from '@material-ui/icons/MoreVert';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
-
-
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
+import Badge             from '@material-ui/core/Badge';
+import AccountCircle     from '@material-ui/icons/AccountCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import MoreIcon          from '@material-ui/icons/MoreVert';
+import SettingsIcon      from '@material-ui/icons/Settings';
+import ExitToAppIcon     from '@material-ui/icons/ExitToApp';
+import SendIcon                          from '@material-ui/icons/Send';
 import { MaterialThemeHOC, UserProfile } from '../../types/global';
 import styles                            from './Header.style';
 import MenuList                          from '../MenuList';
@@ -57,17 +52,6 @@ const StyledMenu = withStyles({
     {...props}
   />
 ));
-
-const StyledMenuItem = withStyles(theme => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
 
 interface HeaderProps extends MaterialThemeHOC {
   profile: UserProfile;
@@ -133,7 +117,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
   render() {
     const { anchorEl, open } = this.state;
-    const { classes, profile } = this.props;
+    const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
 
     const rightApp = auth0Client.isAuthenticated() ? (
