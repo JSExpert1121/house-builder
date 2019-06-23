@@ -1,23 +1,20 @@
-import React                                  from 'react';
-import { Link, Redirect, Switch, withRouter } from 'react-router-dom';
-import SecuredRoute                           from '../../routers/SecuredRoute';
-// Redux
-import { connect }                            from 'react-redux';
-// material ui
-import PropTypes                              from 'prop-types';
-import { withStyles }                         from '@material-ui/core/styles';
-import AppBar                                 from '@material-ui/core/AppBar';
-import Tabs                                   from '@material-ui/core/Tabs';
-import NoSsr                                  from '@material-ui/core/NoSsr';
-import Tab                                    from '@material-ui/core/Tab';
-import AppsIcon                               from '@material-ui/icons/Apps';
-import PlaylistAddIcon                        from '@material-ui/icons/PlaylistAdd';
-// local components
-import ContractorDetailView                   from './ContractorDetailView';
-import CurrentProjectView                     from './CurrentProjectView';
-import AddProjectView                         from './AddProjectView';
-import ProjectDetailView                      from '../../components/ProjectDetailView';
-import ProposalDetailView                     from '../../components/ProposalDetailView';
+import React                      from 'react';
+import { Link, Redirect, Switch } from 'react-router-dom';
+import SecuredRoute               from '../../routers/SecuredRoute';
+import { connect }                from 'react-redux';
+import { withStyles }             from '@material-ui/core/styles';
+import AppBar                     from '@material-ui/core/AppBar';
+import Tabs                       from '@material-ui/core/Tabs';
+import NoSsr                      from '@material-ui/core/NoSsr';
+import Tab                        from '@material-ui/core/Tab';
+import AppsIcon                   from '@material-ui/icons/Apps';
+import PlaylistAddIcon            from '@material-ui/icons/PlaylistAdd';
+import ContractorDetailView       from './ContractorDetailView';
+import CurrentProjectView         from './CurrentProjectView';
+import AddProjectView             from './AddProjectView';
+import ProjectDetailView          from '../../components/ProjectDetailView';
+import ProposalDetailView         from '../../components/ProposalDetailView';
+import { compose }                from 'redux';
 
 const styles = theme => ({
   root: {
@@ -109,19 +106,13 @@ class ConnectedGenContView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({
+  userProfile: state.global_data.userProfile
+});
 
-const GeneralContractorView = connect(
-  mapStateToProps,
-  null
-)(ConnectedGenContView);
-
-GeneralContractorView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(GeneralContractorView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps
+  ),
+)(ConnectedGenContView)

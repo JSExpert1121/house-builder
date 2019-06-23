@@ -1,8 +1,6 @@
 import React       from 'react';
 import { connect } from 'react-redux';
-
-import { Theme, withStyles } from '@material-ui/core/styles';
-
+import { withStyles } from '@material-ui/core/styles';
 import Table             from '@material-ui/core/Table';
 import TableBody         from '@material-ui/core/TableBody';
 import TableHead         from '@material-ui/core/TableHead';
@@ -16,7 +14,6 @@ import DialogTitle       from '@material-ui/core/DialogTitle';
 import DialogContent     from '@material-ui/core/DialogContent';
 import Button            from '@material-ui/core/Button';
 import Paper             from '@material-ui/core/Paper';
-
 import { DropzoneDialog } from 'material-ui-dropzone';
 
 import CustomizedSnackbars from '../../components/shared/CustomSnackbar';
@@ -25,42 +22,9 @@ import NoteAddIcon         from '@material-ui/icons/NoteAdd';
 import CustomTableCell     from '../../components/shared/CustomTableCell';
 
 import { getContractorDetailById, removeFile, uploadFiles } from '../../actions/cont-actions';
-import { File, MaterialThemeHOC, UserProfile }               from '../../types/global';
-
-const styles = (theme: Theme) => ({
-  root: {
-    position: 'relative',
-    left: '0px',
-    top: '0px',
-    flexGrow: 1,
-    padding: theme.spacing(1),
-    margin: theme.spacing(1),
-    height: 'calc(100vh - 152px)',
-    overflowY: 'auto',
-    overflowX: 'hidden',
-  },
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 20px)',
-    top: 'calc(40vh)',
-  },
-  dropzone: {
-    width: '300px',
-    [theme.breakpoints.up('sm')]: {
-      width: '500px',
-    },
-  },
-  button: {
-    padding: '6px',
-  },
-  busy: {
-    position: 'absolute',
-    left: 'calc(50% - 16px)',
-    top: 'calc(50% - 16px)',
-    zIndex: '2000',
-  },
-});
-
+import { File, MaterialThemeHOC, UserProfile }              from '../../types/global';
+import { compose }                                          from 'redux';
+import styles from './ProfileFileView.style'
 interface ProfileFileViewProps extends MaterialThemeHOC {
   user: UserProfile;
   getContractorDetailById: (id: number) => any;
@@ -176,14 +140,14 @@ class ProfileFileView extends React.Component<
     if (this.state.loading)
       return (
         <div className={classes.root}>
-          <CircularProgress className={classes.waitingSpin} />{' '}
+          <CircularProgress className={classes.waitingSpin} />
         </div>
       );
 
     return (
       <Paper className={classes.root}>
         {this.state.busy && (
-          <CircularProgress size={32} thickness={4} className={classes.busy} />
+          <CircularProgress size={32} thickness={4} />
         )}
         <Table className={classes.relative} size="small">
           <TableHead>
@@ -262,7 +226,6 @@ class ProfileFileView extends React.Component<
               <CircularProgress
                 size={32}
                 thickness={4}
-                className={classes.busy}
               />
             )}
             <DialogContentText id="alert-dialog-description">
@@ -287,16 +250,16 @@ const mapStateToProps = state => ({
   files: state.cont_data.files,
   user: state.global_data.userProfile,
 });
+const mapDispatchToProps = {
+  uploadFiles,
+  getContractorDetailById,
+  removeFile,
+};
 
-const mapDispatchToProps = dispatch => ({
-  uploadFiles: (id, files) => dispatch(uploadFiles(id, files)),
-  getContractorDetailById: id => dispatch(getContractorDetailById(id)),
-  removeFile: (id, name) => dispatch(removeFile(id, name)),
-});
-
-const CnProfileFileView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProfileFileView);
-
-export default withStyles({ ...styles })(CnProfileFileView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProfileFileView)

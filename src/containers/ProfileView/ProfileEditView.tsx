@@ -1,7 +1,6 @@
 import React, { Component }                            from 'react';
-import { withRouter }                                  from 'react-router-dom';
 import { History }                                     from 'history';
-import { Theme, withStyles }                           from '@material-ui/core/styles';
+import { createStyles, Theme, withStyles }             from '@material-ui/core/styles';
 import TextField                                       from '@material-ui/core/TextField';
 import { Avatar, Box, Button, Card, CircularProgress } from '@material-ui/core';
 
@@ -13,8 +12,9 @@ import axios            from 'axios';
 import { connect }                       from 'react-redux';
 import { setUserProfileAction }          from '../../actions/global-actions';
 import { MaterialThemeHOC, UserProfile } from '../../types/global';
+import { compose }                       from 'redux';
 
-const styles = (theme: Theme) => ({
+const styles = (theme: Theme) => createStyles({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -24,6 +24,7 @@ const styles = (theme: Theme) => ({
     marginBottom: 'auto',
     overflow: 'auto',
     flexDirection: 'column',
+    width: '100%'
   },
   container: {
     position: 'relative',
@@ -96,12 +97,6 @@ const styles = (theme: Theme) => ({
       width: 170,
     },
   },
-  busy: {
-    position: 'absolute',
-    left: 'calc(50% - 20px)',
-    top: 'calc(50% - 20px)',
-    zIndex: '2000',
-  },
   waitingSpin: {
     position: 'relative',
     left: 'calc(50% - 10px)',
@@ -116,7 +111,7 @@ const styles = (theme: Theme) => ({
 
 interface ProfileEditViewProps extends MaterialThemeHOC {
   userProfile: UserProfile;
-  setUserProfile: (profile: UserProfile) => any;
+  setUserProfileAction: (profile: UserProfile) => any;
   history: History;
 }
 
@@ -268,7 +263,7 @@ class ProfileEditView extends Component<
     };
 
     await auth0Client.updateProfile(new_prof, profile => {
-      this.props.setUserProfile(profile);
+      this.props.setUserProfileAction(profile);
       this.setState({
         isSuccess: true,
         isSaving: false,
@@ -365,8 +360,7 @@ class ProfileEditView extends Component<
                 className={classes.cancelButton}
                 onClick={() => this.props.history.replace('/')}
               >
-                {' '}
-                Cancel{' '}
+                Cancel
               </Button>
               <Button
                 disabled={this.state.isSaving}
@@ -377,7 +371,7 @@ class ProfileEditView extends Component<
               </Button>
             </Box>
             {this.state.isSaving && (
-              <CircularProgress className={classes.busy} />
+              <CircularProgress />
             )}
           </Card>
         </form>
@@ -386,18 +380,18 @@ class ProfileEditView extends Component<
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  setUserProfile: profile => dispatch(setUserProfileAction(profile)),
-});
+const mapDispatchToProps = {
+  setUserProfileAction
+};
 
 const mapStateToProps = state => ({
   userProfile: state.global_data.userProfile,
 });
 
-const WithRouter = withRouter(ProfileEditView);
-const ProfileView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WithRouter);
-
-export default withStyles({ ...styles })(ProfileView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProfileEditView)

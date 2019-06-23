@@ -287,7 +287,7 @@ class connectedProfileView extends Component {
     };
 
     await auth0Client.updateProfile(new_prof, profile => {
-      this.props.setUserProfile(profile);
+      this.props.setUserProfileAction(profile);
       this.setState({
         isSuccess: true,
         isSaving: false,
@@ -426,7 +426,7 @@ class connectedProfileView extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUserProfile: profile => dispatch(setUserProfileAction(profile)),
+    setUserProfileAction: profile => dispatch(setUserProfileAction(profile)),
   };
 };
 

@@ -33,7 +33,7 @@ const globalReducer = handleActions(
       ...state,
       userProfile: action.payload,
     }),
-    [SET_DETAIL_PROPOSAL]: (state, action) => ({
+    [SET_DETAIL_PROPOSAL]: (state, action) => console.log('#long') | ({
       ...state,
       proposalDetail: action.payload,
     }),

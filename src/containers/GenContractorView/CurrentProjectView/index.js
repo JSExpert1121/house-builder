@@ -1,7 +1,6 @@
 import React            from 'react';
 import { connect }      from 'react-redux';
 import { compose }      from 'redux';
-import PropTypes        from 'prop-types';
 import { withStyles }   from '@material-ui/core/styles';
 import Paper            from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -52,7 +51,7 @@ class CurrentProject extends React.Component {
     const { userProfile } = this.props;
     this.setState({ currentPage: page, isBusy: true });
     try {
-      await this.props.getProjectsByGenId(
+      this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,
         page,
         this.state.rowsPerPage
@@ -72,7 +71,7 @@ class CurrentProject extends React.Component {
 
     this.setState({ rowsPerPage, currentPage });
     try {
-      await this.props.getProjectsByGenId(
+      this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,
         currentPage,
         rowsPerPage
@@ -90,13 +89,14 @@ class CurrentProject extends React.Component {
     this.setState({ isBusy: true, showConfirm: false });
     try {
       await this.props.deleteProject(this.state.proId);
+
       let curPage = this.state.currentPage;
       if (
         this.state.rowsPerPage * this.state.currentPage >=
         projects.totalElements - 1
       )
-        curPage--;
-      await this.props.getProjectsByGenId(
+      curPage--;
+      this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,
         curPage,
         this.state.rowsPerPage
@@ -212,23 +212,16 @@ class CurrentProject extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  getProjectsByGenId: (id, page, rowSize) =>
-    dispatch(getProjectsByGenId(id, page, rowSize)),
-  deleteProject: (id, cb) => dispatch(deleteProject(id, cb)),
-  setCurrentProjectAction: id => dispatch(setCurrentProjectAction(id)),
-});
+const mapDispatchToProps = {
+  getProjectsByGenId,
+  deleteProject,
+  setCurrentProjectAction,
+};
 
 const mapStateToProps = state => ({
   projects: state.gen_data.projects,
   userProfile: state.global_data.userProfile,
 });
-
-CurrentProject.propTypes = {
-  classes: PropTypes.object.isRequired,
-  projects: PropTypes.object,
-  userProfile: PropTypes.object,
-};
 
 export default compose(
   connect(

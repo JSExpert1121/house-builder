@@ -26,7 +26,7 @@ export function awardProject(id) {
 }
 export function getProjectsByGenId(id, page, rowSize) {
   return function(dispatch) {
-    return restAPI
+    restAPI
       .get('contractors/' + id + '/projects', {
         params: {
           page: page,

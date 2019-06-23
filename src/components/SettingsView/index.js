@@ -241,8 +241,8 @@ class connectedSettingsView extends React.Component {
               };
 
               auth0Client.updateSet(newSet, () => {
-                auth0Client.getProfile(profile => {
-                  this.props.setUserProfile(profile);
+                auth0Client.getUserInfo(profile => {
+                  this.props.setUserProfileAction(profile);
                 });
                 this.setState({
                   isSuccess: true,
@@ -269,7 +269,7 @@ class connectedSettingsView extends React.Component {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    setUserProfile: profile => dispatch(setUserProfileAction(profile)),
+    setUserProfileAction: profile => dispatch(setUserProfileAction(profile)),
   };
 };
 

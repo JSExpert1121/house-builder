@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-
-import { withRouter }                                                            from 'react-router-dom';
-// material ui
-import PropTypes                                                                 from 'prop-types';
-import { withStyles }                                                            from '@material-ui/core/styles';
+import { withStyles }                                                           from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -18,18 +14,17 @@ import {
   TableRow,
   TableSortLabel,
   TextField,
-}                                                                                from '@material-ui/core';
-import DeleteIcon                                                                from '@material-ui/icons/Delete';
-import Dialog                                                                    from '@material-ui/core/Dialog';
-import DialogActions                                                             from '@material-ui/core/DialogActions';
-import DialogContent                                                             from '@material-ui/core/DialogContent';
+}                                                                               from '@material-ui/core';
+import DeleteIcon                                                               from '@material-ui/icons/Delete';
+import Dialog                                                                   from '@material-ui/core/Dialog';
+import DialogActions                                                            from '@material-ui/core/DialogActions';
+import DialogContent                                                            from '@material-ui/core/DialogContent';
 import DialogContentText
-                                                                                 from '@material-ui/core/DialogContentText';
-import DialogTitle                                                               from '@material-ui/core/DialogTitle';
-// Redux
-import { connect }                                                               from 'react-redux';
-// actions
+                                                                                from '@material-ui/core/DialogContentText';
+import DialogTitle                                                              from '@material-ui/core/DialogTitle';
+import { connect }                                                              from 'react-redux';
 import { createContractor, deleteContractor, getContrators0, selectContractor } from '../../../actions/cont-actions';
+import { compose }                                                              from 'redux';
 
 const styles = theme => ({
   root: {
@@ -69,7 +64,7 @@ const CustomTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-class ConnAllContractorView extends Component {
+class AllContractorsView extends Component {
   constructor(props) {
     super(props);
 
@@ -379,29 +374,22 @@ class ConnAllContractorView extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    contractors: state.cont_data.contractors,
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({
+  contractors: state.cont_data.contractors,
+  userProfile: state.global_data.userProfile,
+})
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getContrators0: (page, size) => dispatch(getContrators0(page, size)),
-    selectContractor: id => dispatch(selectContractor(id)),
-    deleteContractor: (id, cb) => dispatch(deleteContractor(id, cb)),
-    createContractor: (data, cb) => dispatch(createContractor(data, cb)),
-  };
-};
+const mapDispatchToProps = {
+  getContrators0,
+  selectContractor,
+  deleteContractor,
+  createContractor,
+}
 
-const AllContractorView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnAllContractorView);
-
-AllContractorView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(AllContractorView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+)(AllContractorsView)

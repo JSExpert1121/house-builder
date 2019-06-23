@@ -23,6 +23,14 @@ const theme = createMuiTheme({
     fontFamily: ['Niramit', 'Arial'].join(','),
   },
   overrides: {
+    MuiCircularProgress: {
+      root: {
+        position: 'relative',
+        left: 'calc(50% - 16px)',
+        top: 'calc(50% - 16px)',
+        zIndex: '2000',
+      }
+    },
     Muit: {
       root: {
         fontSize: '0.8125rem',

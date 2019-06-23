@@ -1,5 +1,6 @@
 import auth0 from 'auth0-js';
 import axios from 'axios';
+import { setUserProfileAction } from '../actions/global-actions';
 
 class Auth {
   constructor() {
@@ -18,25 +19,20 @@ class Auth {
     });
   }
 
-  getProfile(cb) {
-    this.auth0.client.userInfo(this.accessToken, (err, profile) => {
-      const user_id = profile['https://tungcb:auth0:com/user_id'];
+  getUserInfo = () => dispatch =>
+    this.auth0.client.userInfo(this.accessToken, (err, user) => {
+      const user_id = user['https://tungcb:auth0:com/user_id'];
       const headers = {
         Authorization: `Bearer ${this.accessToken}`,
         'Content-type': 'application/json',
       };
 
-      axios
-        .get(process.env.REACT_APP_AUTH_AUDIENCE + 'users/' + user_id, {
-          headers,
-        })
-        .then(response => {
-          this.userProfile = response.data;
-          cb(this.userProfile);
-        })
-        .catch(err => console.log(err.message));
+      axios.get(process.env.REACT_APP_AUTH_AUDIENCE + 'users/' + user_id, {
+        headers,
+      }).then(res => {
+        dispatch(setUserProfileAction(res.data));
+      })
     });
-  }
 
   updateSet(data, cb) {
     const user_id = this.userProfile.user_id;
@@ -59,7 +55,7 @@ class Auth {
         headers: headers,
       })
       .then(response => {
-        this.getProfile(cb);
+        this.getUserInfo(cb);
       })
       .catch(error => console.log(error.message));
   }

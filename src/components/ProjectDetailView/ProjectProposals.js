@@ -188,7 +188,7 @@ class ConnectedProjectProposals extends React.Component {
             <Button
               className={classes.btnSubmitProposal}
               onClick={() => {
-                this.props.clearProposalDetail();
+                this.props.clearProposalDetail(null);
                 this.props.history.push('/a_pros/proposal_detail/-1');
               }}
             >
@@ -301,16 +301,12 @@ class ConnectedProjectProposals extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProposalData: id => dispatch(getProposalData(id)),
-    getProposalsByProjectId: (id, page, row) =>
-      dispatch(getProposalsByProjectId(id, page, row)),
-    setProposals4Compare: proposals =>
-      dispatch(setProposals4CompareAction(proposals)),
-    clearProposalDetail: () => dispatch(setDetailProposalAction(null)),
-  };
-};
+const mapDispatchToProps = {
+  getProposalData,
+  getProposalsByProjectId,
+  setProposals4Compare: setProposals4CompareAction,
+  clearProposalDetail: setDetailProposalAction,
+}
 
 const mapStateToProps = state => {
   return {
