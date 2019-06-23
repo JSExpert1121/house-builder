@@ -1,18 +1,12 @@
-import React from 'react';
-import Calendar from '../../components/Calendar';
+import React    from 'react';
+import Calendar from 'components/Calendar';
 
 class SCVCalendarView extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
-	render() {
-		return (
-			<main>
-				<Calendar />
-			</main>
-		);
-	}
+  render() {
+    return (
+      <Calendar />
+    );
+  }
 }
 
 export default SCVCalendarView;

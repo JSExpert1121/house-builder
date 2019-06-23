@@ -1,98 +1,96 @@
-import React from "react";
-import PropTypes from "prop-types";
-
-import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
+import React      from 'react';
+import PropTypes  from 'prop-types';
+import Grid       from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Box        from '@material-ui/core/Box';
 
-import { withStyles } from "@material-ui/core/styles";
-import ReactMarkdown from 'react-markdown';
+import { withStyles } from '@material-ui/core/styles';
+import ReactMarkdown  from 'react-markdown';
 
 const styles = theme => ({
   root: {
-    padding: 0
+    padding: 0,
   },
   title: {
-    fontSize: "1.8em",
-    textAlign: "left",
-    color: "#333",
-    marginTop: "0",
-    marginBottom: "0"
+    fontSize: '1.8em',
+    textAlign: 'left',
+    color: '#333',
+    marginTop: '0',
+    marginBottom: '0',
   },
   subtitle: {
-    fontSize: "1.2em",
-    textAlign: "left",
-    color: "#333",
-    marginTop: "0",
-    marginBottom: "4px",
-    fontWeight: "bold"
+    fontSize: '1.2em',
+    textAlign: 'left',
+    color: '#333',
+    marginTop: '0',
+    marginBottom: '4px',
+    fontWeight: 'bold',
   },
   bottomLine: {
-    borderBottom: "1px solid #dedede"
+    borderBottom: '1px solid #dedede',
   },
   template: {
-    display: "inline",
-    fontSize: "1em",
-    textAlign: "left",
-    color: "#444",
-    marginTop: "0",
+    display: 'inline',
+    fontSize: '1em',
+    textAlign: 'left',
+    color: '#444',
+    marginTop: '0',
   },
   brief: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    color: "#444"
+    color: '#444',
   },
   desc: {
-    color: "#444",
-    marginTop: "0",
-    "& > p": {
-      margin: theme.spacing(1, 0)
-    }
+    color: '#444',
+    marginTop: '0',
+    '& > p': {
+      margin: theme.spacing(1, 0),
+    },
   },
   budget: {
-    display: "inline-block",
-    fontSize: "1em",
-    textAlign: "left",
-    fontWeight: "600",
-    color: "#666"
+    display: 'inline-block',
+    fontSize: '1em',
+    textAlign: 'left',
+    fontWeight: '600',
+    color: '#666',
   },
   posttime: {
-    display: "inline-block",
+    display: 'inline-block',
     paddingLeft: theme.spacing(3),
-    fontSize: "1em",
-    textAlign: "left",
-    fontWeight: "normal",
-    color: "#666"
+    fontSize: '1em',
+    textAlign: 'left',
+    fontWeight: 'normal',
+    color: '#666',
   },
   busy: {
-    position: "absolute",
-    left: "calc(50% - 10px)",
-    top: "calc(50%-10px)"
+    position: 'absolute',
+    left: 'calc(50% - 10px)',
+    top: 'calc(50%-10px)',
   },
   status: {
     margin: theme.spacing(1, 0, 0, 0),
-    fontSize: "1em",
-    textAlign: "left",
-    fontWeight: "600",
-    color: theme.palette.primary.light
+    fontSize: '1em',
+    textAlign: 'left',
+    fontWeight: '600',
+    color: theme.palette.primary.light,
   },
   margin: theme.spacing(1),
   minWidth: 120,
   submitBtn: {
-    border: "1px solid #4a148c",
+    border: '1px solid #4a148c',
     borderRadius: 0,
     backgroundColor: theme.palette.primary.light,
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     margin: 5,
-    float: "right",
-    "&:hover": {
-      backgroundColor: theme.palette.primary.dark
+    float: 'right',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
     },
-    "&:disabled": {
-      backgroundColor: "#FFFFFF"
-    }
-  }
+    '&:disabled': {
+      backgroundColor: '#FFFFFF',
+    },
+  },
 });
 
 const ProjectView = ({ classes, project, showFiles = true }) => {
@@ -113,26 +111,40 @@ const ProjectView = ({ classes, project, showFiles = true }) => {
 
         <Grid item xs={12}>
           <Box className={classes.brief}>
-            <Typography className={classes.budget}>Budget: {project.budget}</Typography>
-            <Typography className={classes.posttime}>Posted: {postdate.toDateString()}</Typography>
+            <Typography className={classes.budget}>
+              Budget: {project.budget}
+            </Typography>
+            <Typography className={classes.posttime}>
+              Posted: {postdate.toDateString()}
+            </Typography>
           </Box>
           <Box className={classes.brief}>
-            <Typography style={{ fontWeight: '700' }}> Description:  </Typography>
-            <ReactMarkdown source={project.description} className={classes.desc} />
+            <Typography style={{ fontWeight: '700' }}>
+              {' '}
+              Description:{' '}
+            </Typography>
+            <ReactMarkdown
+              source={project.description}
+              className={classes.desc}
+            />
           </Box>
           {showFiles && (
             <Box className={classes.brief}>
               {project.projectFiles && project.projectFiles.length > 0 && (
                 <>
                   <Typography style={{ fontWeight: '700' }}> Files </Typography>
-                  {project.projectFiles.map(file => <Typography className={classes.desc} key={file.id}>{file.name}</Typography>)}
+                  {project.projectFiles.map(file => (
+                    <Typography className={classes.desc} key={file.id}>
+                      {file.name}
+                    </Typography>
+                  ))}
                 </>
               )}
             </Box>
           )}
         </Grid>
       </Grid>
-    </Box >
+    </Box>
   );
 };
 
@@ -143,18 +155,16 @@ ProjectView.propTypes = {
     createdAt: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    budget: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]).isRequired,
+    budget: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+      .isRequired,
     status: PropTypes.string,
     genContractor: PropTypes.shape({
-      id: PropTypes.string.isRequired
+      id: PropTypes.string.isRequired,
     }),
     projectFiles: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
+        name: PropTypes.string.isRequired,
       })
     ),
     projectTemplates: PropTypes.arrayOf(
@@ -170,13 +180,13 @@ ProjectView.propTypes = {
               name: PropTypes.string.isRequired,
               type: PropTypes.string.isRequired,
               value: PropTypes.string.isRequired,
-              optionList: PropTypes.arrayOf(PropTypes.object)
+              optionList: PropTypes.arrayOf(PropTypes.object),
             })
-          )
-        })
+          ),
+        }),
       })
-    )
-  }).isRequired
+    ),
+  }).isRequired,
 };
 
 // const mapStateToProps = (state) => ({

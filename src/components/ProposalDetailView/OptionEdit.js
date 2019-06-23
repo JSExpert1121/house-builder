@@ -1,37 +1,37 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React     from 'react';
+import PropTypes from 'prop-types';
 
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles }                      from '@material-ui/core/styles';
 import {
+  Button,
   Dialog,
   DialogActions,
-  DialogTitle,
   DialogContent,
   DialogContentText,
-  TextField,
+  DialogTitle,
   Grid,
-  Button,
-  IconButton
-} from "@material-ui/core";
-import { Done as DoneIcon, NotInterested } from "@material-ui/icons";
+  IconButton,
+  TextField,
+}                                          from '@material-ui/core';
+import { Done as DoneIcon, NotInterested } from '@material-ui/icons';
 
 const styles = theme => ({
   root: {
-    display: "flex",
-    flexWrap: "wrap"
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   input: {
-    width: "100%"
+    width: '100%',
   },
   margin: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   withoutLabel: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   textField: {
-    flexBasis: 200
-  }
+    flexBasis: 200,
+  },
 });
 
 class OptionEdit extends React.Component {
@@ -41,8 +41,8 @@ class OptionEdit extends React.Component {
     this.state = {
       ...props.option,
       showAlert: false,
-      title: "",
-      message: ""
+      title: '',
+      message: '',
     };
   }
 
@@ -54,8 +54,8 @@ class OptionEdit extends React.Component {
     ) {
       this.setState({
         showAlert: true,
-        title: "Error",
-        message: "Fill in all the items"
+        title: 'Error',
+        message: 'Fill in all the items',
       });
       return;
     } else if (
@@ -66,8 +66,8 @@ class OptionEdit extends React.Component {
     ) {
       this.setState({
         showAlert: true,
-        title: "Error",
-        message: "Fill in valid values"
+        title: 'Error',
+        message: 'Fill in valid values',
       });
       return;
     }
@@ -122,7 +122,7 @@ class OptionEdit extends React.Component {
               onChange={this.handleChange}
               value={this.state.budget}
               name="budget"
-              type='number'
+              type="number"
               required
             />
           </Grid>
@@ -134,7 +134,7 @@ class OptionEdit extends React.Component {
               margin="none"
               onChange={this.handleChange}
               value={this.state.duration}
-              type='number'
+              type="number"
               name="duration"
               required
             />
@@ -158,17 +158,17 @@ class OptionEdit extends React.Component {
               xs={3}
               sm={2}
               style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "space-around",
-                alignContent: "center"
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-around',
+                alignContent: 'center',
               }}
             >
-              <IconButton style={{ padding: "6px" }} onClick={this.handleSave}>
+              <IconButton style={{ padding: '6px' }} onClick={this.handleSave}>
                 <DoneIcon />
               </IconButton>
               <IconButton
-                style={{ padding: "6px" }}
+                style={{ padding: '6px' }}
                 onClick={this.props.handleCancel}
               >
                 <NotInterested />
@@ -216,7 +216,7 @@ class OptionEdit extends React.Component {
 OptionEdit.propTypes = {
   option: PropTypes.object.isRequired,
   handleSave: PropTypes.func.isRequired,
-  handleCancel: PropTypes.func.isRequired
+  handleCancel: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(OptionEdit);

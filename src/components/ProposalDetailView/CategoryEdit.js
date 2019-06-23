@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React     from 'react';
+import PropTypes from 'prop-types';
 
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 
-import OptionTableView from "./OptionView";
-import OptionEdit from "./OptionEdit";
+import OptionTableView from './OptionView';
+import OptionEdit      from './OptionEdit';
 
 const styles = theme => ({
   root: {
     padding: theme.spacing(1),
-    display: "block",
-    borderTop: "1px solid #CCC",
-    height: '100%'
+    display: 'block',
+    borderTop: '1px solid #CCC',
+    height: '100%',
   },
   options: {
-    padding: theme.spacing(1)
-  }
+    padding: theme.spacing(1),
+  },
 });
 
 class CategoryEdit extends React.Component {
@@ -23,9 +23,9 @@ class CategoryEdit extends React.Component {
     super(props);
 
     this.state = {
-      editingId: "",
+      editingId: '',
       adding: false,
-      addingOption: {}
+      addingOption: {},
     };
   }
 
@@ -37,25 +37,25 @@ class CategoryEdit extends React.Component {
     const options = this.props.category.options;
     let id = 0;
     while (options.length > 0 && 1) {
+      // eslint-disable-line no-loop-func
       if (options.some(opt => this.compareOpt(opt, id))) {
         id++;
         continue;
       }
-
       break;
     }
 
     this.setState({
-      editingId: "",
+      editingId: '',
       adding: true,
       addingOption: {
         id: id.toString(),
-        name: "",
-        value: "",
-        description: "",
-        budget: "1000",
-        duration: "10"
-      }
+        name: '',
+        value: '',
+        description: '',
+        budget: '1000',
+        duration: '10',
+      },
     });
   };
 
@@ -69,16 +69,16 @@ class CategoryEdit extends React.Component {
     } else {
       await this.props.handleUpdate(this.props.category.id, opt);
     }
-    this.setState({ adding: false, editingId: "" });
+    this.setState({ adding: false, editingId: '' });
   };
 
   handleCancel = () => {
-    this.setState({ adding: false, editingId: "" });
+    this.setState({ adding: false, editingId: '' });
   };
 
   handleDelete = async opt => {
     await this.props.handleDelete(this.props.category.id, opt);
-    this.setState({ adding: false, editingId: "" });
+    this.setState({ adding: false, editingId: '' });
   };
 
   render() {
@@ -128,18 +128,14 @@ CategoryEdit.propTypes = {
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
-        duration: PropTypes.oneOfType([
-          PropTypes.string,
-          PropTypes.number,
-        ]).isRequired,
-        budget: PropTypes.oneOfType([
-          PropTypes.string,
-          PropTypes.number,
-        ]).isRequired,
-        description: PropTypes.string.isRequired
+        duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+          .isRequired,
+        budget: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+          .isRequired,
+        description: PropTypes.string.isRequired,
       })
-    )
-  }).isRequired
+    ),
+  }).isRequired,
 };
 
 export default withStyles(styles)(CategoryEdit);

@@ -1,100 +1,101 @@
+import { createAction } from 'redux-actions';
 import {
-	ALL_PROJECT_LOADED,
-	PROJECT_FILES_LOADED,
-	TEMPLATES_LOADED,
-	PROPOSALS_LOADED
-} from "../constants/gen-action-types";
-import Axios from "axios";
+  ALL_PROJECT_LOADED,
+  CLEAR_ALL_PROJECTS, CLEAR_PROJECTS,
+  CLEAR_TEMPLATES,
+  PROJECT_LOADED,
+  TEMPLATES_LOADED,
+} from '../constants/gen-action-types';
 
 import ProjApi from '../api/project';
+import restAPI from '../services';
 
-export function awardProject(id, cb) {
-	return function (dispatch) {
-		return Axios.put(process.env.PROJECT_API + "proposals/" + id, {
-			"status": "AWARDED"
-		})
-			.then(response => {
-				cb(true);
-			})
-			.catch(err => {
-				cb(false);
-				console.log(err.message);
-			})
-	}
+export const projectLoadedAction = createAction(PROJECT_LOADED);
+export const clearAllProjectAction = createAction(CLEAR_ALL_PROJECTS);
+export const clearProjectsAction = createAction(CLEAR_PROJECTS);
+export const loadedProjectAction = createAction(ALL_PROJECT_LOADED);
+export const clearTemplateAction = createAction(CLEAR_TEMPLATES);
+export const loadedTemplatesAction = createAction(TEMPLATES_LOADED);
+
+export function awardProject(id) {
+  return function() {
+    return restAPI.put('proposals/' + id, {
+      status: 'AWARDED',
+    });
+  };
 }
-
 export function getProjectsByGenId(id, page, rowSize) {
-	return function (dispatch) {
-		// dispatch({ type: "CLEAR_PROJECTS" });
-		return Axios.get(process.env.PROJECT_API + "contractors/" + id + "/projects", {
-			params: {
-				"page": page,
-				"size": rowSize
-			}
-		})
-			.then(response => dispatch({ type: "PROJECT_LOADED", payload: response.data }))
-			.catch(err => console.log(err.message))
-	}
+  return function(dispatch) {
+    restAPI
+      .get('contractors/' + id + '/projects', {
+        params: {
+          page: page,
+          size: rowSize,
+        },
+      })
+      .then(response => {
+        dispatch(projectLoadedAction(response.data));
+      });
+  };
 }
-
 export function getAllProjects(page, size) {
-	return function (dispatch) {
-		dispatch({ type: "CLEAR_ALL_PROJECTS" });
-		return Axios.get(process.env.PROJECT_API + "projects", {
-			params: {
-				'page': page,
-				'size': size
-			}
-		})
-			.then(response => {
-				dispatch({ type: ALL_PROJECT_LOADED, payload: response.data });
-			})
-			.catch(err => console.log(err))
-	}
+  return function(dispatch) {
+    dispatch(clearAllProjectAction());
+    return restAPI
+      .get('projects', {
+        params: {
+          page: page,
+          size: size,
+        },
+      })
+      .then(response => {
+        dispatch(loadedProjectAction(response.data));
+      });
+  };
 }
-
-export function addProject(id, data, cb) {
-	return function (dispatch) {
-		return Axios.post(process.env.PROJECT_API + "contractors/" + id + "/projects", data)
-			.then((response) => {
-				cb(response.data.id);
-			}).catch(err => {
-				console.log(err.message);
-				cb(false);
-			});
-	}
-}
-
 export function getTemplates(page, size) {
-	return function (dispatch) {
-		dispatch({ type: "CLEAR_TEMPLATES" });
+  return function(dispatch) {
+    dispatch(clearTemplateAction());
 
-		return Axios.get(process.env.PROJECT_API + "templates", {
-			params: {
-				"page": page,
-				"size": size
-			}
-		})
-			.then(response => {
-				dispatch({ type: TEMPLATES_LOADED, payload: response.data })
-			})
-			.catch(err => console.log(err.message))
-	}
+    return restAPI
+      .get('templates', {
+        params: {
+          page: page,
+          size: size,
+        },
+      })
+      .then(response => {
+        dispatch(loadedTemplatesAction(response.data));
+      });
+  };
 }
+export const addTemplate = (proj_id, templ_id) => dispatch =>
+  ProjApi.addTemplate(proj_id, templ_id);
+export const deleteTemplate = (proj_id, templ_id) => dispatch =>
+  ProjApi.deleteTemplate(proj_id, templ_id);
 
-export const addTemplate = (proj_id, templ_id) => dispatch => ProjApi.addTemplate(proj_id, templ_id);
-export const deleteTemplate = (proj_id, templ_id) => dispatch => ProjApi.deleteTemplate(proj_id, templ_id);
-
+/*
 export function updateProject(id) {
-	return function (dispatch) {
-
-		return Axios.get(process.env.PROJECT_API + "projects/" + id)
-			.then(response => {
-				dispatch({
-					type: PROJECT_DETAIL_LOADED,
-					payload: response.data
-				})
-			})
-			.catch(err => console.log(err.message))
-	}
+  return function(dispatch) {
+    return restAPI.get('projects/' + id).then(response => {
+      dispatch({
+        type: 'PROJECT_DETAIL_LOADED',
+        payload: response.data,
+      });
+    });
+  };
 }
+*/
+/*export function addProject(id, data, cb) {
+  return function(dispatch) {
+    return restAPI
+      .post('contractors/' + id + '/projects', data)
+      .then(response => {
+        cb(response.data.id);
+      })
+      .catch(err => {
+        console.log(err.message);
+        cb(false);
+      });
+  };
+}*/
