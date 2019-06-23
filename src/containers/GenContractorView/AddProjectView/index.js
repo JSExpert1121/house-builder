@@ -18,7 +18,7 @@ import DeleteIcon      from '@material-ui/icons/Delete';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 
-import { addFilesToProject, addProject } from '../../../actions';
+import { addFilesToProject, addProject } from '../../../actions/global-actions';
 import CustomSnackbar                    from '../../../components/shared/CustomSnackbar';
 
 const styles = theme => ({

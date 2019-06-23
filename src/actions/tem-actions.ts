@@ -1,12 +1,13 @@
-import restAPI from '../services';
-
+import restAPI                       from '../services';
 import {
   ALL_TEMPLATES_LOADED,
   SET_SELECTED_CATEGORY,
   SET_SELECTED_OPTION,
   SET_SELECTED_TEMPLATE,
-}                   from '../constants/tem-action-types';
-import { Dispatch } from 'redux';
+}                                    from '../constants/tem-action-types';
+import { Dispatch }                  from 'redux';
+import { AxiosResponse }             from 'axios';
+import { clearSelectedOptionAction } from './cont-actions';
 
 export function createTemplate(template, cb) {
   return function(dispatch) {
@@ -30,7 +31,7 @@ export function selectTemplate(id) {
 
     return restAPI
       .get('templates/' + id)
-      .then(response => {
+      .then((response: AxiosResponse) => {
         dispatch({
           type: SET_SELECTED_TEMPLATE,
           payload: response.data,
@@ -42,11 +43,11 @@ export function selectTemplate(id) {
 
 export function selectOption(id: number) {
   return function(dispatch: Dispatch) {
-    dispatch({ type: 'CLEAR_SELECTED_OPTION' });
+    dispatch(clearSelectedOptionAction());
 
     return restAPI
       .get('options/' + id)
-      .then(response => {
+      .then((response: AxiosResponse) => {
         dispatch({
           type: SET_SELECTED_OPTION,
           payload: response.data,
@@ -62,7 +63,7 @@ export function selectCategory(id) {
 
     return restAPI
       .get('categories/' + id)
-      .then(response => {
+      .then((response: AxiosResponse) => {
         dispatch({
           type: SET_SELECTED_CATEGORY,
           payload: response.data,
@@ -83,7 +84,7 @@ export function getTemplatesO(page, size) {
           size: size,
         },
       })
-      .then(response => {
+      .then((response: AxiosResponse) => {
         dispatch({ type: ALL_TEMPLATES_LOADED, payload: response.data });
       })
       .catch(err => console.log(err.message));

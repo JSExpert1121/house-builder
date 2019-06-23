@@ -8,17 +8,17 @@ import BidderListingView    from '../containers/BidderListingView';
 import TemplatesView        from '../containers/TemplateView';
 import SpecialtyView        from '../containers/SpecialtyView';
 import ContractorView       from '../containers/ContractorView';
-import ProjectsView         from '../containers/ProjectsView';
-import HomeView             from '../containers/HomeView';
-import ProfileView          from '../containers/ProfileView';
-import SettingsView         from '../components/SettingsView';
-import Header               from '../components/Header';
-import Callback             from '../auth0/callback';
-import auth0Client          from '../auth0/auth';
-import { connect }          from 'react-redux';
-import { compose }          from 'redux';
-import { setUserProfile }   from '../actions';
-import { CircularProgress } from '@material-ui/core/es';
+import ProjectsView             from '../containers/ProjectsView';
+import HomeView                 from '../containers/HomeView';
+import ProfileView              from '../containers/ProfileView';
+import SettingsView             from '../components/SettingsView';
+import Header                   from '../components/Header';
+import Callback                 from '../auth0/callback';
+import auth0Client              from '../auth0/auth';
+import { connect }              from 'react-redux';
+import { compose }              from 'redux';
+import { setUserProfileAction } from '../actions/global-actions';
+import { CircularProgress }     from '@material-ui/core/es';
 
 import SecuredRoute                      from './SecuredRoute';
 import { MaterialThemeHOC, UserProfile } from '../types/global';
@@ -29,7 +29,7 @@ import Grid          from '@material-ui/core/Grid';
 
 interface AppRouterProps extends MaterialThemeHOC {
   location: Location;
-  setUserProfile: typeof setUserProfile;
+  setUserProfile: typeof setUserProfileAction;
   userProfile: UserProfile;
 }
 
@@ -115,10 +115,6 @@ class AppRouterConnect extends React.Component<AppRouterProps, AppRouterState> {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  setUserProfile: profile => dispatch(setUserProfile(profile)),
-});
-
 const mapStateToProps = state => ({
   userProfile: state.global_data.userProfile,
 });
@@ -127,7 +123,7 @@ export default compose(
   withRouter,
   connect(
     mapStateToProps,
-    mapDispatchToProps
+    { setUserProfile: setUserProfileAction }
   ),
   withStyles(rootStyles)
 )(AppRouterConnect);

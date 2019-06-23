@@ -1,5 +1,10 @@
 import {
   ALL_CONTRACTORS_LOADED,
+  CLEAR_ALL_CONTRACTORS,
+  CLEAR_SELECTED_CATEGORY,
+  CLEAR_SELECTED_CONTRACTOR,
+  CLEAR_SELECTED_OPTION,
+  CLEAR_SPECIALTIES,
   CONTRACTOR_DETAIL_LOADED,
   SET_SELECTED_CATEGORY,
   SET_SELECTED_CONTRACTOR,
@@ -40,27 +45,27 @@ function tem_reducer(state = initialState, action) {
           cat_name: state.selectedCategory,
         }),
       });
-    case 'CLEAR_ALL_CONTRACTORS':
+    case CLEAR_ALL_CONTRACTORS:
       return Object.assign({}, state, {
         contractors: null,
       });
-    case 'CLEAR_SPECIALTIES':
+    case CLEAR_SPECIALTIES:
       return Object.assign({}, state, {
         specialties: null,
       });
-    case 'CLEAR_SELECTED_CATEGORY':
+    case CLEAR_SELECTED_CATEGORY:
       return Object.assign({}, state, {
         selectedCategory: {
           isLoading: true,
         },
       });
-    case 'CLEAR_SELECTED_OPTION':
+    case CLEAR_SELECTED_OPTION:
       return Object.assign({}, state, {
         selectedOption: {
           isLoading: true,
         },
       });
-    case 'CLEAR_SELECTED_CONTRACTOR':
+    case CLEAR_SELECTED_CONTRACTOR:
       return Object.assign({}, state, {
         selectedContractor: {
           isLoading: true,

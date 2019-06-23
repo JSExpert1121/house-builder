@@ -18,7 +18,7 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { withStyles }                                 from '@material-ui/core/styles';
 import clsx                                           from 'clsx';
 import FiberIcon                                      from '@material-ui/icons/FiberManualRecord';
-import { deleteProposal, getProposalData }            from '../../actions';
+import { deleteProposal, getProposalData }            from '../../actions/global-actions';
 import { awardProject }                               from '../../actions/gen-actions';
 
 import ProjectView       from './ProjectView';

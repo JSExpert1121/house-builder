@@ -15,8 +15,8 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import CustomTableCell     from '../shared/CustomTableCell';
 import CustomizedSnackbars from '../shared/CustomSnackbar';
 
-import { DropzoneDialog }                                              from 'material-ui-dropzone';
-import { addFilesToProposal, deleteProposalFile, getProposalDetails } from '../../actions/index';
+import { DropzoneDialog }                                             from 'material-ui-dropzone';
+import { addFilesToProposal, deleteProposalFile, getProposalDetails } from '../../actions/global-actions';
 
 const styles = theme => ({
   root: {

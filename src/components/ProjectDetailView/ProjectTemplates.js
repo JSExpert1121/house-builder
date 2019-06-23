@@ -32,7 +32,7 @@ import AddIcon     from '@material-ui/icons/Add';
 import removeMd from 'remove-markdown';
 
 import { addTemplate, deleteTemplate, getTemplates } from '../../actions/gen-actions';
-import { getProjectData }                             from '../../actions';
+import { getProjectData }                            from '../../actions/global-actions';
 
 const styles = theme => ({
   root: {

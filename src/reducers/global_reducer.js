@@ -1,4 +1,7 @@
 import {
+  CLEAR_PROPOSAL_MESSAGES,
+  CLEAR_SELECTED_PROJECT,
+  CLEAR_SELECTED_PROPOSAL,
   PROJECT_BIDDERS_LOADED,
   PROJECT_DETAIL_LOADED,
   PROPOSAL_MESSAGES_LOADED,
@@ -10,6 +13,7 @@ import {
   SET_SELECTED_PROPOSAL,
   SET_USER_PROFILE,
 } from '../constants/global-action-types';
+import { handleActions } from 'redux-actions';
 
 const initialState = {
   userProfile: null,
@@ -23,70 +27,61 @@ const initialState = {
   currentProjectId: null,
 };
 
-function global_reducer(state = initialState, action) {
-  switch (action.type) {
-    case SET_USER_PROFILE:
-      return Object.assign({}, state, {
-        userProfile: action.payload,
-      });
-    case SET_DETAIL_PROPOSAL:
-      return {
-        ...state,
-        proposalDetail: action.payload,
-      };
-    case SET_SELECTED_PROPOSAL:
-      return Object.assign({}, state, {
-        proposal: action.payload,
-      });
-    case PROPOSALS_LOADED:
-      return Object.assign({}, state, {
-        proposals: action.payload,
-      });
-    case PROJECT_DETAIL_LOADED:
-      return Object.assign({}, state, {
-        project: action.payload,
-      });
-    case PROJECT_BIDDERS_LOADED:
-      return Object.assign({}, state, {
-        projectBidders: action.payload,
-      });
-    case SEARCH_FILTER_LOADED:
-      return Object.assign({}, state, {
-        searchResult: action.payload,
-      });
-    case SET_CURRENT_PROJECT:
-      return Object.assign({}, state, {
-        currentProjectId: action.payload,
-      });
-
-    case PROPOSAL_MESSAGES_LOADED:
-      return Object.assign({}, state, {
-        proposalMessages: action.payload,
-      });
-    case 'CLEAR_SELECTED_PROJECT':
-      return {
-        ...state,
-        project: null,
-      };
-    case 'CLEAR_PROPOSALS':
-    case 'CLEAR_SELECTED_PROPOSAL':
-      return {
-        ...state,
-        proposal: null,
-      };
-    case 'CLEAR_PROPOSAL_MESSAGES':
-      return {
-        ...state,
-        proposalMessages: null,
-      };
-    case SET_PROPOSALS_COMPARE:
-      return {
-        ...state,
-        compareProps: [...action.payload],
-      };
-    default:
-      return state;
-  }
-}
-
-export default global_reducer;
+const globalReducer = handleActions(
+  {
+    [SET_USER_PROFILE]: (state, action) => ({
+      ...state,
+      userProfile: action.payload,
+    }),
+    [SET_DETAIL_PROPOSAL]: (state, action) => ({
+      ...state,
+      proposalDetail: action.payload,
+    }),
+    [SET_SELECTED_PROPOSAL]: (state, action) => ({
+      ...state,
+      proposal: action.payload,
+    }),
+    [PROPOSALS_LOADED]: (state, action) => ({
+      ...state,
+      proposals: action.payload,
+    }),
+    [PROJECT_DETAIL_LOADED]: (state, action) => ({
+      ...state,
+      project: action.payload,
+    }),
+    [PROJECT_BIDDERS_LOADED]: (state, action) => ({
+      ...state,
+      projectBidders: action.payload,
+    }),
+    [SEARCH_FILTER_LOADED]: (state, action) => ({
+      ...state,
+      searchResult: action.payload,
+    }),
+    [SET_CURRENT_PROJECT]: (state, action) => ({
+      ...state,
+      currentProjectId: action.payload,
+    }),
+    [PROPOSAL_MESSAGES_LOADED]: (state, action) => ({
+      ...state,
+      proposalMessages: action.payload,
+    }),
+    [CLEAR_SELECTED_PROJECT]: (state, action) => ({
+      ...state,
+      project: null,
+    }),
+    [CLEAR_SELECTED_PROPOSAL]: (state, action) => ({
+      ...state,
+      proposal: null,
+    }),
+    [CLEAR_PROPOSAL_MESSAGES]: (state, action) => ({
+      ...state,
+      proposalMessages: null,
+    }),
+    [SET_PROPOSALS_COMPARE]: (state, action) => ({
+      ...state,
+      compareProps: [...action.payload],
+    }),
+  },
+  initialState
+);
+export default globalReducer;

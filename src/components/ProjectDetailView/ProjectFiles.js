@@ -14,7 +14,7 @@ import DeleteIcon               from '@material-ui/icons/Delete';
 import NoteAddIcon              from '@material-ui/icons/NoteAdd';
 import { DropzoneDialog }       from 'material-ui-dropzone';
 
-import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../actions';
+import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../actions/global-actions';
 
 const styles = theme => ({
   root: {

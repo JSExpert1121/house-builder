@@ -28,7 +28,7 @@ import {
   submitProposal,
   updateOption,
   updateProposal,
-}                       from '../../actions/index';
+}                       from '../../actions/global-actions';
 import { awardProject } from '../../actions/gen-actions';
 
 const styles = theme => ({

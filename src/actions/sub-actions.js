@@ -1,9 +1,15 @@
-import { PROPOSALS_LOADED } from '../constants/sub-action-types';
-import restAPI              from '../services';
+import restAPI                                     from '../services';
+import { createAction }                            from 'redux-actions';
+import { loadedProposalsAction }                   from './global-actions';
+import { clearProjectsAction }                     from './gen-actions';
+import { CLEAR_PROPOSALS, INVITED_PROJECT_LOADED } from '../constants/sub-action-types';
+
+export const clearProposalAction = createAction(CLEAR_PROPOSALS);
+export const loadedInvitedProjectAction = createAction(INVITED_PROJECT_LOADED);
 
 export function getProposals(cont_id, page, row, filterStr) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_PROPOSALS' });
+    dispatch(clearProposalAction());
     return restAPI
       .get('contractors/' + cont_id + '/proposals', {
         params: {
@@ -12,16 +18,12 @@ export function getProposals(cont_id, page, row, filterStr) {
           status: filterStr,
         },
       })
-      .then(res => {
-        const result = res.data;
-        dispatch({ type: PROPOSALS_LOADED, payload: result });
-      });
+      .then(res => dispatch(loadedProposalsAction(res.data)));
   };
 }
-
 export function getInvitedProjectsByGenId(id, page, rowSize) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_PROJECTS' });
+    dispatch(clearProjectsAction);
     return restAPI
       .get('projects/invites/' + id, {
         params: {
@@ -29,8 +31,6 @@ export function getInvitedProjectsByGenId(id, page, rowSize) {
           size: rowSize,
         },
       })
-      .then(response =>
-        dispatch({ type: 'INVITED_PROJECT_LOADED', payload: response.data })
-      );
+      .then(response => dispatch(loadedInvitedProjectAction(response.data)));
   };
 }

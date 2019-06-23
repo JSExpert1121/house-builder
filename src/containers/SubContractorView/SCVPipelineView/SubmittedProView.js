@@ -16,7 +16,7 @@ import {
 }                     from '@material-ui/core';
 
 import removeMd                         from 'remove-markdown';
-import { deleteProposal, getProposals } from '../../../actions';
+import { deleteProposal, getProposals } from '../../../actions/global-actions';
 import CustomSnackbar                   from '../../../components/shared/CustomSnackbar';
 import CustomTableCell                  from '../../../components/shared/CustomTableCell';
 

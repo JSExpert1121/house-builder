@@ -11,7 +11,7 @@ import TSnackbarContent from '../../components/SnackBarContent';
 import axios            from 'axios';
 
 import { connect }                       from 'react-redux';
-import { setUserProfile }                from '../../actions';
+import { setUserProfileAction }          from '../../actions/global-actions';
 import { MaterialThemeHOC, UserProfile } from '../../types/global';
 
 const styles = (theme: Theme) => ({
@@ -387,7 +387,7 @@ class ProfileEditView extends Component<
 }
 
 const mapDispatchToProps = dispatch => ({
-  setUserProfile: profile => dispatch(setUserProfile(profile)),
+  setUserProfile: profile => dispatch(setUserProfileAction(profile)),
 });
 
 const mapStateToProps = state => ({

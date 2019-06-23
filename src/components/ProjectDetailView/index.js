@@ -18,7 +18,7 @@ import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
 
-import { getProjectData } from '../../actions';
+import { getProjectData } from '../../actions/global-actions';
 import { IconButton }     from '@material-ui/core';
 import ArrowBackIcon      from '@material-ui/icons/ArrowBack';
 

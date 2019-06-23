@@ -18,8 +18,8 @@ import Checkbox         from '@material-ui/core/Checkbox';
 import CompareIcon      from '@material-ui/icons/Compare';
 import ConfirmDialog    from '../shared/ConfirmDialog';
 
-import removeMd                                                                                 from 'remove-markdown';
-import { clearProposalDetail, getProposalData, getProposalsByProjectId, setProposals4Compare } from '../../actions';
+import removeMd                                                                                          from 'remove-markdown';
+import { setDetailProposalAction, getProposalData, getProposalsByProjectId, setProposals4CompareAction } from '../../actions/global-actions';
 
 const MAX_COMPARE = 3;
 const styles = theme => ({
@@ -307,8 +307,8 @@ const mapDispatchToProps = dispatch => {
     getProposalsByProjectId: (id, page, row) =>
       dispatch(getProposalsByProjectId(id, page, row)),
     setProposals4Compare: proposals =>
-      dispatch(setProposals4Compare(proposals)),
-    clearProposalDetail: () => dispatch(clearProposalDetail()),
+      dispatch(setProposals4CompareAction(proposals)),
+    clearProposalDetail: () => dispatch(setDetailProposalAction(null)),
   };
 };
 

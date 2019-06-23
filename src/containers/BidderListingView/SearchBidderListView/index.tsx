@@ -19,7 +19,7 @@ import classNames                                           from 'classnames';
 import Select                                               from 'react-select';
 import MenuItem                                             from '@material-ui/core/MenuItem';
 import CancelIcon                                           from '@material-ui/icons/Cancel';
-import { searchFilter }                                     from '../../../actions';
+import { searchFilter }                                     from '../../../actions/global-actions';
 import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
 import { match }                                            from 'react-router';
 import { MaterialThemeHOC, UserProfile }                    from '../../../types/global';

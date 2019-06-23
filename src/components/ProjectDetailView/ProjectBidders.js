@@ -26,7 +26,7 @@ import Chip                      from '@material-ui/core/Chip';
 import MenuItem                  from '@material-ui/core/MenuItem';
 import CancelIcon                from '@material-ui/icons/Cancel';
 
-import { getProjectBiddersData, inviteContractor, searchFilter } from '../../actions';
+import { getProjectBiddersData, inviteContractor, searchFilter } from '../../actions/global-actions';
 import { getContrators0, getSpecialties, selectContractor }      from '../../actions/cont-actions';
 
 const styles = theme => ({

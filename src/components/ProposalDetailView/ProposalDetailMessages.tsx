@@ -13,10 +13,10 @@ import LinkOffIcon    from '@material-ui/icons/LinkOff';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { Button, CircularProgress, IconButton, ListItemSecondaryAction, TextField, Theme } from '@material-ui/core';
-import { addFileToPropMessage, addMessageToProposal, getProposalMessages }                 from '../../actions';
-import { DropzoneDialog }                                                                   from 'material-ui-dropzone';
-import { UserProfile }                                                                      from '../../types/global';
-import { FlexDirectionProperty, PositionProperty }                                          from 'csstype';
+import { addFileToPropMessage, addMessageToProposal, getProposalMessages }                 from '../../actions/global-actions';
+import { DropzoneDialog }                                                                  from 'material-ui-dropzone';
+import { UserProfile }                                                                     from '../../types/global';
+import { FlexDirectionProperty, PositionProperty }                                         from 'csstype';
 
 const styles = (theme: Theme) => ({
   root: {

@@ -1,4 +1,4 @@
-import { INVITED_PROJECT_LOADED, PROPOSALS_LOADED } from '../constants/sub-action-types';
+import { CLEAR_PROPOSALS, INVITED_PROJECT_LOADED, PROPOSALS_LOADED } from '../constants/sub-action-types';
 
 const initialState = {
   proposals: null,
@@ -16,7 +16,7 @@ function sub_reducer(state = initialState, action) {
         projects: action.payload,
       });
 
-    case 'CLEAR_PROPOSALS':
+    case CLEAR_PROPOSALS:
       return Object.assign({}, state, {
         proposals: null,
       });

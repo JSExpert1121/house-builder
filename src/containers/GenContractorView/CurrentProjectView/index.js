@@ -18,8 +18,8 @@ import CustomTableCell  from '../../../components/shared/CustomTableCell';
 import CustomSnackbar   from '../../../components/shared/CustomSnackbar';
 import ConfirmDialog    from '../../../components/shared/ConfirmDialog';
 
-import { getProjectsByGenId }               from '../../../actions/gen-actions';
-import { deleteProject, setCurrentProject } from '../../../actions';
+import { getProjectsByGenId }                     from '../../../actions/gen-actions';
+import { deleteProject, setCurrentProjectAction } from '../../../actions/global-actions';
 
 import style from './CurrentProject.style.ts';
 
@@ -119,7 +119,7 @@ class CurrentProject extends React.Component {
   };
 
   handleSelectProject = id => {
-    this.props.setCurrentProject(id);
+    this.props.setCurrentProjectAction(id);
     this.props.history.push('/gen-contractor/project_detail/' + id);
   };
 
@@ -216,7 +216,7 @@ const mapDispatchToProps = dispatch => ({
   getProjectsByGenId: (id, page, rowSize) =>
     dispatch(getProjectsByGenId(id, page, rowSize)),
   deleteProject: (id, cb) => dispatch(deleteProject(id, cb)),
-  setCurrentProject: id => dispatch(setCurrentProject(id)),
+  setCurrentProjectAction: id => dispatch(setCurrentProjectAction(id)),
 });
 
 const mapStateToProps = state => ({

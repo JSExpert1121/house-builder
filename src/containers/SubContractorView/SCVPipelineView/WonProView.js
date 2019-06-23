@@ -19,7 +19,7 @@ import {
 
 import removeMd           from 'remove-markdown';
 import { getProposals }   from '../../../actions/sub-actions';
-import { deleteProposal } from '../../../actions';
+import { deleteProposal } from '../../../actions/global-actions';
 
 const styles = theme => ({
   root: {

@@ -15,7 +15,7 @@ import Typography             from '@material-ui/core/Typography';
 import Radio                  from '@material-ui/core/Radio';
 // customized components
 import CustomTableCell        from '../shared/CustomTableCell';
-import { getProposalDetails } from '../../actions/index';
+import { getProposalDetails } from '../../actions/global-actions';
 
 const styles = theme => ({
   root: {

@@ -1,12 +1,25 @@
+import { createAction } from 'redux-actions';
 import {
   ALL_CONTRACTORS_LOADED,
+  CLEAR_ALL_CONTRACTORS,
+  CLEAR_SELECTED_CONTRACTOR, CLEAR_SELECTED_OPTION,
+  CLEAR_SPECIALTIES,
   CONTRACTOR_DETAIL_LOADED,
-  SET_SELECTED_CATEGORY,
   SET_SELECTED_CONTRACTOR,
-  SET_SELECTED_OPTION,
   SPECIALTIES_LOADED,
-}              from '../constants/cont-action-types';
-import restAPI from '../services';
+} from '../constants/cont-action-types';
+import restAPI          from '../services';
+
+export const clearAllContractorAction = createAction(CLEAR_ALL_CONTRACTORS);
+export const clearSelectedContractorAction = createAction(
+  CLEAR_SELECTED_CONTRACTOR,
+);
+export const setSelectedContractorAction = createAction(
+  SET_SELECTED_CONTRACTOR,
+);
+export const loadedContractorAction = createAction(ALL_CONTRACTORS_LOADED);
+export const clearSpecialtiesAction = createAction(CLEAR_SPECIALTIES);
+export const clearSelectedOptionAction = createAction(CLEAR_SELECTED_OPTION);
 
 export const uploadFiles = (id, files) => dispatch => {
   const formData = new FormData();
@@ -24,7 +37,7 @@ export const uploadFiles = (id, files) => dispatch => {
 
 export function createContractor(contractor, cb) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_ALL_CONTRACTORS' });
+    dispatch(clearAllContractorAction());
 
     return restAPI
       .post('contractors', contractor)
@@ -39,7 +52,7 @@ export function createContractor(contractor, cb) {
 
 export function selectContractor(id) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_SELECTED_CONTRACTOR' });
+    dispatch(clearSelectedContractorAction());
 
     return restAPI.get('contractors/' + id).then(response => {
       dispatch({
@@ -55,42 +68,7 @@ export function updateContractor(id) {
     return restAPI
       .get('contractors/' + id)
       .then(response => {
-        dispatch({
-          type: SET_SELECTED_CONTRACTOR,
-          payload: response.data,
-        });
-      })
-      .catch(err => console.log(err.message));
-  };
-}
-
-export function selectOption(id) {
-  return function(dispatch) {
-    dispatch({ type: 'CLEAR_SELECTED_OPTION' });
-
-    return restAPI
-      .get('options/' + id)
-      .then(response => {
-        dispatch({
-          type: SET_SELECTED_OPTION,
-          payload: response.data,
-        });
-      })
-      .catch(err => console.log(err.message));
-  };
-}
-
-export function selectCategory(id) {
-  return function(dispatch) {
-    dispatch({ type: 'CLEAR_SELECTED_CATEGORY' });
-
-    return restAPI
-      .get('categories/' + id)
-      .then(response => {
-        dispatch({
-          type: SET_SELECTED_CATEGORY,
-          payload: response.data,
-        });
+        dispatch(setSelectedContractorAction(response.data));
       })
       .catch(err => console.log(err.message));
   };
@@ -98,7 +76,7 @@ export function selectCategory(id) {
 
 export function getContrators0(page, size) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_ALL_CONTRACTORS' });
+    dispatch(clearAllContractorAction());
 
     return restAPI
       .get('contractors', {
@@ -108,9 +86,8 @@ export function getContrators0(page, size) {
         },
       })
       .then(response => {
-        dispatch({ type: ALL_CONTRACTORS_LOADED, payload: response.data });
-      })
-      .catch(err => console.log(err.message));
+        dispatch(loadedContractorAction(response.data));
+      });
   };
 }
 
@@ -118,104 +95,6 @@ export function deleteContractor(id, cb) {
   return function(dispatch) {
     return restAPI
       .delete('contractors/' + id)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
-
-export function deleteCategory(id, cb) {
-  return function(dispatch) {
-    return restAPI
-      .delete('categories/' + id)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        console.log(err.message);
-        cb(false);
-      });
-  };
-}
-
-export function deleteOption(id, cb) {
-  return function(dispatch) {
-    return restAPI
-      .delete('options/' + id)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
-
-export function addCategory(id, data, cb) {
-  return function(dispatch) {
-    return restAPI
-      .post('contractors/' + id + '/categories', data)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
-
-export function addOption(id, data, cb) {
-  return function(dispatch) {
-    return restAPI
-      .post('categories/' + id + '/options', data)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
-
-export function editOption(id, data, cb) {
-  return function(dispatch) {
-    return restAPI
-      .put('options/' + id, data)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
-
-export function editCategory(id, data, cb) {
-  return function(dispatch) {
-    return restAPI
-      .put('categories/' + id, data)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
-
-export function editContractor(id, data, cb) {
-  return function(dispatch) {
-    return restAPI
-      .put('contractors/' + id, data)
       .then(response => {
         cb(true);
       })
@@ -304,8 +183,7 @@ export function rejectContractor(id, data, cb) {
 
 export function getSpecialties(page, size) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_SPECIALTIES' });
-
+    dispatch(clearSpecialtiesAction());
     return restAPI
       .get('specialties', {
         params: {
@@ -347,3 +225,134 @@ export function deleteSpecialty(contractorId, specialtyId, cb) {
       });
   };
 }
+
+/*export function deleteCategory(id, cb) {
+  return function(dispatch) {
+    return restAPI
+      .delete('categories/' + id)
+      .then(response => {
+        cb(true);
+      })
+      .catch(err => {
+        console.log(err.message);
+        cb(false);
+      });
+  };
+}*/
+/*
+export function deleteOption(id, cb) {
+  return function(dispatch) {
+    return restAPI
+      .delete('options/' + id)
+      .then(response => {
+        cb(true);
+      })
+      .catch(err => {
+        cb(false);
+        console.log(err.message);
+      });
+  };
+}
+
+export function addCategory(id, data, cb) {
+  return function(dispatch) {
+    return restAPI
+      .post('contractors/' + id + '/categories', data)
+      .then(response => {
+        cb(true);
+      })
+      .catch(err => {
+        cb(false);
+        console.log(err.message);
+      });
+  };
+}
+
+export function addOption(id, data, cb) {
+  return function(dispatch) {
+    return restAPI
+      .post('categories/' + id + '/options', data)
+      .then(response => {
+        cb(true);
+      })
+      .catch(err => {
+        cb(false);
+        console.log(err.message);
+      });
+  };
+}
+
+export function editOption(id, data, cb) {
+  return function(dispatch) {
+    return restAPI
+      .put('options/' + id, data)
+      .then(response => {
+        cb(true);
+      })
+      .catch(err => {
+        cb(false);
+        console.log(err.message);
+      });
+  };
+}
+
+export function editCategory(id, data, cb) {
+  return function(dispatch) {
+    return restAPI
+      .put('categories/' + id, data)
+      .then(response => {
+        cb(true);
+      })
+      .catch(err => {
+        cb(false);
+        console.log(err.message);
+      });
+  };
+}
+
+export function editContractor(id, data, cb) {
+  return function(dispatch) {
+    return restAPI
+      .put('contractors/' + id, data)
+      .then(response => {
+        cb(true);
+      })
+      .catch(err => {
+        cb(false);
+        console.log(err.message);
+      });
+  };
+}*/
+/*
+export function selectOption(id) {
+  return function(dispatch) {
+    dispatch({ type: 'CLEAR_SELECTED_OPTION' });
+
+    return restAPI
+      .get('options/' + id)
+      .then(response => {
+        dispatch({
+          type: SET_SELECTED_OPTION,
+          payload: response.data,
+        });
+      })
+      .catch(err => console.log(err.message));
+  };
+}
+
+export function selectCategory(id) {
+  return function(dispatch) {
+    dispatch({ type: 'CLEAR_SELECTED_CATEGORY' });
+
+    return restAPI
+      .get('categories/' + id)
+      .then(response => {
+        dispatch({
+          type: SET_SELECTED_CATEGORY,
+          payload: response.data,
+        });
+      })
+      .catch(err => console.log(err.message));
+  };
+}
+*/

@@ -1,9 +1,9 @@
-import React                                from 'react';
-import { withRouter }                       from 'react-router-dom';
+import React                                      from 'react';
+import { withRouter }                             from 'react-router-dom';
 // Redux
-import { connect }                          from 'react-redux';
-import { getInvitedProjectsByGenId }        from '../../../actions/sub-actions';
-import { deleteProject, setCurrentProject } from '../../../actions';
+import { connect }                                from 'react-redux';
+import { getInvitedProjectsByGenId }              from '../../../actions/sub-actions';
+import { deleteProject, setCurrentProjectAction } from '../../../actions/global-actions';
 
 import PropTypes      from 'prop-types';
 // material ui
@@ -161,7 +161,7 @@ class ConnectedInvitedProView extends React.Component {
   };
 
   handleSelectProject = async id => {
-    this.props.setCurrentProject(id);
+    this.props.setCurrentProjectAction(id);
     this.props.history.push('/s_cont/project_detail/' + id);
   };
 
@@ -291,7 +291,7 @@ const mapDispatchToProps = dispatch => {
     getInvitedProjectsByGenId: (id, page, rowSize) =>
       dispatch(getInvitedProjectsByGenId(id, page, rowSize)),
     deleteProject: (id, cb) => dispatch(deleteProject(id, cb)),
-    setCurrentProject: id => dispatch(setCurrentProject(id)),
+    setCurrentProjectAction: id => dispatch(setCurrentProjectAction(id)),
   };
 };
 
