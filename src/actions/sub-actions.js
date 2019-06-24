@@ -1,6 +1,6 @@
 import restAPI                                     from '../services';
 import { createAction }                            from 'redux-actions';
-import { loadedProposalsAction }                   from './global-actions';
+import { proposalsLoaded }                   from './global-actions';
 import { clearProjectsAction }                     from './gen-actions';
 import { CLEAR_PROPOSALS, INVITED_PROJECT_LOADED } from '../constants/sub-action-types';
 
@@ -18,7 +18,7 @@ export function getProposals(cont_id, page, row, filterStr) {
           status: filterStr,
         },
       })
-      .then(res => dispatch(loadedProposalsAction(res.data)));
+      .then(res => dispatch(proposalsLoaded(res.data)));
   };
 }
 export function getInvitedProjectsByGenId(id, page, rowSize) {

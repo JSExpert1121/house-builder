@@ -1,12 +1,9 @@
 import React                                      from 'react';
 import { withRouter }                             from 'react-router-dom';
-// Redux
 import { connect }                                from 'react-redux';
 import { getInvitedProjectsByGenId }              from '../../../actions/sub-actions';
-import { deleteProject, setCurrentProjectAction } from '../../../actions/global-actions';
-
+import { deleteProject, setCurrentProject } from '../../../actions/global-actions';
 import PropTypes      from 'prop-types';
-// material ui
 import { withStyles } from '@material-ui/core/styles';
 import Paper          from '@material-ui/core/Paper';
 import {
@@ -161,7 +158,7 @@ class ConnectedInvitedProView extends React.Component {
   };
 
   handleSelectProject = async id => {
-    this.props.setCurrentProjectAction(id);
+    this.props.setCurrentProject(id);
     this.props.history.push('/s_cont/project_detail/' + id);
   };
 
@@ -286,21 +283,16 @@ class ConnectedInvitedProView extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getInvitedProjectsByGenId: (id, page, rowSize) =>
-      dispatch(getInvitedProjectsByGenId(id, page, rowSize)),
-    deleteProject: (id, cb) => dispatch(deleteProject(id, cb)),
-    setCurrentProjectAction: id => dispatch(setCurrentProjectAction(id)),
-  };
+const mapDispatchToProps = {
+    getInvitedProjectsByGenId,
+    deleteProject,
+    setCurrentProject
 };
 
-const mapStateToProps = state => {
-  return {
-    projects: state.sub_data.projects,
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({
+  projects: state.sub_data.projects,
+  userProfile: state.global_data.userProfile,
+})
 
 const InvitedProView = connect(
   mapStateToProps,

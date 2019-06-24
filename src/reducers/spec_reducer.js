@@ -1,3 +1,4 @@
+import { handleActions } from 'redux-actions';
 import {
   SPEC_CREATED,
   SPEC_DELETED,
@@ -18,31 +19,23 @@ const initialState = {
   dirty: true,
 };
 
-function spec_reducer(state = initialState, action) {
-  switch (action.type) {
-    case SPECS_LOADED:
-      return { ...state, specialties: action.payload, dirty: false };
-    case SPEC_LOADED:
-      return state;
-    case SPEC_SELECTED:
-      return { ...state, currentSpecId: action.payload };
-    case SPEC_UPDATED:
-      return { ...state, dirty: true };
-    case SPEC_DELETED:
-      return { ...state, dirty: true };
-    case SPEC_CREATED:
-      return { ...state, dirty: true };
-    case SPEC_SET_PAGEINFO:
-      return {
-        ...state,
-        totalItems: action.payload.totalItems,
-        totalPages: action.payload.totalPages,
-        currentPage: action.payload.pageNo,
-        pageSize: action.payload.pageSize,
-      };
-    default:
-      return state;
-  }
-}
+const specReducer = handleActions(
+  {
+    [SPEC_CREATED]: (state, action) => ({ ...state, dirty: action.payload }),
+    [SPEC_DELETED]: (state, action) => ({ ...state, dirty: action.payload }),
+    [SPEC_LOADED]: (state, action) => state,
+    [SPEC_SELECTED]: (state, action) => ({
+      ...state,
+      currentSpecId: action.payload,
+    }),
+    [SPEC_SET_PAGEINFO]: (state, action) => ({
+      ...state,
+      ...action.payload,
+    }),
+    [SPEC_UPDATED]: (state, action) => ({ ...state, dirty: action.payload }),
+    [SPECS_LOADED]: (state, action) => ({ ...state, ...action.payload }),
+  },
+  initialState
+);
 
-export default spec_reducer;
+export default specReducer;

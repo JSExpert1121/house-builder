@@ -1,25 +1,38 @@
-import { createAction } from 'redux-actions';
+import { createActions } from 'redux-actions';
 import {
   ALL_CONTRACTORS_LOADED,
   CLEAR_ALL_CONTRACTORS,
-  CLEAR_SELECTED_CONTRACTOR, CLEAR_SELECTED_OPTION,
+  CLEAR_SELECTED_CONTRACTOR,
+  CLEAR_SELECTED_OPTION,
   CLEAR_SPECIALTIES,
   CONTRACTOR_DETAIL_LOADED,
   SET_SELECTED_CONTRACTOR,
   SPECIALTIES_LOADED,
 } from '../constants/cont-action-types';
-import restAPI          from '../services';
+import restAPI from '../services';
 
-export const clearAllContractorAction = createAction(CLEAR_ALL_CONTRACTORS);
-export const clearSelectedContractorAction = createAction(
-  CLEAR_SELECTED_CONTRACTOR,
-);
-export const setSelectedContractorAction = createAction(
-  SET_SELECTED_CONTRACTOR,
-);
-export const loadedContractorAction = createAction(ALL_CONTRACTORS_LOADED);
-export const clearSpecialtiesAction = createAction(CLEAR_SPECIALTIES);
-export const clearSelectedOptionAction = createAction(CLEAR_SELECTED_OPTION);
+export const {
+  allContractorsLoaded,
+  clearAllContractors,
+  clearSelectedContractor,
+  clearSelectedOption,
+  clearSpecialties,
+  contractorDetailLoaded,
+  setSelectedContractor,
+  specialtiesLoaded,
+} = createActions({
+  [ALL_CONTRACTORS_LOADED]: contractors => contractors,
+  [CLEAR_ALL_CONTRACTORS]: () => null,
+  [CLEAR_SELECTED_CONTRACTOR]: () => null,
+  [CLEAR_SELECTED_OPTION]: () => null,
+  [CLEAR_SPECIALTIES]: () => null,
+  [CONTRACTOR_DETAIL_LOADED]: (selectedProject, contractorFiles) => ({
+    selectedProject,
+    contractorFiles,
+  }),
+  [SET_SELECTED_CONTRACTOR]: contractor => contractor,
+  [SPECIALTIES_LOADED]: specialties => specialties,
+});
 
 export const uploadFiles = (id, files) => dispatch => {
   const formData = new FormData();
@@ -37,7 +50,7 @@ export const uploadFiles = (id, files) => dispatch => {
 
 export function createContractor(contractor, cb) {
   return function(dispatch) {
-    dispatch(clearAllContractorAction());
+    dispatch(clearAllContractors());
 
     return restAPI
       .post('contractors', contractor)
@@ -52,7 +65,7 @@ export function createContractor(contractor, cb) {
 
 export function selectContractor(id) {
   return function(dispatch) {
-    dispatch(clearSelectedContractorAction());
+    dispatch(clearSelectedContractor());
 
     return restAPI.get('contractors/' + id).then(response => {
       dispatch({
@@ -68,7 +81,7 @@ export function updateContractor(id) {
     return restAPI
       .get('contractors/' + id)
       .then(response => {
-        dispatch(setSelectedContractorAction(response.data));
+        dispatch(setSelectedContractor(response.data));
       })
       .catch(err => console.log(err.message));
   };
@@ -76,7 +89,7 @@ export function updateContractor(id) {
 
 export function getContrators0(page, size) {
   return function(dispatch) {
-    dispatch(clearAllContractorAction());
+    dispatch(clearAllContractors());
 
     return restAPI
       .get('contractors', {
@@ -86,7 +99,7 @@ export function getContrators0(page, size) {
         },
       })
       .then(response => {
-        dispatch(loadedContractorAction(response.data));
+        dispatch(allContractorsLoaded(response.data));
       });
   };
 }
@@ -130,8 +143,7 @@ export function addFiles(id, files, cb) {
 
 export const getContractorDetailById = id => dispatch => {
   return restAPI.get('contractors/' + id).then(response => {
-    console.log(response.data);
-    dispatch({ type: CONTRACTOR_DETAIL_LOADED, payload: response.data });
+    dispatch(contractorDetailLoaded(response.data));
   });
 };
 
@@ -183,7 +195,7 @@ export function rejectContractor(id, data, cb) {
 
 export function getSpecialties(page, size) {
   return function(dispatch) {
-    dispatch(clearSpecialtiesAction());
+    dispatch(clearSpecialties());
     return restAPI
       .get('specialties', {
         params: {
@@ -192,7 +204,7 @@ export function getSpecialties(page, size) {
         },
       })
       .then(response => {
-        dispatch({ type: SPECIALTIES_LOADED, payload: response.data });
+        dispatch(specialtiesLoaded(response.data));
       })
       .catch(err => console.log(err.message));
   };

@@ -19,7 +19,7 @@ import CompareIcon      from '@material-ui/icons/Compare';
 import ConfirmDialog    from '../shared/ConfirmDialog';
 
 import removeMd                                                                                          from 'remove-markdown';
-import { setDetailProposalAction, getProposalData, getProposalsByProjectId, setProposals4CompareAction } from '../../actions/global-actions';
+import { setDetailProposal, getProposalData, getProposalsByProjectId, setProposalsCompare } from '../../actions/global-actions';
 
 const MAX_COMPARE = 3;
 const styles = theme => ({
@@ -304,8 +304,8 @@ class ConnectedProjectProposals extends React.Component {
 const mapDispatchToProps = {
   getProposalData,
   getProposalsByProjectId,
-  setProposals4Compare: setProposals4CompareAction,
-  clearProposalDetail: setDetailProposalAction,
+  setProposals4Compare: setProposalsCompare,
+  clearProposalDetail: setDetailProposal,
 }
 
 const mapStateToProps = state => {

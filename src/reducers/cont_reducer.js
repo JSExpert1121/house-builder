@@ -11,6 +11,7 @@ import {
   SET_SELECTED_OPTION,
   SPECIALTIES_LOADED,
 } from '../constants/cont-action-types';
+import { handleActions } from 'redux-actions';
 
 const initialState = {
   contractors: null,
@@ -22,69 +23,59 @@ const initialState = {
   files: [],
 };
 
-function tem_reducer(state = initialState, action) {
-  switch (action.type) {
-    case ALL_CONTRACTORS_LOADED:
-      return Object.assign({}, state, {
-        contractors: action.payload,
-      });
-    case SET_SELECTED_CONTRACTOR:
-      return Object.assign({}, state, {
-        selectedContractor: action.payload,
-      });
-    case SET_SELECTED_CATEGORY:
-      return Object.assign({}, state, {
-        selectedCategory: Object.assign({}, action.payload, {
-          tem_name: state.selectedContractor,
-        }),
-      });
-    case SET_SELECTED_OPTION:
-      return Object.assign({}, state, {
-        selectedOption: Object.assign({}, action.payload, {
-          tem_name: state.selectedCategory.tem_name,
-          cat_name: state.selectedCategory,
-        }),
-      });
-    case CLEAR_ALL_CONTRACTORS:
-      return Object.assign({}, state, {
-        contractors: null,
-      });
-    case CLEAR_SPECIALTIES:
-      return Object.assign({}, state, {
-        specialties: null,
-      });
-    case CLEAR_SELECTED_CATEGORY:
-      return Object.assign({}, state, {
-        selectedCategory: {
-          isLoading: true,
-        },
-      });
-    case CLEAR_SELECTED_OPTION:
-      return Object.assign({}, state, {
-        selectedOption: {
-          isLoading: true,
-        },
-      });
-    case CLEAR_SELECTED_CONTRACTOR:
-      return Object.assign({}, state, {
-        selectedContractor: {
-          isLoading: true,
-        },
-      });
-    case CONTRACTOR_DETAIL_LOADED:
-      return Object.assign({}, state, {
-        //projects: state.projects.concat(action.payload)
-        selectedProject: action.payload,
-        files: action.payload.contractorFiles.slice(),
-      });
-    case SPECIALTIES_LOADED:
-      return Object.assign({}, state, {
-        //projects: state.projects.concat(action.payload)
-        specialties: action.payload,
-      });
-    default:
-      return state;
-  }
-}
+const templateReducer = handleActions(
+  {
+    [ALL_CONTRACTORS_LOADED]: (state, action) => ({
+      ...state,
+      contractors: action.payload,
+    }),
+    [CLEAR_ALL_CONTRACTORS]: (state, action) => ({
+      ...state,
+      contractors: action.payload,
+    }),
+    [CLEAR_SELECTED_CATEGORY]: (state, action) => ({
+      ...state,
+      selectedCategory: {
+        isLoading: true,
+      },
+    }),
+    [CLEAR_SELECTED_CONTRACTOR]: (state, action) => ({
+      ...state,
+      selectedContractor: action.payload,
+    }),
+    [CLEAR_SELECTED_OPTION]: (state, action) => ({
+      ...state,
+      selectedOption: action.payload,
+    }),
+    [CLEAR_SPECIALTIES]: (state, action) => ({
+      ...state,
+      specialties: action.payload,
+    }),
+    [CONTRACTOR_DETAIL_LOADED]: (state, action) => ({
+      ...state,
+      selectedProject: action.payload.selectedProject,
+      files: action.payload.contractorFiles.slice(),
+    }),
+    [SET_SELECTED_CATEGORY]: (state, action) => ({
+      ...state,
+      selectedCategory: Object.assign({}, action.payload, {
+        tem_name: state.selectedContractor,
+      }),
+    }),
+    [SET_SELECTED_CONTRACTOR]: (state, action) => ({
+      ...state,
+      selectedContractor: action.payload,
+    }),
+    [SET_SELECTED_OPTION]: (state, action) => ({
+      ...state,
+      selectedOption: Object.assign({}, action.payload, {
+        tem_name: state.selectedCategory.tem_name,
+        cat_name: state.selectedCategory,
+      }),
+    }),
+    [SPECIALTIES_LOADED]: (state, action) => ({ ...state, ...action.payload }),
+  },
+  initialState
+);
 
-export default tem_reducer;
+export default templateReducer;

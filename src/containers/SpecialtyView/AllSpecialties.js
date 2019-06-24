@@ -1,7 +1,7 @@
 import React, { Component }                               from 'react';
-import { connect }                                        from 'react-redux';
-import { withRouter }                                     from 'react-router-dom';
-import PropTypes                                          from 'prop-types';
+import { connect }                                         from 'react-redux';
+import { withRouter }                                      from 'react-router-dom';
+import PropTypes                                           from 'prop-types';
 import {
   Button,
   CircularProgress,
@@ -15,9 +15,9 @@ import {
   TablePagination,
   TextField,
   withStyles,
-}                                                         from '@material-ui/core';
-import { CreateSpec, DeleteSpec, LoadSpecs, SelectSpec } from '../../actions/spec-actions';
-import SpecTableView                                      from './SpecTableView';
+}                                                          from '@material-ui/core';
+import { createSpec, deleteSpec, loadSpecs, specSelected } from '../../actions/spec-actions';
+import SpecTableView                                       from './SpecTableView';
 
 const styles = theme => ({
   root: {
@@ -359,10 +359,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  loadPage: (pageNo, pageSize) => dispatch(LoadSpecs(pageNo, pageSize)),
-  deleteSpec: id => dispatch(DeleteSpec(id)),
-  createSpec: spec => dispatch(CreateSpec(spec)),
-  selectSpec: id => dispatch(SelectSpec(id)),
+  loadPage: (pageNo, pageSize) => dispatch(loadSpecs(pageNo, pageSize)),
+  deleteSpec: id => dispatch(deleteSpec(id)),
+  createSpec: spec => dispatch(createSpec(spec)),
+  selectSpec: id => dispatch(specSelected(id)),
 });
 
 const ConnectedAllSpec = connect(

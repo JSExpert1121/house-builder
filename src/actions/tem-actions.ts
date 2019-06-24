@@ -1,13 +1,13 @@
-import restAPI                       from '../services';
+import restAPI                 from '../services';
 import {
   ALL_TEMPLATES_LOADED,
   SET_SELECTED_CATEGORY,
   SET_SELECTED_OPTION,
   SET_SELECTED_TEMPLATE,
-}                                    from '../constants/tem-action-types';
-import { Dispatch }                  from 'redux';
-import { AxiosResponse }             from 'axios';
-import { clearSelectedOptionAction } from './cont-actions';
+}                              from '../constants/tem-action-types';
+import { Dispatch }            from 'redux';
+import { AxiosResponse }       from 'axios';
+import { clearSelectedOption } from './cont-actions';
 
 export function createTemplate(template, cb) {
   return function(dispatch) {
@@ -43,7 +43,7 @@ export function selectTemplate(id) {
 
 export function selectOption(id: number) {
   return function(dispatch: Dispatch) {
-    dispatch(clearSelectedOptionAction());
+    dispatch(clearSelectedOption());
 
     return restAPI
       .get('options/' + id)
