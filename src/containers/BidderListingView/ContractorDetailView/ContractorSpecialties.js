@@ -1,6 +1,5 @@
 import React                                                                from 'react';
 import { connect }                                                          from 'react-redux';
-import PropTypes                                                            from 'prop-types';
 import { withStyles }                                                       from '@material-ui/core/styles';
 import {
   Button,
@@ -21,12 +20,20 @@ import NoteAddIcon                                                          from
 import DeleteIcon                                                           from '@material-ui/icons/Delete';
 import Dialog                                                               from '@material-ui/core/Dialog';
 import DialogActions                                                        from '@material-ui/core/DialogActions';
-import DialogContent                                                        from '@material-ui/core/DialogContent';
-import DialogContentText                                                    from '@material-ui/core/DialogContentText';
-import DialogTitle                                                          from '@material-ui/core/DialogTitle';
-import Fab                                                                  from '@material-ui/core/Fab';
-import AddIcon                                                              from '@material-ui/icons/Add';
-import { addSpecialty, deleteSpecialty, getSpecialties, updateContractor } from '../../../actions/cont-actions';
+import DialogContent     from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle       from '@material-ui/core/DialogTitle';
+import Fab               from '@material-ui/core/Fab';
+import AddIcon           from '@material-ui/icons/Add';
+import {
+  addSpecialty,
+  deleteSpecialty,
+  getSpecialties,
+  selectContractor,
+  updateContractor
+}                        from '../../../actions/cont-actions';
+import {compose}         from "redux";
+import {withRouter}      from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -82,7 +89,7 @@ const CustomTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
-class ConnectedContractorInfoView extends React.Component {
+class ContractorInfoView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -406,30 +413,24 @@ class ConnectedContractorInfoView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    specialties: state.cont_data.specialties,
-    selectedContractor: state.cont_data.selectedContractor,
-  };
+const mapStateToProps = state => ({
+  specialties: state.cont_data.specialties,
+  selectedContractor: state.cont_data.selectedContractor,
+})
+
+const mapDispatchToProps = {
+  getSpecialties,
+  addSpecialty,
+  deleteSpecialty,
+  updateContractor,
+  selectContractor
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getSpecialties: (page, size) => dispatch(getSpecialties(page, size)),
-    addSpecialty: (contractor, specialty, cb) =>
-      dispatch(addSpecialty(contractor, specialty, cb)),
-    deleteSpecialty: (contractor, specialty, cb) =>
-      dispatch(deleteSpecialty(contractor, specialty, cb)),
-    updateContractor: id => dispatch(updateContractor(id)),
-  };
-};
-const ContractorInfoView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedContractorInfoView);
-
-ContractorInfoView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorInfoView);
+export default compose(
+  withStyles(styles),
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ContractorInfoView)

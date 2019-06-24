@@ -30,7 +30,7 @@ class Auth {
       axios.get(process.env.REACT_APP_AUTH_AUDIENCE + 'users/' + user_id, {
         headers,
       }).then(res => {
-        console.dir(setUserProfile);
+        this.userProfile = res.data;
         dispatch(setUserProfile(res.data));
       })
     });

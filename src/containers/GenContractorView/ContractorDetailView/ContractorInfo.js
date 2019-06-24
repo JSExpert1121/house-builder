@@ -150,18 +150,6 @@ class ConnectedContractorInfoView extends React.Component {
           }}
           message={<span id="message-id"> {this.state.snackBarContent}</span>}
         />
-        {/* <div className={classes.buttons}>
-					<Button variant="contained" color="primary" className={classes.button} onClick={() => this.props.approveContractor(selectedContractor.id, { "status": "ACTIVE" }, (result) => {
-						if (result)
-							this.props.updateContractor(selectedContractor.id);
-					}
-					)}>Approve</Button>
-					<Button variant="contained" color="default" className={classes.button} onClick={() => this.props.rejectContractor(selectedContractor.id, { "status": "REJECTED" }, (result) => {
-						if (result)
-							this.props.updateContractor(selectedContractor.id);
-					}
-					)}>Reject</Button>
-				</div> */}
       </div>
     );
   }

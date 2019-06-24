@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux';
-import globalReducer       from './global_reducer';
-import gen_reducer         from './gen_reducer';
-import tem_reducer         from './tem_reducer';
-import cont_reducer        from './cont_reducer';
-import specReducer         from './spec_reducer';
-import sub_reducer         from './sub_reducer';
+import globalReducer       from './globalReducer';
+import genReducer          from './genReducer';
+import temReducer          from './temReducer';
+import cont_reducer        from './contReducer';
+import specReducer         from './specReducer';
+import subReducer          from './subReducer';
 
 export default combineReducers({
   global_data: globalReducer,
-  gen_data: gen_reducer,
-  tem_data: tem_reducer,
+  gen_data: genReducer,
+  tem_data: temReducer,
   cont_data: cont_reducer,
   spec_data: specReducer,
-  sub_data: sub_reducer,
+  sub_data: subReducer,
 });

@@ -15,11 +15,11 @@ import {
   SET_USER_PROFILE,
 } from '../constants/global-action-types';
 
-import PropApi from '../api/proposal';
-import ProjApi from '../api/project';
-import ContApi from '../api/contractor';
-import Axios from 'axios';
-import { clearProposalAction } from './sub-actions';
+import PropApi             from '../api/proposal';
+import ProjApi             from '../api/project';
+import ContApi             from '../api/contractor';
+import Axios               from 'axios';
+import { clearProposals } from './sub-actions';
 
 export const {
   clearProposalMessages,
@@ -95,7 +95,7 @@ export const updateOption = (id, option) => dispatch =>
 
 export function getProposalsByProjectId(id, page, size) {
   return function(dispatch) {
-    dispatch(clearProposalAction());
+    dispatch(clearProposals());
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/proposals',
       {
