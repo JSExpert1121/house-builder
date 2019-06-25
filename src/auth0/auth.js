@@ -1,6 +1,6 @@
-import auth0 from 'auth0-js';
-import axios from 'axios';
-import { setUserProfileAction } from '../actions/global-actions';
+import auth0              from 'auth0-js';
+import axios              from 'axios';
+import { setUserProfile } from '../actions/global-actions';
 
 class Auth {
   constructor() {
@@ -30,7 +30,8 @@ class Auth {
       axios.get(process.env.REACT_APP_AUTH_AUDIENCE + 'users/' + user_id, {
         headers,
       }).then(res => {
-        dispatch(setUserProfileAction(res.data));
+        this.userProfile = res.data;
+        dispatch(setUserProfile(res.data));
       })
     });
 

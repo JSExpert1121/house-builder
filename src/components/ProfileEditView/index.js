@@ -11,8 +11,8 @@ import auth0Client from '../../auth0/auth';
 import TSnackbarContent from '../SnackBarContent';
 import axios            from 'axios';
 
-import { connect }              from 'react-redux';
-import { setUserProfileAction } from '../../actions/global-actions';
+import { connect }        from 'react-redux';
+import { setUserProfile } from '../../actions/global-actions';
 
 const styles = theme => ({
   root: {
@@ -426,7 +426,7 @@ class connectedProfileView extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUserProfileAction: profile => dispatch(setUserProfileAction(profile)),
+    setUserProfileAction: profile => dispatch(setUserProfile(profile)),
   };
 };
 

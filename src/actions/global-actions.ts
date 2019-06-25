@@ -1,4 +1,5 @@
-import { createAction } from 'redux-actions';
+import { createActions } from 'redux-actions';
+
 import {
   CLEAR_PROPOSAL_MESSAGES,
   CLEAR_SELECTED_PROJECT,
@@ -14,47 +15,53 @@ import {
   SET_USER_PROFILE,
 } from '../constants/global-action-types';
 
-import PropApi                 from '../api/proposal';
-import ProjApi                 from '../api/project';
-import ContApi                 from '../api/contractor';
-import Axios                   from 'axios';
-import { clearProposalAction } from './sub-actions';
+import PropApi             from '../api/proposal';
+import ProjApi             from '../api/project';
+import ContApi             from '../api/contractor';
+import Axios               from 'axios';
+import { clearProposals } from './sub-actions';
 
-export const setUserProfileAction = createAction(SET_USER_PROFILE);
-export const setDetailProposalAction = createAction(SET_DETAIL_PROPOSAL);
-export const setProposals4CompareAction = createAction(SET_PROPOSALS_COMPARE);
-export const setSelectedProposalAction = createAction(SET_SELECTED_PROPOSAL);
-export const clearSelectedProposalAction = createAction(
-  CLEAR_SELECTED_PROPOSAL
-);
-export const loadedProposalsAction = createAction(PROPOSALS_LOADED);
-export const clearSelectedProjectAction = createAction(CLEAR_SELECTED_PROJECT);
-export const setLoadedProjectBiddersAction = createAction(
-  PROJECT_BIDDERS_LOADED
-);
-export const clearProposalMessageAction = createAction(CLEAR_PROPOSAL_MESSAGES);
-export const searchFilterLoadedAction = createAction(SEARCH_FILTER_LOADED);
-export const setCurrentProjectAction = createAction(SET_CURRENT_PROJECT);
-
-export function setCurrentProject(id) {
-  return function(dispatch) {
-    dispatch(setCurrentProjectAction(id));
-  };
-}
+export const {
+  clearProposalMessages,
+  clearSelectedProject,
+  clearSelectedProposal,
+  projectBiddersLoaded,
+  projectDetailLoaded,
+  proposalsLoaded,
+  searchFilterLoaded,
+  setCurrentProject,
+  setDetailProposal,
+  setProposalsCompare,
+  setSelectedProposal,
+  setUserProfile,
+} = createActions({
+  [CLEAR_PROPOSAL_MESSAGES]: () => null,
+  [CLEAR_SELECTED_PROJECT]: () => null,
+  [CLEAR_SELECTED_PROPOSAL]: () => null,
+  [PROJECT_BIDDERS_LOADED]: projectBidders => projectBidders,
+  [PROJECT_DETAIL_LOADED]: project => project,
+  [PROPOSALS_LOADED]: proposals => proposals,
+  [SEARCH_FILTER_LOADED]: searchResult => searchResult,
+  [SET_CURRENT_PROJECT]: currentProjectId => currentProjectId,
+  [SET_DETAIL_PROPOSAL]: proposalDetail => proposalDetail,
+  [SET_PROPOSALS_COMPARE]: compareProps => compareProps,
+  [SET_SELECTED_PROPOSAL]: proposal => proposal,
+  [SET_USER_PROFILE]: userProfile => userProfile,
+});
 
 export const getProposalDetails = id => dispatch => {
   return PropApi.getDetail(id).then(data => {
-    dispatch(setDetailProposalAction(data));
+    dispatch(setDetailProposal(data));
     return data;
   });
 };
 export function getProposalData(id) {
   return function(dispatch) {
-    dispatch(clearSelectedProposalAction());
+    dispatch(clearSelectedProposal());
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'proposals/' + id
     ).then(res => {
-      dispatch(setSelectedProposalAction(res.data));
+      dispatch(setSelectedProposal(res.data));
     });
   };
 }
@@ -69,7 +76,7 @@ export const deleteProposal = prop_id => () => PropApi.delete(prop_id);
 
 export const getProposals = (cont_id, page, size, status) => dispatch => {
   ContApi.getProposals(cont_id, page, size, status).then(data => {
-    dispatch(loadedProposalsAction(data));
+    dispatch(proposalsLoaded(data));
   });
 };
 
@@ -88,7 +95,7 @@ export const updateOption = (id, option) => dispatch =>
 
 export function getProposalsByProjectId(id, page, size) {
   return function(dispatch) {
-    dispatch(clearProposalAction());
+    dispatch(clearProposals());
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/proposals',
       {
@@ -98,7 +105,7 @@ export function getProposalsByProjectId(id, page, size) {
         },
       }
     ).then(response => {
-      dispatch(loadedProposalsAction(response.data));
+      dispatch(proposalsLoaded(response.data));
     });
   };
 }
@@ -111,10 +118,10 @@ export const deleteProject = id => dispatch => ProjApi.delete(id);
 
 export function getProjectData(id) {
   return function(dispatch) {
-    dispatch(clearSelectedProjectAction());
+    dispatch(clearSelectedProject());
     return Axios.get(process.env.REACT_APP_PROJECT_API + 'projects/' + id).then(
       response => {
-        dispatch({ type: PROJECT_DETAIL_LOADED, payload: response.data });
+        dispatch(projectDetailLoaded(response.data));
       }
     );
   };
@@ -132,7 +139,7 @@ export function getProjectBiddersData(id, page, size) {
       }
     )
       .then(response => {
-        dispatch(setLoadedProjectBiddersAction(response.data));
+        dispatch(projectBiddersLoaded(response.data));
       })
       .catch(err => console.log(err.message));
   };
@@ -155,7 +162,7 @@ export function deleteFileFromProject(id, name, cb) {
 
 export function getProposalMessages(prop_id, page, size, cb) {
   return function(dispatch) {
-    dispatch(clearProposalMessageAction());
+    dispatch(clearProposalMessages());
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'messages/proposals/' + prop_id,
       {
@@ -235,7 +242,7 @@ export function searchFilter(name, city, specialties) {
       }
     )
       .then(response => {
-        dispatch(searchFilterLoadedAction(response.data));
+        dispatch(projectBiddersLoaded(response.data));
       })
       .catch(err => console.log(err.message));
   };

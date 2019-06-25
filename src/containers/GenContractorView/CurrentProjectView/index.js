@@ -18,7 +18,7 @@ import CustomSnackbar   from '../../../components/shared/CustomSnackbar';
 import ConfirmDialog    from '../../../components/shared/ConfirmDialog';
 
 import { getProjectsByGenId }                     from '../../../actions/gen-actions';
-import { deleteProject, setCurrentProjectAction } from '../../../actions/global-actions';
+import { deleteProject, setCurrentProject } from '../../../actions/global-actions';
 
 import style from './CurrentProject.style.ts';
 
@@ -119,7 +119,7 @@ class CurrentProject extends React.Component {
   };
 
   handleSelectProject = id => {
-    this.props.setCurrentProjectAction(id);
+    this.props.setCurrentProject(id);
     this.props.history.push('/gen-contractor/project_detail/' + id);
   };
 
@@ -215,7 +215,7 @@ class CurrentProject extends React.Component {
 const mapDispatchToProps = {
   getProjectsByGenId,
   deleteProject,
-  setCurrentProjectAction,
+  setCurrentProject,
 };
 
 const mapStateToProps = state => ({

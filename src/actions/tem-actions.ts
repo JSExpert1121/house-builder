@@ -1,17 +1,37 @@
-import restAPI                       from '../services';
+import restAPI                     from '../services';
 import {
   ALL_TEMPLATES_LOADED,
   SET_SELECTED_CATEGORY,
   SET_SELECTED_OPTION,
   SET_SELECTED_TEMPLATE,
-}                                    from '../constants/tem-action-types';
-import { Dispatch }                  from 'redux';
-import { AxiosResponse }             from 'axios';
-import { clearSelectedOptionAction } from './cont-actions';
+  CLEAR_ALL_TEMPLATES,
+  CLEAR_SELECTED_TEMPLATE
+}                                  from '../constants/tem-action-types';
+import { Dispatch }                from 'redux';
+import { AxiosResponse }           from 'axios';
+import { clearSelectedOption }     from './cont-actions';
+import { createActions }           from "redux-actions";
+import { CLEAR_SELECTED_CATEGORY } from "../constants/cont-action-types";
+
+const {
+  allTemplatesLoaded,
+  clearAllTemplates,
+  setSelectedCategory,
+  setSelectedOption,
+  setSelectedTemplate,
+  clearSelectedTemplate,
+} = createActions({
+  [ALL_TEMPLATES_LOADED]: (templates) => templates,
+  [CLEAR_ALL_TEMPLATES]: () => null,
+  [SET_SELECTED_CATEGORY]: (data) => data,
+  [SET_SELECTED_OPTION]: (selectedOption) => selectedOption,
+  [SET_SELECTED_TEMPLATE]: (selectedTemplate) => selectedTemplate,
+  [CLEAR_SELECTED_TEMPLATE]: () => null,
+});
 
 export function createTemplate(template, cb) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_ALL_TEMPLATES' });
+    dispatch(clearAllTemplates());
 
     return restAPI
       .post('templates', template)
@@ -27,15 +47,12 @@ export function createTemplate(template, cb) {
 
 export function selectTemplate(id) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_SELECTED_TEMPLATE' });
+    dispatch(clearSelectedTemplate());
 
     return restAPI
       .get('templates/' + id)
       .then((response: AxiosResponse) => {
-        dispatch({
-          type: SET_SELECTED_TEMPLATE,
-          payload: response.data,
-        });
+        dispatch(setSelectedTemplate(response.data));
       })
       .catch(err => console.log(err.message));
   };
@@ -43,15 +60,12 @@ export function selectTemplate(id) {
 
 export function selectOption(id: number) {
   return function(dispatch: Dispatch) {
-    dispatch(clearSelectedOptionAction());
+    dispatch(clearSelectedOption());
 
     return restAPI
       .get('options/' + id)
       .then((response: AxiosResponse) => {
-        dispatch({
-          type: SET_SELECTED_OPTION,
-          payload: response.data,
-        });
+        dispatch(setSelectedOption(response.data));
       })
       .catch(err => console.log(err.message));
   };
@@ -59,15 +73,12 @@ export function selectOption(id: number) {
 
 export function selectCategory(id) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_SELECTED_CATEGORY' });
+    dispatch({ type: CLEAR_SELECTED_CATEGORY });
 
     return restAPI
       .get('categories/' + id)
       .then((response: AxiosResponse) => {
-        dispatch({
-          type: SET_SELECTED_CATEGORY,
-          payload: response.data,
-        });
+        dispatch(setSelectedCategory(response.data));
       })
       .catch(err => console.log(err.message));
   };
@@ -75,7 +86,7 @@ export function selectCategory(id) {
 
 export function getTemplatesO(page, size) {
   return function(dispatch) {
-    dispatch({ type: 'CLEAR_ALL_TEMPLATES' });
+    dispatch(clearAllTemplates());
 
     return restAPI
       .get('templates', {
@@ -85,7 +96,7 @@ export function getTemplatesO(page, size) {
         },
       })
       .then((response: AxiosResponse) => {
-        dispatch({ type: ALL_TEMPLATES_LOADED, payload: response.data });
+        dispatch(allTemplatesLoaded(response.data));
       })
       .catch(err => console.log(err.message));
   };

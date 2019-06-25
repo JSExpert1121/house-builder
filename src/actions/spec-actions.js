@@ -1,4 +1,5 @@
 import SpecApi from '../api/spec';
+import { createActions } from 'redux-actions';
 
 import {
   SPEC_CREATED,
@@ -10,74 +11,63 @@ import {
   SPECS_LOADED,
 } from '../constants/spec-action-types';
 
-const SpecCreated = spec => ({
-  type: SPEC_CREATED,
-  payload: spec,
+export const {
+  specCreated,
+  specDeleted,
+  specUpdated,
+  specsLoaded,
+  specLoaded,
+  specSetPageInfo,
+  specSelected,
+} = createActions({
+  [SPEC_CREATED]: () => true,
+  [SPEC_DELETED]: () => true,
+  [SPEC_UPDATED]: () => true,
+  [SPECS_LOADED]: specialties => ({ specialties, dirty: false }),
+  [SPEC_LOADED]: () => null,
+  [SPEC_SET_PAGEINFO]: (currentPage, pageSize, totalPages, totalItems) => ({
+    totalItems,
+    totalPages,
+    currentPage,
+    pageSize,
+  }),
+  [SPEC_SELECTED]: currentSpecId => currentSpecId,
 });
 
-const SpecDeleted = () => ({
-  type: SPEC_DELETED,
-});
-
-const SpecUpdated = spec => ({
-  type: SPEC_UPDATED,
-  payload: spec,
-});
-
-const SpecsLoaded = specs => ({
-  type: SPECS_LOADED,
-  payload: specs,
-});
-
-const SpecLoaded = spec => ({
-  type: SPEC_LOADED,
-  payload: spec,
-});
-
-const SetPageInfo = (pageNo, pageSize, totalPages, totalItems) => ({
-  type: SPEC_SET_PAGEINFO,
-  payload: { pageNo, pageSize, totalPages, totalItems },
-});
-
-export const SelectSpec = specid => ({
-  type: SPEC_SELECTED,
-  payload: specid,
-});
-
-export const CreateSpec = spec => dispatch => {
+export const createSpec = spec => dispatch => {
   return SpecApi.create(spec).then(res => {
-    dispatch(SpecCreated(spec));
+    dispatch(specCreated(spec));
     return res.data;
   });
 };
 
-export const UpdateSpec = spec => dispatch => {
+export const updateSpec = spec => dispatch => {
   return SpecApi.update(spec).then(res => {
-    dispatch(SpecUpdated(spec));
+    dispatch(specUpdated(spec));
     return res;
   });
 };
 
-export const DeleteSpec = specid => dispatch => {
+export const deleteSpec = specid => dispatch => {
   return SpecApi.delete(specid).then(res => {
-    dispatch(SpecDeleted());
+    dispatch(specDeleted());
     return res;
   });
 };
 
-export const LoadSpecs = (pageNo, pageSize) => dispatch => {
+export const loadSpecs = (pageNo, pageSize) => dispatch => {
   return SpecApi.loadPage(pageNo, pageSize).then(data => {
     dispatch(
-      SetPageInfo(data.number, data.size, data.totalPages, data.totalElements)
+        specSetPageInfo(data.number, data.size, data.totalPages, data.totalElements)
     );
-    dispatch(SpecsLoaded(data.content));
+    dispatch(specsLoaded(data.content));
     return data.content;
   });
 };
 
-export const LoadSpec = specid => dispatch => {
+export const loadSpec = specid => dispatch => {
   return SpecApi.load(specid).then(data => {
-    dispatch(SpecLoaded(data));
+    dispatch(specLoaded(data));
     return data;
   });
 };

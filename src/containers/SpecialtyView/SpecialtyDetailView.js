@@ -3,7 +3,7 @@ import PropTypes            from 'prop-types';
 import { connect }          from 'react-redux';
 import { withRouter }       from 'react-router-dom';
 
-import { LoadSpec, UpdateSpec } from '../../actions/spec-actions';
+import { loadSpec, updateSpec } from '../../actions/spec-actions';
 
 import {
   Button,
@@ -219,8 +219,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadSpec: id => dispatch(LoadSpec(id)),
-  updateSpec: spec => dispatch(UpdateSpec(spec)),
+  loadSpec: id => dispatch(loadSpec(id)),
+  updateSpec: spec => dispatch(updateSpec(spec)),
 });
 
 const connectedSpecDetailView = connect(

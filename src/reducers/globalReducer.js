@@ -1,3 +1,4 @@
+import { handleActions } from 'redux-actions';
 import {
   CLEAR_PROPOSAL_MESSAGES,
   CLEAR_SELECTED_PROJECT,
@@ -12,8 +13,7 @@ import {
   SET_PROPOSALS_COMPARE,
   SET_SELECTED_PROPOSAL,
   SET_USER_PROFILE,
-} from '../constants/global-action-types';
-import { handleActions } from 'redux-actions';
+}                                    from '../constants/global-action-types';
 
 const initialState = {
   userProfile: null,
@@ -33,7 +33,7 @@ const globalReducer = handleActions(
       ...state,
       userProfile: action.payload,
     }),
-    [SET_DETAIL_PROPOSAL]: (state, action) => console.log('#long') | ({
+    [SET_DETAIL_PROPOSAL]: (state, action) => ({
       ...state,
       proposalDetail: action.payload,
     }),
@@ -67,15 +67,15 @@ const globalReducer = handleActions(
     }),
     [CLEAR_SELECTED_PROJECT]: (state, action) => ({
       ...state,
-      project: null,
+      project: action.payload,
     }),
     [CLEAR_SELECTED_PROPOSAL]: (state, action) => ({
       ...state,
-      proposal: null,
+      proposal: action.payload,
     }),
     [CLEAR_PROPOSAL_MESSAGES]: (state, action) => ({
       ...state,
-      proposalMessages: null,
+      proposalMessages: action.payload,
     }),
     [SET_PROPOSALS_COMPARE]: (state, action) => ({
       ...state,
