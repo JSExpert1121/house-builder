@@ -184,12 +184,12 @@ class ConnectedProjectProposals extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.tableWrap}>
-          {match.url.includes('/a_pros') && (
+          {match.url.includes('/projects') && (
             <Button
               className={classes.btnSubmitProposal}
               onClick={() => {
                 this.props.clearProposalDetail(null);
-                this.props.history.push('/a_pros/proposal_detail/-1');
+                this.props.history.push('/projects/proposal_detail/-1');
               }}
             >
               {' '}

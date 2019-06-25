@@ -59,7 +59,7 @@ class ConnectedProjectDetailView extends React.Component {
     if (match.url.includes('gen-contractor'))
       this.props.history.push('/gen-contractor');
     if (match.url.includes('s_cont')) this.props.history.push('/s_cont');
-    else if (match.url.includes('a_pros')) this.props.history.push('/a_pros');
+    else if (match.url.includes('projects')) this.props.history.push('/projects');
   };
 
   render() {
