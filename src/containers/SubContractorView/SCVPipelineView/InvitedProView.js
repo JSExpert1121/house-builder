@@ -7,7 +7,6 @@ import PropTypes      from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper          from '@material-ui/core/Paper';
 import {
-  Button,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -24,6 +23,7 @@ import {
   TableRow,
 }                     from '@material-ui/core';
 import DeleteIcon     from '@material-ui/icons/Delete';
+import Button from "components/CustomButtons/Button.jsx";
 
 const styles = theme => ({
   root: {

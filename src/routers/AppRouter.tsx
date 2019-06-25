@@ -91,7 +91,7 @@ class AppRouterConnect extends React.Component<AppRouterProps, AppRouterState> {
                   component={GenContractorView}
                 />
                 <SecuredRoute path="/s_cont" component={SubContractorView}/>
-                <SecuredRoute path="/b_list" component={BidderListingView}/>
+                <SecuredRoute render={() => userProfile ? <BidderListingView /> : null } path="/b_list" component={BidderListingView}/>
                 <SecuredRoute path="/projects" component={ProjectsView}/>
                 <SecuredRoute path="/m_temp" component={TemplatesView}/>
                 <SecuredRoute path="/m_spec" component={SpecialtyView}/>

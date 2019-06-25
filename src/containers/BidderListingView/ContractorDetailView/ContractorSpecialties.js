@@ -2,7 +2,6 @@ import React                                                                from
 import { connect }                                                          from 'react-redux';
 import { withStyles }                                                       from '@material-ui/core/styles';
 import {
-  Button,
   CircularProgress,
   IconButton,
   MenuItem,
@@ -34,6 +33,7 @@ import {
 }                        from '../../../actions/cont-actions';
 import {compose}         from "redux";
 import {withRouter}      from "react-router-dom";
+import Button           from "components/CustomButtons/Button.jsx";
 
 const styles = theme => ({
   root: {
@@ -388,7 +388,7 @@ class ContractorInfoView extends React.Component {
               }}
               color="primary"
             >
-              Add{' '}
+              Add
               {this.state.isSaving && (
                 <CircularProgress size={24} thickness={4} />
               )}

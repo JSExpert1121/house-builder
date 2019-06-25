@@ -6,12 +6,12 @@ import {createStyles, withStyles} from '@material-ui/core/styles';
 import Paper                      from '@material-ui/core/Paper';
 import CircularProgress           from '@material-ui/core/CircularProgress';
 import Card                       from '@material-ui/core/Card';
-import Button                     from '@material-ui/core/Button';
 import IconButton                 from '@material-ui/core/IconButton';
 import Box                        from '@material-ui/core/Box';
 import CloudUploadIcon            from '@material-ui/icons/CloudUpload';
 import DeleteIcon                 from '@material-ui/icons/Delete';
 
+import Button from "components/CustomButtons/Button.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 import SimpleMDE   from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
@@ -51,17 +51,6 @@ const styles = theme => createStyles({
     position: 'relative',
     left: 'calc(50% - 10px)',
     top: 'calc(40vh)',
-  },
-  submitButton: {
-    width: 120,
-    [theme.breakpoints.up('sm')]: {
-      width: 170,
-    },
-    color: 'white',
-    backgroundColor: theme.palette.primary.light,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
   },
   editField: {
     lineHeight: '1.5rem',
@@ -190,7 +179,6 @@ class AddProjectView extends Component {
             }}
           />
           <SimpleMDE
-            style={{ height: 'calc(100% - 274px)', overflow: 'auto' }}
             value={this.state.description}
             onChange={this.handleDescChange}
             options={{
@@ -209,11 +197,11 @@ class AddProjectView extends Component {
             <label htmlFor="upload-file" style={{ display: 'inline' }}>
               <Button
                 variant="contained"
-                color="default"
+                color="primary"
                 className={classes.button}
                 component="span"
               >
-                <CloudUploadIcon className={classes.rightIcon} />
+                <CloudUploadIcon />
                 &nbsp;&nbsp;Upload
               </Button>
             </label>
@@ -231,6 +219,7 @@ class AddProjectView extends Component {
           </Box>
           <Box style={{ width: '100%', textAlign: 'center', margin: '16px 0' }}>
             <Button
+              color="primary"
               disabled={this.state.isBusy}
               className={classes.submitButton}
               onClick={this.handleAddProject}

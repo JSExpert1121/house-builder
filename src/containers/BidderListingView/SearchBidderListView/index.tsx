@@ -16,7 +16,7 @@ import Typography                                           from '@material-ui/c
 import Chip                                                 from '@material-ui/core/Chip';
 import Grid                                                 from '@material-ui/core/Grid';
 import classNames                                           from 'classnames';
-import Select                                               from 'react-select';
+// import Select                                               from 'react-select';
 import MenuItem                                             from '@material-ui/core/MenuItem';
 import CancelIcon                                           from '@material-ui/icons/Cancel';
 import { searchFilter }                                     from '../../../actions/global-actions';
@@ -24,9 +24,13 @@ import { getContrators0, getSpecialties, selectContractor } from '../../../actio
 import { match }                                            from 'react-router';
 import { MaterialThemeHOC, UserProfile }                    from '../../../types/global';
 
-import style       from './SearchBidderList.style';
-import { compose } from 'redux';
-import { Button }  from '@material-ui/core';
+import style          from './SearchBidderList.style';
+import { compose }    from 'redux';
+import Button         from "../../../components/CustomButtons/Button";
+import CustomInput    from "../../../components/CustomInput/CustomInput";
+import FormControl    from "@material-ui/core/FormControl";
+import InputLabel    from "@material-ui/core/InputLabel";
+import Select    from "@material-ui/core/Select";
 
 function NoOptionsMessage(props) {
   return (
@@ -51,7 +55,7 @@ function Control(props) {
       InputProps={{
         inputComponent,
         inputProps: {
-          className: props.selectProps.classes.input,
+          // className: props.selectProps.classes.input,
           inputRef: props.innerRef,
           children: props.children,
           ...props.innerProps,
@@ -302,25 +306,76 @@ class BidderListingView extends React.Component<
     return (
       <div className={classes.root}>
         <Card className={classes.card}>
-          <Grid container>
+          <Grid container alignItems="center">
             <Grid item xs={3}>
-              <TextField
+              <CustomInput
+                labelText="Name"
                 id="name"
-                label="Name"
-                value={this.state.filterName}
-                onChange={e => this.onNameChange(e)}
+                inputProps={{
+                  type: "text",
+                  value: this.state.filterName,
+                  onChange: e => this.onNameChange(e)
+                }}
               />
             </Grid>
             <Grid item xs={3}>
-              <TextField
+              <CustomInput
                 id="city"
-                label="City"
-                value={this.state.filterCity}
-                onChange={e => this.onCityChange(e)}
+                labelText="City"
+                inputProps={{
+                  value: this.state.filterCity,
+                  onChange: e => this.onCityChange(e)
+                }}
               />
             </Grid>
             <Grid item xs={3}>
-              <Select
+              <FormControl
+                fullWidth
+                className={classes.selectFormControl}
+              >
+                <InputLabel
+                  htmlFor="simple-select"
+                  className={classes.selectLabel}
+                >
+                  Select multiple specialties
+                </InputLabel>
+                <Select
+                  MenuProps={{
+                    className: classes.selectMenu
+                  }}
+                  classes={{
+                    select: classes.select
+                  }}
+                  value={this.state.multi}
+                  onChange={this.handleChange('multi')}
+                  inputProps={{
+                    name: "simpleSelect",
+                    id: "simple-select"
+                  }}
+                >
+                  <MenuItem
+                    disabled
+                    classes={{
+                      root: classes.selectMenuItem
+                    }}
+                  >
+                    Select multiple specialties
+                  </MenuItem>
+                  {suggestions.map(({value, label }, key) => (
+                    <MenuItem
+                      key={key}
+                      classes={{
+                        root: classes.selectMenuItem,
+                        selected: classes.selectMenuItemSelected
+                      }}
+                      value={value}
+                    >
+                      {label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/*<Select
                 classes={classes}
                 styles={selectStyles}
                 options={suggestions}
@@ -329,13 +384,12 @@ class BidderListingView extends React.Component<
                 onChange={this.handleChange('multi')}
                 placeholder="Select multiple specialties"
                 isMulti
-              />
+              />*/}
             </Grid>
             <Grid item xs={3} className={classes.btnSearchWrapper}>
               <Button
                 variant="contained"
                 color="primary"
-                className={classes.button}
                 onClick={this.handleSearch}
               >
                 Search

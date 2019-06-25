@@ -10,7 +10,7 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableCell        from '@material-ui/core/TableCell';
 import TableRow         from '@material-ui/core/TableRow';
 import TableBody        from '@material-ui/core/TableBody';
-import Button           from '@material-ui/core/Button';
+import Button           from "components/CustomButtons/Button.jsx";
 import IconButton       from '@material-ui/core/IconButton';
 import TablePagination  from '@material-ui/core/TablePagination';
 import Snackbar         from '@material-ui/core/Snackbar';
@@ -186,14 +186,14 @@ class ConnectedProjectProposals extends React.Component {
         <div className={classes.tableWrap}>
           {match.url.includes('/projects') && (
             <Button
+              color="primary"
               className={classes.btnSubmitProposal}
               onClick={() => {
                 this.props.clearProposalDetail(null);
                 this.props.history.push('/projects/proposal_detail/-1');
               }}
             >
-              {' '}
-              Submit Proposal{' '}
+              Submit Proposal
             </Button>
           )}
           <Table className={classes.table} size="small">

@@ -2,7 +2,6 @@ import React                                                                from
 import { connect }                                                          from 'react-redux';
 import { withStyles }                                                       from '@material-ui/core/styles';
 import {
-  Button,
   CircularProgress,
   IconButton,
   MenuItem,
@@ -25,6 +24,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle       from '@material-ui/core/DialogTitle';
 import Fab               from '@material-ui/core/Fab';
 import AddIcon           from '@material-ui/icons/Add';
+import Button            from "components/CustomButtons/Button.jsx";
 import {
   addSpecialty,
   deleteSpecialty,
