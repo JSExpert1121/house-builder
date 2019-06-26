@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-// material ui
-import PropTypes            from 'prop-types';
-import { withStyles }       from '@material-ui/core/styles';
+import React, { Component }         from 'react';
+import { createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -14,11 +12,11 @@ import {
   TableHead,
   TableRow,
   TextField,
-}                           from '@material-ui/core';
-import Dialog               from '@material-ui/core/Dialog';
-import DialogActions        from '@material-ui/core/DialogActions';
-import DialogContent        from '@material-ui/core/DialogContent';
-import DialogContentText    from '@material-ui/core/DialogContentText';
+}                                   from '@material-ui/core';
+import Dialog                       from '@material-ui/core/Dialog';
+import DialogActions                from '@material-ui/core/DialogActions';
+import DialogContent                from '@material-ui/core/DialogContent';
+import DialogContentText            from '@material-ui/core/DialogContentText';
 import DialogTitle          from '@material-ui/core/DialogTitle';
 
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
@@ -39,8 +37,9 @@ import {
 import SplitPane                         from 'react-split-pane';
 import { MaterialThemeHOC, UserProfile } from '../../../types/global';
 import { History }                       from 'history';
+import { compose } from 'redux';
 
-const styles = theme => ({
+const styles = theme => createStyles({
   descTag: {
     padding: theme.spacing(1),
     textAlign: 'center',
@@ -124,7 +123,7 @@ interface ConnTempDetailViewState {
   snackBarContent: any;
 }
 
-class ConnTempDetailView extends Component<
+class TemplateDetailView extends Component<
   ConnTempDetailViewProps,
   ConnTempDetailViewState
 > {
@@ -186,31 +185,13 @@ class ConnTempDetailView extends Component<
               onChange={val => this.setState({ name: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
             />
-            // @ts-ignore
             <SimpleMDE
-              style={{
-                height: '209px',
-                overflow: 'auto',
-                marginBottom: '8px',
-                textAlign: 'left',
-              }}
               value={this.state.description}
               onChange={val => this.setState({ description: val })}
               options={{
                 placeholder: 'Description here',
               }}
             />
-            {/* <TextField
-							label="detail"
-							multiline
-							rows="10"
-							margin="normal"
-							InputLabelProps={{
-								shrink: true,
-							}}
-							value={this.state.description}
-							onChange={(val) => this.setState({ description: val.target.value })}
-						/> */}
             <div>
               <Button
                 disabled={this.state.isSaving}
@@ -476,31 +457,24 @@ class ConnTempDetailView extends Component<
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    template: state.tem_data.selectedTemplate,
-    userProfile: state.global_data.userProfile,
-  };
+const mapStateToProps = state => ({
+  template: state.tem_data.selectedTemplate,
+  userProfile: state.global_data.userProfile,
+});
+
+const mapDispatchToProps = {
+  selectTemplate,
+  selectCategory,
+  deleteCategory,
+  addCategory,
+  editTemplate,
+  deleteTemplate,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    selectTemplate: id => dispatch(selectTemplate(id)),
-    selectCategory: id => dispatch(selectCategory(id)),
-    deleteCategory: (id, cb) => dispatch(deleteCategory(id, cb)),
-    addCategory: (id, data, cb) => dispatch(addCategory(id, data, cb)),
-    editTemplate: (id, data, cb) => dispatch(editTemplate(id, data, cb)),
-    deleteTemplate: (id, cb) => dispatch(deleteTemplate(id, cb)),
-  };
-};
-
-const TempDetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnTempDetailView);
-
-TempDetailView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles({ ...styles })(TempDetailView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(TemplateDetailView)
