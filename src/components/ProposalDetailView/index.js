@@ -192,20 +192,20 @@ class ConnectedProposalDetailView extends React.Component {
       this.props.history.push(
         '/s_cont/pipeline/' + proposal.proposal.status.toLowerCase()
       );
-    else if (match.url.includes('a_pros')) {
+    else if (match.url.includes('projects')) {
       if (match.params.id !== '-1') {
         this.props.history.push(
-          '/a_pros/project_detail/' +
+          '/projects/project_detail/' +
             proposal.proposal.project.id +
             '/proposals'
         );
       } else {
         if (!!project) {
           this.props.history.push(
-            '/a_pros/project_detail/' + project.id + '/proposals'
+            '/projects/project_detail/' + project.id + '/proposals'
           );
         } else {
-          this.props.history.push('/a_pros/project_detail/');
+          this.props.history.push('/projects/project_detail/');
         }
       }
     }

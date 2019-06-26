@@ -1,7 +1,7 @@
 import React          from 'react';
 import { connect }    from 'react-redux';
 import TextField      from '@material-ui/core/TextField';
-import Button         from '@material-ui/core/Button';
+import Button from "components/CustomButtons/Button.jsx";
 import PropTypes      from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table          from '@material-ui/core/Table';
@@ -40,10 +40,7 @@ const styles = theme => ({
   },
   reject: {
     backgroundColor: 'lightblue',
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
+  }
 });
 
 const CustomTableCell = withStyles(theme => ({
@@ -157,7 +154,6 @@ class ConnectedContractorInfoView extends React.Component {
           <Button
             variant="contained"
             color="primary"
-            className={classes.button}
             onClick={() =>
               this.props.approveContractor(
                 selectedContractor.id,
@@ -174,7 +170,6 @@ class ConnectedContractorInfoView extends React.Component {
           <Button
             variant="contained"
             color="default"
-            className={classes.button}
             onClick={() =>
               this.props.rejectContractor(
                 selectedContractor.id,

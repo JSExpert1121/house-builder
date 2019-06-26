@@ -1,16 +1,13 @@
-import React              from 'react';
-import { withRouter }     from 'react-router-dom';
-// Redux
-import { connect }        from 'react-redux';
-import { getAllProjects } from '../../../actions/gen-actions';
-
-import PropTypes                                                                     from 'prop-types';
-// material ui
-import { withStyles }                                                                from '@material-ui/core/styles';
-import Paper                                                                         from '@material-ui/core/Paper';
-import { CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow } from '@material-ui/core';
+import React                                                                      from 'react';
+import {withRouter}                                                               from 'react-router-dom';
+import {connect}                                                                  from 'react-redux';
+import {getAllProjects}                                                           from '../../../actions/gen-actions';
+import {withStyles}                                                               from '@material-ui/core/styles';
+import Paper                                                                      from '@material-ui/core/Paper';
+import {CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow} from '@material-ui/core';
 
 import CustomTableCell from '../../../components/shared/CustomTableCell';
+import {compose}       from "redux";
 
 const styles = theme => ({
   root: {
@@ -34,7 +31,7 @@ const styles = theme => ({
   },
 });
 
-class connectedCurProView extends React.Component {
+class CurrentProjectView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -95,7 +92,7 @@ class connectedCurProView extends React.Component {
                   key={row.id}
                   hover
                   onClick={() => {
-                    this.props.history.push('/a_pros/project_detail/' + row.id);
+                    this.props.history.push('/projects/project_detail/' + row.id);
                   }}
                 >
                   <CustomTableCell component="th" scope="row">
@@ -137,19 +134,15 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => {
-  return {
-    projects: state.gen_data.allprojects,
-  };
-};
+const mapStateToProps = state => ({
+  projects: state.gen_data.allprojects,
+});
 
-const CurrentProjectView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(connectedCurProView);
-
-CurrentProjectView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(CurrentProjectView));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
+)(CurrentProjectView)

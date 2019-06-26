@@ -5,7 +5,7 @@ import PropTypes            from 'prop-types';
 
 import Paper          from '@material-ui/core/Paper';
 import TextField      from '@material-ui/core/TextField';
-import Button         from '@material-ui/core/Button';
+import Button from "components/CustomButtons/Button.jsx";
 import Typography     from '@material-ui/core/Typography';
 import Table          from '@material-ui/core/Table';
 import TableHead      from '@material-ui/core/TableHead';
@@ -63,21 +63,7 @@ const styles = theme => ({
   width_300: {
     width: 300,
     marginRight: 10,
-  },
-  submitBtn: {
-    border: '1px solid #4a148c',
-    borderRadius: 0,
-    backgroundColor: theme.palette.primary.light,
-    color: '#FFFFFF',
-    margin: 5,
-    float: 'right',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    '&:disabled': {
-      backgroundColor: '#FFFFFF',
-    },
-  },
+  }
 });
 
 class ConnectedProposalDetailOverview extends Component {
@@ -310,8 +296,8 @@ class ConnectedProposalDetailOverview extends Component {
           {match.url.includes('/s_cont') && (
             <Button
               disabled={this.state.isSaving}
-              className={classes.submitBtn}
               onClick={this.delete}
+              color="primary"
             >
               Delete Proposal
             </Button>
@@ -319,8 +305,8 @@ class ConnectedProposalDetailOverview extends Component {
           {match.url.includes('/gen-contractor') && (
             <Button
               disabled={this.state.isSaving || proposal.status === 'AWARDED'}
-              className={classes.submitBtn}
               onClick={this.award}
+              color="primary"
             >
               Award Project
             </Button>
@@ -328,15 +314,13 @@ class ConnectedProposalDetailOverview extends Component {
           {edit && (
             <Button
               disabled={this.state.isSaving}
-              className={classes.submitBtn}
               onClick={this.submit}
+              color="primary"
             >
               {btnTitle}
             </Button>
           )}
         </Box>
-
-        {/* {this.state.isSaving && <CircularProgress className={classes.busy} />} */}
         <ConfirmDialog
           open={this.state.showConfirm}
           message={this.state.message}

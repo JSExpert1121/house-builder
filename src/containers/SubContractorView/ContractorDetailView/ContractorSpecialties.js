@@ -3,7 +3,6 @@ import { connect }                                                          from
 import PropTypes                                                            from 'prop-types';
 import { withStyles }                                                       from '@material-ui/core/styles';
 import {
-  Button,
   CircularProgress,
   IconButton,
   MenuItem,
@@ -27,6 +26,7 @@ import DialogTitle                                                          from
 import Fab                                                                  from '@material-ui/core/Fab';
 import AddIcon                                                              from '@material-ui/icons/Add';
 import { addSpecialty, deleteSpecialty, getSpecialties, updateContractor } from '../../../actions/cont-actions';
+import Button from "components/CustomButtons/Button.jsx";
 
 const styles = theme => ({
   root: {
@@ -381,7 +381,7 @@ class ConnectedContractorInfoView extends React.Component {
               }}
               color="primary"
             >
-              Add{' '}
+              Add
               {this.state.isSaving && (
                 <CircularProgress size={24} thickness={4} />
               )}

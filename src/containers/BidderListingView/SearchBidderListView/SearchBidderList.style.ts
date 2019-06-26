@@ -69,9 +69,6 @@ export default (theme: Theme) =>
       marginBottom: '20px',
       padding: theme.spacing(1)
     },
-    button: {
-      margin: theme.spacing(1),
-    },
     btnSearchWrapper: {
       textAlign: 'end',
       alignSelf: 'center'
