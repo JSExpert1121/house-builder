@@ -2,14 +2,14 @@ import React                                                                    
 import {withRouter}                                                               from 'react-router-dom';
 import {connect}                                                                  from 'react-redux';
 import {getAllProjects}                                                           from '../../../actions/gen-actions';
-import {withStyles}                                                               from '@material-ui/core/styles';
+import {createStyles, withStyles}                                                 from '@material-ui/core/styles';
 import Paper                                                                      from '@material-ui/core/Paper';
 import {CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow} from '@material-ui/core';
 
 import CustomTableCell from '../../../components/shared/CustomTableCell';
 import {compose}       from "redux";
 
-const styles = theme => ({
+const styles = theme => createStyles({
   root: {
     flexGrow: 1,
     height: 'calc(100vh - 64px - 48px - 16px)',

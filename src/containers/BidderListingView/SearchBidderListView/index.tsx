@@ -4,21 +4,14 @@ import { History }                                          from 'history';
 import { withStyles }                                       from '@material-ui/core/styles';
 import Card                                                 from '@material-ui/core/Card';
 import CircularProgress                                     from '@material-ui/core/CircularProgress';
-import Paper                                                from '@material-ui/core/Paper';
 import Table                                                from '@material-ui/core/Table';
 import TableBody                                            from '@material-ui/core/TableBody';
 import TableCell                                            from '@material-ui/core/TableCell';
 import TableHead                                            from '@material-ui/core/TableHead';
 import TablePagination                                      from '@material-ui/core/TablePagination';
 import TableRow                                             from '@material-ui/core/TableRow';
-import TextField                                            from '@material-ui/core/TextField';
-import Typography                                           from '@material-ui/core/Typography';
-import Chip                                                 from '@material-ui/core/Chip';
 import Grid                                                 from '@material-ui/core/Grid';
-import classNames                                           from 'classnames';
-// import Select                                               from 'react-select';
 import MenuItem                                             from '@material-ui/core/MenuItem';
-import CancelIcon                                           from '@material-ui/icons/Cancel';
 import { searchFilter }                                     from '../../../actions/global-actions';
 import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
 import { match }                                            from 'react-router';
@@ -32,6 +25,7 @@ import FormControl    from "@material-ui/core/FormControl";
 import InputLabel    from "@material-ui/core/InputLabel";
 import Select    from "@material-ui/core/Select";
 
+/*
 function NoOptionsMessage(props) {
   return (
     <Typography
@@ -43,11 +37,15 @@ function NoOptionsMessage(props) {
     </Typography>
   );
 }
+*/
 
+/*
 function inputComponent({ inputRef, ...props }) {
   return <div ref={inputRef} {...props} />;
 }
+*/
 
+/*
 function Control(props) {
   return (
     <TextField
@@ -138,8 +136,9 @@ function Menu(props) {
     </Paper>
   );
 }
+*/
 
-const components = {
+/*const components = {
   Control,
   Menu,
   MultiValue,
@@ -148,7 +147,7 @@ const components = {
   Placeholder,
   SingleValue,
   ValueContainer,
-};
+};*/
 
 const CustomTableCell = withStyles(theme => ({
   head: {

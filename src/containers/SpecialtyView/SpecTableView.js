@@ -1,10 +1,8 @@
-import React                                                              from 'react';
-import PropTypes                                                          from 'prop-types';
-// material ui
-import { IconButton, Table, TableBody, TableHead, TableRow, withStyles } from '@material-ui/core';
-import { Delete as DeleteIcon, NoteAdd as NoteAddIcon }                  from '@material-ui/icons';
-import CustomTableCell
-                                                                          from '../../components/shared/CustomTableCell';
+import React                                                           from 'react';
+import PropTypes                                                       from 'prop-types';
+import {IconButton, Table, TableBody, TableHead, TableRow, withStyles} from '@material-ui/core';
+import {Delete as DeleteIcon, NoteAdd as NoteAddIcon}                  from '@material-ui/icons';
+import CustomTableCell                                                 from '../../components/shared/CustomTableCell';
 
 const styles = theme => ({
   row: {

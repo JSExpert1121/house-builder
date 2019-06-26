@@ -1,15 +1,16 @@
-import React, { Component }                                                        from 'react';
-import { Theme, withStyles }                                                       from '@material-ui/core/styles';
+import React, { Component }                                                       from 'react';
+import { createStyles, Theme, withStyles }                                        from '@material-ui/core/styles';
 import { Button, CircularProgress, Link, Paper, Snackbar, TextField }             from '@material-ui/core';
-import { connect }                                                                 from 'react-redux';
+import { connect }                                                                from 'react-redux';
 import { deleteOption, editOption, selectCategory, selectOption, selectTemplate } from '../../../actions/tem-actions';
-import SplitPane                                                                   from 'react-split-pane';
-import SimpleMDE                                                                   from 'react-simplemde-editor';
+import SplitPane                                                                  from 'react-split-pane';
+import SimpleMDE                                                                  from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import { MaterialThemeHOC, UserProfile }                                           from '../../../types/global';
-import { History }                                                                 from 'history';
+import { MaterialThemeHOC, UserProfile }                                          from '../../../types/global';
+import { History }                                                                from 'history';
+import { compose }                                                                from "redux";
 
-const styles = (theme: Theme) => ({
+const styles = (theme: Theme) => createStyles({
   descTag: {
     padding: theme.spacing(1),
     textAlign: 'center',
@@ -84,7 +85,7 @@ interface ConnOptionDetailViewState {
   type: any;
 }
 
-class ConnOptionDetailView extends Component<
+class OptionDetailView extends Component<
   ConnOptionDetailViewProps,
   ConnOptionDetailViewState
 > {
@@ -275,17 +276,18 @@ const mapStateToProps = state => ({
   userProfile: state.global_data.userProfile,
 });
 
-const mapDispatchToProps = dispatch => ({
-  selectOption: id => dispatch(selectOption(id)),
-  selectTemplate: id => dispatch(selectTemplate(id)),
-  selectCategory: id => dispatch(selectCategory(id)),
-  editOption: (id, data, cb) => dispatch(editOption(id, data, cb)),
-  deleteOption: (id, cb) => dispatch(deleteOption(id, cb)),
-});
+const mapDispatchToProps = {
+  selectOption,
+  selectTemplate,
+  selectCategory,
+  editOption,
+  deleteOption,
+};
 
-const OptionDetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnOptionDetailView);
-
-export default withStyles({ ...styles })(OptionDetailView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(OptionDetailView)

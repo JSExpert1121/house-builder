@@ -6,8 +6,10 @@ import { Apps as AppsIcon, Ballot as BallotIcon } from '@material-ui/icons';
 import SecuredRoute                               from '../../routers/SecuredRoute';
 import AllSpecialties                             from './AllSpecialties';
 import SpecialtyDetailView                        from './SpecialtyDetailView';
+import {createStyles}                             from "@material-ui/styles";
+import {compose}                                  from "redux";
 
-const styles = theme => ({
+const styles = theme => createStyles({
   root: {
     flexGrow: 1,
   },
@@ -26,8 +28,6 @@ const styles = theme => ({
 });
 
 export class SpecialtyView extends Component {
-  state = {};
-
   render() {
     const { classes, userProfile, location } = this.props;
 
@@ -85,11 +85,10 @@ const mapStateToProps = state => ({
   userProfile: state.global_data.userProfile,
 });
 
-const mapDispatchToProps = {};
-
-const ConnectedSpecialtyView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SpecialtyView);
-
-export default withRouter(withStyles(styles)(ConnectedSpecialtyView));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+  ),
+)(SpecialtyView)

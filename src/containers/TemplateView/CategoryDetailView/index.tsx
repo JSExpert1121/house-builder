@@ -1,6 +1,6 @@
-import React, { Component }  from 'react';
-import { withRouter }        from 'react-router-dom';
-import { Theme, withStyles } from '@material-ui/core/styles';
+import React, { Component }                from 'react';
+import { withRouter }                      from 'react-router-dom';
+import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -14,19 +14,19 @@ import {
   TableHead,
   TableRow,
   TextField,
-}                            from '@material-ui/core';
-import NoteAddIcon           from '@material-ui/icons/NoteAdd';
-import DeleteIcon            from '@material-ui/icons/Delete';
+}                                          from '@material-ui/core';
+import NoteAddIcon                         from '@material-ui/icons/NoteAdd';
+import DeleteIcon                          from '@material-ui/icons/Delete';
 
 import Dialog            from '@material-ui/core/Dialog';
 import DialogActions     from '@material-ui/core/DialogActions';
 import DialogContent     from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle       from '@material-ui/core/DialogTitle';
-import SimpleMDE         from 'react-simplemde-editor';
+import SimpleMDE   from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import { connect }       from 'react-redux';
-import { History }       from 'history';
+import { connect } from 'react-redux';
+import { History } from 'history';
 import {
   addOption,
   deleteCategory,
@@ -35,14 +35,15 @@ import {
   selectCategory,
   selectOption,
   selectTemplate,
-}                        from '../../../actions/tem-actions';
-import SplitPane         from 'react-split-pane';
+}                  from '../../../actions/tem-actions';
+import SplitPane   from 'react-split-pane';
 import {
   MaterialThemeHOC,
   UserProfile,
-}                        from '../../../types/global';
+}                  from '../../../types/global';
+import { compose } from "redux";
 
-const styles = (theme: Theme) => ({
+const styles = (theme: Theme) => createStyles({
   descTag: {
     padding: theme.spacing(1),
     textAlign: 'center',
@@ -127,7 +128,7 @@ interface ConnCategoryDetailViewState {
   snackBarContent: any;
 }
 
-class ConnCategoryDetailView extends Component<
+class CategoryDetailView extends Component<
   ConnCategoryDetailViewProps,
   ConnCategoryDetailViewState
 > {
@@ -236,17 +237,6 @@ class ConnCategoryDetailView extends Component<
                 placeholder: 'Description here',
               }}
             />
-            {/* <TextField
-							label="detail"
-							multiline
-							rows="10"
-							margin="normal"
-							InputLabelProps={{
-								shrink: true,
-							}}
-							value={this.state.description}
-							onChange={(val) => this.setState({ description: val.target.value })}
-						/> */}
             <div>
               <Button
                 className={classes.halfWidth}
@@ -505,30 +495,26 @@ class ConnCategoryDetailView extends Component<
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    category: state.tem_data.selectedCategory,
-    userProfile: state.global_data.userProfile,
-  };
+const mapStateToProps = state => ({
+  category: state.tem_data.selectedCategory,
+  userProfile: state.global_data.userProfile,
+});
+
+const mapDispatchToProps = {
+  selectTemplate,
+  deleteOption,
+  selectCategory,
+  addOption,
+  editCategory,
+  selectOption,
+  deleteCategory,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    selectTemplate: id => dispatch(selectTemplate(id)),
-    deleteOption: (id, cb) => dispatch(deleteOption(id, cb)),
-    selectCategory: id => dispatch(selectCategory(id)),
-    addOption: (id, data, cb) => dispatch(addOption(id, data, cb)),
-    editCategory: (id, data, cb) => dispatch(editCategory(id, data, cb)),
-    selectOption: id => dispatch(selectOption(id)),
-    deleteCategory: (id, cb) => dispatch(deleteCategory(id, cb)),
-  };
-};
-
-const ConnectedRouter = withRouter(ConnCategoryDetailView);
-
-const CategoryDetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedRouter);
-
-export default withStyles({ ...styles })(CategoryDetailView);
+export default compose(
+  withRouter,
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(CategoryDetailView)

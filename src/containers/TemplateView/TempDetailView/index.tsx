@@ -432,7 +432,7 @@ class TemplateDetailView extends Component<
               }}
               color="primary"
             >
-              Add{' '}
+              Add
               {this.state.isAdding && (
                 <CircularProgress size={24} thickness={4} />
               )}

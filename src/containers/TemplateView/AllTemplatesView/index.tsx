@@ -1,7 +1,7 @@
-import React, { Component }                                               from 'react';
-import { withRouter }                                                     from 'react-router-dom';
-import { connect }                                                        from 'react-redux';
-import { withStyles }                                                     from '@material-ui/core/styles';
+import React, { Component }         from 'react';
+import { withRouter }               from 'react-router-dom';
+import { connect }                  from 'react-redux';
+import { createStyles, withStyles } from '@material-ui/core/styles';
 import {
   Button,
   CircularProgress,
@@ -15,23 +15,23 @@ import {
   TablePagination,
   TableRow,
   TextField,
-}                                                                         from '@material-ui/core';
-import { History }                                                        from 'history';
-import NoteAddIcon                                                        from '@material-ui/icons/NoteAdd';
+}                                   from '@material-ui/core';
+import { History }                  from 'history';
+import NoteAddIcon                  from '@material-ui/icons/NoteAdd';
 import DeleteIcon                                                         from '@material-ui/icons/Delete';
 import Dialog                                                             from '@material-ui/core/Dialog';
 import DialogActions                                                      from '@material-ui/core/DialogActions';
 import DialogContent                                                      from '@material-ui/core/DialogContent';
 import DialogContentText                                                  from '@material-ui/core/DialogContentText';
-import DialogTitle                                                        from '@material-ui/core/DialogTitle';
-import SimpleMDE                                                          from 'react-simplemde-editor';
+import DialogTitle                                                       from '@material-ui/core/DialogTitle';
+import SimpleMDE                                                         from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-// actions
-import removeMd                                                           from 'remove-markdown';
+import removeMd                                                          from 'remove-markdown';
 import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from '../../../actions/tem-actions';
-import { MaterialThemeHOC, UserProfile }                                  from '../../../types/global';
+import { MaterialThemeHOC, UserProfile }                                 from '../../../types/global';
+import { compose }                                                       from "redux";
 
-const styles = theme => ({
+const styles = theme => createStyles({
   root: {
     flexGrow: 1,
     height: 'calc(100vh - 64px - 48px - 16px)',
@@ -91,7 +91,7 @@ interface ConnAllTemplateViewState {
   SnackBarContent: any;
 }
 
-class ConnAllTemplateView extends Component<
+class AllTemplateView extends Component<
   ConnAllTemplateViewProps,
   ConnAllTemplateViewState
 > {
@@ -343,27 +343,23 @@ class ConnAllTemplateView extends Component<
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    templates: state.tem_data.templates,
-    userProfile: state.global_data.userProfile,
-  };
+const mapStateToProps = state => ({
+  templates: state.tem_data.templates,
+  userProfile: state.global_data.userProfile,
+});
+
+const mapDispatchToProps = {
+  getTemplatesO,
+  selectTemplate,
+  deleteTemplate,
+  createTemplate,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getTemplatesO: (page, size) => dispatch(getTemplatesO(page, size)),
-    selectTemplate: id => dispatch(selectTemplate(id)),
-    deleteTemplate: (id, cb) => dispatch(deleteTemplate(id, cb)),
-    createTemplate: (data, cb) => dispatch(createTemplate(data, cb)),
-  };
-};
-
-const ConnectedRouter = withRouter(ConnAllTemplateView);
-
-const AllTemplateView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedRouter);
-
-export default withStyles({ ...styles })(AllTemplateView);
+export default compose(
+  withRouter,
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(AllTemplateView)

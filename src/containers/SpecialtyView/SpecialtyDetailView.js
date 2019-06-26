@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes            from 'prop-types';
 import { connect }          from 'react-redux';
 import { withRouter }       from 'react-router-dom';
-
 import { loadSpec, updateSpec } from '../../actions/spec-actions';
 
 import {
@@ -17,9 +15,11 @@ import {
   Paper,
   TextField,
   withStyles,
-} from '@material-ui/core';
+}                     from '@material-ui/core';
+import {createStyles} from "@material-ui/styles";
+import {compose}      from "redux";
 
-const styles = theme => ({
+const styles = theme => createStyles({
   root: {
     width: '400px',
     [theme.breakpoints.up('sm')]: {
@@ -68,18 +68,6 @@ export class SpecialtyDetailView extends Component {
     value: '',
     name: '',
     description: '',
-  };
-
-  static propTypes = {
-    specid: PropTypes.string.isRequired,
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired,
-    }).isRequired,
-    updateSpec: PropTypes.func.isRequired,
-    loadSpec: PropTypes.func.isRequired,
-    user: PropTypes.shape({
-      email: PropTypes.string.isRequired,
-    }).isRequired,
   };
 
   async componentDidMount() {
@@ -218,13 +206,16 @@ const mapStateToProps = state => ({
   user: state.global_data.userProfile,
 });
 
-const mapDispatchToProps = dispatch => ({
-  loadSpec: id => dispatch(loadSpec(id)),
-  updateSpec: spec => dispatch(updateSpec(spec)),
-});
+const mapDispatchToProps = {
+  loadSpec,
+  updateSpec,
+};
 
-const connectedSpecDetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SpecialtyDetailView);
-export default withRouter(withStyles(styles)(connectedSpecDetailView));
+export default compose(
+  withRouter,
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(SpecialtyDetailView)
