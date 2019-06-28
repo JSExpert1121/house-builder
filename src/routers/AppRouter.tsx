@@ -20,10 +20,10 @@ import { compose, Dispatch } from 'redux';
 import { CircularProgress }  from '@material-ui/core/es';
 
 import SecuredRoute                      from './SecuredRoute';
-import { MaterialThemeHOC, UserProfile } from '../types/global';
+import { MaterialThemeHOC, UserProfile } from 'types/global';
 
 import rootStyles    from './AppRouter.style';
-import { Container } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 import Grid          from '@material-ui/core/Grid';
 
 interface AppRouterProps extends MaterialThemeHOC {
@@ -82,8 +82,8 @@ class AppRouterConnect extends React.Component<AppRouterProps, AppRouterState> {
         <Header/>
         <main className={classes.content}>
           <div className={classes.appBarSpacer}/>
-          <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={3}>
+          <Container className={classes.container} maxWidth={false}>
+            <Grid container>
               <Switch>
                 <Route exact path="/" component={HomeView}/>
                 <SecuredRoute
