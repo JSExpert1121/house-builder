@@ -1,31 +1,24 @@
 import React from 'react';
-
-import PropTypes      from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card           from '@material-ui/core/Card';
 import Table          from '@material-ui/core/Table';
 import TableBody      from '@material-ui/core/TableBody';
 import TableHead      from '@material-ui/core/TableHead';
 import TableRow       from '@material-ui/core/TableRow';
 
-import CustomTableCell from '../../components/shared/CustomTableCell';
+import CustomTableCell from 'components/shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 64px - 48px - 16px)',
-    overflow: 'auto',
-    overflowX: 'hidden',
+    marginTop: theme.spacing(1)
   },
 });
 
 class SCVReportsView extends React.Component {
   render() {
     const { classes } = this.props;
-
     return (
-      <Card className={classes.root}>
-        <Table className={classes.table}>
+      <div className={classes.root}>
+        <Table>
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">A</CustomTableCell>
@@ -45,13 +38,9 @@ class SCVReportsView extends React.Component {
             </TableRow>
           </TableBody>
         </Table>
-      </Card>
+      </div>
     );
   }
 }
-
-SCVReportsView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(SCVReportsView);

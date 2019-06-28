@@ -1,40 +1,30 @@
-import React                                      from 'react';
-import { withRouter }                             from 'react-router-dom';
-import { connect }                                from 'react-redux';
-import { getInvitedProjectsByGenId }              from '../../../actions/sub-actions';
-import { deleteProject, setCurrentProject } from '../../../actions/global-actions';
-import PropTypes      from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Paper          from '@material-ui/core/Paper';
-import {
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-}                     from '@material-ui/core';
-import DeleteIcon     from '@material-ui/icons/Delete';
-import Button from "components/CustomButtons/Button.jsx";
+import CircularProgress                   from '@material-ui/core/CircularProgress';
+import Dialog                             from '@material-ui/core/Dialog';
+import DialogActions                      from '@material-ui/core/DialogActions';
+import DialogContent                      from '@material-ui/core/DialogContent';
+import DialogContentText                  from '@material-ui/core/DialogContentText';
+import DialogTitle                        from '@material-ui/core/DialogTitle';
+import IconButton                         from '@material-ui/core/IconButton';
+import Paper                              from '@material-ui/core/Paper';
+import Snackbar                           from '@material-ui/core/Snackbar';
+import {withStyles}                       from '@material-ui/core/styles';
+import Table                              from '@material-ui/core/Table';
+import TableBody                          from '@material-ui/core/TableBody';
+import TableHead                          from '@material-ui/core/TableHead';
+import TablePagination                    from '@material-ui/core/TablePagination';
+import TableRow                           from '@material-ui/core/TableRow';
+import DeleteIcon                         from '@material-ui/icons/Delete';
+import Button                             from "components/CustomButtons/Button.jsx";
+import {compose}                          from 'redux';
+import React                              from 'react';
+import {connect}                          from 'react-redux';
+import CustomTableCell                    from "components/shared/CustomTableCell";
+import {deleteProject, setCurrentProject} from '../../../actions/global-actions';
+import {getInvitedProjectsByGenId}        from '../../../actions/sub-actions';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 164px)',
-    margin: theme.spacing(1),
-    overflow: 'auto',
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 212px)',
+    marginTop: theme.spacing(1),
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -48,18 +38,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedInvitedProView extends React.Component {
+class InvitedProView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -170,57 +149,55 @@ class ConnectedInvitedProView extends React.Component {
     }
     return (
       <Paper className={classes.root}>
-        <div className={classes.tableWrap}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell> Project Title </CustomTableCell>
-                <CustomTableCell align="center">Budget</CustomTableCell>
-                <CustomTableCell align="center">Discription</CustomTableCell>
-                <CustomTableCell align="center">Action</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {projects.content.map(row => (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell> Project Title </CustomTableCell>
+              <CustomTableCell align="center">Budget</CustomTableCell>
+              <CustomTableCell align="center">Description</CustomTableCell>
+              <CustomTableCell align="center">Action</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {projects.content.map(row => (
                 <TableRow className={classes.row} key={row.id} hover>
                   <CustomTableCell
-                    component="th"
-                    scope="row"
-                    onClick={() => this.handleSelectProject(row.id)}
+                      component="th"
+                      scope="row"
+                      onClick={() => this.handleSelectProject(row.id)}
                   >
                     {row.title}
                   </CustomTableCell>
                   <CustomTableCell
-                    align="center"
-                    onClick={() => this.handleSelectProject(row.id)}
+                      align="center"
+                      onClick={() => this.handleSelectProject(row.id)}
                   >
                     {row.budget}
                   </CustomTableCell>
                   <CustomTableCell
-                    align="center"
-                    onClick={() => this.handleSelectProject(row.id)}
+                      align="center"
+                      onClick={() => this.handleSelectProject(row.id)}
                   >
                     {row.description}
                   </CustomTableCell>
                   <CustomTableCell align="center">
                     <IconButton
-                      aria-label="Delete"
-                      color="primary"
-                      onClick={() => {
-                        this.setState({
-                          alertConfirm: true,
-                          proId: row.id,
-                        });
-                      }}
+                        aria-label="Delete"
+                        color="primary"
+                        onClick={() => {
+                          this.setState({
+                            alertConfirm: true,
+                            proId: row.id,
+                          });
+                        }}
                     >
                       <DeleteIcon />
                     </IconButton>
                   </CustomTableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}
@@ -294,13 +271,10 @@ const mapStateToProps = state => ({
   userProfile: state.global_data.userProfile,
 })
 
-const InvitedProView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedInvitedProView);
-
-InvitedProView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(InvitedProView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(InvitedProView)

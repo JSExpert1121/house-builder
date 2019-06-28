@@ -6,7 +6,7 @@ import {CLEAR_PROPOSALS, INVITED_PROJECT_LOADED,} from '../constants/sub-action-
 
 export const {clearProposals, invitedProjectLoaded} = createActions({
   [CLEAR_PROPOSALS]: () => null,
-  [INVITED_PROJECT_LOADED]: () => null,
+  [INVITED_PROJECT_LOADED]: (payload) => payload,
 });
 
 export function getProposals(cont_id, page, row, filterStr) {
@@ -14,11 +14,9 @@ export function getProposals(cont_id, page, row, filterStr) {
     dispatch(clearProposals());
     return restAPI
         .get('contractors/' + cont_id + '/proposals', {
-          params: {
-            page: page,
-            size: row,
-            status: filterStr,
-          },
+          page: page,
+          size: row,
+          status: filterStr
         })
         .then(res => dispatch(proposalsLoaded(res.data)));
   };
@@ -29,10 +27,8 @@ export function getInvitedProjectsByGenId(id, page, rowSize) {
     dispatch(clearProjects);
     return restAPI
         .get('projects/invites/' + id, {
-          params: {
-            page: page,
-            size: rowSize,
-          },
+          page: page,
+          size: rowSize,
         })
         .then(response => dispatch(invitedProjectLoaded(response.data)));
   };

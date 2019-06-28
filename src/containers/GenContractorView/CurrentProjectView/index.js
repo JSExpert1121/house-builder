@@ -132,35 +132,34 @@ class CurrentProject extends React.Component {
 
     return (
       <Paper className={classes.root}>
-        <div className={classes.tableWrap}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell> Project Title </CustomTableCell>
-                <CustomTableCell align="center">Budget</CustomTableCell>
-                <CustomTableCell align="center">Discription</CustomTableCell>
-                <CustomTableCell align="center">Action</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {projects.content.map(row => (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell> Project Title </CustomTableCell>
+              <CustomTableCell align="center">Budget</CustomTableCell>
+              <CustomTableCell align="center">Discription</CustomTableCell>
+              <CustomTableCell align="center">Action</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {projects.content.map(row => (
                 <TableRow className={classes.row} key={row.id} hover>
                   <CustomTableCell
-                    component="th"
-                    scope="row"
-                    onClick={() => this.handleSelectProject(row.id)}
+                      component="th"
+                      scope="row"
+                      onClick={() => this.handleSelectProject(row.id)}
                   >
                     <Typography className="nowrap">{row.title}</Typography>
                   </CustomTableCell>
                   <CustomTableCell
-                    align="center"
-                    onClick={() => this.handleSelectProject(row.id)}
+                      align="center"
+                      onClick={() => this.handleSelectProject(row.id)}
                   >
                     {row.budget}
                   </CustomTableCell>
                   <CustomTableCell
-                    align="center"
-                    onClick={() => this.handleSelectProject(row.id)}
+                      align="center"
+                      onClick={() => this.handleSelectProject(row.id)}
                   >
                     <Typography className="nowrap">
                       {removeMd(row.description)}
@@ -168,20 +167,19 @@ class CurrentProject extends React.Component {
                   </CustomTableCell>
                   <CustomTableCell align="center">
                     <IconButton
-                      aria-label="Delete"
-                      color="primary"
-                      onClick={() =>
-                        this.setState({ showConfirm: true, proId: row.id })
-                      }
+                        aria-label="Delete"
+                        color="primary"
+                        onClick={() =>
+                            this.setState({ showConfirm: true, proId: row.id })
+                        }
                     >
                       <DeleteIcon />
                     </IconButton>
                   </CustomTableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}
