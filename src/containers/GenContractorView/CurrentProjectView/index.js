@@ -133,7 +133,7 @@ class CurrentProject extends React.Component {
     return (
       <Paper className={classes.root}>
         <div className={classes.tableWrap}>
-          <Table className={classes.table} size="small">
+          <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 <CustomTableCell> Project Title </CustomTableCell>

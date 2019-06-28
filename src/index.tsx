@@ -12,7 +12,7 @@ import * as serviceWorker from './serviceWorker';
 
 WebFont.load({
   google: {
-    families: ['Niramit:300,400,500,600,700', 'sans-serif'],
+    families: ['Roboto:300,400,500,600,700', 'sans-serif'],
   },
 });
 
