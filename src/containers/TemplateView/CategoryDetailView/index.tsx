@@ -1,32 +1,26 @@
-import React, { Component }                from 'react';
-import { withRouter }                      from 'react-router-dom';
-import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
+import Button               from '@material-ui/core/Button';
+import CircularProgress     from '@material-ui/core/CircularProgress';
+import Dialog               from '@material-ui/core/Dialog';
+import DialogActions        from '@material-ui/core/DialogActions';
+import DialogContent        from '@material-ui/core/DialogContent';
+import DialogContentText    from '@material-ui/core/DialogContentText';
+import DialogTitle          from '@material-ui/core/DialogTitle';
+import IconButton           from '@material-ui/core/IconButton';
+import Link                 from '@material-ui/core/Link';
+import Paper                from '@material-ui/core/Paper';
+import Snackbar             from '@material-ui/core/Snackbar';
 import {
-  Button,
-  CircularProgress,
-  IconButton,
-  Link,
-  Paper,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-}                                          from '@material-ui/core';
-import NoteAddIcon                         from '@material-ui/icons/NoteAdd';
-import DeleteIcon                          from '@material-ui/icons/Delete';
-
-import Dialog            from '@material-ui/core/Dialog';
-import DialogActions     from '@material-ui/core/DialogActions';
-import DialogContent     from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle       from '@material-ui/core/DialogTitle';
-import SimpleMDE   from 'react-simplemde-editor';
-import 'easymde/dist/easymde.min.css';
-import { connect } from 'react-redux';
-import { History } from 'history';
+  createStyles,
+  Theme,
+  withStyles
+}                           from '@material-ui/core/styles';
+import Table                from '@material-ui/core/Table';
+import TableBody            from '@material-ui/core/TableBody';
+import TableHead            from '@material-ui/core/TableHead';
+import TableRow             from '@material-ui/core/TableRow';
+import TextField            from '@material-ui/core/TextField';
+import DeleteIcon           from '@material-ui/icons/Delete';
+import NoteAddIcon          from '@material-ui/icons/NoteAdd';
 import {
   addOption,
   deleteCategory,
@@ -35,13 +29,18 @@ import {
   selectCategory,
   selectOption,
   selectTemplate,
-}                  from '../../../actions/tem-actions';
-import SplitPane   from 'react-split-pane';
-import {
-  MaterialThemeHOC,
-  UserProfile,
-}                  from '../../../types/global';
-import { compose } from "redux";
+}                           from 'actions/tem-actions';
+import CustomTableCell      from "components/shared/CustomTableCell";
+import 'easymde/dist/easymde.min.css';
+import { History }          from 'history';
+import React, { Component } from 'react';
+import { connect }          from 'react-redux';
+import { withRouter }       from 'react-router-dom';
+import SimpleMDE            from 'react-simplemde-editor';
+import SplitPane            from 'react-split-pane';
+import { compose }          from "redux";
+
+import { MaterialThemeHOC, UserProfile, } from 'types/global';
 
 const styles = (theme: Theme) => createStyles({
   descTag: {
@@ -59,7 +58,7 @@ const styles = (theme: Theme) => createStyles({
     flexDirection: 'column',
     overflow: 'scroll',
   },
-  halfWidth: {
+  marginRight: {
     width: 'calc(33% - 20px)',
   },
   optList: {
@@ -85,17 +84,6 @@ const styles = (theme: Theme) => createStyles({
     lineHeight: '1.5rem',
   },
 });
-
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
 
 interface ConnCategoryDetailViewProps extends MaterialThemeHOC {
   category: any;
@@ -239,7 +227,7 @@ class CategoryDetailView extends Component<
             />
             <div>
               <Button
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 disabled={this.state.isSaving}
                 onClick={() =>
                   this.props.history.push('/m_temp/template_detail')
@@ -249,7 +237,7 @@ class CategoryDetailView extends Component<
                 Cancel
               </Button>
               <Button
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 disabled={this.state.isSaving}
                 onClick={async () => {
                   this.setState({ isSaving: true });
@@ -284,7 +272,7 @@ class CategoryDetailView extends Component<
               </Button>
               <Button
                 disabled={this.state.isDeleting}
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 onClick={async () => {
                   this.setState({ isDeleting: true });
                   await this.props.deleteCategory(category.id, result => {
@@ -311,7 +299,7 @@ class CategoryDetailView extends Component<
           </Paper>
 
           <Paper className={classes.optList}>
-            <Table size="small">
+            <Table>
               <TableHead>
                 <TableRow>
                   <CustomTableCell> Option Name </CustomTableCell>
@@ -426,15 +414,6 @@ class CategoryDetailView extends Component<
                 placeholder: 'Description here',
               }}
             />
-            {/* <TextField
-							label="detail"
-							margin="dense"
-							multiline
-							rows="10"
-							fullWidth
-							value={this.state.odescription}
-							onChange={(val) => this.setState({ odescription: val.target.value })}
-						/> */}
           </DialogContent>
           <DialogActions>
             <Button

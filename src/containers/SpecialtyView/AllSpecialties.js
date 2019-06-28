@@ -1,28 +1,24 @@
-import React, { Component }                               from 'react';
-import { connect }                                         from 'react-redux';
-import { withRouter }                                      from 'react-router-dom';
-import PropTypes                                           from 'prop-types';
-import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Paper,
-  Snackbar,
-  TablePagination,
-  TextField,
-  withStyles,
-}                                                          from '@material-ui/core';
-import { createSpec, deleteSpec, loadSpecs, specSelected } from '../../actions/spec-actions';
-import SpecTableView                                       from './SpecTableView';
+import Button                                             from '@material-ui/core/Button';
+import CircularProgress                                   from '@material-ui/core/CircularProgress';
+import Dialog                                             from '@material-ui/core/Dialog';
+import DialogActions                                      from '@material-ui/core/DialogActions';
+import DialogContent                                      from '@material-ui/core/DialogContent';
+import DialogContentText                                  from '@material-ui/core/DialogContentText';
+import DialogTitle                                        from '@material-ui/core/DialogTitle';
+import Paper                                              from '@material-ui/core/Paper';
+import Snackbar                                           from '@material-ui/core/Snackbar';
+import {withStyles}                                       from '@material-ui/core/styles';
+import TablePagination                                    from '@material-ui/core/TablePagination';
+import TextField                                          from '@material-ui/core/TextField';
+import React, {Component}                                 from 'react';
+import {connect}                                          from 'react-redux';
+import {compose}                                          from 'redux';
+import {createSpec, deleteSpec, loadSpecs, specSelected,} from '../../actions/spec-actions';
+import SpecTableView                                      from './SpecTableView';
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     flexGrow: 1,
-    height: 'calc(100vh - 64px - 48px - 16px)',
   },
   tableWrap: {
     overflow: 'auto',
@@ -46,28 +42,6 @@ const styles = theme => ({
 });
 
 class AllSpecialties extends Component {
-  static propTypes = {
-    specialties: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        value: PropTypes.string.isRequired,
-      })
-    ),
-    totalPages: PropTypes.number.isRequired,
-    pageNo: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    totalItems: PropTypes.number.isRequired,
-    dirty: PropTypes.bool.isRequired,
-    loadPage: PropTypes.func.isRequired,
-    deleteSpec: PropTypes.func.isRequired,
-    selectSpec: PropTypes.func.isRequired,
-    userProfile: PropTypes.shape({
-      email: PropTypes.string.isRequired,
-    }).isRequired,
-  };
-
   state = {
     loading: true,
     success: true,
@@ -210,14 +184,12 @@ class AllSpecialties extends Component {
 
     return (
       <Paper className={classes.root}>
-        <div className={classes.tableWrap}>
-          <SpecTableView
-            specialties={specialties}
-            handleDelete={this.handleDelete}
-            handleAdd={this.showAddDialog}
-            handleSelect={this.handleSelect}
-          />
-        </div>
+        <SpecTableView
+          specialties={specialties}
+          handleDelete={this.handleDelete}
+          handleAdd={this.showAddDialog}
+          handleSelect={this.handleSelect}
+        />
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}
@@ -346,28 +318,27 @@ class AllSpecialties extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    specialties: state.spec_data.specialties,
-    totalPages: state.spec_data.totalPages,
-    totalItems: state.spec_data.totalItems,
-    pageNo: state.spec_data.currentPage,
-    pageSize: state.spec_data.pageSize,
-    dirty: state.spec_data.dirty,
-    userProfile: state.global_data.userProfile,
-  };
-};
-
-const mapDispatchToProps = dispatch => ({
-  loadPage: (pageNo, pageSize) => dispatch(loadSpecs(pageNo, pageSize)),
-  deleteSpec: id => dispatch(deleteSpec(id)),
-  createSpec: spec => dispatch(createSpec(spec)),
-  selectSpec: id => dispatch(specSelected(id)),
+const mapStateToProps = state => ({
+  specialties: state.spec_data.specialties,
+  totalPages: state.spec_data.totalPages,
+  totalItems: state.spec_data.totalItems,
+  pageNo: state.spec_data.currentPage,
+  pageSize: state.spec_data.pageSize,
+  dirty: state.spec_data.dirty,
+  userProfile: state.global_data.userProfile,
 });
 
-const ConnectedAllSpec = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AllSpecialties);
+const mapDispatchToProps = {
+  loadPage:loadSpecs,
+  deleteSpec,
+  createSpec,
+  selectSpec:specSelected,
+};
 
-export default withRouter(withStyles(styles)(ConnectedAllSpec));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(AllSpecialties);

@@ -4,12 +4,6 @@ export default (theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      height: 'calc(100vh - 136px)',
-      overflow: 'scroll',
-    },
-    tableWrap: {
-      overflow: 'auto',
-      maxHeight: 'calc(100vh - 192px)',
     },
     row: {
       '&:nth-of-type(odd)': {
@@ -63,11 +57,6 @@ export default (theme: Theme) =>
       position: 'absolute',
       left: 2,
       fontSize: 16,
-    },
-    card: {
-      width: '100%',
-      marginBottom: '20px',
-      padding: theme.spacing(1)
     },
     btnSearchWrapper: {
       textAlign: 'end',
