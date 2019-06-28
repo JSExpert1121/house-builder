@@ -23,10 +23,10 @@ export default (theme: Theme) =>
       flexGrow: 1,
       height: '100vh',
       overflow: 'auto',
+      padding: theme.spacing(0, 2),
     },
     container: {
-      paddingTop: theme.spacing(4),
-      paddingBottom: theme.spacing(4),
+      padding: theme.spacing(4, 0)
     },
     paper: {
       padding: theme.spacing(2),
