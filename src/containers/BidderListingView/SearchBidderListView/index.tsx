@@ -16,11 +16,11 @@ import { connect }                                          from 'react-redux';
 import { match }                                            from 'react-router';
 import { compose }                                          from 'redux';
 import CustomTableCell                                      from "components/shared/CustomTableCell";
-import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
-import { searchFilter }                                     from '../../../actions/global-actions';
+import { getContrators0, getSpecialties, selectContractor } from 'actions/cont-actions';
+import { searchFilter }                                     from 'actions/global-actions';
 import Button                                               from "../../../components/CustomButtons/Button";
 import CustomInput                                          from "../../../components/CustomInput/CustomInput";
-import { MaterialThemeHOC, UserProfile }                    from '../../../types/global';
+import { MaterialThemeHOC, UserProfile }                    from 'types/global';
 
 import style from './SearchBidderList.style';
 
@@ -140,7 +140,7 @@ class BidderListingView extends React.Component<
   }
 
   render() {
-    const { classes, theme, specialties, userProfile } = this.props;
+    const { classes, specialties, userProfile } = this.props;
     const { contractors } = this.state;
     const suggestions = specialties
       ? specialties.content.map(specialty => ({
@@ -148,12 +148,6 @@ class BidderListingView extends React.Component<
           label: specialty.name,
         }))
       : [];
-    const selectStyles = {
-      input: base => ({
-        ...base,
-        color: theme.palette.text.primary,
-      }),
-    };
 
     if (contractors === null) {
       return <CircularProgress className={classes.waitingSpin} />;

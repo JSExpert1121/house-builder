@@ -1,45 +1,37 @@
-import React, { Component }         from 'react';
-import { withRouter }               from 'react-router-dom';
-import { connect }                  from 'react-redux';
-import { createStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Button,
-  CircularProgress,
-  IconButton,
-  Paper,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-}                                   from '@material-ui/core';
-import { History }                  from 'history';
-import NoteAddIcon                  from '@material-ui/icons/NoteAdd';
-import DeleteIcon                                                         from '@material-ui/icons/Delete';
-import Dialog                                                             from '@material-ui/core/Dialog';
-import DialogActions                                                      from '@material-ui/core/DialogActions';
-import DialogContent                                                      from '@material-ui/core/DialogContent';
-import DialogContentText                                                  from '@material-ui/core/DialogContentText';
+import Button                                                            from '@material-ui/core/Button';
+import CircularProgress                                                  from '@material-ui/core/CircularProgress';
+import Dialog                                                            from '@material-ui/core/Dialog';
+import DialogActions                                                     from '@material-ui/core/DialogActions';
+import DialogContent                                                     from '@material-ui/core/DialogContent';
+import DialogContentText                                                 from '@material-ui/core/DialogContentText';
 import DialogTitle                                                       from '@material-ui/core/DialogTitle';
-import SimpleMDE                                                         from 'react-simplemde-editor';
+import IconButton                                                        from '@material-ui/core/IconButton';
+import Paper                                                             from '@material-ui/core/Paper';
+import Snackbar                                                          from '@material-ui/core/Snackbar';
+import { createStyles, withStyles }                                      from '@material-ui/core/styles';
+import Table                                                             from '@material-ui/core/Table';
+import TableBody                                                         from '@material-ui/core/TableBody';
+import TableHead                                                         from '@material-ui/core/TableHead';
+import TablePagination      from '@material-ui/core/TablePagination';
+import TableRow             from '@material-ui/core/TableRow';
+import TextField            from '@material-ui/core/TextField';
+import DeleteIcon           from '@material-ui/icons/Delete';
+import NoteAddIcon          from '@material-ui/icons/NoteAdd';
 import 'easymde/dist/easymde.min.css';
+import CustomTableCell      from "components/shared/CustomTableCell";
+import { History }          from 'history';
+import React, { Component } from 'react';
+import { connect }          from 'react-redux';
+import { withRouter }       from 'react-router-dom';
+import SimpleMDE            from 'react-simplemde-editor';
+import { compose }          from "redux";
 import removeMd                                                          from 'remove-markdown';
 import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from '../../../actions/tem-actions';
 import { MaterialThemeHOC, UserProfile }                                 from '../../../types/global';
-import { compose }                                                       from "redux";
 
 const styles = theme => createStyles({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 64px - 48px - 16px)',
-    margin: theme.spacing(1),
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 64px - 48px - 48px - 16px)',
+    marginTop: theme.spacing(1),
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -58,17 +50,6 @@ const styles = theme => createStyles({
     lineHeight: '1.5rem',
   },
 });
-
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
 
 interface ConnAllTemplateViewProps extends MaterialThemeHOC {
   getTemplatesO: (currentPage: number, rowsPerPage: number) => any;
@@ -143,92 +124,90 @@ class AllTemplateView extends Component<
 
     return (
       <Paper className={classes.root}>
-        <div className={classes.tableWrap}>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <CustomTableCell> Template Name </CustomTableCell>
-                <CustomTableCell align="center">
-                  Template Description
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell> Template Name </CustomTableCell>
+              <CustomTableCell align="center">
+                Template Description
+              </CustomTableCell>
+              <CustomTableCell align="center">
+                <IconButton
+                  style={{ color: '#FFFFFF' }}
+                  onClick={() => this.setState({ openCategoryForm: true })}
+                >
+                  <NoteAddIcon />
+                </IconButton>
+              </CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {templates.content.map(row => (
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  component="th"
+                  scope="row"
+                  onClick={async () => {
+                    await this.props.selectTemplate(row.id);
+                    this.props.history.push('/m_temp/template_detail');
+                  }}
+                >
+                  {row.name}
                 </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectTemplate(row.id);
+                    this.props.history.push('/m_temp/template_detail');
+                  }}
+                >
+                  {removeMd(row.description)}
+                </CustomTableCell>
+
                 <CustomTableCell align="center">
                   <IconButton
-                    style={{ color: '#FFFFFF' }}
-                    onClick={() => this.setState({ openCategoryForm: true })}
+                    className={classes.button}
+                    aria-label="Delete"
+                    color="primary"
+                    onClick={async () => {
+                      await this.props.deleteTemplate(row.id, result => {
+                        this.setState({
+                          snackBar: true,
+                          SnackBarContent: result
+                            ? 'delete template success'
+                            : 'please delete categories',
+                        });
+                      });
+
+                      if (
+                        this.state.rowsPerPage * this.state.currentPage <
+                        templates.totalElements - 1
+                      ) {
+                        await this.props.getTemplatesO(
+                          this.state.currentPage,
+                          this.state.rowsPerPage
+                        );
+                      } else {
+                        const currentPage = this.state.currentPage - 1;
+
+                        this.setState({
+                          currentPage: currentPage,
+                        });
+
+                        await this.props.getTemplatesO(
+                          currentPage,
+                          this.state.rowsPerPage
+                        );
+                      }
+                    }}
                   >
-                    <NoteAddIcon />
+                    <DeleteIcon />
                   </IconButton>
                 </CustomTableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {templates.content.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                    component="th"
-                    scope="row"
-                    onClick={async () => {
-                      await this.props.selectTemplate(row.id);
-                      this.props.history.push('/m_temp/template_detail');
-                    }}
-                  >
-                    {row.name}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    align="center"
-                    onClick={async () => {
-                      await this.props.selectTemplate(row.id);
-                      this.props.history.push('/m_temp/template_detail');
-                    }}
-                  >
-                    {removeMd(row.description)}
-                  </CustomTableCell>
-
-                  <CustomTableCell align="center">
-                    <IconButton
-                      className={classes.button}
-                      aria-label="Delete"
-                      color="primary"
-                      onClick={async () => {
-                        await this.props.deleteTemplate(row.id, result => {
-                          this.setState({
-                            snackBar: true,
-                            SnackBarContent: result
-                              ? 'delete template success'
-                              : 'please delete categories',
-                          });
-                        });
-
-                        if (
-                          this.state.rowsPerPage * this.state.currentPage <
-                          templates.totalElements - 1
-                        ) {
-                          await this.props.getTemplatesO(
-                            this.state.currentPage,
-                            this.state.rowsPerPage
-                          );
-                        } else {
-                          const currentPage = this.state.currentPage - 1;
-
-                          this.setState({
-                            currentPage: currentPage,
-                          });
-
-                          await this.props.getTemplatesO(
-                            currentPage,
-                            this.state.rowsPerPage
-                          );
-                        }
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </CustomTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}

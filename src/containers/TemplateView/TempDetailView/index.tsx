@@ -1,30 +1,32 @@
-import React, { Component }         from 'react';
-import { createStyles, withStyles } from '@material-ui/core/styles';
-import {
-  Button,
-  CircularProgress,
-  IconButton,
-  Paper,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TextField,
-}                                   from '@material-ui/core';
+import Button from "components/CustomButtons/Button.jsx";
+import CircularProgress             from '@material-ui/core/CircularProgress';
 import Dialog                       from '@material-ui/core/Dialog';
 import DialogActions                from '@material-ui/core/DialogActions';
 import DialogContent                from '@material-ui/core/DialogContent';
 import DialogContentText            from '@material-ui/core/DialogContentText';
-import DialogTitle          from '@material-ui/core/DialogTitle';
+import DialogTitle                  from '@material-ui/core/DialogTitle';
+import IconButton                   from '@material-ui/core/IconButton';
+import Paper                        from '@material-ui/core/Paper';
+import Snackbar                     from '@material-ui/core/Snackbar';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import Table                        from '@material-ui/core/Table';
+import TableBody                    from '@material-ui/core/TableBody';
+import TableHead                    from '@material-ui/core/TableHead';
+import TableRow                     from '@material-ui/core/TableRow';
+import TextField                    from '@material-ui/core/TextField';
+import DeleteIcon                   from '@material-ui/icons/Delete';
 
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import DeleteIcon  from '@material-ui/icons/Delete';
-import SimpleMDE   from 'react-simplemde-editor';
+import NoteAddIcon          from '@material-ui/icons/NoteAdd';
+import CustomTableCell      from "components/shared/CustomTableCell";
 import 'easymde/dist/easymde.min.css';
+import { History }          from 'history';
+import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
+import SimpleMDE   from 'react-simplemde-editor';
+
+import SplitPane   from 'react-split-pane';
+import { compose } from 'redux';
 import {
   addCategory,
   deleteCategory,
@@ -32,12 +34,11 @@ import {
   editTemplate,
   selectCategory,
   selectTemplate,
-}                  from '../../../actions/tem-actions';
-
-import SplitPane                         from 'react-split-pane';
-import { MaterialThemeHOC, UserProfile } from '../../../types/global';
-import { History }                       from 'history';
-import { compose } from 'redux';
+}                  from 'actions/tem-actions';
+import {
+  MaterialThemeHOC,
+  UserProfile
+}                  from 'types/global';
 
 const styles = theme => createStyles({
   descTag: {
@@ -55,8 +56,8 @@ const styles = theme => createStyles({
     flexDirection: 'column',
     overflow: 'scroll',
   },
-  halfWidth: {
-    width: 'calc(33% - 20px)',
+  marginRight: {
+    marginRight: "5px"
   },
   cateList: {
     textAlign: 'center',
@@ -84,17 +85,6 @@ const styles = theme => createStyles({
     lineHeight: '1.5rem',
   },
 });
-
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
 
 interface ConnTempDetailViewProps extends MaterialThemeHOC {
   selectCategory: typeof selectCategory;
@@ -195,14 +185,14 @@ class TemplateDetailView extends Component<
             <div>
               <Button
                 disabled={this.state.isSaving}
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 onClick={() => this.props.history.push('/m_temp')}
-                color="primary"
+                color="success"
               >
                 Cancel
               </Button>
               <Button
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 disabled={this.state.isSaving}
                 onClick={async () => {
                   this.setState({ isSaving: true });
@@ -227,14 +217,13 @@ class TemplateDetailView extends Component<
                 }}
                 color="primary"
               >
-                Save{' '}
+                Save
                 {this.state.isSaving && (
                   <CircularProgress size={24} thickness={4} />
                 )}
               </Button>
               <Button
                 disabled={this.state.isDeleting}
-                className={classes.halfWidth}
                 onClick={async () => {
                   this.setState({ isDeleting: true });
                   await this.props.deleteTemplate(template.id, result => {
@@ -251,7 +240,7 @@ class TemplateDetailView extends Component<
                   });
                   this.setState({ isDeleting: false });
                 }}
-                color="primary"
+                color="danger"
               >
                 Delete
                 {this.state.isDeleting && (
@@ -261,7 +250,7 @@ class TemplateDetailView extends Component<
             </div>
           </Paper>
           <Paper className={classes.cateList}>
-            <Table size="small">
+            <Table>
               <TableHead>
                 <TableRow>
                   <CustomTableCell> Category Name </CustomTableCell>
@@ -269,7 +258,7 @@ class TemplateDetailView extends Component<
                   <CustomTableCell align="center">Value</CustomTableCell>
                   <CustomTableCell align="center">
                     <IconButton
-                      style={{ color: '#FFFFFF' }}
+                      style={{ color: '#fff' }}
                       onClick={() => this.setState({ openCategoryForm: true })}
                     >
                       <NoteAddIcon />

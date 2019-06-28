@@ -1,8 +1,14 @@
-import React                                                           from 'react';
-import PropTypes                                                       from 'prop-types';
-import {IconButton, Table, TableBody, TableHead, TableRow, withStyles} from '@material-ui/core';
-import {Delete as DeleteIcon, NoteAdd as NoteAddIcon}                  from '@material-ui/icons';
-import CustomTableCell                                                 from '../../components/shared/CustomTableCell';
+import IconButton from '@material-ui/core/IconButton';
+import Table      from '@material-ui/core/Table';
+import TableBody  from '@material-ui/core/TableBody';
+import TableHead  from '@material-ui/core/TableHead';
+import TableRow   from '@material-ui/core/TableRow';
+
+import DeleteIcon      from '@material-ui/icons/Delete';
+import NoteAddIcon     from '@material-ui/icons/NoteAdd';
+import React           from 'react';
+import CustomTableCell from '../../components/shared/CustomTableCell';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   row: {
@@ -26,7 +32,7 @@ const SpecTableView = ({
   classes,
 }) => {
   return (
-    <Table size="small">
+    <Table>
       <TableHead>
         <TableRow>
           <CustomTableCell> Specialty Name </CustomTableCell>
@@ -77,19 +83,6 @@ const SpecTableView = ({
       </TableBody>
     </Table>
   );
-};
-
-SpecTableView.propTypes = {
-  specialties: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-    })
-  ),
-  handleAdd: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  handleSelect: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(SpecTableView);

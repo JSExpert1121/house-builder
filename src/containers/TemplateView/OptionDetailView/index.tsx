@@ -1,14 +1,20 @@
-import React, { Component }                                                       from 'react';
+import Button                                                                     from '@material-ui/core/Button'
+import CircularProgress
+                                                                                  from '@material-ui/core/CircularProgress'
+import Link                                                                       from '@material-ui/core/Link'
+import Paper                                                                      from '@material-ui/core/Paper'
+import Snackbar                                                                   from '@material-ui/core/Snackbar'
 import { createStyles, Theme, withStyles }                                        from '@material-ui/core/styles';
-import { Button, CircularProgress, Link, Paper, Snackbar, TextField }             from '@material-ui/core';
-import { connect }                                                                from 'react-redux';
-import { deleteOption, editOption, selectCategory, selectOption, selectTemplate } from '../../../actions/tem-actions';
-import SplitPane                                                                  from 'react-split-pane';
-import SimpleMDE                                                                  from 'react-simplemde-editor';
+import TextField                                                                  from '@material-ui/core/TextField'
+import { deleteOption, editOption, selectCategory, selectOption, selectTemplate } from 'actions/tem-actions';
 import 'easymde/dist/easymde.min.css';
-import { MaterialThemeHOC, UserProfile }                                          from '../../../types/global';
 import { History }                                                                from 'history';
+import React, { Component }                                                       from 'react';
+import { connect }                                                                from 'react-redux';
+import SimpleMDE                                                                  from 'react-simplemde-editor';
+import SplitPane                                                                  from 'react-split-pane';
 import { compose }                                                                from "redux";
+import { MaterialThemeHOC, UserProfile }                                          from 'types/global';
 
 const styles = (theme: Theme) => createStyles({
   descTag: {
@@ -26,7 +32,7 @@ const styles = (theme: Theme) => createStyles({
     flexDirection: 'column',
     overflow: 'auto',
   },
-  halfWidth: {
+  marginRight: {
     width: 'calc(33% - 20px)',
   },
   optList: {
@@ -174,14 +180,7 @@ class OptionDetailView extends Component<
               onChange={val => this.setState({ value: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
             />
-            // @ts-ignore
             <SimpleMDE
-              style={{
-                height: '209px',
-                overflow: 'auto',
-                marginBottom: '8px',
-                textAlign: 'left',
-              }}
               value={this.state.description}
               onChange={val => this.setState({ description: val })}
               options={{
@@ -190,7 +189,7 @@ class OptionDetailView extends Component<
             />
             <div>
               <Button
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 onClick={() =>
                   this.props.history.push('/m_temp/category_detail')
                 }
@@ -199,7 +198,7 @@ class OptionDetailView extends Component<
                 Cancel
               </Button>
               <Button
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 disabled={this.state.isSaving}
                 onClick={async () => {
                   this.setState({ isSaving: true });
@@ -232,7 +231,7 @@ class OptionDetailView extends Component<
                 )}
               </Button>
               <Button
-                className={classes.halfWidth}
+                className={classes.marginRight}
                 disabled={this.state.isDeleting}
                 onClick={async () => {
                   this.setState({ isDeleting: true });
@@ -251,7 +250,7 @@ class OptionDetailView extends Component<
               </Button>
             </div>
           </Paper>
-          <Paper className={classes.optList}></Paper>
+          <Paper className={classes.optList} />
         </SplitPane>
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
