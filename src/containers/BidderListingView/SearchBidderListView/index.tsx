@@ -1,164 +1,28 @@
-import React                                                from 'react';
-import { connect }                                          from 'react-redux';
-import { History }                                          from 'history';
-import { withStyles }                                       from '@material-ui/core/styles';
-import Card                                                 from '@material-ui/core/Card';
 import CircularProgress                                     from '@material-ui/core/CircularProgress';
+import FormControl                                          from "@material-ui/core/FormControl";
+import Grid                                                 from '@material-ui/core/Grid';
+import InputLabel                                           from "@material-ui/core/InputLabel";
+import MenuItem                                             from '@material-ui/core/MenuItem';
+import Select                                               from "@material-ui/core/Select";
+import { withStyles }                                       from '@material-ui/core/styles';
 import Table                                                from '@material-ui/core/Table';
 import TableBody                                            from '@material-ui/core/TableBody';
-import TableCell                                            from '@material-ui/core/TableCell';
 import TableHead                                            from '@material-ui/core/TableHead';
 import TablePagination                                      from '@material-ui/core/TablePagination';
 import TableRow                                             from '@material-ui/core/TableRow';
-import Grid                                                 from '@material-ui/core/Grid';
-import MenuItem                                             from '@material-ui/core/MenuItem';
-import { searchFilter }                                     from '../../../actions/global-actions';
-import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
+import { History }                                          from 'history';
+import React                                                from 'react';
+import { connect }                                          from 'react-redux';
 import { match }                                            from 'react-router';
+import { compose }                                          from 'redux';
+import CustomTableCell                                      from "components/shared/CustomTableCell";
+import { getContrators0, getSpecialties, selectContractor } from '../../../actions/cont-actions';
+import { searchFilter }                                     from '../../../actions/global-actions';
+import Button                                               from "../../../components/CustomButtons/Button";
+import CustomInput                                          from "../../../components/CustomInput/CustomInput";
 import { MaterialThemeHOC, UserProfile }                    from '../../../types/global';
 
-import style          from './SearchBidderList.style';
-import { compose }    from 'redux';
-import Button         from "../../../components/CustomButtons/Button";
-import CustomInput    from "../../../components/CustomInput/CustomInput";
-import FormControl    from "@material-ui/core/FormControl";
-import InputLabel    from "@material-ui/core/InputLabel";
-import Select    from "@material-ui/core/Select";
-
-/*
-function NoOptionsMessage(props) {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.noOptionsMessage}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-*/
-
-/*
-function inputComponent({ inputRef, ...props }) {
-  return <div ref={inputRef} {...props} />;
-}
-*/
-
-/*
-function Control(props) {
-  return (
-    <TextField
-      fullWidth
-      InputProps={{
-        inputComponent,
-        inputProps: {
-          // className: props.selectProps.classes.input,
-          inputRef: props.innerRef,
-          children: props.children,
-          ...props.innerProps,
-        },
-      }}
-      {...props.selectProps.textFieldProps}
-    />
-  );
-}
-
-function Option(props) {
-  return (
-    <MenuItem
-      buttonRef={props.innerRef}
-      selected={props.isFocused}
-      component="div"
-      style={{
-        fontWeight: props.isSelected ? 500 : 400,
-      }}
-      {...props.innerProps}
-    >
-      {props.children}
-    </MenuItem>
-  );
-}
-
-function Placeholder(props) {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.placeholder}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-function SingleValue(props) {
-  return (
-    <Typography
-      className={props.selectProps.classes.singleValue}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
-}
-
-function ValueContainer(props) {
-  return (
-    <div className={props.selectProps.classes.valueContainer}>
-      {props.children}
-    </div>
-  );
-}
-
-function MultiValue(props) {
-  return (
-    <Chip
-      tabIndex={-1}
-      label={props.children}
-      className={classNames(props.selectProps.classes.chip, {
-        [props.selectProps.classes.chipFocused]: props.isFocused,
-      })}
-      onDelete={props.removeProps.onClick}
-      deleteIcon={<CancelIcon {...props.removeProps} />}
-    />
-  );
-}
-
-function Menu(props) {
-  return (
-    <Paper
-      square
-      className={props.selectProps.classes.paper}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Paper>
-  );
-}
-*/
-
-/*const components = {
-  Control,
-  Menu,
-  MultiValue,
-  NoOptionsMessage,
-  Option,
-  Placeholder,
-  SingleValue,
-  ValueContainer,
-};*/
-
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
+import style from './SearchBidderList.style';
 
 interface BidderListingProps extends MaterialThemeHOC {
   match: match;
@@ -304,183 +168,170 @@ class BidderListingView extends React.Component<
 
     return (
       <div className={classes.root}>
-        <Card className={classes.card}>
-          <Grid container alignItems="center">
-            <Grid item xs={3}>
-              <CustomInput
-                labelText="Name"
-                id="name"
-                inputProps={{
-                  type: "text",
-                  value: this.state.filterName,
-                  onChange: e => this.onNameChange(e)
-                }}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <CustomInput
-                id="city"
-                labelText="City"
-                inputProps={{
-                  value: this.state.filterCity,
-                  onChange: e => this.onCityChange(e)
-                }}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <FormControl
-                fullWidth
-                className={classes.selectFormControl}
+        <Grid container alignItems="center">
+          <Grid item xs={3}>
+            <CustomInput
+              labelText="Name"
+              id="name"
+              inputProps={{
+                type: "text",
+                value: this.state.filterName,
+                onChange: e => this.onNameChange(e)
+              }}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <CustomInput
+              id="city"
+              labelText="City"
+              inputProps={{
+                value: this.state.filterCity,
+                onChange: e => this.onCityChange(e)
+              }}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <FormControl
+              fullWidth
+              className={classes.selectFormControl}
+            >
+              <InputLabel
+                htmlFor="simple-select"
+                className={classes.selectLabel}
               >
-                <InputLabel
-                  htmlFor="simple-select"
-                  className={classes.selectLabel}
-                >
-                  Select multiple specialties
-                </InputLabel>
-                <Select
-                  MenuProps={{
-                    className: classes.selectMenu
-                  }}
-                  classes={{
-                    select: classes.select
-                  }}
-                  value={this.state.multi}
-                  onChange={this.handleChange('multi')}
-                  inputProps={{
-                    name: "simpleSelect",
-                    id: "simple-select"
-                  }}
-                >
-                  <MenuItem
-                    disabled
-                    classes={{
-                      root: classes.selectMenuItem
-                    }}
-                  >
-                    Select multiple specialties
-                  </MenuItem>
-                  {suggestions.map(({value, label }, key) => (
-                    <MenuItem
-                      key={key}
-                      classes={{
-                        root: classes.selectMenuItem,
-                        selected: classes.selectMenuItemSelected
-                      }}
-                      value={value}
-                    >
-                      {label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              {/*<Select
-                classes={classes}
-                styles={selectStyles}
-                options={suggestions}
-                components={components}
+                Select multiple specialties
+              </InputLabel>
+              <Select
+                MenuProps={{
+                  className: classes.selectMenu
+                }}
+                classes={{
+                  select: classes.select
+                }}
                 value={this.state.multi}
                 onChange={this.handleChange('multi')}
-                placeholder="Select multiple specialties"
-                isMulti
-              />*/}
-            </Grid>
-            <Grid item xs={3} className={classes.btnSearchWrapper}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.handleSearch}
+                inputProps={{
+                  name: "simpleSelect",
+                  id: "simple-select"
+                }}
               >
-                Search
-              </Button>
-            </Grid>
+                <MenuItem
+                  disabled
+                  classes={{
+                    root: classes.selectMenuItem
+                  }}
+                >
+                  Select multiple specialties
+                </MenuItem>
+                {suggestions.map(({value, label }, key) => (
+                  <MenuItem
+                    key={key}
+                    classes={{
+                      root: classes.selectMenuItem,
+                      selected: classes.selectMenuItemSelected
+                    }}
+                    value={value}
+                  >
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell> Logo </CustomTableCell>
-                <CustomTableCell align="center">Name</CustomTableCell>
-                <CustomTableCell align="center">Email</CustomTableCell>
-                <CustomTableCell align="center">Rating</CustomTableCell>
-                <CustomTableCell align="center">Other</CustomTableCell>
+          <Grid item xs={3} className={classes.btnSearchWrapper}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.handleSearch}
+            >
+              Search
+            </Button>
+          </Grid>
+        </Grid>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell> Logo </CustomTableCell>
+              <CustomTableCell align="center">Name</CustomTableCell>
+              <CustomTableCell align="center">Email</CustomTableCell>
+              <CustomTableCell align="center">Rating</CustomTableCell>
+              <CustomTableCell align="center">Other</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {contractors.content.map(row => (
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  component="th"
+                  scope="row"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                />
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                >
+                  {row.address ? row.address.name : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                >
+                  {row.email ? row.email : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                />
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                />
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {contractors.content.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                    component="th"
-                    scope="row"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/b_list/contractor_detail');
-                    }}
-                  ></CustomTableCell>
-                  <CustomTableCell
-                    align="center"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/b_list/contractor_detail');
-                    }}
-                  >
-                    {row.address ? row.address.name : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    align="center"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/b_list/contractor_detail');
-                    }}
-                  >
-                    {row.email ? row.email : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    align="center"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/b_list/contractor_detail');
-                    }}
-                  ></CustomTableCell>
-                  <CustomTableCell
-                    align="center"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/b_list/contractor_detail');
-                    }}
-                  ></CustomTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            style={{ overflow: 'auto' }}
-            rowsPerPageOptions={[5, 10, 20]}
-            component="div"
-            count={contractors.content.length}
-            rowsPerPage={this.state.rowsPerPage}
-            page={this.state.currentPage}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page',
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page',
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-        </Card>
+            ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          style={{ overflow: 'auto' }}
+          rowsPerPageOptions={[5, 10, 20]}
+          component="div"
+          count={contractors.content.length}
+          rowsPerPage={this.state.rowsPerPage}
+          page={this.state.currentPage}
+          backIconButtonProps={{
+            'aria-label': 'Previous Page',
+          }}
+          nextIconButtonProps={{
+            'aria-label': 'Next Page',
+          }}
+          onChangePage={this.handleChangePage}
+          onChangeRowsPerPage={this.handleChangeRowsPerPage}
+        />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  getContrators0: (page, size) => dispatch(getContrators0(page, size)),
-  selectContractor: id => dispatch(selectContractor(id)),
-  getSpecialties: () => dispatch(getSpecialties()),
-  searchFilter: (name, city, specialties) =>
-    dispatch(searchFilter(name, city, specialties)),
-});
+const mapDispatchToProps = {
+  getContrators0,
+  selectContractor,
+  getSpecialties,
+  searchFilter,
+};
 
 const mapStateToProps = state => ({
   userProfile: state.global_data.userProfile,

@@ -1,8 +1,6 @@
 import React       from 'react';
 import { connect } from 'react-redux';
-
-import PropTypes      from 'prop-types';
-import Paper          from '@material-ui/core/Paper';
+import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import Tabs           from '@material-ui/core/Tabs';
 import Tab            from '@material-ui/core/Tab';
@@ -13,14 +11,10 @@ import ContractorSpecialties from './ContractorSpecialties';
 import ContractorFiles       from './ContractorFiles';
 import { IconButton }        from '@material-ui/core';
 import ArrowBackIcon         from '@material-ui/icons/ArrowBack';
-// import ContractorMessages from './ContractorMessages';
-// import ContractorProposals from './ContractorProposals';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 136px)',
-    margin: theme.spacing(1),
+    marginTop: theme.spacing(1),
   },
   toolbarstyle: {
     backgroundColor: theme.palette.background.paper,
@@ -32,10 +26,9 @@ const styles = theme => ({
   },
 });
 
-class ConnectedContractorDetailView extends React.Component {
+class ContractorDetailView extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       curDetailTab: 0,
     };
@@ -60,29 +53,27 @@ class ConnectedContractorDetailView extends React.Component {
     return (
       <NoSsr>
         <div className={classes.root}>
-          <Paper square>
-            <div style={{ display: 'flex' }}>
-              <IconButton className={classes.backBtn} onClick={this.handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-              <Tabs
-                value={curDetailTab}
-                onChange={this.handleTabChange}
-                variant="scrollable"
-                indicatorColor="primary"
-                textColor="primary"
-                scrollButtons="off"
-                className={classes.toolbarstyle}
-              >
-                <Tab label="Info" />
-                <Tab label="Files" />
-                <Tab label="Specialties" />
-              </Tabs>
-            </div>
-            {curDetailTab === 0 && <ContractorInfo />}
-            {curDetailTab === 1 && <ContractorFiles />}
-            {curDetailTab === 2 && <ContractorSpecialties />}
-          </Paper>
+          <div style={{ display: 'flex' }}>
+            <IconButton className={classes.backBtn} onClick={this.handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Tabs
+              value={curDetailTab}
+              onChange={this.handleTabChange}
+              variant="scrollable"
+              indicatorColor="primary"
+              textColor="primary"
+              scrollButtons="off"
+              className={classes.toolbarstyle}
+            >
+              <Tab label="Info" />
+              <Tab label="Files" />
+              <Tab label="Specialties" />
+            </Tabs>
+          </div>
+          {curDetailTab === 0 && <ContractorInfo />}
+          {curDetailTab === 1 && <ContractorFiles />}
+          {curDetailTab === 2 && <ContractorSpecialties />}
         </div>
       </NoSsr>
     );
@@ -95,12 +86,7 @@ const mapStateToProps = state => {
   };
 };
 
-const ContractorDetailView = connect(mapStateToProps)(
-  ConnectedContractorDetailView
-);
-
-ContractorDetailView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorDetailView);
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps),
+)(ContractorDetailView)

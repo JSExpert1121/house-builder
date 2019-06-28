@@ -1,24 +1,20 @@
 import React          from 'react';
 import { connect }    from 'react-redux';
-import PropTypes      from 'prop-types';
+import {compose}      from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import Table          from '@material-ui/core/Table';
 import TableBody      from '@material-ui/core/TableBody';
-import TableCell      from '@material-ui/core/TableCell';
 import TableHead      from '@material-ui/core/TableHead';
 import TableRow       from '@material-ui/core/TableRow';
 
-import { CircularProgress, Snackbar }                             from '@material-ui/core';
-import { DropzoneDialog }                                         from 'material-ui-dropzone';
+import { CircularProgress, Snackbar }                            from '@material-ui/core';
+import { DropzoneDialog }                                        from 'material-ui-dropzone';
 import { approveContractor, rejectContractor, updateContractor } from '../../../actions/cont-actions';
+import CustomTableCell                                           from "../../../components/shared/CustomTableCell";
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    padding: theme.spacing(1),
-    height: 'calc(100vh - 184px)',
-    overflow: 'auto',
-    overflowX: 'hidden',
+    marginTop: theme.spacing(1),
   },
   waitingSpin: {
     position: 'relative',
@@ -44,18 +40,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedContractorInfoView extends React.Component {
+class ContractorInfoView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -69,8 +54,6 @@ class ConnectedContractorInfoView extends React.Component {
 
   render() {
     const { classes, selectedContractor } = this.props;
-    // const contractorFiles = selectedContractor.contractorFiles;
-
     if (this.state.isProcessing)
       return (
         <div className={classes.root}>
@@ -80,7 +63,7 @@ class ConnectedContractorInfoView extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Table className={classes.table}>
+        <Table>
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Email</CustomTableCell>
@@ -116,15 +99,6 @@ class ConnectedContractorInfoView extends React.Component {
             </TableRow>
           </TableBody>
         </Table>
-        {/* <br />
-				Approve/Reject Reason
-				<br /><br />
-				<TextField
-					placeholder=""
-					multiline={true}
-					rows={4}
-					className={classes.textField}
-				/> */}
         <DropzoneDialog
           open={this.state.openUploadForm}
           onSave={this.handleUploadFiles}
@@ -150,45 +124,25 @@ class ConnectedContractorInfoView extends React.Component {
           }}
           message={<span id="message-id"> {this.state.snackBarContent}</span>}
         />
-        {/* <div className={classes.buttons}>
-					<Button variant="contained" color="primary" className={classes.button} onClick={() => this.props.approveContractor(selectedContractor.id, { "status": "ACTIVE" }, (result) => {
-						if (result)
-							this.props.updateContractor(selectedContractor.id);
-					}
-					)}>Approve</Button>
-					<Button variant="contained" color="default" className={classes.button} onClick={() => this.props.rejectContractor(selectedContractor.id, { "status": "REJECTED" }, (result) => {
-						if (result)
-							this.props.updateContractor(selectedContractor.id);
-					}
-					)}>Reject</Button>
-				</div> */}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    selectedContractor: state.cont_data.selectedContractor,
-  };
-};
+const mapStateToProps = state => ({
+  selectedContractor: state.cont_data.selectedContractor,
+})
 
-const mapDispatchToProps = dispatch => {
-  return {
-    approveContractor: (id, data, cb) =>
-      dispatch(approveContractor(id, data, cb)),
-    rejectContractor: (id, data, cb) =>
-      dispatch(rejectContractor(id, data, cb)),
-    updateContractor: id => dispatch(updateContractor(id)),
-  };
-};
-const ContractorInfoView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedContractorInfoView);
+const mapDispatchToProps = {
+  approveContractor,
+  rejectContractor,
+  updateContractor
+}
 
-ContractorInfoView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorInfoView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ContractorInfoView)
