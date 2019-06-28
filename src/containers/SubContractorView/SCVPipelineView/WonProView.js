@@ -1,35 +1,25 @@
-import React          from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect }    from 'react-redux';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton       from '@material-ui/core/IconButton';
+import Snackbar         from '@material-ui/core/Snackbar';
+import {withStyles}     from '@material-ui/core/styles';
+import Table            from '@material-ui/core/Table';
+import TableBody        from '@material-ui/core/TableBody';
+import TableHead        from '@material-ui/core/TableHead';
+import TablePagination  from '@material-ui/core/TablePagination'
+import TableRow         from '@material-ui/core/TableRow'
+import DeleteIcon       from '@material-ui/icons/Delete';
+import React            from 'react';
+import {connect}        from 'react-redux';
+import {compose}        from 'redux';
 
-import PropTypes      from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import DeleteIcon     from '@material-ui/icons/Delete';
-import {
-  CircularProgress,
-  IconButton,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-}                     from '@material-ui/core';
-
-import removeMd           from 'remove-markdown';
-import { getProposals }   from '../../../actions/sub-actions';
-import { deleteProposal } from '../../../actions/global-actions';
+import removeMd         from 'remove-markdown';
+import CustomTableCell  from "components/shared/CustomTableCell";
+import {deleteProposal} from '../../../actions/global-actions';
+import {getProposals}   from '../../../actions/sub-actions';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    padding: theme.spacing(1),
-    height: 'calc(100vh - 64px - 48px - 36px - 16px)',
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 64px - 48px - 36px - 48px - 16px)',
+    marginTop: theme.spacing(1),
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -49,18 +39,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedSubmittedProView extends React.Component {
+class WonProjectView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -170,81 +149,78 @@ class ConnectedSubmittedProView extends React.Component {
     if (proposals === null)
       return (
         <div className={classes.root}>
-          {' '}
-          <CircularProgress className={classes.waitingSpin} />{' '}
+          <CircularProgress className={classes.waitingSpin} />
         </div>
       );
 
     return (
       <div className={classes.root}>
-        <div className={classes.tableWrap}>
-          <Table className={classes.table} size="small">
-            <TableHead>
-              <TableRow>
-                <CustomTableCell align="center">Proposal To</CustomTableCell>
-                <CustomTableCell align="center">Price($)</CustomTableCell>
-                <CustomTableCell align="center">Duration</CustomTableCell>
-                <CustomTableCell align="center">Status</CustomTableCell>
-                <CustomTableCell align="center">Description</CustomTableCell>
-                <CustomTableCell align="center">Actions</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {proposals.content.map(row => (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell align="center">Proposal To</CustomTableCell>
+              <CustomTableCell align="center">Price($)</CustomTableCell>
+              <CustomTableCell align="center">Duration</CustomTableCell>
+              <CustomTableCell align="center">Status</CustomTableCell>
+              <CustomTableCell align="center">Description</CustomTableCell>
+              <CustomTableCell align="center">Actions</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {proposals.content.map(row => (
                 <TableRow className={classes.row} key={row.id} hover>
                   <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
+                      onClick={() => this.handleSelectProposal(row.id)}
+                      component="th"
+                      scope="row"
+                      align="center"
                   >
                     {row.project.title}
                   </CustomTableCell>
                   <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
+                      onClick={() => this.handleSelectProposal(row.id)}
+                      component="th"
+                      scope="row"
+                      align="center"
                   >
                     {row.budget}
                   </CustomTableCell>
                   <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
+                      onClick={() => this.handleSelectProposal(row.id)}
+                      component="th"
+                      scope="row"
+                      align="center"
                   >
                     {row.duration}
                   </CustomTableCell>
                   <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
+                      onClick={() => this.handleSelectProposal(row.id)}
+                      component="th"
+                      scope="row"
+                      align="center"
                   >
                     {row.status}
                   </CustomTableCell>
                   <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    align="center"
+                      onClick={() => this.handleSelectProposal(row.id)}
+                      align="center"
                   >
                     {removeMd(row.description)}
                   </CustomTableCell>
                   <CustomTableCell align="center">
                     <IconButton
-                      className={classes.button}
-                      aria-label="Delete"
-                      color="primary"
-                      onClick={() => this.handleDeleteProposal(row.id)}
+                        className={classes.button}
+                        aria-label="Delete"
+                        color="primary"
+                        onClick={() => this.handleDeleteProposal(row.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
                   </CustomTableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}
@@ -279,28 +255,20 @@ class ConnectedSubmittedProView extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProposals: (id, page, row, filterStr) =>
-      dispatch(getProposals(id, page, row, filterStr)),
-    deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
-  };
+const mapDispatchToProps = {
+  getProposals,
+  deleteProposal,
 };
 
-const mapStateToProps = state => {
-  return {
-    proposals: state.sub_data.proposals,
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({
+  proposals: state.sub_data.proposals,
+  userProfile: state.global_data.userProfile,
+});
 
-const SubmittedProView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedSubmittedProView);
-
-SubmittedProView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(SubmittedProView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(WonProjectView);
