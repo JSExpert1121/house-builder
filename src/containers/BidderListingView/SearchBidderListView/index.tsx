@@ -18,7 +18,7 @@ import { compose }                                          from 'redux';
 import CustomTableCell                                      from "components/shared/CustomTableCell";
 import { getContrators0, getSpecialties, selectContractor } from 'actions/cont-actions';
 import { searchFilter }                                     from 'actions/global-actions';
-import Button                                               from "../../../components/CustomButtons/Button";
+import Button from "components/CustomButtons/Button.jsx";
 import CustomInput                                          from "../../../components/CustomInput/CustomInput";
 import { MaterialThemeHOC, UserProfile }                    from 'types/global';
 

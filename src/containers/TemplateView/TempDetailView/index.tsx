@@ -187,7 +187,7 @@ class TemplateDetailView extends Component<
                 disabled={this.state.isSaving}
                 className={classes.marginRight}
                 onClick={() => this.props.history.push('/m_temp')}
-                color="success"
+                color="warning"
               >
                 Cancel
               </Button>
@@ -215,7 +215,7 @@ class TemplateDetailView extends Component<
 
                   this.setState({ isSaving: false });
                 }}
-                color="primary"
+                color="success"
               >
                 Save
                 {this.state.isSaving && (

@@ -10,7 +10,7 @@
 
       &.active,
       &:hover {
-        > [data-toggle='collapse'] {
+        > [data-toggle="collapse"] {
           color: $font-color;
 
           i {
@@ -37,7 +37,7 @@
 @mixin sidebar-active-color($font-color) {
   .nav {
     li {
-      &.active > a:not([data-toggle='collapse']) {
+      &.active > a:not([data-toggle="collapse"]) {
         color: $font-color;
         opacity: 1;
         @include shadow-big-color($font-color);

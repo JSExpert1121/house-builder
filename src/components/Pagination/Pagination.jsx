@@ -1,11 +1,12 @@
-import React      from 'react';
-import PropTypes  from 'prop-types';
-import cx         from 'classnames';
-// @material-ui/core components
-import withStyles from '@material-ui/core/styles/withStyles';
-import Button     from '@material-ui/core/Button';
+import React from "react";
+import PropTypes from "prop-types";
+import cx from "classnames";
 
-import paginationStyle from 'assets/jss/material-dashboard-pro-react/components/paginationStyle.jsx';
+// @material-ui/core components
+import withStyles from "@material-ui/core/styles/withStyles";
+import Button from "@material-ui/core/Button";
+
+import paginationStyle from "assets/jss/material-dashboard-pro-react/components/paginationStyle.jsx";
 
 function Pagination({ ...props }) {
   const { classes, pages, color } = props;
@@ -15,7 +16,7 @@ function Pagination({ ...props }) {
         const paginationLink = cx({
           [classes.paginationLink]: true,
           [classes[color]]: prop.active,
-          [classes.disabled]: prop.disabled,
+          [classes.disabled]: prop.disabled
         });
         return (
           <li className={classes.paginationItem} key={key}>
@@ -25,7 +26,7 @@ function Pagination({ ...props }) {
               </Button>
             ) : (
               <Button
-                onClick={() => console.log("you've clicked " + prop.text)}
+                onClick={() => alert("you've clicked " + prop.text)}
                 className={paginationLink}
               >
                 {prop.text}
@@ -39,7 +40,7 @@ function Pagination({ ...props }) {
 }
 
 Pagination.defaultProps = {
-  color: 'primary',
+  color: "primary"
 };
 
 Pagination.propTypes = {
@@ -50,12 +51,12 @@ Pagination.propTypes = {
       disabled: PropTypes.bool,
       text: PropTypes.oneOfType([
         PropTypes.number,
-        PropTypes.oneOf(['PREV', 'NEXT', '...']),
+        PropTypes.oneOf(["PREV", "NEXT", "..."])
       ]).isRequired,
-      onClick: PropTypes.func,
+      onClick: PropTypes.func
     })
   ).isRequired,
-  color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
+  color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"])
 };
 
 export default withStyles(paginationStyle)(Pagination);

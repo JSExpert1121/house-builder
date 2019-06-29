@@ -22,12 +22,7 @@ import CustomSnackbar                  from '../../../components/shared/CustomSn
 const styles = theme => createStyles({
   root: {
     position: 'relative',
-    flexGrow: 1,
-    height: 'calc(100vh - 128px)',
     marginTop: theme.spacing(1),
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   mainBoard: {
     width: '100%',
@@ -219,7 +214,7 @@ class AddProjectView extends Component {
           </Box>
           <Box style={{ width: '100%', textAlign: 'center', margin: '16px 0' }}>
             <Button
-              color="primary"
+              color="rose"
               disabled={this.state.isBusy}
               className={classes.submitButton}
               onClick={this.handleAddProject}

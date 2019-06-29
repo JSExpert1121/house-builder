@@ -1,32 +1,33 @@
-import React          from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect }    from 'react-redux';
-
-import PropTypes        from 'prop-types';
-import { withStyles }   from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Table            from '@material-ui/core/Table';
-import TableHead        from '@material-ui/core/TableHead';
-import TableCell        from '@material-ui/core/TableCell';
-import TableRow         from '@material-ui/core/TableRow';
-import TableBody        from '@material-ui/core/TableBody';
-import Button           from "components/CustomButtons/Button.jsx";
-import IconButton       from '@material-ui/core/IconButton';
-import TablePagination  from '@material-ui/core/TablePagination';
-import Snackbar         from '@material-ui/core/Snackbar';
 import Checkbox         from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton       from '@material-ui/core/IconButton';
+import Snackbar         from '@material-ui/core/Snackbar';
+import {withStyles}     from '@material-ui/core/styles';
+import Table            from '@material-ui/core/Table';
+import TableBody        from '@material-ui/core/TableBody';
+import TableHead        from '@material-ui/core/TableHead';
+import TablePagination  from '@material-ui/core/TablePagination';
+import TableRow         from '@material-ui/core/TableRow';
 import CompareIcon      from '@material-ui/icons/Compare';
-import ConfirmDialog    from '../shared/ConfirmDialog';
+import Button           from "components/CustomButtons/Button.jsx";
+import React            from 'react';
+import {connect}        from 'react-redux';
+import {compose}        from 'redux';
 
-import removeMd                                                                                          from 'remove-markdown';
-import { setDetailProposal, getProposalData, getProposalsByProjectId, setProposalsCompare } from '../../actions/global-actions';
+import removeMd        from 'remove-markdown';
+import {
+  getProposalData,
+  getProposalsByProjectId,
+  setDetailProposal,
+  setProposalsCompare
+}                      from '../../actions/global-actions';
+import ConfirmDialog   from '../shared/ConfirmDialog';
+import CustomTableCell from "../shared/CustomTableCell";
 
 const MAX_COMPARE = 3;
 const styles = theme => ({
   root: {
-    flexGrow: 1,
     padding: theme.spacing(1),
-    height: 'calc(100vh - 64px - 100px)',
   },
   tableWrap: {
     overflowX: 'hidden',
@@ -36,12 +37,6 @@ const styles = theme => ({
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.background.default,
     },
-  },
-  btnSubmitProposal: {
-    marginBottom: 5,
-    backgroundColor: theme.palette.primary.light,
-    color: '#FFF',
-    borderRadius: 0,
   },
   waitingSpin: {
     position: 'relative',
@@ -65,18 +60,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedProjectProposals extends React.Component {
+class ProjectProposals extends React.Component {
   constructor(props) {
     super(props);
 
@@ -176,8 +160,7 @@ class ConnectedProjectProposals extends React.Component {
     if (proposals === null)
       return (
         <div className={classes.root}>
-          {' '}
-          <CircularProgress className={classes.waitingSpin} />{' '}
+          <CircularProgress className={classes.waitingSpin} />
         </div>
       );
 
@@ -186,8 +169,7 @@ class ConnectedProjectProposals extends React.Component {
         <div className={classes.tableWrap}>
           {match.url.includes('/projects') && (
             <Button
-              color="primary"
-              className={classes.btnSubmitProposal}
+              color="rose"
               onClick={() => {
                 this.props.clearProposalDetail(null);
                 this.props.history.push('/projects/proposal_detail/-1');
@@ -196,7 +178,7 @@ class ConnectedProjectProposals extends React.Component {
               Submit Proposal
             </Button>
           )}
-          <Table className={classes.table} size="small">
+          <Table>
             <TableHead>
               <TableRow>
                 {match.url.includes('/gen-contractor') && (
@@ -308,25 +290,15 @@ const mapDispatchToProps = {
   clearProposalDetail: setDetailProposal,
 }
 
-const mapStateToProps = state => {
-  return {
-    proposals: state.global_data.proposals,
-    project: state.global_data.project,
-  };
-};
+const mapStateToProps = state => ({
+  proposals: state.global_data.proposals,
+  project: state.global_data.project,
+})
 
-const ProjectProposals = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedProjectProposals);
-
-ConnectedProjectProposals.propTypes = {
-  classes: PropTypes.object.isRequired,
-  project: PropTypes.object,
-  proposals: PropTypes.object,
-  getProposalData: PropTypes.func.isRequired,
-  getProposalsByProjectId: PropTypes.func.isRequired,
-  setProposals4Compare: PropTypes.func.isRequired,
-};
-
-export default withRouter(withStyles(styles)(ProjectProposals));
+export default compose(
+    withStyles(styles),
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
+)(ProjectProposals);

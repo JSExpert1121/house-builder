@@ -1,26 +1,21 @@
-import React          from 'react';
-import { connect }    from 'react-redux';
-import TextField      from '@material-ui/core/TextField';
-import Button from "components/CustomButtons/Button.jsx";
-import PropTypes      from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table          from '@material-ui/core/Table';
-import TableBody      from '@material-ui/core/TableBody';
-import TableCell      from '@material-ui/core/TableCell';
-import TableHead      from '@material-ui/core/TableHead';
-import TableRow       from '@material-ui/core/TableRow';
-
-import { CircularProgress, Snackbar }                             from '@material-ui/core';
-import { DropzoneDialog }                                         from 'material-ui-dropzone';
-import { approveContractor, rejectContractor, updateContractor } from '../../../actions/cont-actions';
+import {CircularProgress, Snackbar}                             from '@material-ui/core';
+import {withStyles}                                             from '@material-ui/core/styles';
+import Table                                                    from '@material-ui/core/Table';
+import TableBody                                                from '@material-ui/core/TableBody';
+import TableHead                                                from '@material-ui/core/TableHead';
+import TableRow                                                 from '@material-ui/core/TableRow';
+import TextField                                                from '@material-ui/core/TextField';
+import Button                                                   from 'components/CustomButtons/Button.jsx';
+import {DropzoneDialog}                                         from 'material-ui-dropzone';
+import React                                                    from 'react';
+import {connect}                                                from 'react-redux';
+import {compose}                                                from 'redux';
+import {approveContractor, rejectContractor, updateContractor,} from '../../../actions/cont-actions';
+import CustomTableCell                                          from '../../../components/shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
     padding: theme.spacing(1),
-    height: 'calc(100vh - 164px)',
-    overflow: 'auto',
-    overflowX: 'hidden',
   },
   waitingSpin: {
     position: 'relative',
@@ -34,27 +29,10 @@ const styles = theme => ({
   buttons: {
     marginTop: theme.spacing(1),
     textAlign: 'center',
-  },
-  approve: {
-    backgroundColor: 'purple',
-  },
-  reject: {
-    backgroundColor: 'lightblue',
   }
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedContractorInfoView extends React.Component {
+class ContractorInfoView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -68,7 +46,6 @@ class ConnectedContractorInfoView extends React.Component {
 
   render() {
     const { classes, selectedContractor } = this.props;
-    // const contractorFiles = selectedContractor.contractorFiles;
 
     if (this.state.isProcessing)
       return (
@@ -79,7 +56,7 @@ class ConnectedContractorInfoView extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Table className={classes.table} size="small">
+        <Table>
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Email</CustomTableCell>
@@ -153,7 +130,7 @@ class ConnectedContractorInfoView extends React.Component {
         <div className={classes.buttons}>
           <Button
             variant="contained"
-            color="primary"
+            color="rose"
             onClick={() =>
               this.props.approveContractor(
                 selectedContractor.id,
@@ -169,7 +146,7 @@ class ConnectedContractorInfoView extends React.Component {
           </Button>
           <Button
             variant="contained"
-            color="default"
+            color="warning"
             onClick={() =>
               this.props.rejectContractor(
                 selectedContractor.id,
@@ -189,28 +166,20 @@ class ConnectedContractorInfoView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    selectedContractor: state.cont_data.selectedContractor,
-  };
+const mapStateToProps = state => ({
+  selectedContractor: state.cont_data.selectedContractor,
+});
+
+const mapDispatchToProps = {
+  approveContractor,
+  rejectContractor,
+  updateContractor,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    approveContractor: (id, data, cb) =>
-      dispatch(approveContractor(id, data, cb)),
-    rejectContractor: (id, data, cb) =>
-      dispatch(rejectContractor(id, data, cb)),
-    updateContractor: id => dispatch(updateContractor(id)),
-  };
-};
-const ContractorInfoView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedContractorInfoView);
-
-ContractorInfoView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorInfoView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ContractorInfoView);

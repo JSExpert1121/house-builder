@@ -1,27 +1,29 @@
 /*eslint-disable*/
-import React, { Component } from 'react';
-import { NavLink }          from 'react-router-dom';
+import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
+// nodejs library to set properties for components
+import PropTypes from "prop-types";
 
-import withStyles from '@material-ui/core/styles/withStyles';
-import Switch     from '@material-ui/core/Switch';
+import withStyles from "@material-ui/core/styles/withStyles";
+import Switch from "@material-ui/core/Switch";
 
-import styles from 'assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch.jsx';
+import styles from "assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch.jsx";
 
-import imagine1 from 'assets/img/sidebar-1.jpg';
-import imagine2 from 'assets/img/sidebar-2.jpg';
-import imagine3 from 'assets/img/sidebar-3.jpg';
-import imagine4 from 'assets/img/sidebar-4.jpg';
+import imagine1 from "assets/img/sidebar-1.jpg";
+import imagine2 from "assets/img/sidebar-2.jpg";
+import imagine3 from "assets/img/sidebar-3.jpg";
+import imagine4 from "assets/img/sidebar-4.jpg";
 
-import Button from 'components/CustomButtons/Button.jsx';
+import Button from "components/CustomButtons/Button.jsx";
 
 class FixedPlugin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      classes: 'dropdown show',
+      classes: "dropdown show",
       bg_checked: true,
       bgImage: this.props.bgImage,
-      showImage: true,
+      showImage: true
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -30,10 +32,10 @@ class FixedPlugin extends Component {
   }
   handleChange = name => event => {
     switch (name) {
-      case 'miniActive':
+      case "miniActive":
         this.props.sidebarMinimize();
         break;
-      case 'image':
+      case "image":
         if (event.target.checked) {
           this.props.handleImageClick(this.state.bgImage);
         } else {
@@ -50,7 +52,7 @@ class FixedPlugin extends Component {
     return (
       <div
         className={
-          'fixed-plugin' + (this.props.rtlActive ? ' fixed-plugin-rtl' : '')
+          "fixed-plugin" + (this.props.rtlActive ? " fixed-plugin-rtl" : "")
         }
       >
         <div id="fixedPluginClasses" className={this.props.fixedClasses}>
@@ -64,79 +66,79 @@ class FixedPlugin extends Component {
                 <div className="badge-colors text-center">
                   <span
                     className={
-                      this.props.color === 'purple'
-                        ? 'badge filter badge-purple active'
-                        : 'badge filter badge-purple'
+                      this.props.color === "purple"
+                        ? "badge filter badge-purple active"
+                        : "badge filter badge-purple"
                     }
                     data-color="purple"
                     onClick={() => {
-                      this.props.handleColorClick('purple');
+                      this.props.handleColorClick("purple");
                     }}
                   />
                   <span
                     className={
-                      this.props.color === 'blue'
-                        ? 'badge filter badge-blue active'
-                        : 'badge filter badge-blue'
+                      this.props.color === "blue"
+                        ? "badge filter badge-blue active"
+                        : "badge filter badge-blue"
                     }
                     data-color="blue"
                     onClick={() => {
-                      this.props.handleColorClick('blue');
+                      this.props.handleColorClick("blue");
                     }}
                   />
                   <span
                     className={
-                      this.props.color === 'green'
-                        ? 'badge filter badge-green active'
-                        : 'badge filter badge-green'
+                      this.props.color === "green"
+                        ? "badge filter badge-green active"
+                        : "badge filter badge-green"
                     }
                     data-color="green"
                     onClick={() => {
-                      this.props.handleColorClick('green');
+                      this.props.handleColorClick("green");
                     }}
                   />
                   <span
                     className={
-                      this.props.color === 'red'
-                        ? 'badge filter badge-red active'
-                        : 'badge filter badge-red'
+                      this.props.color === "red"
+                        ? "badge filter badge-red active"
+                        : "badge filter badge-red"
                     }
                     data-color="red"
                     onClick={() => {
-                      this.props.handleColorClick('red');
+                      this.props.handleColorClick("red");
                     }}
                   />
                   <span
                     className={
-                      this.props.color === 'orange'
-                        ? 'badge filter badge-orange active'
-                        : 'badge filter badge-orange'
+                      this.props.color === "orange"
+                        ? "badge filter badge-orange active"
+                        : "badge filter badge-orange"
                     }
                     data-color="orange"
                     onClick={() => {
-                      this.props.handleColorClick('orange');
+                      this.props.handleColorClick("orange");
                     }}
                   />
                   <span
                     className={
-                      this.props.color === 'white'
-                        ? 'badge filter badge-white active'
-                        : 'badge filter badge-white'
+                      this.props.color === "white"
+                        ? "badge filter badge-white active"
+                        : "badge filter badge-white"
                     }
                     data-color="orange"
                     onClick={() => {
-                      this.props.handleColorClick('white');
+                      this.props.handleColorClick("white");
                     }}
                   />
                   <span
                     className={
-                      this.props.color === 'rose'
-                        ? 'badge filter badge-rose active'
-                        : 'badge filter badge-rose'
+                      this.props.color === "rose"
+                        ? "badge filter badge-rose active"
+                        : "badge filter badge-rose"
                     }
                     data-color="orange"
                     onClick={() => {
-                      this.props.handleColorClick('rose');
+                      this.props.handleColorClick("rose");
                     }}
                   />
                 </div>
@@ -149,35 +151,35 @@ class FixedPlugin extends Component {
                 <div className="badge-colors text-center">
                   <span
                     className={
-                      this.props.bgColor === 'blue'
-                        ? 'badge filter badge-blue active'
-                        : 'badge filter badge-blue'
+                      this.props.bgColor === "blue"
+                        ? "badge filter badge-blue active"
+                        : "badge filter badge-blue"
                     }
                     data-color="orange"
                     onClick={() => {
-                      this.props.handleBgColorClick('blue');
+                      this.props.handleBgColorClick("blue");
                     }}
                   />
                   <span
                     className={
-                      this.props.bgColor === 'white'
-                        ? 'badge filter badge-white active'
-                        : 'badge filter badge-white'
+                      this.props.bgColor === "white"
+                        ? "badge filter badge-white active"
+                        : "badge filter badge-white"
                     }
                     data-color="orange"
                     onClick={() => {
-                      this.props.handleBgColorClick('white');
+                      this.props.handleBgColorClick("white");
                     }}
                   />
                   <span
                     className={
-                      this.props.bgColor === 'black'
-                        ? 'badge filter badge-black active'
-                        : 'badge filter badge-black'
+                      this.props.bgColor === "black"
+                        ? "badge filter badge-black active"
+                        : "badge filter badge-black"
                     }
                     data-color="orange"
                     onClick={() => {
-                      this.props.handleBgColorClick('black');
+                      this.props.handleBgColorClick("black");
                     }}
                   />
                 </div>
@@ -189,14 +191,13 @@ class FixedPlugin extends Component {
                 <p className="switch-label">Sidebar Mini</p>
                 <Switch
                   checked={this.props.miniActive}
-                  onChange={this.handleChange('miniActive')}
+                  onChange={this.handleChange("miniActive")}
                   value="sidebarMini"
                   classes={{
                     switchBase: classes.switchBase,
                     checked: classes.switchChecked,
-                    icon: classes.switchIcon,
-                    iconChecked: classes.switchIconChecked,
-                    bar: classes.switchBar,
+                    thumb: classes.switchIcon,
+                    track: classes.switchBar
                   }}
                 />
                 <div className="clearfix" />
@@ -207,21 +208,20 @@ class FixedPlugin extends Component {
                 <p className="switch-label">Sidebar Image</p>
                 <Switch
                   checked={this.state.showImage}
-                  onChange={this.handleChange('image')}
+                  onChange={this.handleChange("image")}
                   value="sidebarMini"
                   classes={{
                     switchBase: classes.switchBase,
                     checked: classes.switchChecked,
-                    icon: classes.switchIcon,
-                    iconChecked: classes.switchIconChecked,
-                    bar: classes.switchBar,
+                    thumb: classes.switchIcon,
+                    track: classes.switchBar
                   }}
                 />
                 <div className="clearfix" />
               </a>
             </li>
             <li className="header-title">Images</li>
-            <li className={this.state['bgImage'] === imagine1 ? 'active' : ''}>
+            <li className={this.state["bgImage"] === imagine1 ? "active" : ""}>
               <a
                 className="img-holder switch-trigger"
                 onClick={() => {
@@ -232,7 +232,7 @@ class FixedPlugin extends Component {
                 <img src={imagine1} alt="..." />
               </a>
             </li>
-            <li className={this.state['bgImage'] === imagine2 ? 'active' : ''}>
+            <li className={this.state["bgImage"] === imagine2 ? "active" : ""}>
               <a
                 className="img-holder switch-trigger"
                 onClick={() => {
@@ -243,7 +243,7 @@ class FixedPlugin extends Component {
                 <img src={imagine2} alt="..." />
               </a>
             </li>
-            <li className={this.state['bgImage'] === imagine3 ? 'active' : ''}>
+            <li className={this.state["bgImage"] === imagine3 ? "active" : ""}>
               <a
                 className="img-holder switch-trigger"
                 onClick={() => {
@@ -254,7 +254,7 @@ class FixedPlugin extends Component {
                 <img src={imagine3} alt="..." />
               </a>
             </li>
-            <li className={this.state['bgImage'] === imagine4 ? 'active' : ''}>
+            <li className={this.state["bgImage"] === imagine4 ? "active" : ""}>
               <a
                 className="img-holder switch-trigger"
                 onClick={() => {
@@ -269,7 +269,7 @@ class FixedPlugin extends Component {
               <div>
                 <Button
                   color="warning"
-                  href="https://www.creative-tim.com/product/material-dashboard-pro-react"
+                  href="https://www.creative-tim.com/product/material-dashboard-pro-react?ref=mdpr-fixed-plugin"
                   target="_blank"
                   fullWidth
                 >
@@ -279,7 +279,7 @@ class FixedPlugin extends Component {
             </li>
             <li className="button-container">
               <div>
-                <NavLink to={'/documentation'} activeClassName="active">
+                <NavLink to={"/documentation"} activeClassName="active">
                   <Button color="info" fullWidth>
                     Documentation
                   </Button>
@@ -296,5 +296,28 @@ class FixedPlugin extends Component {
     );
   }
 }
+
+FixedPlugin.propTypes = {
+  bgImage: PropTypes.string,
+  handleFixedClick: PropTypes.func,
+  miniActive: PropTypes.bool,
+  fixedClasses: PropTypes.string,
+  bgColor: PropTypes.oneOf(["white", "black", "blue"]),
+  color: PropTypes.oneOf([
+    "white",
+    "red",
+    "orange",
+    "green",
+    "blue",
+    "purple",
+    "rose"
+  ]),
+  handleBgColorClick: PropTypes.func,
+  handleColorClick: PropTypes.func,
+  handleImageClick: PropTypes.func,
+  classes: PropTypes.object,
+  sidebarMinimize: PropTypes.func,
+  rtlActive: PropTypes.bool
+};
 
 export default withStyles(styles)(FixedPlugin);

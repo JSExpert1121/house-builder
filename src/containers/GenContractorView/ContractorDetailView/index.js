@@ -1,7 +1,6 @@
 import React       from 'react';
 import { connect } from 'react-redux';
-
-import PropTypes      from 'prop-types';
+import { compose } from 'redux';
 import Paper          from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import Tabs           from '@material-ui/core/Tabs';
@@ -13,26 +12,19 @@ import ContractorSpecialties from './ContractorSpecialties';
 import ContractorFiles       from './ContractorFiles';
 import { IconButton }        from '@material-ui/core';
 import ArrowBackIcon         from '@material-ui/icons/ArrowBack';
-// import ContractorMessages from './ContractorMessages';
-// import ContractorProposals from './ContractorProposals';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 136px)',
     margin: theme.spacing(1),
   },
   toolbarstyle: {
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.primary.dark,
     flexGrow: 1,
-  },
-  backBtn: {
-    color: theme.palette.primary.dark,
-  },
+  }
 });
 
-class ConnectedContractorDetailView extends React.Component {
+class ContractorDetailView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -65,7 +57,7 @@ class ConnectedContractorDetailView extends React.Component {
         <div className={classes.root}>
           <Paper square>
             <div style={{ display: 'flex' }}>
-              <IconButton className={classes.backBtn} onClick={this.handleBack}>
+              <IconButton onClick={this.handleBack}>
                 <ArrowBackIcon />
               </IconButton>
               <Tabs
@@ -92,19 +84,12 @@ class ConnectedContractorDetailView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    selectedContractor: state.cont_data.selectedContractor,
-    currentProjectId: state.global_data.currentProjectId,
-  };
-};
+const mapStateToProps = state => ({
+  selectedContractor: state.cont_data.selectedContractor,
+  currentProjectId: state.global_data.currentProjectId,
+});
 
-const ContractorDetailView = connect(mapStateToProps)(
-  ConnectedContractorDetailView
-);
-
-ContractorDetailView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorDetailView);
+export default compose(
+    withStyles(styles),
+    connect(mapStateToProps),
+)(ContractorDetailView);

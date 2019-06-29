@@ -1,40 +1,34 @@
-import React       from 'react';
-import { connect } from 'react-redux';
+import Card                                                from '@material-ui/core/Card';
+import Chip                                                from '@material-ui/core/Chip';
+import CircularProgress                                    from '@material-ui/core/CircularProgress';
+import IconButton                                          from '@material-ui/core/IconButton';
+import MenuItem                                            from '@material-ui/core/MenuItem';
+import Paper                                               from '@material-ui/core/Paper';
+import Snackbar                                            from '@material-ui/core/Snackbar';
+import {emphasize, withStyles}                             from '@material-ui/core/styles';
+import Table                                               from '@material-ui/core/Table';
+import TableBody                                           from '@material-ui/core/TableBody';
+import TableHead                                           from '@material-ui/core/TableHead';
+import TablePagination                                     from '@material-ui/core/TablePagination';
+import TableRow                                            from '@material-ui/core/TableRow';
+import TextField                                           from '@material-ui/core/TextField';
+import Typography                                          from '@material-ui/core/Typography';
+import AccessAlarmIcon                                     from '@material-ui/icons/AccessAlarm';
+import CancelIcon                                          from '@material-ui/icons/Cancel';
+import classNames                                          from 'classnames';
+import React                                               from 'react';
+import {connect}                                           from 'react-redux';
+import Select                                              from 'react-select';
+import {compose}                                           from 'redux';
+import {getContrators0, getSpecialties, selectContractor,} from '../../actions/cont-actions';
 
-import PropTypes                 from 'prop-types';
-import { emphasize, withStyles } from '@material-ui/core/styles';
-import {
-  Button,
-  Card,
-  CircularProgress,
-  IconButton,
-  Paper,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-  Typography,
-}                                from '@material-ui/core';
-import AccessAlarmIcon           from '@material-ui/icons/AccessAlarm';
-import classNames                from 'classnames';
-import Select                    from 'react-select';
-import Chip                      from '@material-ui/core/Chip';
-import MenuItem                  from '@material-ui/core/MenuItem';
-import CancelIcon                from '@material-ui/icons/Cancel';
-
-import { getProjectBiddersData, inviteContractor, searchFilter } from '../../actions/global-actions';
-import { getContrators0, getSpecialties, selectContractor }      from '../../actions/cont-actions';
+import {getProjectBiddersData, inviteContractor, searchFilter,} from '../../actions/global-actions';
+import Button                                                   from "../CustomButtons/Button";
+import CustomTableCell                                          from "../shared/CustomTableCell";
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 136px)',
     margin: theme.spacing(1),
-    overflow: 'scroll',
   },
   tableWrap: {
     overflow: 'auto',
@@ -121,17 +115,6 @@ const styles = theme => ({
     borderColor: 'lightgrey',
   },
 });
-
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
 
 function NoOptionsMessage(props) {
   return (
@@ -251,7 +234,7 @@ const components = {
   ValueContainer,
 };
 
-class ConnectedProjectBidders extends React.Component {
+class ProjectBidders extends React.Component {
   constructor(props) {
     super(props);
 
@@ -420,7 +403,7 @@ class ConnectedProjectBidders extends React.Component {
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
-                    ></CustomTableCell>
+                    />
                     <CustomTableCell
                       align="center"
                       onClick={async () => {
@@ -460,7 +443,7 @@ class ConnectedProjectBidders extends React.Component {
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
-                    ></CustomTableCell>
+                    />
                     <CustomTableCell
                       onClick={async () => {
                         await this.props.selectContractor(row.id);
@@ -471,7 +454,7 @@ class ConnectedProjectBidders extends React.Component {
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
-                    ></CustomTableCell>
+                    />
                   </TableRow>
                 ))}
               </TableBody>
@@ -576,7 +559,7 @@ class ConnectedProjectBidders extends React.Component {
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
-                    ></CustomTableCell>
+                    />
                     <CustomTableCell
                       align="center"
                       onClick={async () => {
@@ -602,7 +585,7 @@ class ConnectedProjectBidders extends React.Component {
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
-                    ></CustomTableCell>
+                    />
                     <CustomTableCell
                       align="center"
                       onClick={async () => {
@@ -614,13 +597,13 @@ class ConnectedProjectBidders extends React.Component {
                         if (match.url.includes('s_cont'))
                           this.props.history.push('/s_cont/contractor_detail');
                       }}
-                    ></CustomTableCell>
+                    />
                     <CustomTableCell align="center">
                       {this.isInvited(row.id) ? (
                         <IconButton
                           className={classes.button}
                           aria-label="Delete"
-                          color="primary"
+                          color="rose"
                         >
                           <AccessAlarmIcon />
                         </IconButton>
@@ -628,7 +611,7 @@ class ConnectedProjectBidders extends React.Component {
                         <Button
                           className={classes.button}
                           aria-label="Delete"
-                          color="primary"
+                          color="rose"
                           onClick={async () => {
                             await this.props.inviteContractor(
                               project.id,
@@ -680,37 +663,27 @@ class ConnectedProjectBidders extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    projectBidders: state.global_data.projectBidders,
-    project: state.global_data.project,
-    searchResult: state.global_data.searchResult,
-    specialties: state.cont_data.specialties,
-    contractors: state.cont_data.contractors,
-  };
+const mapStateToProps = state => ({
+  projectBidders: state.global_data.projectBidders,
+  project: state.global_data.project,
+  searchResult: state.global_data.searchResult,
+  specialties: state.cont_data.specialties,
+  contractors: state.cont_data.contractors,
+});
+
+const mapDispatchToProps = {
+  getProjectBiddersData,
+  selectContractor,
+  getSpecialties,
+  searchFilter,
+  getContrators0,
+  inviteContractor,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProjectBiddersData: (id, page, size) =>
-      dispatch(getProjectBiddersData(id, page, size)),
-    selectContractor: id => dispatch(selectContractor(id)),
-    getSpecialties: () => dispatch(getSpecialties()),
-    searchFilter: (name, city, specialties, cb) =>
-      dispatch(searchFilter(name, city, specialties, cb)),
-    getContrators0: (page, size) => dispatch(getContrators0(page, size)),
-    inviteContractor: (projId, subConId, cb) =>
-      dispatch(inviteContractor(projId, subConId, cb)),
-  };
-};
-
-const ProjectBidders = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedProjectBidders);
-
-ProjectBidders.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(ProjectBidders);
+export default compose(
+  withStyles(styles, { withTheme: true }),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProjectBidders);

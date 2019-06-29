@@ -26,7 +26,7 @@ export default (theme: Theme) =>
       padding: theme.spacing(0, 2),
     },
     container: {
-      padding: theme.spacing(4, 0)
+      padding: theme.spacing(2, 0),
     },
     paper: {
       padding: theme.spacing(2),

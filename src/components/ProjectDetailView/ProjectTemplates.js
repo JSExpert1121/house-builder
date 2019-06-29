@@ -1,56 +1,45 @@
-import React          from 'react';
-import { connect }    from 'react-redux';
-import PropTypes      from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-
-import CircularProgress  from '@material-ui/core/CircularProgress';
-import Table             from '@material-ui/core/Table';
-import TableHead         from '@material-ui/core/TableHead';
-import TableCell         from '@material-ui/core/TableCell';
-import TableRow          from '@material-ui/core/TableRow';
-import TableBody         from '@material-ui/core/TableBody';
-import IconButton        from '@material-ui/core/IconButton';
-import TablePagination   from '@material-ui/core/TablePagination';
-import TextField         from '@material-ui/core/TextField';
-import Typography        from '@material-ui/core/Typography';
+import Box               from '@material-ui/core/Box';
 import Button            from '@material-ui/core/Button';
-import Snackbar          from '@material-ui/core/Snackbar';
-import Select            from '@material-ui/core/Select';
-import MenuItem          from '@material-ui/core/MenuItem';
+import CircularProgress  from '@material-ui/core/CircularProgress';
 import Dialog            from '@material-ui/core/Dialog';
 import DialogActions     from '@material-ui/core/DialogActions';
 import DialogContent     from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle       from '@material-ui/core/DialogTitle';
 import Fab               from '@material-ui/core/Fab';
-import Box               from '@material-ui/core/Box';
+import IconButton        from '@material-ui/core/IconButton';
+import MenuItem          from '@material-ui/core/MenuItem';
+import Select            from '@material-ui/core/Select';
+import Snackbar          from '@material-ui/core/Snackbar';
+import {withStyles}      from '@material-ui/core/styles';
+import Table             from '@material-ui/core/Table';
+import TableBody         from '@material-ui/core/TableBody';
+import TableHead         from '@material-ui/core/TableHead';
+import TablePagination   from '@material-ui/core/TablePagination';
+import TableRow          from '@material-ui/core/TableRow';
+import TextField         from '@material-ui/core/TextField';
+import Typography        from '@material-ui/core/Typography';
+import AddIcon           from '@material-ui/icons/Add';
+import DeleteIcon        from '@material-ui/icons/Delete';
 
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import DeleteIcon  from '@material-ui/icons/Delete';
-import AddIcon     from '@material-ui/icons/Add';
+import React       from 'react';
+import {connect}   from 'react-redux';
+import {compose}   from 'redux';
+import removeMd    from 'remove-markdown';
 
-import removeMd from 'remove-markdown';
-
-import { addTemplate, deleteTemplate, getTemplates } from '../../actions/gen-actions';
-import { getProjectData }                            from '../../actions/global-actions';
+import {addTemplate, deleteTemplate, getTemplates,} from '../../actions/gen-actions';
+import {getProjectData}                             from '../../actions/global-actions';
+import CustomTableCell                              from '../shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 64px - 100px - 16px)',
     margin: theme.spacing(1),
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 64px - 100px - 48px - 40px)',
   },
   row: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.background.default,
     },
-  },
-  button: {
-    padding: '6px',
   },
   select: {
     width: '180px',
@@ -76,18 +65,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedProjectTemplateView extends React.Component {
+class ProjectTemplate extends React.Component {
   constructor(props) {
     super(props);
 
@@ -199,91 +177,88 @@ class ConnectedProjectTemplateView extends React.Component {
               : null}
           </Box>
         )}
-        <Box className={classes.tableWrap}>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <CustomTableCell> Template Name </CustomTableCell>
-                <CustomTableCell align="center">Template Desc</CustomTableCell>
-                <CustomTableCell align="center">Template Value</CustomTableCell>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell> Template Name </CustomTableCell>
+              <CustomTableCell align="center">Template Desc</CustomTableCell>
+              <CustomTableCell align="center">Template Value</CustomTableCell>
+              {editable && (
+                <CustomTableCell align="center">
+                  <IconButton
+                    style={{ color: '#fff' }}
+                    onClick={() => this.setState({ openCategoryForm: true })}
+                  >
+                    <NoteAddIcon />
+                  </IconButton>
+                </CustomTableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {project.projectTemplates.map(row => (
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell component="th" scope="row">
+                  {row.template.name ? row.template.name : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <Typography className="nowrap">
+                    {row.template.description
+                      ? removeMd(row.template.description)
+                      : 'N/A'}
+                  </Typography>
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  {row.template.value ? row.template.value : 'N/A'}
+                </CustomTableCell>
                 {editable && (
                   <CustomTableCell align="center">
                     <IconButton
                       className={classes.button}
-                      style={{ color: '#FFFFFF' }}
-                      onClick={() => this.setState({ openCategoryForm: true })}
+                      aria-label="Delete"
+                      color="primary"
+                      onClick={async () => {
+                        try {
+                          await this.props.deleteTemplate(
+                            project.id,
+                            row.template.id
+                          );
+                          await this.props.getProjectData(project.id);
+
+                          let curPage = this.state.currentPage;
+                          if (
+                            this.state.rowsPerPage * this.state.currentPage <
+                            project.projectTemplates.length - 1
+                          ) {
+                          } else {
+                            curPage--;
+                          }
+                          await this.props.getTemplates(
+                            curPage,
+                            this.state.rowsPerPage
+                          );
+                          this.setState({
+                            snackBar: true,
+                            snackBarContent: 'delete template success',
+                            currentPage: curPage,
+                          });
+                        } catch (error) {
+                          console.log(error);
+                          this.setState({
+                            snackBar: true,
+                            snackBarContent: 'delete template failed',
+                          });
+                        }
+                      }}
                     >
-                      <NoteAddIcon />
+                      <DeleteIcon />
                     </IconButton>
                   </CustomTableCell>
                 )}
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {project.projectTemplates.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell component="th" scope="row">
-                    {row.template.name ? row.template.name : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    <Typography className="nowrap">
-                      {row.template.description
-                        ? removeMd(row.template.description)
-                        : 'N/A'}
-                    </Typography>
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    {row.template.value ? row.template.value : 'N/A'}
-                  </CustomTableCell>
-                  {editable && (
-                    <CustomTableCell align="center">
-                      <IconButton
-                        className={classes.button}
-                        aria-label="Delete"
-                        color="primary"
-                        onClick={async () => {
-                          try {
-                            await this.props.deleteTemplate(
-                              project.id,
-                              row.template.id
-                            );
-                            await this.props.getProjectData(project.id);
-
-                            let curPage = this.state.currentPage;
-                            if (
-                              this.state.rowsPerPage * this.state.currentPage <
-                              project.projectTemplates.length - 1
-                            ) {
-                            } else {
-                              curPage--;
-                            }
-                            await this.props.getTemplates(
-                              curPage,
-                              this.state.rowsPerPage
-                            );
-                            this.setState({
-                              snackBar: true,
-                              snackBarContent: 'delete template success',
-                              currentPage: curPage,
-                            });
-                          } catch (error) {
-                            console.log(error);
-                            this.setState({
-                              snackBar: true,
-                              snackBarContent: 'delete template failed',
-                            });
-                          }
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </CustomTableCell>
-                  )}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+            ))}
+          </TableBody>
+        </Table>
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}
@@ -390,31 +365,23 @@ class ConnectedProjectTemplateView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    templates: state.gen_data.templates,
-    project: state.global_data.project,
-    userProfile: state.global_data.userProfile,
-  };
+const mapStateToProps = state => ({
+  templates: state.gen_data.templates,
+  project: state.global_data.project,
+  userProfile: state.global_data.userProfile,
+});
+
+const mapDispatchToProps = {
+  getTemplates,
+  addTemplate,
+  deleteTemplate,
+  getProjectData,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getTemplates: (page, size) => dispatch(getTemplates(page, size)),
-    addTemplate: (project, template) =>
-      dispatch(addTemplate(project, template)),
-    deleteTemplate: (project, template) =>
-      dispatch(deleteTemplate(project, template)),
-    getProjectData: id => dispatch(getProjectData(id)),
-  };
-};
-const ProjectTemplateView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedProjectTemplateView);
-
-ProjectTemplateView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ProjectTemplateView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProjectTemplate);
