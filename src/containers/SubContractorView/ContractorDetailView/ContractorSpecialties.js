@@ -1,42 +1,34 @@
-import React                                                                from 'react';
-import { connect }                                                          from 'react-redux';
-import PropTypes                                                            from 'prop-types';
-import { withStyles }                                                       from '@material-ui/core/styles';
-import {
-  CircularProgress,
-  IconButton,
-  MenuItem,
-  Select,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-}                                                                           from '@material-ui/core';
-import NoteAddIcon                                                          from '@material-ui/icons/NoteAdd';
-import DeleteIcon                                                           from '@material-ui/icons/Delete';
-import Dialog                                                               from '@material-ui/core/Dialog';
-import DialogActions                                                        from '@material-ui/core/DialogActions';
-import DialogContent                                                        from '@material-ui/core/DialogContent';
-import DialogContentText                                                    from '@material-ui/core/DialogContentText';
-import DialogTitle                                                          from '@material-ui/core/DialogTitle';
-import Fab                                                                  from '@material-ui/core/Fab';
-import AddIcon                                                              from '@material-ui/icons/Add';
-import { addSpecialty, deleteSpecialty, getSpecialties, updateContractor } from '../../../actions/cont-actions';
-import Button from "components/CustomButtons/Button.jsx";
-
+import CircularProgress                                                   from '@material-ui/core/CircularProgress';
+import Dialog                                                             from '@material-ui/core/Dialog';
+import DialogActions                                                      from '@material-ui/core/DialogActions';
+import DialogContent                                                      from '@material-ui/core/DialogContent';
+import DialogContentText                                                  from '@material-ui/core/DialogContentText';
+import DialogTitle                                                        from '@material-ui/core/DialogTitle';
+import Fab                                                                from '@material-ui/core/Fab';
+import IconButton                                                         from '@material-ui/core/IconButton';
+import MenuItem                                                           from '@material-ui/core/MenuItem';
+import Select                                                             from '@material-ui/core/Select';
+import Snackbar                                                           from '@material-ui/core/Snackbar';
+import {withStyles}                                                       from '@material-ui/core/styles';
+import Table                                                              from '@material-ui/core/Table';
+import TableBody                                                          from '@material-ui/core/TableBody';
+import TableHead                                                          from '@material-ui/core/TableHead';
+import TablePagination                                                    from '@material-ui/core/TablePagination';
+import TableRow                                                           from '@material-ui/core/TableRow';
+import TextField                                                          from '@material-ui/core/TextField';
+import AddIcon                                                            from '@material-ui/icons/Add';
+import DeleteIcon                                                         from '@material-ui/icons/Delete';
+import NoteAddIcon                                                        from '@material-ui/icons/NoteAdd';
+import Button                                                             from 'components/CustomButtons/Button.jsx';
+import React                                                              from 'react';
+import {connect}                                                          from 'react-redux';
+import {compose}                                                          from 'redux';
+import {addSpecialty, deleteSpecialty, getSpecialties, updateContractor,} from '../../../actions/cont-actions';
+import CustomTableCell
+                                                                          from '../../../components/shared/CustomTableCell';
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 184px)',
     padding: theme.spacing(1),
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 240px)',
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -71,18 +63,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedContractorInfoView extends React.Component {
+class ContractorInfoView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -194,108 +175,104 @@ class ConnectedContractorInfoView extends React.Component {
               )
             : null}
         </div>
-        <div className={classes.tableWrap}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell> Specialty Name </CustomTableCell>
-                <CustomTableCell align="center">Specialty Desc</CustomTableCell>
-                <CustomTableCell align="center">
-                  Specialty Value
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell> Specialty Name </CustomTableCell>
+              <CustomTableCell align="center">Specialty Desc</CustomTableCell>
+              <CustomTableCell align="center">Specialty Value</CustomTableCell>
+              <CustomTableCell align="center">
+                <IconButton
+                  className={classes.titleBtn}
+                  onClick={() => this.setState({ openCategoryForm: true })}
+                >
+                  <NoteAddIcon />
+                </IconButton>
+              </CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {selectedContractor.contractorSpecialties.map(row => (
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  component="th"
+                  scope="row"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.specialty.name ? row.specialty.name : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.specialty.description
+                    ? row.specialty.description
+                    : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.specialty.value ? row.specialty.value : 'N/A'}
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <IconButton
-                    className={classes.titleBtn}
-                    onClick={() => this.setState({ openCategoryForm: true })}
+                    className={classes.button}
+                    aria-label="Delete"
+                    color="primary"
+                    onClick={async () => {
+                      await this.props.deleteSpecialty(
+                        selectedContractor.id,
+                        row.specialty.id,
+                        result => {
+                          this.setState({
+                            snackBar: true,
+                            snackBarContent: result
+                              ? 'delete specialty success'
+                              : 'please specialty categories',
+                          });
+                          this.props.updateContractor(selectedContractor.id);
+                        }
+                      );
+
+                      if (
+                        this.state.rowsPerPage * this.state.currentPage <
+                        selectedContractor.contractorSpecialties.length - 1
+                      ) {
+                        await this.props.getSpecialties(
+                          this.state.currentPage,
+                          this.state.rowsPerPage
+                        );
+                      } else {
+                        const currentPage = this.state.currentPage - 1;
+
+                        this.setState({
+                          currentPage: currentPage,
+                        });
+
+                        await this.props.getSpecialties(
+                          currentPage,
+                          this.state.rowsPerPage
+                        );
+                      }
+                    }}
                   >
-                    <NoteAddIcon />
+                    <DeleteIcon />
                   </IconButton>
                 </CustomTableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedContractor.contractorSpecialties.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                    component="th"
-                    scope="row"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/m_cont/contractor_detail');
-                    }}
-                  >
-                    {row.specialty.name ? row.specialty.name : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    align="center"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/m_cont/contractor_detail');
-                    }}
-                  >
-                    {row.specialty.description
-                      ? row.specialty.description
-                      : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    align="center"
-                    onClick={async () => {
-                      await this.props.selectContractor(row.id);
-                      this.props.history.push('/m_cont/contractor_detail');
-                    }}
-                  >
-                    {row.specialty.value ? row.specialty.value : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    <IconButton
-                      className={classes.button}
-                      aria-label="Delete"
-                      color="primary"
-                      onClick={async () => {
-                        await this.props.deleteSpecialty(
-                          selectedContractor.id,
-                          row.specialty.id,
-                          result => {
-                            this.setState({
-                              snackBar: true,
-                              snackBarContent: result
-                                ? 'delete specialty success'
-                                : 'please specialty categories',
-                            });
-                            this.props.updateContractor(selectedContractor.id);
-                          }
-                        );
-
-                        if (
-                          this.state.rowsPerPage * this.state.currentPage <
-                          selectedContractor.contractorSpecialties.length - 1
-                        ) {
-                          await this.props.getSpecialties(
-                            this.state.currentPage,
-                            this.state.rowsPerPage
-                          );
-                        } else {
-                          const currentPage = this.state.currentPage - 1;
-
-                          this.setState({
-                            currentPage: currentPage,
-                          });
-
-                          await this.props.getSpecialties(
-                            currentPage,
-                            this.state.rowsPerPage
-                          );
-                        }
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </CustomTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}
@@ -406,30 +383,22 @@ class ConnectedContractorInfoView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    specialties: state.cont_data.specialties,
-    selectedContractor: state.cont_data.selectedContractor,
-  };
+const mapStateToProps = state => ({
+  specialties: state.cont_data.specialties,
+  selectedContractor: state.cont_data.selectedContractor,
+});
+
+const mapDispatchToProps = {
+  getSpecialties,
+  addSpecialty,
+  deleteSpecialty,
+  updateContractor,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getSpecialties: (page, size) => dispatch(getSpecialties(page, size)),
-    addSpecialty: (contractor, specialty, cb) =>
-      dispatch(addSpecialty(contractor, specialty, cb)),
-    deleteSpecialty: (contractor, specialty, cb) =>
-      dispatch(deleteSpecialty(contractor, specialty, cb)),
-    updateContractor: id => dispatch(updateContractor(id)),
-  };
-};
-const ContractorInfoView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedContractorInfoView);
-
-ContractorInfoView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorInfoView);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ContractorInfoView);

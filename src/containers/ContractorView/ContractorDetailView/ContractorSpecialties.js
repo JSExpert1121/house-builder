@@ -1,42 +1,36 @@
-import React                                                                from 'react';
-import { connect }                                                          from 'react-redux';
-import PropTypes                                                            from 'prop-types';
-import { withStyles }                                                       from '@material-ui/core/styles';
-import {
-  Button,
-  CircularProgress,
-  IconButton,
-  MenuItem,
-  Select,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-}                                                                           from '@material-ui/core';
-import NoteAddIcon                                                          from '@material-ui/icons/NoteAdd';
-import DeleteIcon                                                           from '@material-ui/icons/Delete';
-import Dialog                                                               from '@material-ui/core/Dialog';
-import DialogActions                                                        from '@material-ui/core/DialogActions';
-import DialogContent                                                        from '@material-ui/core/DialogContent';
-import DialogContentText                                                    from '@material-ui/core/DialogContentText';
-import DialogTitle                                                          from '@material-ui/core/DialogTitle';
-import Fab                                                                  from '@material-ui/core/Fab';
-import AddIcon                                                              from '@material-ui/icons/Add';
-import { addSpecialty, deleteSpecialty, getSpecialties, updateContractor } from '../../../actions/cont-actions';
+import Button                                                             from '@material-ui/core/Button';
+import CircularProgress                                                   from '@material-ui/core/CircularProgress';
+import Dialog                                                             from '@material-ui/core/Dialog';
+import DialogActions                                                      from '@material-ui/core/DialogActions';
+import DialogContent                                                      from '@material-ui/core/DialogContent';
+import DialogContentText                                                  from '@material-ui/core/DialogContentText';
+import DialogTitle                                                        from '@material-ui/core/DialogTitle';
+import Fab                                                                from '@material-ui/core/Fab';
+import IconButton                                                         from '@material-ui/core/IconButton';
+import MenuItem                                                           from '@material-ui/core/MenuItem';
+import Select                                                             from '@material-ui/core/Select';
+import Snackbar                                                           from '@material-ui/core/Snackbar';
+import {withStyles}                                                       from '@material-ui/core/styles';
+import Table                                                              from '@material-ui/core/Table';
+import TableBody                                                          from '@material-ui/core/TableBody';
+import TableHead                                                          from '@material-ui/core/TableHead';
+import TablePagination                                                    from '@material-ui/core/TablePagination';
+import TableRow                                                           from '@material-ui/core/TableRow';
+import TextField                                                          from '@material-ui/core/TextField';
+import AddIcon                                                            from '@material-ui/icons/Add';
+import DeleteIcon                                                         from '@material-ui/icons/Delete';
+import NoteAddIcon                                                        from '@material-ui/icons/NoteAdd';
+import React                                                              from 'react';
+import {connect}                                                          from 'react-redux';
+import {compose}                                                          from 'redux';
+import {withRouter}                                                          from 'react-router-dom';
+import {addSpecialty, deleteSpecialty, getSpecialties, updateContractor, selectContractor} from '../../../actions/cont-actions';
+import CustomTableCell
+                                                                          from '../../../components/shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 164px)',
     padding: theme.spacing(1),
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 220px)',
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -71,18 +65,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedContractorInfoView extends React.Component {
+class ContractorInfoView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -195,7 +178,7 @@ class ConnectedContractorInfoView extends React.Component {
             : null}
         </div>
         <div className={classes.tableWrap}>
-          <Table size="small">
+          <Table>
             <TableHead>
               <TableRow>
                 <CustomTableCell> Specialty Name </CustomTableCell>
@@ -406,30 +389,24 @@ class ConnectedContractorInfoView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    specialties: state.cont_data.specialties,
-    selectedContractor: state.cont_data.selectedContractor,
-  };
+const mapStateToProps = state => ({
+  specialties: state.cont_data.specialties,
+  selectedContractor: state.cont_data.selectedContractor,
+});
+
+const mapDispatchToProps = {
+  getSpecialties,
+  addSpecialty,
+  deleteSpecialty,
+  updateContractor,
+  selectContractor,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getSpecialties: (page, size) => dispatch(getSpecialties(page, size)),
-    addSpecialty: (contractor, specialty, cb) =>
-      dispatch(addSpecialty(contractor, specialty, cb)),
-    deleteSpecialty: (contractor, specialty, cb) =>
-      dispatch(deleteSpecialty(contractor, specialty, cb)),
-    updateContractor: id => dispatch(updateContractor(id)),
-  };
-};
-const ContractorInfoView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedContractorInfoView);
-
-ContractorInfoView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorInfoView);
+export default compose(
+  withRouter,
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ContractorInfoView);

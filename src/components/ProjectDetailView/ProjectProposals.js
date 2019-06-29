@@ -38,12 +38,6 @@ const styles = theme => ({
       backgroundColor: theme.palette.background.default,
     },
   },
-  btnSubmitProposal: {
-    marginBottom: 5,
-    backgroundColor: theme.palette.primary.light,
-    color: '#FFF',
-    borderRadius: 0,
-  },
   waitingSpin: {
     position: 'relative',
     left: 'calc(50% - 10px)',
@@ -166,8 +160,7 @@ class ProjectProposals extends React.Component {
     if (proposals === null)
       return (
         <div className={classes.root}>
-          {' '}
-          <CircularProgress className={classes.waitingSpin} />{' '}
+          <CircularProgress className={classes.waitingSpin} />
         </div>
       );
 
@@ -176,8 +169,7 @@ class ProjectProposals extends React.Component {
         <div className={classes.tableWrap}>
           {match.url.includes('/projects') && (
             <Button
-              color="primary"
-              className={classes.btnSubmitProposal}
+              color="rose"
               onClick={() => {
                 this.props.clearProposalDetail(null);
                 this.props.history.push('/projects/proposal_detail/-1');

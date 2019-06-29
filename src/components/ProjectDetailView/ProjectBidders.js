@@ -1,4 +1,3 @@
-import Button                                              from '@material-ui/core/Button';
 import Card                                                from '@material-ui/core/Card';
 import Chip                                                from '@material-ui/core/Chip';
 import CircularProgress                                    from '@material-ui/core/CircularProgress';
@@ -24,6 +23,7 @@ import {compose}                                           from 'redux';
 import {getContrators0, getSpecialties, selectContractor,} from '../../actions/cont-actions';
 
 import {getProjectBiddersData, inviteContractor, searchFilter,} from '../../actions/global-actions';
+import Button                                                   from "../CustomButtons/Button";
 import CustomTableCell                                          from "../shared/CustomTableCell";
 
 const styles = theme => ({
@@ -603,7 +603,7 @@ class ProjectBidders extends React.Component {
                         <IconButton
                           className={classes.button}
                           aria-label="Delete"
-                          color="primary"
+                          color="rose"
                         >
                           <AccessAlarmIcon />
                         </IconButton>
@@ -611,7 +611,7 @@ class ProjectBidders extends React.Component {
                         <Button
                           className={classes.button}
                           aria-label="Delete"
-                          color="primary"
+                          color="rose"
                           onClick={async () => {
                             await this.props.inviteContractor(
                               project.id,
