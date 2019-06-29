@@ -65,7 +65,7 @@ const styles = theme => ({
   },
 });
 
-class ProjectTemplateView extends React.Component {
+class ProjectTemplate extends React.Component {
   constructor(props) {
     super(props);
 
@@ -384,4 +384,4 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   )
-)(ProjectTemplateView);
+)(ProjectTemplate);

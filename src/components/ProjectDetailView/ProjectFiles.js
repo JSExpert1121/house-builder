@@ -78,7 +78,7 @@ class ProjectFiles extends React.Component {
               <CustomTableCell align="center">Name</CustomTableCell>
               <CustomTableCell align="center">
                 <IconButton
-                  style={{ color: '#FFFFFF' }}
+                  style={{ color: '#fff' }}
                   onClick={() => this.setState({ openUploadForm: true })}
                 >
                   <NoteAddIcon />
