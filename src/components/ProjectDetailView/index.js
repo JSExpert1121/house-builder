@@ -1,26 +1,24 @@
-import React                                  from 'react';
-import { Link, Redirect, Switch, withRouter } from 'react-router-dom';
-import SecuredRoute                           from '../../routers/SecuredRoute';
+import {IconButton}             from '@material-ui/core';
+import NoSsr                    from '@material-ui/core/NoSsr';
+import Paper                    from '@material-ui/core/Paper';
+import {withStyles}             from '@material-ui/core/styles';
+import Tab                      from '@material-ui/core/Tab';
+import Tabs                     from '@material-ui/core/Tabs';
+import ArrowBackIcon            from '@material-ui/icons/ArrowBack';
+import React                    from 'react';
+import {connect}                from 'react-redux';
+import {Link, Redirect, Switch} from 'react-router-dom';
+import {compose}                from 'redux';
 
-import { connect } from 'react-redux';
-
-import PropTypes      from 'prop-types';
-import Paper          from '@material-ui/core/Paper';
-import { withStyles } from '@material-ui/core/styles';
-import Tabs           from '@material-ui/core/Tabs';
-import Tab            from '@material-ui/core/Tab';
-import NoSsr          from '@material-ui/core/NoSsr';
-
-import ProjectOverView  from './ProjectOverView';
+import {getProjectData} from '../../actions/global-actions';
+import SecuredRoute     from '../../routers/SecuredRoute';
 import ProjectBidders   from './ProjectBidders';
 import ProjectFiles     from './ProjectFiles';
+
+import ProjectOverView  from './ProjectOverView';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
-
-import { getProjectData } from '../../actions/global-actions';
-import { IconButton }     from '@material-ui/core';
-import ArrowBackIcon      from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
   root: {
@@ -42,7 +40,7 @@ const styles = theme => ({
   },
 });
 
-class ConnectedProjectDetailView extends React.Component {
+class ProjectDetailView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -59,7 +57,8 @@ class ConnectedProjectDetailView extends React.Component {
     if (match.url.includes('gen-contractor'))
       this.props.history.push('/gen-contractor');
     if (match.url.includes('s_cont')) this.props.history.push('/s_cont');
-    else if (match.url.includes('projects')) this.props.history.push('/projects');
+    else if (match.url.includes('projects'))
+      this.props.history.push('/projects');
   };
 
   render() {
@@ -171,25 +170,16 @@ class ConnectedProjectDetailView extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProjectData: id => dispatch(getProjectData(id)),
-  };
-};
+const mapStateToProps = state => ({
+  project: state.global_data.project,
+});
 
-const mapStateToProps = state => {
-  return {
-    project: state.global_data.project,
-  };
-};
-
-const ProjectDetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedProjectDetailView);
-
-ProjectDetailView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(ProjectDetailView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+      {
+        getProjectData,
+      }
+  )
+)(ProjectDetailView);

@@ -1,20 +1,16 @@
-import React       from 'react';
-import { connect } from 'react-redux';
-
-import PropTypes      from 'prop-types';
-import Box            from '@material-ui/core/Box';
-import Grid           from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
-
-import ProjectView   from '../ProposalDetailView/ProjectView';
+import Box           from '@material-ui/core/Box';
+import Grid          from '@material-ui/core/Grid';
+import {withStyles}  from '@material-ui/core/styles';
+import React         from 'react';
+import {connect}     from 'react-redux';
+import {compose}     from 'redux';
 import GenContractor from '../Contractor/GenContractor';
+
+import ProjectView from '../ProposalDetailView/ProjectView';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
     padding: theme.spacing(1, 1),
-    height: 'calc(100vh - 64px - 48px - 36px - 16px)',
-    overflow: 'auto',
   },
   title: {
     fontSize: '20px',
@@ -30,7 +26,7 @@ const styles = theme => ({
   },
 });
 
-class ConnectedProjectOverView extends React.Component {
+class ProjectOverView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -58,34 +54,11 @@ class ConnectedProjectOverView extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    project: state.global_data.project,
-  };
-};
+const mapStateToProps = state => ({
+  project: state.global_data.project,
+})
 
-const ProjectOverView = connect(mapStateToProps)(ConnectedProjectOverView);
-
-ConnectedProjectOverView.propTypes = {
-  classes: PropTypes.object.isRequired,
-  project: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    budget: PropTypes.number.isRequired,
-    updatedAt: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    genContractor: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      updatedAt: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      address: PropTypes.shape({
-        name: PropTypes.string,
-        street: PropTypes.string,
-        city: PropTypes.string,
-      }),
-    }).isRequired,
-  }),
-};
-
-export default withStyles(styles)(ProjectOverView);
+export default compose(
+  withStyles(styles),
+  connect(mapStateToProps)
+)(ProjectOverView);
