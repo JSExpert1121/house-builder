@@ -1,36 +1,20 @@
-import React       from 'react';
-import { connect } from 'react-redux';
+import {CircularProgress, IconButton, Snackbar} from '@material-ui/core';
+import {withStyles}                             from '@material-ui/core/styles';
+import Table                                    from '@material-ui/core/Table';
+import TableBody                                from '@material-ui/core/TableBody';
+import TableHead                                from '@material-ui/core/TableHead';
+import TableRow                                 from '@material-ui/core/TableRow';
+import DeleteIcon                               from '@material-ui/icons/Delete';
+import NoteAddIcon                              from '@material-ui/icons/NoteAdd';
 
-import PropTypes      from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table          from '@material-ui/core/Table';
-import TableBody      from '@material-ui/core/TableBody';
-import TableCell      from '@material-ui/core/TableCell';
-import TableHead      from '@material-ui/core/TableHead';
-import TableRow       from '@material-ui/core/TableRow';
-
-import { CircularProgress, IconButton, Snackbar } from '@material-ui/core';
-import DeleteIcon                                 from '@material-ui/icons/Delete';
-import NoteAddIcon                                from '@material-ui/icons/NoteAdd';
-import { DropzoneDialog }                         from 'material-ui-dropzone';
-
-import { addFiles, deleteFile, getContractorDetailById, updateContractor } from '../../../actions/cont-actions';
+import {addFiles, deleteFile, getContractorDetailById, updateContractor,} from 'actions/cont-actions';
+import CustomTableCell                                                    from 'components/shared/CustomTableCell';
+import {DropzoneDialog}                                                   from 'material-ui-dropzone';
+import React                                                              from 'react';
+import {connect}                                                          from 'react-redux';
+import {compose}                                                          from 'redux';
 
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    padding: theme.spacing(1),
-    height: 'calc(100vh -184px)',
-    overflow: 'auto',
-    overflowX: 'hidden',
-  },
-  titleBtn: {
-    color: '#FFFFFF',
-    padding: '6px',
-  },
-  button: {
-    padding: '6px',
-  },
   waitingSpin: {
     position: 'relative',
     left: 'calc(50% - 10px)',
@@ -38,18 +22,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedContractorFiles extends React.Component {
+class ContractorFiles extends React.Component {
   constructor(props) {
     super(props);
 
@@ -111,13 +84,13 @@ class ConnectedContractorFiles extends React.Component {
     if (this.state.isProcessing)
       return (
         <div className={classes.root}>
-          <CircularProgress className={classes.waitingSpin} />{' '}
+          <CircularProgress className={classes.waitingSpin} />
         </div>
       );
 
     return (
-      <div className={classes.root}>
-        <Table className={classes.table}>
+      <>
+        <Table>
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Name</CustomTableCell>
@@ -187,33 +160,26 @@ class ConnectedContractorFiles extends React.Component {
           }}
           message={<span id="message-id"> {this.state.snackBarContent}</span>}
         />
-      </div>
+      </>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    selectedContractor: state.cont_data.selectedContractor,
-  };
+const mapStateToProps = state => ({
+  selectedContractor: state.cont_data.selectedContractor,
+});
+
+const mapDispatchToProps = {
+  addFiles,
+  getContractorDetailById,
+  deleteFile,
+  updateContractor,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addFiles: (id, files, cb) => dispatch(addFiles(id, files, cb)),
-    getContractorDetailById: id => dispatch(getContractorDetailById(id)),
-    deleteFile: (id, name, cb) => dispatch(deleteFile(id, name, cb)),
-    updateContractor: id => dispatch(updateContractor(id)),
-  };
-};
-
-const ContractorFiles = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedContractorFiles);
-
-ContractorFiles.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ContractorFiles);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ContractorFiles);

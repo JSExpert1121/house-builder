@@ -1,28 +1,22 @@
-import React       from 'react';
-import { connect } from 'react-redux';
+import {IconButton, Snackbar} from '@material-ui/core';
+import {withStyles}           from '@material-ui/core/styles';
+import Table                  from '@material-ui/core/Table';
+import TableBody              from '@material-ui/core/TableBody';
+import TableHead              from '@material-ui/core/TableHead';
+import TableRow               from '@material-ui/core/TableRow';
+import DeleteIcon             from '@material-ui/icons/Delete';
+import NoteAddIcon            from '@material-ui/icons/NoteAdd';
+import {DropzoneDialog}       from 'material-ui-dropzone';
+import React                  from 'react';
+import {connect}              from 'react-redux';
+import {compose}              from 'redux';
 
-import PropTypes      from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table          from '@material-ui/core/Table';
-import TableBody      from '@material-ui/core/TableBody';
-import TableCell      from '@material-ui/core/TableCell';
-import TableHead      from '@material-ui/core/TableHead';
-import TableRow       from '@material-ui/core/TableRow';
-
-import { IconButton, Snackbar } from '@material-ui/core';
-import DeleteIcon               from '@material-ui/icons/Delete';
-import NoteAddIcon              from '@material-ui/icons/NoteAdd';
-import { DropzoneDialog }       from 'material-ui-dropzone';
-
-import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../actions/global-actions';
+import {addFilesToProject, deleteFileFromProject, getProjectData,} from '../../actions/global-actions';
+import CustomTableCell                                             from '../shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
     padding: theme.spacing(1),
-    height: 'calc(100vh - 64px - 100px)',
-    overflow: 'auto',
-    overflowX: 'hidden',
   },
   waitingSpin: {
     position: 'relative',
@@ -31,18 +25,7 @@ const styles = theme => ({
   },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class ConnectedProjectFiles extends React.Component {
+class ProjectFiles extends React.Component {
   constructor(props) {
     super(props);
 
@@ -164,27 +147,20 @@ class ConnectedProjectFiles extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    project: state.global_data.project,
-  };
+const mapStateToProps = state => ({
+  project: state.global_data.project,
+});
+
+const mapDispatchToProps = {
+  addFiles: addFilesToProject,
+  getProjectData,
+  deleteFile: deleteFileFromProject,
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addFiles: (id, files, cb) => dispatch(addFilesToProject(id, files, cb)),
-    getProjectData: id => dispatch(getProjectData(id)),
-    deleteFile: (id, name, cb) => dispatch(deleteFileFromProject(id, name, cb)),
-  };
-};
-
-const ProjectFiles = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedProjectFiles);
-
-ProjectFiles.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ProjectFiles);
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProjectFiles);
