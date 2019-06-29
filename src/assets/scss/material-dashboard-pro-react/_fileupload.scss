@@ -31,7 +31,7 @@
   display: inline-block;
   margin-bottom: 9px;
 
-  input[type='file'] {
+  input[type="file"] {
     display: none;
   }
 }
@@ -154,7 +154,7 @@
       border-color: $pink;
     }
 
-    input[type='file'] {
+    input[type="file"] {
       cursor: pointer;
       display: block;
       height: 100%;
