@@ -1,26 +1,27 @@
-import React                from 'react';
+import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { connect }          from 'react-redux';
-import { compose }          from 'redux';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import clx from 'clsx';
 
-import List         from '@material-ui/core/List';
-import ListItem     from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon     from '@material-ui/icons/Home';
-import MessageIcon  from '@material-ui/icons/Message';
-import PagesIcon    from '@material-ui/icons/Pages';
-import WidgetsIcon  from '@material-ui/icons/Widgets';
+import HomeIcon from '@material-ui/icons/Home';
+import MessageIcon from '@material-ui/icons/Message';
+import PagesIcon from '@material-ui/icons/Pages';
+import WidgetsIcon from '@material-ui/icons/Widgets';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import ServiceIcon  from '@material-ui/icons/GroupWork';
-import HelpIcon     from '@material-ui/icons/Help';
+import ServiceIcon from '@material-ui/icons/GroupWork';
+import HelpIcon from '@material-ui/icons/Help';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-import auth0Client     from '../../auth0/auth';
+import auth0Client from '../../auth0/auth';
 import { UserProfile } from '../../types/global';
-import styles          from './MenuList.style';
+import styles from './MenuList.style';
 
 interface ConnectedMenuListProps {
   classes: any;
@@ -61,7 +62,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
           className={pathname === '/' ? classes.selectedStyle : ''}
         >
           <ListItemIcon>
-            <HomeIcon />
+            <HomeIcon color="primary" className={clx({[classes.activeIcon]: pathname === '/'})} />
           </ListItemIcon>
           <ListItemText primary="Home" className={classes.listItemText} />
         </ListItem>
@@ -72,12 +73,17 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             button
             component={Link}
             to="/gen-contractor"
-            className={
-              pathname.includes('/gen-contractor') ? classes.selectedStyle : ''
-            }
+            className={clx({
+              [classes.selectedStyle]: pathname.includes('/gen-contractor'),
+            })}
           >
             <ListItemIcon>
-              <MessageIcon />
+              <MessageIcon
+                color="primary"
+                className={clx({
+                  [classes.activeIcon]: pathname.includes('/gen-contractor'),
+                })}
+              />
             </ListItemIcon>
             <ListItemText
               primary="General Contractor"
@@ -92,12 +98,17 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             button
             component={Link}
             to="/s_cont"
-            className={
-              pathname.includes('/s_cont') ? classes.selectedStyle : ''
-            }
+            className={clx({
+              [classes.selectedStyle]: pathname.includes('/s_cont'),
+            })}
           >
             <ListItemIcon>
-              <ServiceIcon />
+              <ServiceIcon
+                color="primary"
+                className={clx({
+                  [classes.activeIcon]: pathname.includes('/s_cont'),
+                })}
+              />
             </ListItemIcon>
             <ListItemText
               primary="Sub Contractor"
@@ -112,12 +123,17 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             button
             component={Link}
             to="/b_list"
-            className={
-              pathname.includes('/b_list') ? classes.selectedStyle : ''
-            }
+            className={clx({
+              [classes.selectedStyle]: pathname.includes('/b_list'),
+            })}
           >
             <ListItemIcon>
-              <HelpIcon />
+              <HelpIcon
+                color="primary"
+                className={clx({
+                  [classes.activeIcon]: pathname.includes('/b_list'),
+                })}
+              />
             </ListItemIcon>
             <ListItemText
               primary="Bidder Listing"
@@ -132,12 +148,17 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             button
             component={Link}
             to="/projects"
-            className={
-              pathname.includes('/projects') ? classes.selectedStyle : ''
-            }
+            className={clx({
+              [classes.selectedStyle]: pathname.includes('/projects'),
+            })}
           >
             <ListItemIcon>
-              <WidgetsIcon />
+              <WidgetsIcon
+                color="primary"
+                className={clx({
+                  [classes.activeIcon]: pathname.includes('/projects'),
+                })}
+              />
             </ListItemIcon>
             <ListItemText primary="Projects" className={classes.listItemText} />
           </ListItem>
@@ -147,12 +168,17 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             button
             component={Link}
             to="/m_temp"
-            className={
-              pathname.includes('/m_temp') ? classes.selectedStyle : ''
-            }
+            className={clx({
+              [classes.selectedStyle]: pathname.includes('/m_temp'),
+            })}
           >
             <ListItemIcon>
-              <PagesIcon />
+              <PagesIcon
+                color="primary"
+                className={clx({
+                  [classes.activeIcon]: pathname.includes('/m_temp'),
+                })}
+              />
             </ListItemIcon>
             <ListItemText
               primary="Manage Templates"
@@ -165,12 +191,17 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             button
             component={Link}
             to="/m_cont"
-            className={
-              pathname.includes('/m_cont') ? classes.selectedStyle : ''
-            }
+            className={clx({
+              [classes.selectedStyle]: pathname.includes('/m_cont'),
+            })}
           >
             <ListItemIcon>
-              <SettingsIcon />
+              <SettingsIcon
+                color="primary"
+                className={clx({
+                  [classes.activeIcon]: pathname.includes('/m_cont'),
+                })}
+              />
             </ListItemIcon>
             <ListItemText
               primary="Manage Contractor"
@@ -183,12 +214,17 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             button
             component={Link}
             to="/m_spec"
-            className={
-              pathname.includes('/m_spec') ? classes.selectedStyle : ''
-            }
+            className={clx({
+              [classes.selectedStyle]: pathname.includes('/m_spec'),
+            })}
           >
             <ListItemIcon>
-              <PagesIcon />
+              <PagesIcon
+                color="primary"
+                className={clx({
+                  [classes.activeIcon]: pathname.includes('/m_spec'),
+                })}
+              />
             </ListItemIcon>
             <ListItemText
               primary="Manage Specialty"

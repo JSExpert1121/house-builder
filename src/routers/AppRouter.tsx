@@ -1,7 +1,6 @@
 import React                                   from 'react';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { withStyles }                          from '@material-ui/styles';
-
 import GenContractorView     from '../containers/GenContractorView';
 import SubContractorView     from '../containers/SubContractorView';
 import BidderListingView     from '../containers/BidderListingView';

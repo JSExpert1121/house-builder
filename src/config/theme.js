@@ -18,6 +18,19 @@ const theme = createMuiTheme({
     // fontFamily: ['Niramit', 'Arial'].join(','),
   },
   overrides: {
+    MuiAppBar: {
+      colorPrimary: {
+        backgroundColor: '#001529',
+        color: '#fff',
+      }
+    },
+    MuiDrawer: {
+      paper: {
+        backgroundColor: '#001529',
+        color: '#fff',
+        height: '100vh',
+      }
+    },
     MuiBadge: {
       colorSecondary: {
         backgroundColor: '#f50057',
@@ -57,6 +70,11 @@ const theme = createMuiTheme({
       root: {
         minHeight: '36px',
       },
+    },
+    MuiSvgIcon: {
+      colorPrimary: {
+        color: '#fff'
+      }
     },
     MuiIconButton: {
       root: {

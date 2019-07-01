@@ -229,7 +229,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               LOGO
             </Typography>
             <IconButton onClick={this.handleDrawerClose}>
-              <ChevronLeftIcon />
+              <ChevronLeftIcon color="primary" />
             </IconButton>
           </div>
           <Divider />

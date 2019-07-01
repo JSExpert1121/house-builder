@@ -20,19 +20,11 @@ export default (theme: Theme) =>
       top: 'calc(50vh - 10px)',
     },
     content: {
-      flexGrow: 1,
-      height: '100vh',
-      overflow: 'auto',
+      flex: 1,
       padding: theme.spacing(0, 2),
     },
     container: {
-      padding: theme.spacing(2, 0),
-    },
-    paper: {
-      padding: theme.spacing(2),
-      display: 'flex',
-      overflow: 'auto',
-      flexDirection: 'column',
+      padding: theme.spacing(3, 2),
     },
     fixedHeight: {
       height: 240,
