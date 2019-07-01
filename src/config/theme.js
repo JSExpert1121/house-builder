@@ -18,6 +18,12 @@ const theme = createMuiTheme({
     // fontFamily: ['Niramit', 'Arial'].join(','),
   },
   overrides: {
+    MuiBadge: {
+      colorSecondary: {
+        backgroundColor: '#f50057',
+        color: '#fff'
+      }
+    },
     MuiTableHead: {
       root: {
         backgroundColor: '#4a148c',
