@@ -92,12 +92,7 @@ export function getContrators0(page, size) {
     dispatch(clearAllContractors());
 
     return restAPI
-      .get('contractors', {
-        params: {
-          page: page,
-          size: size,
-        },
-      })
+      .get('/contractors', { page, size })
       .then(response => {
         dispatch(allContractorsLoaded(response.data));
       });
@@ -197,12 +192,7 @@ export function getSpecialties(page, size) {
   return function(dispatch) {
     dispatch(clearSpecialties());
     return restAPI
-      .get('specialties', {
-        params: {
-          page: page,
-          size: size,
-        },
-      })
+      .get('specialties', {page, size})
       .then(response => {
         dispatch(specialtiesLoaded(response.data));
       })

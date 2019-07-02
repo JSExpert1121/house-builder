@@ -40,7 +40,6 @@ export function createTemplate(template, cb) {
       })
       .catch(err => {
         cb(false);
-        console.log(err.message);
       });
   };
 }
@@ -50,7 +49,7 @@ export function selectTemplate(id) {
     dispatch(clearSelectedTemplate());
 
     return restAPI
-      .get('templates/' + id)
+      .get(`/templates/${id}`)
       .then((response: AxiosResponse) => {
         dispatch(setSelectedTemplate(response.data));
       })
@@ -63,55 +62,44 @@ export function selectOption(id: number) {
     dispatch(clearSelectedOption());
 
     return restAPI
-      .get('options/' + id)
+      .get(`/options/${id}`)
       .then((response: AxiosResponse) => {
         dispatch(setSelectedOption(response.data));
-      })
-      .catch(err => console.log(err.message));
+      });
   };
 }
 
 export function selectCategory(id) {
   return function(dispatch) {
     dispatch({ type: CLEAR_SELECTED_CATEGORY });
-
     return restAPI
-      .get('categories/' + id)
+      .get(`/categories/${id}`)
       .then((response: AxiosResponse) => {
         dispatch(setSelectedCategory(response.data));
-      })
-      .catch(err => console.log(err.message));
+      });
   };
 }
 
 export function getTemplatesO(page, size) {
   return function(dispatch) {
     dispatch(clearAllTemplates());
-
     return restAPI
-      .get('templates', {
-        params: {
-          page: page,
-          size: size,
-        },
-      })
+      .get('/templates', { page, size })
       .then((response: AxiosResponse) => {
         dispatch(allTemplatesLoaded(response.data));
-      })
-      .catch(err => console.log(err.message));
+      });
   };
 }
 
 export function deleteTemplate(id, cb) {
   return function(dispatch) {
     return restAPI
-      .delete('templates/' + id)
+      .delete(`/templates/${id}`)
       .then(response => {
         cb(true);
       })
       .catch(err => {
         cb(false);
-        console.log(err.message);
       });
   };
 }

@@ -37,12 +37,7 @@ export function awardProject(id) {
 export function getProjectsByGenId(id, page, rowSize) {
   return function (dispatch) {
     restAPI
-        .get('contractors/' + id + '/projects', {
-          params: {
-            page: page,
-            size: rowSize,
-          },
-        })
+        .get(`/contractors/${id}/projects`, { page, size: rowSize })
         .then(response => {
           dispatch(projectLoaded(response.data));
         });
@@ -53,12 +48,7 @@ export function getAllProjects(page, size) {
   return function (dispatch) {
     dispatch(clearAllProjects());
     return restAPI
-        .get('projects', {
-          params: {
-            page: page,
-            size: size,
-          },
-        })
+        .get('/projects', { page, size})
         .then(response => {
           dispatch(allProjectLoaded(response.data));
         });
@@ -68,14 +58,8 @@ export function getAllProjects(page, size) {
 export function getTemplates(page, size) {
   return function (dispatch) {
     dispatch(clearTemplates());
-
     return restAPI
-        .get('templates', {
-          params: {
-            page: page,
-            size: size,
-          },
-        })
+        .get('/templates', { page, size })
         .then(response => {
           dispatch(templatesLoaded(response.data));
         });
@@ -84,5 +68,6 @@ export function getTemplates(page, size) {
 
 export const addTemplate = (proj_id, templ_id) => dispatch =>
     ProjApi.addTemplate(proj_id, templ_id);
+
 export const deleteTemplate = (proj_id, templ_id) => dispatch =>
     ProjApi.deleteTemplate(proj_id, templ_id);
