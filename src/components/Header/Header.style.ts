@@ -58,6 +58,10 @@ export default (theme: Theme) =>
     profilemenu: {
       top: '50px',
     },
+    drawerPaperRoot: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
     drawerPaper: {
       position: 'relative',
       whiteSpace: 'nowrap',
