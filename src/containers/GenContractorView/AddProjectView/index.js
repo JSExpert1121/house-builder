@@ -1,20 +1,20 @@
-import React, {Component}         from 'react';
-import {withRouter}               from 'react-router-dom';
-import {connect}                  from 'react-redux';
-import {compose}                  from "redux";
-import {createStyles, withStyles} from '@material-ui/core/styles';
-import Paper                      from '@material-ui/core/Paper';
-import CircularProgress           from '@material-ui/core/CircularProgress';
-import Card                       from '@material-ui/core/Card';
-import IconButton                 from '@material-ui/core/IconButton';
 import Box                        from '@material-ui/core/Box';
+import Card                       from '@material-ui/core/Card';
+import CircularProgress           from '@material-ui/core/CircularProgress';
+import IconButton                 from '@material-ui/core/IconButton';
+import Paper                      from '@material-ui/core/Paper';
+import {createStyles, withStyles} from '@material-ui/core/styles';
 import CloudUploadIcon            from '@material-ui/icons/CloudUpload';
 import DeleteIcon                 from '@material-ui/icons/Delete';
 
-import Button from "components/CustomButtons/Button.jsx";
-import CustomInput from "components/CustomInput/CustomInput.jsx";
-import SimpleMDE   from 'react-simplemde-editor';
+import Button             from "components/CustomButtons/Button.jsx";
+import CustomInput        from "components/CustomInput/CustomInput.jsx";
 import 'easymde/dist/easymde.min.css';
+import React, {Component} from 'react';
+import {connect}          from 'react-redux';
+import {withRouter}       from 'react-router-dom';
+import SimpleMDE          from 'react-simplemde-editor';
+import {compose}          from "redux";
 
 import {addFilesToProject, addProject} from '../../../actions/global-actions';
 import CustomSnackbar                  from '../../../components/shared/CustomSnackbar';
@@ -33,24 +33,6 @@ const styles = theme => createStyles({
     flexDirection: 'column',
     overflow: 'auto',
   },
-  paper_title: {
-    width: '100%',
-  },
-  paper_price: {
-    width: '100%',
-  },
-  paper_job_detail: {
-    width: '100%',
-  },
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
-  },
-  editField: {
-    lineHeight: '1.5rem',
-    height: '1.5rem',
-  },
   busy: {
     position: 'absolute',
     left: 'calc(50% - 20px)',
@@ -59,7 +41,6 @@ const styles = theme => createStyles({
   fileUpload: {
     display: 'flex',
     flexWrap: 'wrap',
-    margin: '16px 0',
   },
   fileItem: {
     margin: '6px',
@@ -113,7 +94,6 @@ class AddProjectView extends Component {
       this.setState({ isBusy: false });
       this.props.history.push('/gen-contractor');
     } catch (error) {
-      console.log('AddProjectView: ', error);
       this.setState({
         isBusy: false,
         showMessage: true,
@@ -192,8 +172,7 @@ class AddProjectView extends Component {
             <label htmlFor="upload-file" style={{ display: 'inline' }}>
               <Button
                 variant="contained"
-                color="primary"
-                className={classes.button}
+                color="info"
                 component="span"
               >
                 <CloudUploadIcon />
@@ -212,7 +191,7 @@ class AddProjectView extends Component {
               </span>
             ))}
           </Box>
-          <Box style={{ width: '100%', textAlign: 'center', margin: '16px 0' }}>
+          <Box style={{ width: '100%', textAlign: 'center' }}>
             <Button
               color="rose"
               disabled={this.state.isBusy}
