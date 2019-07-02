@@ -89,30 +89,6 @@ class GenContView extends React.Component {
               <Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
             </Switch>
           </NavPills>
-          {/*<AppBar position="static" color="default">
-            <Tabs
-              value={curTabPos}
-              variant="scrollable"
-              scrollButtons="on"
-              indicatorColor="primary"
-              textColor="primary"
-            >
-              <Tab
-                component={Link}
-                to={`${match.url}/current_pros`}
-                label="Current Projects"
-                icon={<AppsIcon />}
-              />
-              <Tab
-                component={Link}
-                to={`${match.url}/add_project`}
-                label="Add Project"
-                icon={<PlaylistAddIcon />}
-              />
-            </Tabs>
-          </AppBar>*/}
-
-
         </div>
       </NoSsr>
     );

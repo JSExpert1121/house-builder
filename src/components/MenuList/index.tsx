@@ -1,27 +1,24 @@
-import React from 'react';
+import List                 from '@material-ui/core/List';
+import ListItem             from '@material-ui/core/ListItem';
+import ListItemIcon         from '@material-ui/core/ListItemIcon';
+import ListItemText         from '@material-ui/core/ListItemText';
+import { withStyles }       from '@material-ui/core/styles';
+import ServiceIcon          from '@material-ui/icons/GroupWork';
+import HelpIcon             from '@material-ui/icons/Help';
+import HomeIcon             from '@material-ui/icons/Home';
+import MessageIcon          from '@material-ui/icons/Message';
+import PagesIcon            from '@material-ui/icons/Pages';
+import SettingsIcon         from '@material-ui/icons/Settings';
+import WidgetsIcon          from '@material-ui/icons/Widgets';
+import clx                  from 'clsx';
+import React                from 'react';
+import { connect }          from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import clx from 'clsx';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
-import MessageIcon from '@material-ui/icons/Message';
-import PagesIcon from '@material-ui/icons/Pages';
-import WidgetsIcon from '@material-ui/icons/Widgets';
-
-import { withStyles } from '@material-ui/core/styles';
-
-import ServiceIcon from '@material-ui/icons/GroupWork';
-import HelpIcon from '@material-ui/icons/Help';
-import SettingsIcon from '@material-ui/icons/Settings';
+import { compose }          from 'redux';
+import { UserProfile }      from 'types/global';
 
 import auth0Client from '../../auth0/auth';
-import { UserProfile } from '../../types/global';
-import styles from './MenuList.style';
+import styles      from './MenuList.style';
 
 interface ConnectedMenuListProps {
   classes: any;
@@ -31,7 +28,7 @@ interface ConnectedMenuListProps {
 
 class MenuList extends React.Component<ConnectedMenuListProps> {
   render() {
-    const { classes, userProfile, location } = this.props;
+    const {classes, userProfile, location} = this.props;
     const pathname = location.pathname;
 
     if (!auth0Client.isAuthenticated())
@@ -44,9 +41,9 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
             className={pathname === '/' ? classes.selectedStyle : ''}
           >
             <ListItemIcon>
-              <HomeIcon />
+              <HomeIcon/>
             </ListItemIcon>
-            <ListItemText primary="Home" className={classes.listItemText} />
+            <ListItemText primary="Home" className={classes.listItemText}/>
           </ListItem>
         </List>
       );
@@ -62,9 +59,12 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
           className={pathname === '/' ? classes.selectedStyle : ''}
         >
           <ListItemIcon>
-            <HomeIcon color="primary" className={clx({[classes.activeIcon]: pathname === '/'})} />
+            <HomeIcon
+              color="primary"
+              className={clx({[classes.activeIcon]: pathname === '/'})}
+            />
           </ListItemIcon>
-          <ListItemText primary="Home" className={classes.listItemText} />
+          <ListItemText primary="Home" className={classes.listItemText}/>
         </ListItem>
         {(roles.includes('Gen') ||
           roles.includes('GenSub') ||
@@ -160,7 +160,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                 })}
               />
             </ListItemIcon>
-            <ListItemText primary="Projects" className={classes.listItemText} />
+            <ListItemText primary="Projects" className={classes.listItemText}/>
           </ListItem>
         )}
         {(roles.includes('Admin') || roles.includes('SuperAdmin')) && (
