@@ -13,7 +13,6 @@ import {
 
 const navPillsStyle = theme => ({
   root: {
-    marginTop: "20px",
     paddingLeft: "0",
     marginBottom: "0",
     overflow: "visible !important"
@@ -52,7 +51,11 @@ const navPillsStyle = theme => ({
     lineHeight: "24px",
     borderRadius: "30px",
     textTransform: "uppercase",
-    letterSpacing: "initial"
+    letterSpacing: "initial",
+
+    "&:first-child": {
+      marginLeft: 0
+    }
   },
   pillsWithIcons: {
     borderRadius: "4px"

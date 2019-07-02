@@ -17,7 +17,7 @@ export const {
   specUpdated,
   specsLoaded,
   specLoaded,
-  specSetPageInfo,
+  specSetPageinfo,
   specSelected,
 } = createActions({
   [SPEC_CREATED]: () => true,
@@ -58,7 +58,7 @@ export const deleteSpec = specid => dispatch => {
 export const loadSpecs = (pageNo, pageSize) => dispatch => {
   return SpecApi.loadPage(pageNo, pageSize).then(data => {
     dispatch(
-        specSetPageInfo(data.number, data.size, data.totalPages, data.totalElements)
+        specSetPageinfo(data.number, data.size, data.totalPages, data.totalElements)
     );
     dispatch(specsLoaded(data.content));
     return data.content;
