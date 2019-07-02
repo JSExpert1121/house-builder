@@ -214,6 +214,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         <Drawer
           variant="permanent"
           classes={{
+            root: classes.drawerPaperRoot,
             paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
           }}
           open={open}

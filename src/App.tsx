@@ -6,11 +6,9 @@ import AppRouter from './routers/AppRouter';
 
 const App: React.FC = () => {
   return (
-    <div className="rootDiv">
-      <AppTheme theme={theme}>
-        <AppRouter />
-      </AppTheme>
-    </div>
+    <AppTheme theme={theme}>
+      <AppRouter />
+    </AppTheme>
   );
 };
 
