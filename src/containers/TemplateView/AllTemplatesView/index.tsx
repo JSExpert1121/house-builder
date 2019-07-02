@@ -1,4 +1,3 @@
-import Button                                                            from '@material-ui/core/Button';
 import CircularProgress                                                  from '@material-ui/core/CircularProgress';
 import Dialog                                                            from '@material-ui/core/Dialog';
 import DialogActions                                                     from '@material-ui/core/DialogActions';
@@ -26,12 +25,16 @@ import { withRouter }       from 'react-router-dom';
 import SimpleMDE            from 'react-simplemde-editor';
 import { compose }          from "redux";
 import removeMd                                                          from 'remove-markdown';
-import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from '../../../actions/tem-actions';
-import { MaterialThemeHOC, UserProfile }                                 from '../../../types/global';
+import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from 'actions/tem-actions';
+import { MaterialThemeHOC, UserProfile }                                 from 'types/global';
+import Button from 'components/CustomButtons/Button';
 
 const styles = theme => createStyles({
   root: {
     marginTop: theme.spacing(1),
+  },
+  marginRight: {
+    marginRight: '5px',
   },
   row: {
     '&:nth-of-type(odd)': {
@@ -228,9 +231,9 @@ class AllTemplateView extends Component<
         <Dialog
           open={this.state.openCategoryForm}
           onClose={() => this.setState({ openCategoryForm: false })}
-          aria-labelledby="form-dialog-title"
+          aria-labelledby="create-template"
         >
-          <DialogTitle id="form-dialog-title">create template</DialogTitle>
+          <DialogTitle id="create-template">Create template</DialogTitle>
           <DialogContent>
             <DialogContentText>
               please input the correct template information
@@ -245,13 +248,7 @@ class AllTemplateView extends Component<
               onChange={val => this.setState({ name: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
             />
-            // @ts-ignore
             <SimpleMDE
-              styles={{
-                height: '209px',
-                overflow: 'auto',
-                marginBottom: '8px',
-              }}
               value={this.state.description}
               onChange={val => this.setState({ description: val })}
               options={{
@@ -263,7 +260,9 @@ class AllTemplateView extends Component<
             <Button
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
-              color="primary"
+              color="info"
+              size="small"
+              className={classes.marginRight}
             >
               Cancel
             </Button>
@@ -296,8 +295,9 @@ class AllTemplateView extends Component<
                 });
               }}
               color="primary"
+              size="small"
             >
-              Add{' '}
+              Add
               {this.state.isSaving && (
                 <CircularProgress size={24} thickness={4} />
               )}
