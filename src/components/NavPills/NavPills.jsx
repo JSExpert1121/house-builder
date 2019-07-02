@@ -3,7 +3,7 @@ import React from "react";
 import classNames from "classnames";
 // nodejs library to set properties for components
 import PropTypes from "prop-types";
-import SwipeableViews from "react-swipeable-views";
+import { Link } from 'react-router-dom';
 
 // material-ui components
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -66,6 +66,8 @@ class NavPills extends React.Component {
           });
           return (
             <Tab
+              component={Link}
+              to={prop.href}
               label={prop.tabButton}
               key={key}
               {...icon}
@@ -80,20 +82,9 @@ class NavPills extends React.Component {
     );
     const tabContent = (
       <div className={classes.contentWrapper}>
-        <SwipeableViews
-          axis={direction === "rtl" ? "x-reverse" : "x"}
-          index={this.state.active}
-          onChangeIndex={this.handleChangeIndex}
-          style={{ overflowY: "hidden" }}
-        >
-          {tabs.map((prop, key) => {
-            return (
-              <div className={classes.tabContent} key={key}>
-                {prop.tabContent}
-              </div>
-            );
-          })}
-        </SwipeableViews>
+        <div className={classes.tabContent}>
+          {this.props.children}
+        </div>
       </div>
     );
     return horizontal !== undefined ? (

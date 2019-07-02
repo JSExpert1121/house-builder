@@ -131,7 +131,7 @@ class CurrentProject extends React.Component {
     }
 
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.root} elevation={0}>
         <Table>
           <TableHead>
             <TableRow>
