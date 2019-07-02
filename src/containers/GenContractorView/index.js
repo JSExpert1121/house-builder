@@ -1,29 +1,21 @@
-import React                      from 'react';
-import { Link, Redirect, Switch } from 'react-router-dom';
-import SecuredRoute               from '../../routers/SecuredRoute';
-import { connect }                from 'react-redux';
-import { withStyles }             from '@material-ui/core/styles';
-import AppBar                     from '@material-ui/core/AppBar';
-import Tabs                       from '@material-ui/core/Tabs';
-import NoSsr                      from '@material-ui/core/NoSsr';
-import Tab                        from '@material-ui/core/Tab';
-import AppsIcon                   from '@material-ui/icons/Apps';
-import PlaylistAddIcon            from '@material-ui/icons/PlaylistAdd';
-import ContractorDetailView       from './ContractorDetailView';
-import CurrentProjectView         from './CurrentProjectView';
-import AddProjectView             from './AddProjectView';
-import ProjectDetailView          from '../../components/ProjectDetailView';
-import ProposalDetailView         from '../../components/ProposalDetailView';
-import { compose }                from 'redux';
+import NoSsr                from '@material-ui/core/NoSsr';
+import {withStyles}         from '@material-ui/core/styles';
+import NavPills             from "components/NavPills/NavPills.jsx";
+import React                from 'react';
+import {connect}            from 'react-redux';
+import {Redirect, Switch}   from 'react-router-dom';
+import {compose}            from 'redux';
+import ProjectDetailView    from '../../components/ProjectDetailView';
+import ProposalDetailView   from '../../components/ProposalDetailView';
+import SecuredRoute         from '../../routers/SecuredRoute';
+import AddProjectView       from './AddProjectView';
+import ContractorDetailView from './ContractorDetailView';
+import CurrentProjectView   from './CurrentProjectView';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     height: '100%',
-  },
-  toolbarstyle: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.dark,
   },
   waitingSpin: {
     position: 'relative',
@@ -32,7 +24,7 @@ const styles = theme => ({
   },
 });
 
-class ConnectedGenContView extends React.Component {
+class GenContView extends React.Component {
   render() {
     const { classes, userProfile, match, location } = this.props;
 
@@ -60,46 +52,43 @@ class ConnectedGenContView extends React.Component {
     return (
       <NoSsr>
         <div className={classes.root}>
-          <AppBar position="static" className={classes.toolbarstyle}>
-            <Tabs value={curTabPos} variant="scrollable" scrollButtons="on">
-              <Tab
-                component={Link}
-                to={`${match.url}/current_pros`}
-                label="Current Projects"
-                icon={<AppsIcon />}
+          <NavPills
+              color="primary"
+              tabs={[
+                {
+                  tabButton: "Current Projects",
+                  href: `${match.url}/current_pros`,
+                },
+                {
+                  tabButton: "Add Project",
+                  href: `${match.url}/add_project`,
+                }
+              ]}
+          >
+            <Switch>
+              <SecuredRoute
+                  path={`${match.url}/current_pros`}
+                  component={CurrentProjectView}
               />
-              <Tab
-                component={Link}
-                to={`${match.url}/add_project`}
-                label="Add Project"
-                icon={<PlaylistAddIcon />}
+              <SecuredRoute
+                  path={`${match.url}/add_project`}
+                  component={AddProjectView}
               />
-            </Tabs>
-          </AppBar>
-
-          <Switch>
-            <SecuredRoute
-              path={`${match.url}/current_pros`}
-              component={CurrentProjectView}
-            />
-            <SecuredRoute
-              path={`${match.url}/add_project`}
-              component={AddProjectView}
-            />
-            <SecuredRoute
-              path={`${match.url}/proposal_detail/:id`}
-              component={ProposalDetailView}
-            />
-            <SecuredRoute
-              path={`${match.url}/project_detail/:id`}
-              component={ProjectDetailView}
-            />
-            <SecuredRoute
-              path={`${match.url}/contractor_detail`}
-              component={ContractorDetailView}
-            />
-            <Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
-          </Switch>
+              <SecuredRoute
+                  path={`${match.url}/proposal_detail/:id`}
+                  component={ProposalDetailView}
+              />
+              <SecuredRoute
+                  path={`${match.url}/project_detail/:id`}
+                  component={ProjectDetailView}
+              />
+              <SecuredRoute
+                  path={`${match.url}/contractor_detail`}
+                  component={ContractorDetailView}
+              />
+              <Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
+            </Switch>
+          </NavPills>
         </div>
       </NoSsr>
     );
@@ -107,12 +96,10 @@ class ConnectedGenContView extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  userProfile: state.global_data.userProfile
+  userProfile: state.global_data.userProfile,
 });
 
 export default compose(
   withStyles(styles),
-  connect(
-    mapStateToProps
-  ),
-)(ConnectedGenContView)
+  connect(mapStateToProps)
+)(GenContView);

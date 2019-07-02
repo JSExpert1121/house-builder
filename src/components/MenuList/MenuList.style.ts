@@ -18,8 +18,10 @@ export default (theme: Theme) =>
       },
     },
     selectedStyle: {
-      borderLeft: '5px solid ' + theme.palette.primary.light,
-      color: theme.palette.primary.light,
+      backgroundColor: theme.palette.primary.dark,
+    },
+    activeIcon: {
+      color: '#f50057',
     },
     nested: {
       paddingLeft: theme.spacing(4),
