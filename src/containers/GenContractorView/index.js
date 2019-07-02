@@ -1,46 +1,27 @@
-import NoSsr                from '@material-ui/core/NoSsr';
-import {withStyles}         from '@material-ui/core/styles';
-import NavPills             from "components/NavPills/NavPills.jsx";
-import React                from 'react';
-import {connect}            from 'react-redux';
-import {Redirect, Switch}   from 'react-router-dom';
-import {compose}            from 'redux';
-import ProjectDetailView    from '../../components/ProjectDetailView';
-import ProposalDetailView   from '../../components/ProposalDetailView';
-import SecuredRoute         from '../../routers/SecuredRoute';
-import AddProjectView       from './AddProjectView';
-import ContractorDetailView from './ContractorDetailView';
-import CurrentProjectView   from './CurrentProjectView';
+import NoSsr                  from '@material-ui/core/NoSsr';
+import {withStyles}           from '@material-ui/core/styles';
+import NavPills               from "components/NavPills/NavPills.jsx";
+import React                  from 'react';
+import {connect}              from 'react-redux';
+import {Redirect, Switch}     from 'react-router-dom';
+import {compose}              from 'redux';
+import ProjectDetailView      from '../../components/ProjectDetailView';
+import ProposalDetailView     from '../../components/ProposalDetailView';
+import SecuredRoute           from '../../routers/SecuredRoute';
+import AddProjectView         from './AddProjectView';
+import ContractorDetailView   from './ContractorDetailView';
+import CurrentProjectView     from './CurrentProjectView';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     height: '100%',
-  },
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
-  },
+  }
 });
 
 class GenContView extends React.Component {
   render() {
-    const { classes, userProfile, match, location } = this.props;
-
-    const tabNo = {
-      '/gen-contractor': 0,
-      '/gen-contractor/current_pros': 0,
-      '/gen-contractor/add_project': 1,
-    };
-
-    let curTabPos = tabNo[location.pathname];
-
-    if (
-      location.pathname.includes('proposal_detail') ||
-      location.pathname.includes('project_detail')
-    )
-      curTabPos = 0;
+    const { classes, userProfile, match } = this.props;
 
     if (
       !userProfile.user_metadata.roles.includes('Gen') &&
