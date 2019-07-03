@@ -1,62 +1,39 @@
-import React          from 'react';
-import { withStyles } from '@material-ui/core/styles';
-
-import Paper                      from '@material-ui/core/Paper';
-import Tabs                       from '@material-ui/core/Tabs';
-import Tab                        from '@material-ui/core/Tab';
-import NoSsr                      from '@material-ui/core/NoSsr';
-import SecuredRoute               from '../../../routers/SecuredRoute';
-import { Link, Redirect, Switch } from 'react-router-dom';
-import SubmittedProView           from './SubmittedProView';
-import WonProView                 from './WonProView';
-import InvitedProView             from './InvitedProView';
-import AppBar                     from '@material-ui/core/AppBar';
+import NoSsr              from '@material-ui/core/NoSsr';
+import Paper              from '@material-ui/core/Paper';
+import {withStyles}       from '@material-ui/core/styles';
+import React              from 'react';
+import {Redirect, Switch} from 'react-router-dom';
+import CustomTabs         from "../../../components/shared/CustomTabs";
+import SecuredRoute       from '../../../routers/SecuredRoute';
+import InvitedProView     from './InvitedProView';
+import SubmittedProView   from './SubmittedProView';
+import WonProView         from './WonProView';
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-  }
+  },
 });
 
 class SCVPipelineView extends React.Component {
   render() {
-    const { classes, match, location } = this.props;
-    const tabNo = {
-      '/s_cont/pipeline': 0,
-      '/s_cont/pipeline/submitted': 0,
-      '/s_cont/pipeline/awarded': 1,
-      '/s_cont/pipeline/invited': 2,
-    };
-
-    let curTabPos = tabNo[location.pathname];
-
+    const { classes, match } = this.props;
     return (
       <NoSsr>
         <div className={classes.root}>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={curTabPos}
-              variant="scrollable"
-              indicatorColor="primary"
-              textColor="primary"
-              scrollButtons="auto"
-              onChange={() => ({})}
-            >
-              <Tab
-                component={Link}
-                to={`${match.url}/submitted`}
-                label="Submitted"
-              />
-              <Tab component={Link} to={`${match.url}/awarded`} label="Won" />
-              <Tab
-                component={Link}
-                to={`${match.url}/invited`}
-                label="Invited"
-              />
-            </Tabs>
-          </AppBar>
-
           <Paper square>
+            <CustomTabs
+              tabs={[
+                {
+                  href: `${match.url}/submitted`,
+                  label: 'Submitted',
+                },
+                {
+                  href: `${match.url}/invited`,
+                  label: 'Invited',
+                },
+              ]}
+            />
             <Switch>
               <SecuredRoute
                 path={`${match.url}/submitted`}

@@ -5,10 +5,6 @@ export default (theme: Theme) =>
     root: {
       flexGrow: 1,
     },
-    toolbarstyle: {
-      backgroundColor: theme.palette.background.paper,
-      color: theme.palette.primary.dark,
-    },
     buttonAdditional: {
       position: 'absolute',
       float: 'right',
@@ -20,6 +16,6 @@ export default (theme: Theme) =>
       top: 'calc(40vh)',
     },
     mainWrapper: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
   });

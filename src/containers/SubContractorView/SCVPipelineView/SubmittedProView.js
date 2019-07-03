@@ -18,7 +18,8 @@ import CustomTableCell                from '../../../components/shared/CustomTab
 
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing(1),
+    // marginTop: theme.spacing(1),
+    padding: theme.spacing(1)
   },
   row: {
     '&:nth-of-type(odd)': {

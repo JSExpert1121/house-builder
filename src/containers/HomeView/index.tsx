@@ -1,5 +1,16 @@
-import React, { FunctionComponent } from 'react';
+import React          from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
-const HomeView: FunctionComponent = () => <div>Welcome Home</div>;
+const style = (theme) =>  ({
+  root: {
+   padding: theme.spacing(1)
+  }
+});
 
-export default HomeView;
+function HomeView({ classes }) {
+  return (
+    <div className={classes.root}>Welcome Home</div>
+  )
+}
+
+export default withStyles(style)(HomeView);

@@ -20,14 +20,14 @@ const theme = createMuiTheme({
   overrides: {
     MuiAppBar: {
       colorPrimary: {
-        backgroundColor: '#001529',
-        color: '#fff',
+        // backgroundColor: '#001529',
+        // color: '#fff',
       }
     },
     MuiDrawer: {
       paper: {
-        backgroundColor: '#001529',
-        color: '#fff',
+        // backgroundColor: '#001529',
+        // color: '#fff',
         height: '100vh',
       }
     },
@@ -71,9 +71,23 @@ const theme = createMuiTheme({
         minHeight: '36px',
       },
     },
+    MuiTab: {
+      root: {
+        textTransform: 'capitalize',
+      },
+      labelIcon: {
+        minHeight: 0,
+        paddingTop: '3px',
+      }
+    },
+    MuiBottomNavigation: {
+      root: {
+        justifyContent: 'flex-start',
+      }
+    },
     MuiSvgIcon: {
-      colorPrimary: {
-        color: '#fff'
+      colorSecondary: {
+        color: '#0000008a'
       }
     },
     MuiIconButton: {
