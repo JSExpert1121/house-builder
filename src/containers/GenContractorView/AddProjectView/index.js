@@ -28,7 +28,7 @@ const styles = theme => createStyles({
     width: '100%',
     height: '100%',
     borderBottom: '5px solid ' + theme.palette.primary.light,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1, 2),
     display: 'flex',
     flexDirection: 'column',
     overflow: 'auto',

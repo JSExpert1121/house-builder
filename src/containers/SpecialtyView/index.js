@@ -1,67 +1,48 @@
-import React, { Component }                       from 'react';
-import { Link, Redirect, Switch, withRouter }     from 'react-router-dom';
-import { connect }                                from 'react-redux';
-import { AppBar, NoSsr, Tab, Tabs, withStyles }   from '@material-ui/core';
-import { Apps as AppsIcon, Ballot as BallotIcon } from '@material-ui/icons';
-import SecuredRoute                               from '../../routers/SecuredRoute';
-import AllSpecialties                             from './AllSpecialties';
-import SpecialtyDetailView                        from './SpecialtyDetailView';
-import {createStyles}                             from "@material-ui/styles";
-import {compose}                                  from "redux";
+import {NoSsr, withStyles}                      from '@material-ui/core';
+import {Apps as AppsIcon, Ballot as BallotIcon} from '@material-ui/icons';
+import {createStyles}                           from '@material-ui/styles';
+import React, {Component}                       from 'react';
+import {connect}                                from 'react-redux';
+import {Redirect, Switch, withRouter}           from 'react-router-dom';
+import {compose}                                from 'redux';
+import CustomTabs                               from '../../components/shared/CustomTabs';
+import SecuredRoute                             from '../../routers/SecuredRoute';
+import AllSpecialties                           from './AllSpecialties';
+import SpecialtyDetailView                      from './SpecialtyDetailView';
 
-const styles = theme => createStyles({
-  root: {
-    flexGrow: 1,
-  },
-  contentWrapper: {
-    marginTop: theme.spacing(1)
-  },
-  toolbarstyle: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.dark,
-  },
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
-  },
-});
+const styles = theme =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    contentWrapper: {
+      marginTop: theme.spacing(1),
+    },
+  });
 
 export class SpecialtyView extends Component {
   render() {
-    const { classes, userProfile, location } = this.props;
-
-    const tabNo = {
-      '/m_spec': 0,
-      '/m_spec/all_specialties': 0,
-      '/m_spec/specialty_detail': 1,
-    };
-
-    const curTabPos = tabNo[location.pathname];
-
+    const { classes, userProfile } = this.props;
     if (!userProfile.user_metadata.roles.includes('SuperAdmin'))
       return <div> Access Forbidden </div>;
 
     return (
       <NoSsr>
         <div className={classes.root}>
-          <AppBar position="static" className={classes.toolbarstyle}>
-            <Tabs value={curTabPos} variant="scrollable" scrollButtons="on">
-              <Tab
-                component={Link}
-                to={`/m_spec/all_specialties`}
-                label="All Specialties"
-                icon={<AppsIcon />}
-              />
-              <Tab
-                component={Link}
-                to={`/m_spec/specialty_detail`}
-                label="Specialty Detail"
-                icon={<BallotIcon />}
-              />
-            </Tabs>
-          </AppBar>
-
+          <CustomTabs
+            tabs={[
+              {
+                href: `/m_spec/all_specialties`,
+                label: 'All Specialties',
+                icon: AppsIcon,
+              },
+              {
+                href: `/m_spec/specialty_detail`,
+                label: 'Specialty Detail',
+                icon: BallotIcon,
+              },
+            ]}
+          />
           <main className={classes.contentWrapper}>
             <Switch>
               <SecuredRoute
@@ -88,7 +69,5 @@ const mapStateToProps = state => ({
 export default compose(
   withRouter,
   withStyles(styles),
-  connect(
-    mapStateToProps,
-  ),
-)(SpecialtyView)
+  connect(mapStateToProps)
+)(SpecialtyView);

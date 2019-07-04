@@ -1,57 +1,31 @@
-import React                      from 'react';
-import { connect }                from 'react-redux';
-import { Link, Redirect, Switch } from 'react-router-dom';
-import SecuredRoute               from '../../routers/SecuredRoute';
-
-import { withStyles }    from '@material-ui/core/styles';
-import AppBar            from '@material-ui/core/AppBar';
-import Tabs              from '@material-ui/core/Tabs';
-import NoSsr             from '@material-ui/core/NoSsr';
-import Tab               from '@material-ui/core/Tab';
-import TableChartIcon    from '@material-ui/icons/TableChart';
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import TuneIcon          from '@material-ui/icons/Tune';
-import AssignmentIcon    from '@material-ui/icons/Assignment';
-import SettingsIcon      from '@material-ui/icons/Settings';
-
-import SCVPipelineView      from './SCVPipelineView/index';
-import SCVCalendarView      from './SCVCalendarView';
-import SCVReportsView       from './SCVReportsView';
-import SCVAnalyticsView     from './SCVAnalyticsView';
-import SCVSettingsView      from './SCVSettingsView';
-import ProposalDetailView   from '../../components/ProposalDetailView';
+import NoSsr from '@material-ui/core/NoSsr';
+import {withStyles}         from '@material-ui/core/styles';
+import AssignmentIcon       from '@material-ui/icons/Assignment';
+import CalendarTodayIcon    from '@material-ui/icons/CalendarToday';
+import SettingsIcon         from '@material-ui/icons/Settings';
+import TableChartIcon       from '@material-ui/icons/TableChart';
+import TuneIcon             from '@material-ui/icons/Tune';
+import React                from 'react';
+import {connect}            from 'react-redux';
+import {Redirect, Switch}   from 'react-router-dom';
+import {compose}            from 'redux';
 import ProjectDetailView    from '../../components/ProjectDetailView';
+import ProposalDetailView   from '../../components/ProposalDetailView';
+import CustomTabs           from "../../components/shared/CustomTabs";
+import SecuredRoute         from '../../routers/SecuredRoute';
 import ContractorDetailView from './ContractorDetailView';
 
-import style       from './index.style';
-import { compose } from 'redux';
+import style            from './index.style';
+import SCVAnalyticsView from './SCVAnalyticsView';
+import SCVCalendarView  from './SCVCalendarView';
+
+import SCVPipelineView from './SCVPipelineView/index';
+import SCVReportsView  from './SCVReportsView';
+import SCVSettingsView from './SCVSettingsView';
 
 class SubContractorView extends React.Component {
   render() {
-    const { classes, match, userProfile, location } = this.props;
-
-    const tabName = [
-      match.url + '/pipeline',
-      match.url + '/calendar',
-      match.url + '/analytics',
-      match.url + '/reports',
-      match.url + '/settings',
-    ];
-
-    let curTabPos;
-
-    for (let i = 0; i < tabName.length; i++) {
-      if (location.pathname.includes(tabName[i])) {
-        curTabPos = i;
-        break;
-      }
-    }
-
-    if (
-      location.pathname === match.url ||
-      location.pathname.includes(match.url + '/proposal_detail')
-    )
-      curTabPos = 0;
+    const { classes, match, userProfile } = this.props;
 
     if (
       !userProfile.user_metadata.roles.includes('Sub') &&
@@ -63,40 +37,35 @@ class SubContractorView extends React.Component {
     return (
       <NoSsr>
         <div className={classes.root}>
-          <AppBar position="static" className={classes.toolbarstyle}>
-            <Tabs value={curTabPos} variant="scrollable" scrollButtons="on">
-              <Tab
-                component={Link}
-                to={`${match.url}/pipeline`}
-                label="Pipeline"
-                icon={<TableChartIcon />}
-              />
-              <Tab
-                component={Link}
-                to={`${match.url}/calendar`}
-                label="Calendar"
-                icon={<CalendarTodayIcon />}
-              />
-              <Tab
-                component={Link}
-                to={`${match.url}/analytics`}
-                label="Analytics"
-                icon={<TuneIcon />}
-              />
-              <Tab
-                component={Link}
-                to={`${match.url}/reports`}
-                label="Reports"
-                icon={<AssignmentIcon />}
-              />
-              <Tab
-                component={Link}
-                to={`${match.url}/settings`}
-                label="Setting"
-                icon={<SettingsIcon />}
-              />
-            </Tabs>
-          </AppBar>
+          <CustomTabs
+            tabs={[
+              {
+                href: `${match.url}/pipeline`,
+                label: 'Pipeline',
+                icon: TableChartIcon,
+              },
+              {
+                href: `${match.url}/calendar`,
+                label: 'Calendar',
+                icon: CalendarTodayIcon,
+              },
+              {
+                href: `${match.url}/analytics`,
+                label: 'Analytics',
+                icon: TuneIcon,
+              },
+              {
+                href: `${match.url}/reports`,
+                label: 'Reports',
+                icon: AssignmentIcon,
+              },
+              {
+                href: `${match.url}/settings`,
+                label: 'Setting',
+                icon: SettingsIcon,
+              },
+            ]}
+          />
           <main className={classes.mainWrapper}>
             <Switch>
               <SecuredRoute

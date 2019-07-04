@@ -1,18 +1,15 @@
-import React, { Component }                            from 'react';
-import { History }                                     from 'history';
+import { Avatar, Box, Button, Card, CircularProgress } from '@material-ui/core';
 import { createStyles, Theme, withStyles }             from '@material-ui/core/styles';
 import TextField                                       from '@material-ui/core/TextField';
-import { Avatar, Box, Button, Card, CircularProgress } from '@material-ui/core';
-
-import auth0Client from '../../auth0/auth';
-
-import TSnackbarContent from '../../components/SnackBarContent';
-import axios            from 'axios';
-
-import { connect }                       from 'react-redux';
-import { setUserProfile }                from '../../actions/global-actions';
-import { MaterialThemeHOC, UserProfile } from '../../types/global';
-import { compose }                       from 'redux';
+import { setUserProfile }                              from 'actions/global-actions';
+import axios                                           from 'axios';
+import { History }                                     from 'history';
+import React, { Component }                            from 'react';
+import { connect }                                     from 'react-redux';
+import { compose }                                     from 'redux';
+import { MaterialThemeHOC, UserProfile }               from 'types/global';
+import auth0Client                                     from '../../auth0/auth';
+import TSnackbarContent                                from '../../components/SnackBarContent';
 
 const styles = (theme: Theme) => createStyles({
   root: {

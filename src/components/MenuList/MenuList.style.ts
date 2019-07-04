@@ -18,10 +18,11 @@ export default (theme: Theme) =>
       },
     },
     selectedStyle: {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: '#f0f2f5',
+      color: theme.palette.common.black,
     },
     activeIcon: {
-      color: '#f50057',
+      color: theme.palette.primary.main,
     },
     nested: {
       paddingLeft: theme.spacing(4),

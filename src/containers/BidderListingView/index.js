@@ -11,15 +11,7 @@ import { compose }          from 'redux';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-  },
-  toolbarstyle: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.dark,
-  },
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
+    padding: theme.spacing(0, 1),
   },
 });
 

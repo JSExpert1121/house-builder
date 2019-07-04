@@ -21,10 +21,9 @@ export default (theme: Theme) =>
     },
     content: {
       flex: 1,
-      padding: theme.spacing(0, 2),
     },
     container: {
-      padding: theme.spacing(3, 2),
+      padding: theme.spacing(0, 0),
     },
     fixedHeight: {
       height: 240,
