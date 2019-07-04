@@ -73,7 +73,7 @@ const templateReducer = handleActions(
         cat_name: state.selectedCategory,
       }),
     }),
-    [SPECIALTIES_LOADED]: (state, action) => ({ ...state, ...action.payload }),
+    [SPECIALTIES_LOADED]: (state, action) => ({ ...state, specialties: action.payload }),
   },
   initialState
 );
