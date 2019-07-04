@@ -1,19 +1,16 @@
-import React     from 'react';
-import PropTypes from 'prop-types';
-
+import Dialog            from '@material-ui/core/Dialog';
+import DialogActions     from '@material-ui/core/DialogActions';
+import DialogContent     from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle                         from '@material-ui/core/DialogTitle';
+import Grid                                from '@material-ui/core/Grid';
+import IconButton                          from '@material-ui/core/IconButton';
 import { withStyles }                      from '@material-ui/core/styles';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
-  IconButton,
-  TextField,
-}                                          from '@material-ui/core';
+import TextField                           from '@material-ui/core/TextField';
 import { Done as DoneIcon, NotInterested } from '@material-ui/icons';
+import PropTypes                           from 'prop-types';
+import React                               from 'react';
+import Button                              from '../CustomButtons/Button';
 
 const styles = theme => ({
   root: {
@@ -173,21 +170,6 @@ class OptionEdit extends React.Component {
               >
                 <NotInterested />
               </IconButton>
-
-              {/* <Button
-                color="primary"
-                className={classes.margin}
-                onClick={this.handleSave}
-              >
-                Save
-              </Button>
-              <Button
-                color="primary"
-                className={classes.margin}
-                onClick={this.handleSave}
-              >
-                Cancel
-              </Button> */}
             </Grid>
           </Grid>
         </Grid>
@@ -212,11 +194,5 @@ class OptionEdit extends React.Component {
     );
   }
 }
-
-OptionEdit.propTypes = {
-  option: PropTypes.object.isRequired,
-  handleSave: PropTypes.func.isRequired,
-  handleCancel: PropTypes.func.isRequired,
-};
 
 export default withStyles(styles)(OptionEdit);

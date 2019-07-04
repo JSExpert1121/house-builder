@@ -1,33 +1,33 @@
-import React, { Component } from 'react';
-import { withRouter }       from 'react-router-dom';
-import { connect }          from 'react-redux';
-import PropTypes            from 'prop-types';
-
-import Paper          from '@material-ui/core/Paper';
-import TextField      from '@material-ui/core/TextField';
-import Button from "components/CustomButtons/Button.jsx";
-import Typography     from '@material-ui/core/Typography';
-import Table          from '@material-ui/core/Table';
-import TableHead      from '@material-ui/core/TableHead';
-import TableRow       from '@material-ui/core/TableRow';
-import TableBody      from '@material-ui/core/TableBody';
-import Box            from '@material-ui/core/Box';
-import InputAdornment from '@material-ui/core/InputAdornment';
-
-import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { withStyles }                                 from '@material-ui/core/styles';
-import clsx                                           from 'clsx';
-import FiberIcon                                      from '@material-ui/icons/FiberManualRecord';
-import { deleteProposal, getProposalData }            from '../../actions/global-actions';
-import { awardProject }                               from '../../actions/gen-actions';
-
-import ProjectView       from './ProjectView';
-import SubContractorView from '../Contractor/SubContractor';
-import ConfirmDialog     from '../../components/shared/ConfirmDialog';
-import CustomTableCell   from '../../components/shared/CustomTableCell';
-import ProposalView      from './ProposalView';
-import SimpleMDE         from 'react-simplemde-editor';
+import Box                                 from '@material-ui/core/Box';
+import InputAdornment                      from '@material-ui/core/InputAdornment';
+import List                                from '@material-ui/core/List';
+import ListItem                            from '@material-ui/core/ListItem';
+import ListItemIcon                        from '@material-ui/core/ListItemIcon';
+import ListItemText                        from '@material-ui/core/ListItemText';
+import Paper                               from '@material-ui/core/Paper';
+import { withStyles }                      from '@material-ui/core/styles';
+import Table                               from '@material-ui/core/Table';
+import TableBody                           from '@material-ui/core/TableBody';
+import TableHead                           from '@material-ui/core/TableHead';
+import TableRow                            from '@material-ui/core/TableRow';
+import TextField                           from '@material-ui/core/TextField';
+import Typography                          from '@material-ui/core/Typography';
+import FiberIcon                           from '@material-ui/icons/FiberManualRecord';
+import clsx                                from 'clsx';
+import Button                              from 'components/CustomButtons/Button.jsx';
 import 'easymde/dist/easymde.min.css';
+import React, { Component }                from 'react';
+import { connect }                         from 'react-redux';
+import { withRouter }                      from 'react-router-dom';
+import SimpleMDE                           from 'react-simplemde-editor';
+import { awardProject }                    from '../../actions/gen-actions';
+import { deleteProposal, getProposalData } from '../../actions/global-actions';
+import ConfirmDialog                       from '../../components/shared/ConfirmDialog';
+import CustomTableCell                     from '../../components/shared/CustomTableCell';
+import SubContractorView                   from '../Contractor/SubContractor';
+
+import ProjectView  from './ProjectView';
+import ProposalView from './ProposalView';
 
 const styles = theme => ({
   '@global': {
@@ -297,7 +297,7 @@ class ConnectedProposalDetailOverview extends Component {
             <Button
               disabled={this.state.isSaving}
               onClick={this.delete}
-              color="primary"
+              color="warning"
             >
               Delete Proposal
             </Button>
@@ -306,7 +306,7 @@ class ConnectedProposalDetailOverview extends Component {
             <Button
               disabled={this.state.isSaving || proposal.status === 'AWARDED'}
               onClick={this.award}
-              color="primary"
+              color="success"
             >
               Award Project
             </Button>

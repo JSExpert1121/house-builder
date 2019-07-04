@@ -1,4 +1,3 @@
-import Button                                                                 from '@material-ui/core/Button';
 import CircularProgress                                                       from '@material-ui/core/CircularProgress';
 import Dialog                                                                 from '@material-ui/core/Dialog';
 import DialogActions                                                          from '@material-ui/core/DialogActions';
@@ -21,9 +20,10 @@ import React, {Component}                                                     fr
 import {connect}                                                              from 'react-redux';
 import {compose}                                                              from 'redux';
 import {createContractor, deleteContractor, getContrators0, selectContractor} from '../../../actions/cont-actions';
+import Button
+                                                                              from '../../../components/CustomButtons/Button';
 import CustomTableCell
                                                                               from "../../../components/shared/CustomTableCell";
-
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -300,7 +300,6 @@ class AllContractorsView extends Component {
             <Button
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
-              color="primary"
             >
               Cancel
             </Button>
@@ -362,7 +361,7 @@ class AllContractorsView extends Component {
 const mapStateToProps = state => ({
   contractors: state.cont_data.contractors,
   userProfile: state.global_data.userProfile,
-})
+});
 
 const mapDispatchToProps = {
   getContrators0,

@@ -1,18 +1,16 @@
+import Avatar               from '@material-ui/core/Avatar';
+import Card                 from '@material-ui/core/Card';
+import CircularProgress     from '@material-ui/core/CircularProgress';
+import { withStyles }       from '@material-ui/core/styles';
+import TextField            from '@material-ui/core/TextField';
+import axios                from 'axios';
 import React, { Component } from 'react';
-import { withRouter }       from 'react-router-dom';
-
-import PropTypes                                  from 'prop-types';
-import { withStyles }                             from '@material-ui/core/styles';
-import TextField                                  from '@material-ui/core/TextField';
-import { Avatar, Button, Card, CircularProgress } from '@material-ui/core';
-
-import auth0Client from '../../auth0/auth';
-
-import TSnackbarContent from '../SnackBarContent';
-import axios            from 'axios';
-
-import { connect }        from 'react-redux';
-import { setUserProfile } from '../../actions/global-actions';
+import { connect }          from 'react-redux';
+import { compose }          from 'redux';
+import { setUserProfile }   from '../../actions/global-actions';
+import auth0Client          from '../../auth0/auth';
+import Button               from '../CustomButtons/Button';
+import TSnackbarContent     from '../SnackBarContent';
 
 const styles = theme => ({
   root: {
@@ -94,7 +92,7 @@ const styles = theme => ({
   },
 });
 
-class connectedProfileView extends Component {
+class ProfileView extends Component {
   constructor(props) {
     super(props);
 
@@ -131,8 +129,8 @@ class connectedProfileView extends Component {
     await axios
       .get(
         process.env.REACT_APP_PROJECT_API +
-          'contractors/' +
-          userProfile.user_metadata.contractor_id
+        'contractors/' +
+        userProfile.user_metadata.contractor_id,
       )
       .then(async response => {
         if (response.data.address !== null) address = response.data.address;
@@ -170,10 +168,6 @@ class connectedProfileView extends Component {
     this.setState({ isSuccess: false });
   };
 
-  handleRoleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
-
   handleConfirm = async () => {
     const { userProfile } = this.props;
 
@@ -183,73 +177,9 @@ class connectedProfileView extends Component {
     });
 
     let cont_id = userProfile.user_metadata.contractor_id;
-
-    /*
-		let contractorData = {
-			"email": userProfile.email,
-			"updatedBy": userProfile.email,
-		};
-
-		if (cont_id !== "") {
-			contractorData.userId = cont_id;
-
-			if (this.state.isGenChecked) {
-				await axios.put(process.env.REACT_APP_PROJECT_API + "gencontractors/" + cont_id, contractorData)
-					.then(response => {
-						console.log(response);
-					})
-					.catch(error => {
-						if (error.response.status === 404) {
-							axios.post(process.env.REACT_APP_PROJECT_API + "gencontractors/", contractorData)
-								.then(response => {
-									console.log(response);
-								})
-								.catch(error => console.log(error.message));
-						}
-					});
-			}
-			if (this.state.isSubChecked) {
-				await axios.put(process.env.REACT_APP_PROJECT_API + "subcontractors/" + cont_id, contractorData)
-					.then(response => {
-						console.log(response);
-					})
-					.catch(error => {
-						if (error.response.status === 404) {
-							axios.post(process.env.REACT_APP_PROJECT_API + "subcontractors/", contractorData)
-								.then(response => {
-									console.log(response);
-								})
-								.catch(error => console.log(error.message));
-						}
-					});
-			}
-		}
-
-		else {
-			if (this.state.isGenChecked)
-				await axios.post(process.env.REACT_APP_PROJECT_API + "gencontractors", contractorData)
-					.then(response => {
-						cont_id = response.data.id;
-						console.log(response);
-					})
-					.catch(error => console.log(error.message));
-
-			if (this.state.isSubChecked) {
-				await axios.post(process.env.REACT_APP_PROJECT_API + "subcontractors", contractorData)
-					.then(response => {
-						if (cont_id === '')
-							cont_id = response.data.id;
-						console.log(response);
-					})
-					.catch(error => console.log(error.message));
-			}
-		} */
-
-    // let addr;
     await axios
       .get(process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id)
       .then(response => {
-        // addr = response.data.address;
       })
       .catch(error => {
         console.log(error.message);
@@ -268,21 +198,13 @@ class connectedProfileView extends Component {
         email: userProfile.user_metadata.email,
         updatedBy: userProfile.user_metadata.email,
         address: addressData,
-      }
+      },
     );
-
-    /*let userRole = [];
-		if (this.state.isGenChecked)
-			userRole.push("Gen");
-		if (this.state.isSubChecked)
-			userRole.push("Sub");*/
 
     const new_prof = {
       user_metadata: {
         firstname: this.state.firstname,
         lastname: this.state.lastname,
-        // contractor_id: cont_id,
-        // roles: userRole
       },
     };
 
@@ -299,7 +221,7 @@ class connectedProfileView extends Component {
     const { classes } = this.props;
 
     if (this.state.isDataLoaded === false)
-      return <CircularProgress className={classes.waitingSpin} />;
+      return <CircularProgress className={classes.waitingSpin}/>;
 
     return (
       <div className={classes.root}>
@@ -311,7 +233,7 @@ class connectedProfileView extends Component {
             message="Your profile has been saved!"
           />
         ) : (
-          <div></div>
+          <div/>
         )}
         <form noValidate autoComplete="off">
           <Card className={classes.container}>
@@ -375,46 +297,21 @@ class connectedProfileView extends Component {
               onChange={val => this.setState({ phone: val.target.value })}
               margin="normal"
             />
-            {/*
-							<FormControlLabel
-								control={
-									<Checkbox
-										checked={this.state.isGenChecked}
-										onChange={this.handleRoleChange('isGenChecked')}
-										value="isGenChecked"
-									/>
-								}
-								label="Gen Contractor"
-								className={classes.textFieldHalf}
-							/>
-
-							<FormControlLabel
-								control={
-									<Checkbox
-										checked={this.state.isSubChecked}
-										onChange={this.handleRoleChange('isSubChecked')}
-										value="isSubChecked"
-									/>
-								}
-								label="Sub Contractor"
-								className={classes.textFieldHalf}
-							/> */}
-
             <Button
               className={classes.cancelButton}
               onClick={() => this.props.history.replace('/')}
             >
-              {' '}
-              Cancel{' '}
+              Cancel
             </Button>
             <Button
+              color="primary"
               disabled={this.state.isSaving}
               className={classes.submitButton}
               onClick={this.handleConfirm}
             >
               Confirm
               {this.state.isSaving && (
-                <CircularProgress size={24} thickness={4} />
+                <CircularProgress size={24} thickness={4}/>
               )}
             </Button>
           </Card>
@@ -424,25 +321,16 @@ class connectedProfileView extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setUserProfileAction: profile => dispatch(setUserProfile(profile)),
-  };
+const mapDispatchToProps = {
+  setUserProfileAction: setUserProfile,
 };
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({ userProfile: state.global_data.userProfile });
 
-const ProfileView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(connectedProfileView);
-
-ProfileView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(ProfileView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
+)(ProfileView);

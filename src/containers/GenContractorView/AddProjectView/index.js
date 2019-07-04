@@ -193,7 +193,7 @@ class AddProjectView extends Component {
           </Box>
           <Box style={{ width: '100%', textAlign: 'center' }}>
             <Button
-              color="rose"
+              color="primary"
               disabled={this.state.isBusy}
               className={classes.submitButton}
               onClick={this.handleAddProject}

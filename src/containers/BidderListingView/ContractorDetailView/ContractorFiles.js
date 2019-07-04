@@ -154,7 +154,7 @@ class ContractorFiles extends React.Component {
             'text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*',
           ]}
           filesLimit={100}
-          dropzoneText="select files to upload(< 50mb)"
+          dropzoneText="select files to upload (< 50mb)"
           onClose={() => this.setState({ openUploadForm: false })}
         />
         <Snackbar
