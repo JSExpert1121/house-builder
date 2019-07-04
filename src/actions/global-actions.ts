@@ -15,10 +15,10 @@ import {
   SET_USER_PROFILE,
 } from '../constants/global-action-types';
 
-import PropApi             from '../api/proposal';
-import ProjApi             from '../api/project';
-import ContApi             from '../api/contractor';
-import Axios               from 'axios';
+import PropApi from '../api/proposal';
+import ProjApi from '../api/project';
+import ContApi from '../api/contractor';
+import Axios from 'axios';
 import { clearProposals } from './sub-actions';
 
 export const {
@@ -56,7 +56,7 @@ export const getProposalDetails = id => dispatch => {
   });
 };
 export function getProposalData(id) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(clearSelectedProposal());
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'proposals/' + id
@@ -94,7 +94,7 @@ export const updateOption = (id, option) => dispatch =>
   PropApi.updateOption(id, option);
 
 export function getProposalsByProjectId(id, page, size) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(clearProposals());
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/proposals',
@@ -115,9 +115,10 @@ export const addProject = (cont_id, project) => dispatch =>
 export const addFilesToProject = (id, files) => dispatch =>
   ProjApi.addFiles(id, files);
 export const deleteProject = id => dispatch => ProjApi.delete(id);
+export const archiveProject = id => dispatch => ProjApi.archive(id);
 
 export function getProjectData(id) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(clearSelectedProject());
     return Axios.get(process.env.REACT_APP_PROJECT_API + 'projects/' + id).then(
       response => {
@@ -128,7 +129,7 @@ export function getProjectData(id) {
 }
 
 export function getProjectBiddersData(id, page, size) {
-  return function(dispatch) {
+  return function (dispatch) {
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/invites',
       {
@@ -146,7 +147,7 @@ export function getProjectBiddersData(id, page, size) {
 }
 
 export function deleteFileFromProject(id, name, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return Axios.delete(
       process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/files/' + name
     )
@@ -161,7 +162,7 @@ export function deleteFileFromProject(id, name, cb) {
 }
 
 export function getProposalMessages(prop_id, page, size, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(clearProposalMessages());
     return Axios.get(
       process.env.REACT_APP_PROJECT_API + 'messages/proposals/' + prop_id,
@@ -178,12 +179,12 @@ export function getProposalMessages(prop_id, page, size, cb) {
 }
 
 export function addMessageToProposal(prop_id, message, cb, cont_type) {
-  return function() {
+  return function () {
     return Axios.post(
       process.env.REACT_APP_PROJECT_API +
-        'messages/proposals/' +
-        prop_id +
-        (cont_type === 's_cont' ? '/togencon' : '/tosubcon'),
+      'messages/proposals/' +
+      prop_id +
+      (cont_type === 's_cont' ? '/togencon' : '/tosubcon'),
       message
     )
       .then(res => {
@@ -197,7 +198,7 @@ export function addMessageToProposal(prop_id, message, cb, cont_type) {
 }
 
 export function addFileToPropMessage(msg_id, files, cb) {
-  return function() {
+  return function () {
     const formData = new FormData();
     files.forEach(async file => {
       await formData.append('file', file);
@@ -206,9 +207,9 @@ export function addFileToPropMessage(msg_id, files, cb) {
     console.log('MESSAGE_ID', msg_id);
     return Axios.post(
       process.env.REACT_APP_PROJECT_API +
-        'messages/' +
-        msg_id +
-        '/files/upload/multiple',
+      'messages/' +
+      msg_id +
+      '/files/upload/multiple',
       formData,
       {
         headers: {
@@ -227,7 +228,7 @@ export function addFileToPropMessage(msg_id, files, cb) {
 }
 
 export function searchFilter(name, city, specialties) {
-  return function(dispatch) {
+  return function (dispatch) {
     return Axios.post(
       process.env.REACT_APP_PROJECT_API + 'contractors/search',
       {
@@ -249,13 +250,13 @@ export function searchFilter(name, city, specialties) {
 }
 
 export function inviteContractor(prop_id, subId, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return Axios.post(
       process.env.REACT_APP_PROJECT_API +
-        'projects/' +
-        prop_id +
-        '/invite/' +
-        subId
+      'projects/' +
+      prop_id +
+      '/invite/' +
+      subId
     )
       .then(res => {
         cb(res.data);

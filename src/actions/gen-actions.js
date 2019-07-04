@@ -1,4 +1,4 @@
-import {createActions} from 'redux-actions';
+import { createActions } from 'redux-actions';
 import {
   ALL_PROJECT_LOADED,
   CLEAR_ALL_PROJECTS,
@@ -6,9 +6,9 @@ import {
   CLEAR_TEMPLATES,
   PROJECT_LOADED,
   TEMPLATES_LOADED,
-}                      from '../constants/gen-action-types';
-import ProjApi         from '../api/project';
-import restAPI         from '../services';
+} from '../constants/gen-action-types';
+import ProjApi from '../api/project';
+import restAPI from '../services';
 
 export const {
   allProjectLoaded,
@@ -37,21 +37,29 @@ export function awardProject(id) {
 export function getProjectsByGenId(id, page, rowSize) {
   return function (dispatch) {
     restAPI
-        .get(`/contractors/${id}/projects`, { page, size: rowSize })
-        .then(response => {
-          dispatch(projectLoaded(response.data));
-        });
+      .get(`/contractors/${id}/projects`, { page, size: rowSize })
+      .then(response => {
+        dispatch(projectLoaded(response.data));
+      });
   };
+}
+
+export const getArchivedProjectsByGenId = (id, page, rowSize) => dispatch => {
+  restAPI
+    .get(`/contractors/${id}/projects`, { page, size: rowSize, status: 'ARCHIVED' })
+    .then(response => {
+      dispatch(projectLoaded(response.data));
+    });
 }
 
 export function getAllProjects(page, size) {
   return function (dispatch) {
     dispatch(clearAllProjects());
     return restAPI
-        .get('/projects', { page, size})
-        .then(response => {
-          dispatch(allProjectLoaded(response.data));
-        });
+      .get('/projects', { page, size })
+      .then(response => {
+        dispatch(allProjectLoaded(response.data));
+      });
   };
 }
 
@@ -59,15 +67,15 @@ export function getTemplates(page, size) {
   return function (dispatch) {
     dispatch(clearTemplates());
     return restAPI
-        .get('/templates', { page, size })
-        .then(response => {
-          dispatch(templatesLoaded(response.data));
-        });
+      .get('/templates', { page, size })
+      .then(response => {
+        dispatch(templatesLoaded(response.data));
+      });
   };
 }
 
 export const addTemplate = (proj_id, templ_id) => dispatch =>
-    ProjApi.addTemplate(proj_id, templ_id);
+  ProjApi.addTemplate(proj_id, templ_id);
 
 export const deleteTemplate = (proj_id, templ_id) => dispatch =>
-    ProjApi.deleteTemplate(proj_id, templ_id);
+  ProjApi.deleteTemplate(proj_id, templ_id);

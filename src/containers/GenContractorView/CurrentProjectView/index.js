@@ -1,24 +1,24 @@
-import React            from 'react';
-import { connect }      from 'react-redux';
-import { compose }      from 'redux';
-import { withStyles }   from '@material-ui/core/styles';
-import Paper            from '@material-ui/core/Paper';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Table            from '@material-ui/core/Table';
-import TableHead        from '@material-ui/core/TableHead';
-import TableRow         from '@material-ui/core/TableRow';
-import TableBody        from '@material-ui/core/TableBody';
-import IconButton       from '@material-ui/core/IconButton';
-import TablePagination  from '@material-ui/core/TablePagination';
-import Typography       from '@material-ui/core/Typography';
-import DeleteIcon       from '@material-ui/icons/Delete';
-import removeMd         from 'remove-markdown';
-import CustomTableCell  from '../../../components/shared/CustomTableCell';
-import CustomSnackbar   from '../../../components/shared/CustomSnackbar';
-import ConfirmDialog    from '../../../components/shared/ConfirmDialog';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import IconButton from '@material-ui/core/IconButton';
+import TablePagination from '@material-ui/core/TablePagination';
+import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
+import removeMd from 'remove-markdown';
+import CustomTableCell from '../../../components/shared/CustomTableCell';
+import CustomSnackbar from '../../../components/shared/CustomSnackbar';
+import ConfirmDialog from '../../../components/shared/ConfirmDialog';
 
-import { getProjectsByGenId }                     from '../../../actions/gen-actions';
-import { deleteProject, setCurrentProject } from '../../../actions/global-actions';
+import { getProjectsByGenId } from '../../../actions/gen-actions';
+import { deleteProject, setCurrentProject, archiveProject } from '../../../actions/global-actions';
 
 import style from './CurrentProject.style.ts';
 
@@ -95,7 +95,7 @@ class CurrentProject extends React.Component {
         this.state.rowsPerPage * this.state.currentPage >=
         projects.totalElements - 1
       )
-      curPage--;
+        curPage--;
       this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,
         curPage,
@@ -143,40 +143,40 @@ class CurrentProject extends React.Component {
           </TableHead>
           <TableBody>
             {projects.content.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                      component="th"
-                      scope="row"
-                      onClick={() => this.handleSelectProject(row.id)}
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  component="th"
+                  scope="row"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  <Typography className="nowrap">{row.title}</Typography>
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  {row.budget}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  <Typography className="nowrap">
+                    {removeMd(row.description)}
+                  </Typography>
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <IconButton
+                    aria-label="Delete"
+                    color="primary"
+                    onClick={() =>
+                      this.setState({ showConfirm: true, proId: row.id })
+                    }
                   >
-                    <Typography className="nowrap">{row.title}</Typography>
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={() => this.handleSelectProject(row.id)}
-                  >
-                    {row.budget}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={() => this.handleSelectProject(row.id)}
-                  >
-                    <Typography className="nowrap">
-                      {removeMd(row.description)}
-                    </Typography>
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    <IconButton
-                        aria-label="Delete"
-                        color="primary"
-                        onClick={() =>
-                            this.setState({ showConfirm: true, proId: row.id })
-                        }
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </CustomTableCell>
-                </TableRow>
+                    <DeleteIcon />
+                  </IconButton>
+                </CustomTableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
@@ -212,7 +212,7 @@ class CurrentProject extends React.Component {
 
 const mapDispatchToProps = {
   getProjectsByGenId,
-  deleteProject,
+  deleteProject: archiveProject,
   setCurrentProject,
 };
 

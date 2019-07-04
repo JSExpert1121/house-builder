@@ -17,6 +17,7 @@ export default {
     Axios.delete(PROJ_API_PATH + id + '/files/' + name).then(res => res.data),
   getInfo: id => Axios.get(PROJ_API_PATH + id).then(res => res.data),
   delete: id => Axios.delete(PROJ_API_PATH + id).then(res => res.data),
+  archive: id => Axios.put(PROJ_API_PATH + id + '/archive').then(res => res.data),
   update: (id, proj) =>
     Axios.put(PROJ_API_PATH + id, proj).then(res => res.data),
   getAll: (page, size) =>
