@@ -1,16 +1,13 @@
-import React     from 'react';
-import PropTypes from 'prop-types';
-
-import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import CircularProgress  from '@material-ui/core/CircularProgress';
+import Dialog            from '@material-ui/core/Dialog';
+import DialogActions     from '@material-ui/core/DialogActions';
+import DialogContent     from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle       from '@material-ui/core/DialogTitle';
+import { makeStyles }    from '@material-ui/styles';
+import PropTypes         from 'prop-types';
+import React             from 'react';
+import Button            from '../CustomButtons/Button';
 
 const useStyles = makeStyles(theme => ({
   relative: {
@@ -48,7 +45,7 @@ const ConfirmDialog = ({
       </DialogContent>
       <DialogActions>
         {onCancel && (
-          <Button onClick={onCancel} color="primary" autoFocus>
+          <Button onClick={onCancel} autoFocus>
             Cancel
           </Button>
         )}

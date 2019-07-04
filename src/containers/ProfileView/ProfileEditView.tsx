@@ -1,15 +1,19 @@
-import { Avatar, Box, Button, Card, CircularProgress } from '@material-ui/core';
-import { createStyles, Theme, withStyles }             from '@material-ui/core/styles';
-import TextField                                       from '@material-ui/core/TextField';
-import { setUserProfile }                              from 'actions/global-actions';
-import axios                                           from 'axios';
-import { History }                                     from 'history';
-import React, { Component }                            from 'react';
-import { connect }                                     from 'react-redux';
-import { compose }                                     from 'redux';
-import { MaterialThemeHOC, UserProfile }               from 'types/global';
-import auth0Client                                     from '../../auth0/auth';
-import TSnackbarContent                                from '../../components/SnackBarContent';
+import Avatar                              from '@material-ui/core/Avatar';
+import Box                                 from '@material-ui/core/Box';
+import Card                                from '@material-ui/core/Card';
+import CircularProgress                    from '@material-ui/core/CircularProgress';
+import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
+import TextField                           from '@material-ui/core/TextField';
+import { setUserProfile }                  from 'actions/global-actions';
+import axios                             from 'axios';
+import { History }                       from 'history';
+import React, { Component }              from 'react';
+import { connect }                       from 'react-redux';
+import { compose }                       from 'redux';
+import { MaterialThemeHOC, UserProfile } from 'types/global';
+import auth0Client                       from '../../auth0/auth';
+import TSnackbarContent                  from '../../components/SnackBarContent';
+import Button                            from '../../components/CustomButtons/Button';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -35,6 +39,9 @@ const styles = (theme: Theme) => createStyles({
     [theme.breakpoints.up('sm')]: {
       width: '400px',
     },
+  },
+  marginRight: {
+    marginRight: theme.spacing(1)
   },
   textFieldHalf: {
     margin: theme.spacing(1),
@@ -213,10 +220,6 @@ class ProfileEditView extends Component<
     this.setState({ isSuccess: false });
   };
 
-  handleRoleChange = name => event => {
-    // this.setState({ [name]: event.target.checked });
-  };
-
   handleConfirm = async () => {
     const { userProfile } = this.props;
 
@@ -354,14 +357,14 @@ class ProfileEditView extends Component<
 
             <Box className={classes.btnBox}>
               <Button
-                className={classes.cancelButton}
+                className={classes.marginRight}
                 onClick={() => this.props.history.replace('/')}
               >
                 Cancel
               </Button>
               <Button
+                color="primary"
                 disabled={this.state.isSaving}
-                className={classes.submitButton}
                 onClick={this.handleConfirm}
               >
                 Confirm

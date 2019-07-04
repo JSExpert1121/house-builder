@@ -130,23 +130,6 @@ class ContractorInfoView extends React.Component {
         <div className={classes.buttons}>
           <Button
             variant="contained"
-            color="rose"
-            onClick={() =>
-              this.props.approveContractor(
-                selectedContractor.id,
-                { status: 'ACTIVE' },
-                result => {
-                  if (result)
-                    this.props.updateContractor(selectedContractor.id);
-                }
-              )
-            }
-          >
-            Approve
-          </Button>
-          <Button
-            variant="contained"
-            color="warning"
             onClick={() =>
               this.props.rejectContractor(
                 selectedContractor.id,
@@ -159,6 +142,21 @@ class ContractorInfoView extends React.Component {
             }
           >
             Reject
+          </Button>
+          <Button
+            color="primary"
+            onClick={() =>
+              this.props.approveContractor(
+                selectedContractor.id,
+                { status: 'ACTIVE' },
+                result => {
+                  if (result)
+                    this.props.updateContractor(selectedContractor.id);
+                }
+              )
+            }
+          >
+            Approve
           </Button>
         </div>
       </div>

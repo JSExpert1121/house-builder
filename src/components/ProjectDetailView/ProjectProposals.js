@@ -169,7 +169,7 @@ class ProjectProposals extends React.Component {
         <div className={classes.tableWrap}>
           {match.url.includes('/projects') && (
             <Button
-              color="rose"
+              color="primary"
               onClick={() => {
                 this.props.clearProposalDetail(null);
                 this.props.history.push('/projects/proposal_detail/-1');
