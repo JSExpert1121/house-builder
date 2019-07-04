@@ -236,7 +236,7 @@ class AllTemplateView extends Component<
           <DialogTitle id="create-template">Create template</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              please input the correct template information
+              Please input the correct template information
             </DialogContentText>
             <TextField
               autoFocus
@@ -260,7 +260,6 @@ class AllTemplateView extends Component<
             <Button
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
-              color="info"
               size="small"
               className={classes.marginRight}
             >

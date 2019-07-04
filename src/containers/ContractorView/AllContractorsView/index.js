@@ -43,8 +43,8 @@ const styles = theme => ({
     left: 'calc(50% - 10px)',
     top: 'calc(40vh)',
   },
-  successAlert: {
-    marginBottom: '10px',
+  marginRight: {
+    marginRight: theme.spacing(1),
   },
   editField: {
     lineHeight: '1.5rem',
@@ -271,7 +271,7 @@ class AllContractorsView extends Component {
           onClose={() => this.setState({ openCategoryForm: false })}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">create template</DialogTitle>
+          <DialogTitle id="form-dialog-title">Create template</DialogTitle>
           <DialogContent>
             <DialogContentText>
               please input the correct template information
@@ -298,6 +298,7 @@ class AllContractorsView extends Component {
           </DialogContent>
           <DialogActions>
             <Button
+              className={classes.marginRight}
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
             >

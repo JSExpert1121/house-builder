@@ -101,15 +101,6 @@ const theme = createMuiTheme({
         height: '48px',
       },
     },
-    MuiButton: {
-      root: {
-        backgroundColor: '#7c43bd',
-        color: 'white',
-        '&:hover': {
-          backgroundColor: '#12005e',
-        },
-      },
-    },
   },
 });
 

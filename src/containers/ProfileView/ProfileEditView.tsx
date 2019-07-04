@@ -220,10 +220,6 @@ class ProfileEditView extends Component<
     this.setState({ isSuccess: false });
   };
 
-  handleRoleChange = name => event => {
-    // this.setState({ [name]: event.target.checked });
-  };
-
   handleConfirm = async () => {
     const { userProfile } = this.props;
 
@@ -361,7 +357,6 @@ class ProfileEditView extends Component<
 
             <Box className={classes.btnBox}>
               <Button
-                color="warning"
                 className={classes.marginRight}
                 onClick={() => this.props.history.replace('/')}
               >

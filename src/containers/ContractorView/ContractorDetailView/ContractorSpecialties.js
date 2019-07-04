@@ -41,6 +41,9 @@ const styles = theme => ({
   select: {
     width: '180px',
   },
+  marginRight: {
+    marginRight: theme.spacing(1),
+  },
   waitingSpin: {
     position: 'relative',
     left: 'calc(50% - 10px)',
@@ -302,7 +305,7 @@ class ContractorInfoView extends React.Component {
           onClose={() => this.setState({ openCategoryForm: false })}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">create template</DialogTitle>
+          <DialogTitle id="form-dialog-title">Create template</DialogTitle>
           <DialogContent>
             <DialogContentText>
               please input the correct template information
@@ -329,6 +332,7 @@ class ContractorInfoView extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button
+              className={classes.marginRight}
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
             >

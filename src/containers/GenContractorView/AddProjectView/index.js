@@ -172,7 +172,6 @@ class AddProjectView extends Component {
             <label htmlFor="upload-file" style={{ display: 'inline' }}>
               <Button
                 variant="contained"
-                color="info"
                 component="span"
               >
                 <CloudUploadIcon />
