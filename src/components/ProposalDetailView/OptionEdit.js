@@ -8,7 +8,6 @@ import IconButton                          from '@material-ui/core/IconButton';
 import { withStyles }                      from '@material-ui/core/styles';
 import TextField                           from '@material-ui/core/TextField';
 import { Done as DoneIcon, NotInterested } from '@material-ui/icons';
-import PropTypes                           from 'prop-types';
 import React                               from 'react';
 import Button                              from '../CustomButtons/Button';
 

@@ -1,4 +1,3 @@
-import Button               from '@material-ui/core/Button';
 import CircularProgress     from '@material-ui/core/CircularProgress';
 import Dialog               from '@material-ui/core/Dialog';
 import DialogActions        from '@material-ui/core/DialogActions';
@@ -41,6 +40,7 @@ import SplitPane            from 'react-split-pane';
 import { compose }          from "redux";
 
 import { MaterialThemeHOC, UserProfile, } from 'types/global';
+import Button                             from '../../../components/CustomButtons/Button';
 
 const styles = (theme: Theme) => createStyles({
   descTag: {
@@ -232,7 +232,6 @@ class CategoryDetailView extends Component<
                 onClick={() =>
                   this.props.history.push('/m_temp/template_detail')
                 }
-                color="primary"
               >
                 Cancel
               </Button>
@@ -265,7 +264,7 @@ class CategoryDetailView extends Component<
                 }}
                 color="primary"
               >
-                Save{' '}
+                Save
                 {this.state.isSaving && (
                   <CircularProgress size={24} thickness={4} />
                 )}
@@ -288,7 +287,7 @@ class CategoryDetailView extends Component<
                   });
                   this.setState({ isDeleting: false });
                 }}
-                color="primary"
+                color="danger"
               >
                 Delete
                 {this.state.isDeleting && (

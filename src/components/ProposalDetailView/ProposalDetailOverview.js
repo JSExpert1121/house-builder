@@ -18,8 +18,8 @@ import Button                              from 'components/CustomButtons/Button
 import 'easymde/dist/easymde.min.css';
 import React, { Component }                from 'react';
 import { connect }                         from 'react-redux';
-import { withRouter }                      from 'react-router-dom';
 import SimpleMDE                           from 'react-simplemde-editor';
+import { compose }                         from 'redux';
 import { awardProject }                    from '../../actions/gen-actions';
 import { deleteProposal, getProposalData } from '../../actions/global-actions';
 import ConfirmDialog                       from '../../components/shared/ConfirmDialog';
@@ -66,7 +66,7 @@ const styles = theme => ({
   }
 });
 
-class ConnectedProposalDetailOverview extends Component {
+class ProposalDetailOverview extends Component {
   constructor(props) {
     super(props);
 
@@ -332,37 +332,22 @@ class ConnectedProposalDetailOverview extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProposalData: id => dispatch(getProposalData(id)),
-    deleteProposal: (id, cb) => dispatch(deleteProposal(id, cb)),
-    awardProject: (id, cb) => dispatch(awardProject(id, cb)),
-  };
+const mapDispatchToProps = {
+  getProposalData,
+  deleteProposal,
+  awardProject,
 };
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-    proposal: state.global_data.proposalDetail,
-    project: state.global_data.project,
-  };
-};
+const mapStateToProps = state => ({
+  userProfile: state.global_data.userProfile,
+  proposal: state.global_data.proposalDetail,
+  project: state.global_data.project,
+});
 
-const ProposalDetailOverview = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedProposalDetailOverview);
-
-ProposalDetailOverview.propTypes = {
-  classes: PropTypes.object.isRequired,
-  proposal: PropTypes.object,
-  edit: PropTypes.bool.isRequired,
-  project: PropTypes.object,
-  handleOverviewChange: PropTypes.func.isRequired,
-  templateSelected: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  handleAward: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-};
-
-export default withRouter(withStyles(styles)(ProposalDetailOverview));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProposalDetailOverview);

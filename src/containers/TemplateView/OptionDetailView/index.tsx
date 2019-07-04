@@ -1,4 +1,3 @@
-import Button                                                                     from '@material-ui/core/Button'
 import CircularProgress
                                                                                   from '@material-ui/core/CircularProgress'
 import Link                                                                       from '@material-ui/core/Link'
@@ -10,11 +9,12 @@ import { deleteOption, editOption, selectCategory, selectOption, selectTemplate 
 import 'easymde/dist/easymde.min.css';
 import { History }                                                                from 'history';
 import React, { Component }                                                       from 'react';
-import { connect }                                                                from 'react-redux';
-import SimpleMDE                                                                  from 'react-simplemde-editor';
-import SplitPane                                                                  from 'react-split-pane';
-import { compose }                                                                from "redux";
-import { MaterialThemeHOC, UserProfile }                                          from 'types/global';
+import { connect }                       from 'react-redux';
+import SimpleMDE                         from 'react-simplemde-editor';
+import SplitPane                         from 'react-split-pane';
+import { compose }                       from "redux";
+import { MaterialThemeHOC, UserProfile } from 'types/global';
+import Button                            from '../../../components/CustomButtons/Button';
 
 const styles = (theme: Theme) => createStyles({
   descTag: {
@@ -193,7 +193,6 @@ class OptionDetailView extends Component<
                 onClick={() =>
                   this.props.history.push('/m_temp/category_detail')
                 }
-                color="primary"
               >
                 Cancel
               </Button>
@@ -225,7 +224,7 @@ class OptionDetailView extends Component<
                 }}
                 color="primary"
               >
-                Save{' '}
+                Save
                 {this.state.isSaving && (
                   <CircularProgress size={24} thickness={4} />
                 )}
@@ -241,7 +240,7 @@ class OptionDetailView extends Component<
                   this.props.history.push('/m_temp/category_detail');
                   this.setState({ isDeleting: false });
                 }}
-                color="primary"
+                color="danger"
               >
                 Delete
                 {this.state.isDeleting && (

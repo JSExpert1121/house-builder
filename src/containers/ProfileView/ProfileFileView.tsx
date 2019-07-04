@@ -12,7 +12,6 @@ import DialogActions     from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle       from '@material-ui/core/DialogTitle';
 import DialogContent     from '@material-ui/core/DialogContent';
-import Button            from '@material-ui/core/Button';
 import Paper             from '@material-ui/core/Paper';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
@@ -24,7 +23,8 @@ import CustomTableCell     from '../../components/shared/CustomTableCell';
 import { getContractorDetailById, removeFile, uploadFiles } from '../../actions/cont-actions';
 import { File, MaterialThemeHOC, UserProfile }              from '../../types/global';
 import { compose }                                          from 'redux';
-import styles from './ProfileFileView.style'
+import styles                                               from './ProfileFileView.style'
+import Button                                               from '../../components/CustomButtons/Button';
 interface ProfileFileViewProps extends MaterialThemeHOC {
   user: UserProfile;
   getContractorDetailById: (id: number) => any;
@@ -233,7 +233,7 @@ class ProfileFileView extends React.Component<
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.closeConfirmDialog} color="primary" autoFocus>
+            <Button onClick={this.closeConfirmDialog} autoFocus>
               Cancel
             </Button>
             <Button onClick={this.handleremoveFile} color="primary">
