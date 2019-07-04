@@ -67,8 +67,10 @@ class ProjectFiles extends React.Component {
   };
 
   render() {
-    const { classes, project } = this.props;
+    const { classes, project, location } = this.props;
     const projectFiles = project.projectFiles;
+
+    const readonly = location.pathname.includes('/projects');
 
     return (
       <div className={classes.root}>
@@ -76,14 +78,18 @@ class ProjectFiles extends React.Component {
           <TableHead>
             <TableRow>
               <CustomTableCell align="center">Name</CustomTableCell>
-              <CustomTableCell align="center">
-                <IconButton
-                  style={{ color: '#fff' }}
-                  onClick={() => this.setState({ openUploadForm: true })}
-                >
-                  <NoteAddIcon />
-                </IconButton>
-              </CustomTableCell>
+              {
+                !readonly && (
+                  <CustomTableCell align="center">
+                    <IconButton
+                      style={{ color: '#fff' }}
+                      onClick={() => this.setState({ openUploadForm: true })}
+                    >
+                      <NoteAddIcon />
+                    </IconButton>
+                  </CustomTableCell>
+                )
+              }
             </TableRow>
           </TableHead>
           <TableBody>
@@ -103,16 +109,20 @@ class ProjectFiles extends React.Component {
                     {row.name}
                   </a>
                 </CustomTableCell>
-                <CustomTableCell align="center">
-                  <IconButton
-                    className={classes.button}
-                    aria-label="Delete"
-                    color="primary"
-                    onClick={() => this.handleDeleteFile(row.name)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </CustomTableCell>
+                {
+                  !readonly && (
+                    <CustomTableCell align="center">
+                      <IconButton
+                        className={classes.button}
+                        aria-label="Delete"
+                        color="primary"
+                        onClick={() => this.handleDeleteFile(row.name)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </CustomTableCell>
+                  )
+                }
               </TableRow>
             ))}
           </TableBody>
