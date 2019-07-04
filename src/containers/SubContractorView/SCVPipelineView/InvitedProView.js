@@ -242,7 +242,6 @@ class InvitedProView extends React.Component {
           <DialogActions>
             <Button
               onClick={() => this.setState({ alertConfirm: false })}
-              color="primary"
             >
               No
             </Button>

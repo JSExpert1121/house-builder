@@ -1,20 +1,24 @@
-import React          from 'react';
-import { withRouter } from 'react-router-dom';
-import PropTypes      from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import auth0Client    from '../../auth0/auth';
-import Table          from '@material-ui/core/Table';
-import TableBody      from '@material-ui/core/TableBody';
-import TableCell      from '@material-ui/core/TableCell';
-import TableHead      from '@material-ui/core/TableHead';
-import TableRow       from '@material-ui/core/TableRow';
-import Card           from '@material-ui/core/Card';
-
-import { Button, Checkbox, CircularProgress, Divider, FormControl, MenuItem, Radio, Select } from '@material-ui/core';
-import TSnackbarContent                                                                       from '../SnackBarContent';
-
+import Card             from '@material-ui/core/Card';
+import Checkbox         from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Divider          from '@material-ui/core/Divider';
+import FormControl      from '@material-ui/core/FormControl';
+import MenuItem         from '@material-ui/core/MenuItem';
+import Radio            from '@material-ui/core/Radio';
+import Select           from '@material-ui/core/Select';
+import { withStyles }   from '@material-ui/core/styles';
+import Table            from '@material-ui/core/Table';
+import TableBody        from '@material-ui/core/TableBody';
+import TableHead        from '@material-ui/core/TableHead';
+import TableRow         from '@material-ui/core/TableRow';
+import React            from 'react';
 import { connect }        from 'react-redux';
+import { compose }        from 'redux';
 import { setUserProfile } from '../../actions/global-actions';
+import auth0Client        from '../../auth0/auth';
+import Button             from '../CustomButtons/Button';
+import CustomTableCell    from '../shared/CustomTableCell';
+import TSnackbarContent   from '../SnackBarContent';
 
 const styles = theme => ({
   root: {
@@ -30,23 +34,12 @@ const styles = theme => ({
     width: 500,
     padding: '5px',
   },
-  saveBtn: {
-    border: '1px solid #4a148c',
-    backgroundColor: theme.palette.primary.light,
-    color: '#FFFFFF',
-    margin: 5,
-    float: 'right',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    '&:disabled': {
-      backgroundColor: '#FFFFFF',
-    },
+  marginRight: {
+    marginRight: theme.spacing(1),
   },
-  cancelBtn: {
-    border: '1px solid #c7a4ff',
-    margin: 5,
-    float: 'right',
+  buttonWrap: {
+    display: 'flex',
+    justifyContent: 'flex-end'
   },
   formControl: {
     color: theme.palette.primary.light,
@@ -56,26 +49,9 @@ const styles = theme => ({
       minWidth: 240,
     },
   },
-
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
-  },
 });
 
-const CustomTableCell = withStyles(theme => ({
-  head: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-    color: theme.palette.primary.light,
-  },
-}))(TableCell);
-
-class connectedSettingsView extends React.Component {
+class SettingsView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -125,11 +101,11 @@ class connectedSettingsView extends React.Component {
                 onClose={this.handleClose}
                 variant="success"
                 message="Your settings has been saved!"
-              />{' '}
+              />
               <Divider />
             </div>
           ) : (
-            <div></div>
+            <div/>
           )}
           <Table className={classes.table}>
             <TableHead>
@@ -220,72 +196,66 @@ class connectedSettingsView extends React.Component {
               </TableRow>
             </TableBody>
           </Table>
-          <Button
-            disabled={this.state.isSaving}
-            className={classes.saveBtn}
-            onClick={() => {
-              this.setState({
-                isSaving: true,
-              });
-
-              const newSet = {
-                user_metadata: {
-                  settings: {
-                    setting1: this.state.setting1,
-                    setting2: this.state.setting2,
-                    checkedA: this.state.checkedA,
-                    checkedB: this.state.checkedB,
-                    checkedC: this.state.checkedC,
-                  },
-                },
-              };
-
-              auth0Client.updateSet(newSet, () => {
-                auth0Client.getUserInfo(profile => {
-                  this.props.setUserProfileAction(profile);
-                });
+          <div className={classes.buttonWrap}>
+            <Button
+              variant="contained"
+              className={classes.marginRight}
+              onClick={() => this.props.history.replace('/')}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={this.state.isSaving}
+              onClick={() => {
                 this.setState({
-                  isSuccess: true,
-                  isSaving: false,
+                  isSaving: true,
                 });
-              });
-            }}
-          >
-            Save &nbsp;
-            {this.state.isSaving && (
-              <CircularProgress size={24} thickness={4} />
-            )}
-          </Button>
-          <Button
-            className={classes.cancelBtn}
-            onClick={() => this.props.history.replace('/')}
-          >
-            Cancel
-          </Button>
+
+                const newSet = {
+                  user_metadata: {
+                    settings: {
+                      setting1: this.state.setting1,
+                      setting2: this.state.setting2,
+                      checkedA: this.state.checkedA,
+                      checkedB: this.state.checkedB,
+                      checkedC: this.state.checkedC,
+                    },
+                  },
+                };
+
+                auth0Client.updateSet(newSet, () => {
+                  auth0Client.getUserInfo(profile => {
+                    this.props.setUserProfile(profile);
+                  });
+                  this.setState({
+                    isSuccess: true,
+                    isSaving: false,
+                  });
+                });
+              }}
+            >
+              Save &nbsp;
+              {this.state.isSaving && (
+                <CircularProgress size={24} thickness={4} />
+              )}
+            </Button>
+          </div>
         </Card>
       </div>
     );
   }
 }
-const mapDispatchToProps = dispatch => {
-  return {
-    setUserProfileAction: profile => dispatch(setUserProfile(profile)),
-  };
-};
 
-const mapStateToProps = state => {
-  return {
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({userProfile: state.global_data.userProfile})
 
-const SettingsView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(connectedSettingsView);
-
-SettingsView.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(withStyles(styles)(SettingsView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    {
+      setUserProfile,
+    }
+  )
+)(SettingsView);

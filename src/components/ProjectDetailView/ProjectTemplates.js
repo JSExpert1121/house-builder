@@ -1,5 +1,4 @@
 import Box               from '@material-ui/core/Box';
-import Button            from '@material-ui/core/Button';
 import CircularProgress  from '@material-ui/core/CircularProgress';
 import Dialog            from '@material-ui/core/Dialog';
 import DialogActions     from '@material-ui/core/DialogActions';
@@ -30,6 +29,7 @@ import removeMd    from 'remove-markdown';
 
 import {addTemplate, deleteTemplate, getTemplates,} from '../../actions/gen-actions';
 import {getProjectData}                             from '../../actions/global-actions';
+import Button                                       from '../CustomButtons/Button';
 import CustomTableCell                              from '../shared/CustomTableCell';
 
 const styles = theme => ({
@@ -306,7 +306,6 @@ class ProjectTemplate extends React.Component {
             <Button
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
-              color="primary"
             >
               Cancel
             </Button>
@@ -340,7 +339,7 @@ class ProjectTemplate extends React.Component {
               }}
               color="primary"
             >
-              Add{' '}
+              Add
               {this.state.isSaving && (
                 <CircularProgress size={24} thickness={4} />
               )}

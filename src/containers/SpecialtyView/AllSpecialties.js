@@ -1,4 +1,3 @@
-import Button                                             from '@material-ui/core/Button';
 import CircularProgress                                   from '@material-ui/core/CircularProgress';
 import Dialog                                             from '@material-ui/core/Dialog';
 import DialogActions                                      from '@material-ui/core/DialogActions';
@@ -14,6 +13,7 @@ import React, {Component}                                 from 'react';
 import {connect}                                          from 'react-redux';
 import {compose}                                          from 'redux';
 import {createSpec, deleteSpec, loadSpecs, specSelected,} from '../../actions/spec-actions';
+import Button                                             from '../../components/CustomButtons/Button';
 import SpecTableView                                      from './SpecTableView';
 
 const styles = () => ({
@@ -273,7 +273,6 @@ class AllSpecialties extends Component {
             <Button
               disabled={this.state.saving}
               onClick={() => this.setState({ showNewDlg: false })}
-              color="primary"
             >
               Cancel
             </Button>
@@ -305,7 +304,7 @@ class AllSpecialties extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.closeConfirmDialog} color="primary" autoFocus>
+            <Button onClick={this.closeConfirmDialog} autoFocus>
               Cancel
             </Button>
             <Button onClick={this.handleDelSpec} color="primary">

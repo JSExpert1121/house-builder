@@ -1,23 +1,19 @@
-import React, { Component } from 'react';
-import { connect }          from 'react-redux';
-import { withRouter }       from 'react-router-dom';
-import { loadSpec, updateSpec } from '../../actions/spec-actions';
-
-import {
-  Button,
-  CircularProgress,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Paper,
-  TextField,
-  withStyles,
-}                     from '@material-ui/core';
-import {createStyles} from "@material-ui/styles";
-import {compose}      from "redux";
+import CircularProgress             from '@material-ui/core/CircularProgress';
+import Container                    from '@material-ui/core/Container';
+import Dialog                       from '@material-ui/core/Dialog';
+import DialogActions                from '@material-ui/core/DialogActions';
+import DialogContent                from '@material-ui/core/DialogContent';
+import DialogContentText            from '@material-ui/core/DialogContentText';
+import DialogTitle                  from '@material-ui/core/DialogTitle';
+import Paper                        from '@material-ui/core/Paper';
+import TextField                    from '@material-ui/core/TextField';
+import { createStyles, withStyles } from '@material-ui/styles';
+import React, { Component }         from 'react';
+import { connect }                  from 'react-redux';
+import { withRouter }               from 'react-router-dom';
+import { compose }                  from 'redux';
+import { loadSpec, updateSpec }     from '../../actions/spec-actions';
+import Button                       from '../../components/CustomButtons/Button';
 
 const styles = theme => createStyles({
   root: {
@@ -162,7 +158,6 @@ export class SpecialtyDetailView extends Component {
             <Button
               disabled={this.state.updating}
               onClick={this.handlePop}
-              color="primary"
               className={classes.btnWidth}
             >
               Cancel
