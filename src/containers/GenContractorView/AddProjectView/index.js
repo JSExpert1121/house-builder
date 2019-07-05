@@ -140,6 +140,7 @@ class AddProjectView extends Component {
   };
 
   handleDescChange = value => {
+    console.log('Desc: ', value);
     this.setState({ description: value });
   };
 
@@ -206,7 +207,11 @@ class AddProjectView extends Component {
             onChange={this.handleDescChange}
             options={{
               placeholder: 'Description here',
-              lineWrapping: false
+              lineWrapping: false,
+              hideIcons: ['toggleSideBySide', 'toggleFullScreen'],
+              renderingConfig: {
+                singleLineBreaks: true
+              }
             }}
           />
           <Box className={classes.fileUpload}>

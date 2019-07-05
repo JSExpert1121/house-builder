@@ -28,6 +28,7 @@ import { UserProfile, Projects } from '../../../types/global';
 const style = (theme: Theme) => createStyles({
     root: {
         marginTop: theme.spacing(1),
+        position: 'relative'
     },
     row: {
         '&:nth-of-type(odd)': {
@@ -156,16 +157,17 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
             this.setState({
                 isBusy: false,
                 showMessage: true,
+                variant: 'success',
                 message: msg,
                 currentPage: curPage,
             });
         } catch (error) {
             console.log(error);
-            msg = 'delete project failed';
             this.setState({
                 isBusy: false,
                 showMessage: true,
-                message: msg,
+                variant: 'error',
+                message: 'delete project failed',
             });
         }
     };
@@ -263,7 +265,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                     onCancel={() => this.setState({ showConfirm: false })}
                     message="Do you want to delete this project?"
                 />
-                {this.state.isBusy && <CircularProgress className="busy" />}
+                {this.state.isBusy && <CircularProgress className={classes.busy} />}
             </Paper>
         );
     }

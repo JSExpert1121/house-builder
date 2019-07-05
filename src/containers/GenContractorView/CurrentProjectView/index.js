@@ -86,7 +86,6 @@ class CurrentProject extends React.Component {
 
   handleDeleteProject = async id => {
     const { userProfile, projects } = this.props;
-    let msg = 'delete project success';
 
     this.setState({ isBusy: true, showConfirm: false });
     try {
@@ -103,16 +102,17 @@ class CurrentProject extends React.Component {
       this.setState({
         isBusy: false,
         showMessage: true,
-        message: msg,
+        message: 'delete project success',
+        variant: 'success',
         currentPage: curPage,
       });
     } catch (error) {
       console.log(error);
-      msg = 'delete project failed';
       this.setState({
         isBusy: false,
         showMessage: true,
-        message: msg,
+        variant: 'error',
+        message: 'delete project failed',
       });
     }
   };
