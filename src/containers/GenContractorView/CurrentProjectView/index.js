@@ -94,7 +94,7 @@ class CurrentProject extends React.Component {
       let curPage = this.state.currentPage;
       if (this.state.rowsPerPage * this.state.currentPage > (projects.totalElements - 1))
         curPage--;
-      this.props.getProjectsByGenId(
+      await this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,
         curPage,
         this.state.rowsPerPage
@@ -161,7 +161,7 @@ class CurrentProject extends React.Component {
                   align="center"
                   onClick={() => this.handleSelectProject(row.id)}
                 >
-                  {row.due && row.due.slice(0,10)}
+                  {row.due && row.due.slice(0, 10)}
                 </CustomTableCell>
                 <CustomTableCell
                   align="center"

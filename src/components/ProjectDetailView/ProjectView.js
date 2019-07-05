@@ -96,7 +96,7 @@ const styles = theme => ({
 const ProjectView = ({ classes, project, showFiles = true }) => {
   const posttime = project.updatedAt;
   const postdate = new Date(posttime);
-  console.log('ProjectView: ', project.description);
+  // console.log('ProjectView: ', project.description);
   const desc = project.description.replace(/\n/g, '\n\n');
   return (
     <Box className={classes.root}>

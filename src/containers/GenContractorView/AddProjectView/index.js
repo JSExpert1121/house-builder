@@ -104,7 +104,7 @@ class AddProjectView extends Component {
     let projectId = null;
     try {
       projectId = await this.props.addProject(userProfile.user_metadata.contractor_id, projectData);
-      console.log('Add Project', projectId);
+      // console.log('Add Project', projectId);
       await this.props.addFiles(projectId, files);
       this.setState({ isBusy: false });
       this.props.history.push('/gen-contractor');
@@ -118,7 +118,7 @@ class AddProjectView extends Component {
   };
 
   handleFileChange = e => {
-    console.log(this.state.files, e.target.files);
+    // console.log(this.state.files, e.target.files);
     this.setState({ files: [...this.state.files, ...e.target.files] });
   };
 
@@ -140,7 +140,6 @@ class AddProjectView extends Component {
   };
 
   handleDescChange = value => {
-    console.log('Desc: ', value);
     this.setState({ description: value });
   };
 
