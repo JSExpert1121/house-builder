@@ -110,10 +110,8 @@ export function getProposalsByProjectId(id, page, size) {
   };
 }
 
-export const addProject = (cont_id, project) => dispatch =>
-  ContApi.addProject(cont_id, project).then(data => data.id);
-export const addFilesToProject = (id, files) => dispatch =>
-  ProjApi.addFiles(id, files);
+export const addProject = (cont_id, project) => dispatch => ContApi.addProject(cont_id, project).then(data => data.id);
+export const addFilesToProject = (id, files) => dispatch => ProjApi.addFiles(id, files);
 export const deleteProject = id => dispatch => ProjApi.delete(id);
 export const archiveProject = id => dispatch => ProjApi.archive(id);
 
@@ -146,20 +144,21 @@ export function getProjectBiddersData(id, page, size) {
   };
 }
 
-export function deleteFileFromProject(id, name, cb) {
-  return function (dispatch) {
-    return Axios.delete(
-      process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/files/' + name
-    )
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
+export const deleteFileFromProject = (id, name) => dispatch => ProjApi.deleteFile(id, name);
+// export function deleteFileFromProject(id, name, cb) {
+//   return function (dispatch) {
+//     return Axios.delete(
+//       process.env.REACT_APP_PROJECT_API + 'projects/' + id + '/files/' + name
+//     )
+//       .then(response => {
+//         cb(true);
+//       })
+//       .catch(err => {
+//         cb(false);
+//         console.log(err.message);
+//       });
+//   };
+// }
 
 export function getProposalMessages(prop_id, page, size, cb) {
   return function (dispatch) {

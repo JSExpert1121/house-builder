@@ -1,23 +1,23 @@
-import Box                        from '@material-ui/core/Box';
-import Card                       from '@material-ui/core/Card';
-import CircularProgress           from '@material-ui/core/CircularProgress';
-import IconButton                 from '@material-ui/core/IconButton';
-import Paper                      from '@material-ui/core/Paper';
-import {createStyles, withStyles} from '@material-ui/core/styles';
-import CloudUploadIcon            from '@material-ui/icons/CloudUpload';
-import DeleteIcon                 from '@material-ui/icons/Delete';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import Button             from "components/CustomButtons/Button.jsx";
-import CustomInput        from "components/CustomInput/CustomInput.jsx";
+import Button from "components/CustomButtons/Button.jsx";
+import CustomInput from "components/CustomInput/CustomInput.jsx";
 import 'easymde/dist/easymde.min.css';
-import React, {Component} from 'react';
-import {connect}          from 'react-redux';
-import {withRouter}       from 'react-router-dom';
-import SimpleMDE          from 'react-simplemde-editor';
-import {compose}          from "redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import SimpleMDE from 'react-simplemde-editor';
+import { compose } from "redux";
 
-import {addFilesToProject, addProject} from '../../../actions/global-actions';
-import CustomSnackbar                  from '../../../components/shared/CustomSnackbar';
+import { addFilesToProject, addProject } from '../../../actions/global-actions';
+import CustomSnackbar from '../../../components/shared/CustomSnackbar';
 
 const styles = theme => createStyles({
   root: {
@@ -44,6 +44,7 @@ const styles = theme => createStyles({
   },
   fileItem: {
     margin: '6px',
+    padding: theme.spacing(1),
     border: '1px solid #CCC',
   },
 });
@@ -86,10 +87,8 @@ class AddProjectView extends Component {
 
     let projectId = null;
     try {
-      projectId = await this.props.addProject(
-        userProfile.user_metadata.contractor_id,
-        projectData
-      );
+      projectId = await this.props.addProject(userProfile.user_metadata.contractor_id, projectData);
+      console.log('Add Project', projectId);
       await this.props.addFiles(projectId, files);
       this.setState({ isBusy: false });
       this.props.history.push('/gen-contractor');

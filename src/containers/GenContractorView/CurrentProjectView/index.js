@@ -91,10 +91,7 @@ class CurrentProject extends React.Component {
       await this.props.deleteProject(this.state.proId);
 
       let curPage = this.state.currentPage;
-      if (
-        this.state.rowsPerPage * this.state.currentPage >=
-        projects.totalElements - 1
-      )
+      if (this.state.rowsPerPage * this.state.currentPage > (projects.totalElements - 1))
         curPage--;
       this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,

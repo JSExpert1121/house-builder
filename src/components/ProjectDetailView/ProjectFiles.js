@@ -1,27 +1,36 @@
-import {IconButton, Snackbar} from '@material-ui/core';
-import {withStyles}           from '@material-ui/core/styles';
-import Table                  from '@material-ui/core/Table';
-import TableBody              from '@material-ui/core/TableBody';
-import TableHead              from '@material-ui/core/TableHead';
-import TableRow               from '@material-ui/core/TableRow';
-import DeleteIcon             from '@material-ui/icons/Delete';
-import NoteAddIcon            from '@material-ui/icons/NoteAdd';
-import {DropzoneDialog}       from 'material-ui-dropzone';
-import React                  from 'react';
-import {connect}              from 'react-redux';
-import {compose}              from 'redux';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
-import {addFilesToProject, deleteFileFromProject, getProjectData,} from '../../actions/global-actions';
-import CustomTableCell                                             from '../shared/CustomTableCell';
+import { IconButton, Snackbar } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import { DropzoneDialog } from 'material-ui-dropzone';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../actions/global-actions';
+import CustomSnackbar from '../shared/CustomSnackbar';
+import CustomTableCell from '../shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
     padding: theme.spacing(1),
+    position: 'relative'
   },
   waitingSpin: {
     position: 'relative',
     left: 'calc(50% - 10px)',
     top: 'calc(40vh)',
+  },
+  busy: {
+    position: 'absolute',
+    left: 'calc(50% - 20px)',
+    top: 'calc(50% - 20px)',
   },
 });
 
@@ -31,39 +40,63 @@ class ProjectFiles extends React.Component {
 
     this.state = {
       openUploadForm: false,
-      snackBar: false,
-      isProcessing: false,
-      snackBarContent: '',
+      showMessage: false,
+      variant: 'success',
+      isBusy: false,
+      message: '',
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   handleUploadFiles = async files => {
     const { project } = this.props;
 
-    await this.props.addFiles(project.id, files, res =>
+    this.setState({ isBusy: true });
+    try {
+      await this.props.addFiles(project.id, files);
+      await this.props.getProjectData(project.id);
       this.setState({
-        snackBar: true,
-        snackBarContent: res ? 'File Upload Success' : 'File Upload Failed',
-        openUploadForm: false,
-      })
-    );
-
-    await this.props.getProjectData(project.id);
+        isBusy: false,
+        showMessage: true,
+        message: 'File Upload Success',
+        variant: 'success',
+        openUploadForm: false
+      });
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        isBusy: false,
+        showMessage: true,
+        message: 'File Upload Failed',
+        variant: 'error',
+        openUploadForm: false
+      });
+    }
   };
 
   handleDeleteFile = async name => {
     const { project } = this.props;
 
-    await this.props.deleteFile(project.id, name, res => {
+    this.setState({ isBusy: true });
+    try {
+      await this.props.deleteFile(project.id, name);
       this.setState({
-        snackBar: true,
-        snackBarContent: res ? 'delete file success' : 'delete file failed',
+        isBusy: false,
+        showMessage: true,
+        message: 'Delete file succeeded',
+        variant: 'success'
       });
-    });
-
-    await this.props.getProjectData(project.id);
+      await this.props.getProjectData(project.id);
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        isBusy: false,
+        showMessage: true,
+        message: 'Delete file failed',
+        variant: 'error'
+      });
+    }
   };
 
   render() {
@@ -139,19 +172,13 @@ class ProjectFiles extends React.Component {
           dropzoneText="select files to upload(< 50mb)"
           onClose={() => this.setState({ openUploadForm: false })}
         />
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          open={this.state.snackBar}
-          onClose={() =>
-            this.setState({
-              snackBar: false,
-            })
-          }
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id"> {this.state.snackBarContent}</span>}
+        <CustomSnackbar
+          open={this.state.showMessage}
+          variant={this.state.variant}
+          message={this.state.message}
+          handleClose={() => this.setState({ showMessage: false })}
         />
+        {this.state.isBusy && <CircularProgress className={classes.busy} />}
       </div>
     );
   }
