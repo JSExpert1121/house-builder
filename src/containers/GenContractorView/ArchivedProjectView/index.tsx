@@ -80,7 +80,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         this.state = {
             rowsPerPage: 20,
             currentPage: 0,
-            isBusy: false,
+            isBusy: true,
             showMessage: false,
             message: '',
             variant: 'success',
@@ -89,13 +89,17 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         };
     }
 
-    componentDidMount() {
+    async componentWillMount() {
         const { userProfile } = this.props;
-        this.props.getArchivedProjectsByGenId(
-            userProfile.user_metadata.contractor_id,
-            0,
-            0
-        );
+        try {
+            await this.props.getArchivedProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.setState({ isBusy: false });
+    }
+    componentDidMount() {
     }
 
     handleChangePage = async (event, page) => {
@@ -185,6 +189,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                         <TableRow>
                             <CustomTableCell> Project Title </CustomTableCell>
                             <CustomTableCell align="center">Budget</CustomTableCell>
+                            <CustomTableCell align="center">Due Date</CustomTableCell>
                             <CustomTableCell align="center">Discription</CustomTableCell>
                             <CustomTableCell align="center">Action</CustomTableCell>
                         </TableRow>
@@ -204,6 +209,12 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                                     onClick={() => this.handleSelectProject(row.id)}
                                 >
                                     {row.budget}
+                                </CustomTableCell>
+                                <CustomTableCell
+                                    align="center"
+                                    onClick={() => this.handleSelectProject(row.id)}
+                                >
+                                    {row.due && row.due.slice(0,10)}
                                 </CustomTableCell>
                                 <CustomTableCell
                                     align="center"

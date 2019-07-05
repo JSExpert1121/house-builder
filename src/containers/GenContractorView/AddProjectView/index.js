@@ -1,23 +1,32 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { compose } from "redux";
+
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import { createStyles, withStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
+
+import { createStyles, withStyles } from '@material-ui/core/styles';
 
 import Button from "components/CustomButtons/Button.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 import 'easymde/dist/easymde.min.css';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import SimpleMDE from 'react-simplemde-editor';
-import { compose } from "redux";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
-import { addFilesToProject, addProject } from '../../../actions/global-actions';
-import CustomSnackbar from '../../../components/shared/CustomSnackbar';
+import { addFilesToProject, addProject } from 'actions/global-actions';
+import CustomSnackbar from 'components/shared/CustomSnackbar';
 
 const styles = theme => createStyles({
   root: {
@@ -47,6 +56,10 @@ const styles = theme => createStyles({
     padding: theme.spacing(1),
     border: '1px solid #CCC',
   },
+  textFieldHalf: {
+    width: 'calc(50% - 8px)',
+    paddingRight: theme.spacing(1)
+  },
 });
 
 class AddProjectView extends Component {
@@ -57,6 +70,7 @@ class AddProjectView extends Component {
       title: '',
       price: 0,
       description: '',
+      dueDate: new Date(),
       isBusy: false,
       files: [],
       showMessage: false,
@@ -67,7 +81,7 @@ class AddProjectView extends Component {
 
   handleAddProject = async () => {
     const { userProfile } = this.props;
-    const { files, title, description, price } = this.state;
+    const { files, title, description, price, dueDate } = this.state;
     if (title.length === 0 || description === 0 || price.length === 0) {
       this.setState({
         showMessage: true,
@@ -81,6 +95,7 @@ class AddProjectView extends Component {
       description,
       budget: price,
       updatedBy: userProfile.email,
+      due: dueDate
     };
 
     this.setState({ isBusy: true });
@@ -119,6 +134,10 @@ class AddProjectView extends Component {
     this.setState({ files: [...files] });
   };
 
+  handleDateChange = (date) => {
+    this.setState({ dueDate: date });
+  };
+
   handleDescChange = value => {
     this.setState({ description: value });
   };
@@ -140,18 +159,31 @@ class AddProjectView extends Component {
               onChange: val => this.setState({ title: val.target.value })
             }}
           />
-          <CustomInput
-            labelText="Price"
-            id="price"
-            formControlProps={{
-              fullWidth: true
-            }}
-            inputProps={{
-              type: "number",
-              value: this.state.price,
-              onChange: val => this.setState({ price: val.target.value })
-            }}
-          />
+          <Grid container justify="space-around">
+            <TextField
+              label="Price"
+              className={classes.textFieldHalf}
+              value={this.state.lastname}
+              onChange={val => this.setState({ lastname: val.target.value })}
+              margin="normal"
+              type='number'
+              value={this.state.price}
+              onChange={val => this.setState({ price: val.target.value })}
+            />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                className={classes.textFieldHalf}
+                margin="normal"
+                id="mui-pickers-date"
+                label="Date picker"
+                value={this.state.dueDate}
+                onChange={this.handleDateChange}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
           <SimpleMDE
             value={this.state.description}
             onChange={this.handleDescChange}

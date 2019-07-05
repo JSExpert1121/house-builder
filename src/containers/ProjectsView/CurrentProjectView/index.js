@@ -1,13 +1,13 @@
-import React                                                                      from 'react';
-import {withRouter}                                                               from 'react-router-dom';
-import {connect}                                                                  from 'react-redux';
-import {getAllProjects}                                                           from '../../../actions/gen-actions';
-import {createStyles, withStyles}                                                 from '@material-ui/core/styles';
-import Paper                                                                      from '@material-ui/core/Paper';
-import {CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow} from '@material-ui/core';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getAllProjects } from '../../../actions/gen-actions';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import { CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow } from '@material-ui/core';
 
 import CustomTableCell from '../../../components/shared/CustomTableCell';
-import {compose}       from "redux";
+import { compose } from "redux";
 
 const styles = theme => createStyles({
   root: {
@@ -82,6 +82,7 @@ class CurrentProjectView extends React.Component {
               <TableRow>
                 <CustomTableCell> Project Title </CustomTableCell>
                 <CustomTableCell align="center">Budget</CustomTableCell>
+                <CustomTableCell align="center">Due Date</CustomTableCell>
                 <CustomTableCell align="center">Discription</CustomTableCell>
               </TableRow>
             </TableHead>
@@ -99,6 +100,7 @@ class CurrentProjectView extends React.Component {
                     {row.title}
                   </CustomTableCell>
                   <CustomTableCell align="center">{row.budget}</CustomTableCell>
+                  <CustomTableCell align="center">{row.due && row.due.slice(0, 10)}</CustomTableCell>
                   <CustomTableCell align="center">
                     {row.description}
                   </CustomTableCell>

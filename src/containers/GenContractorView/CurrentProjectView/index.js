@@ -38,13 +38,15 @@ class CurrentProject extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { userProfile } = this.props;
-    this.props.getProjectsByGenId(
-      userProfile.user_metadata.contractor_id,
-      0,
-      0
-    );
+    this.setState({ isBusy: true });
+    try {
+      await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
+    } catch (error) {
+      console.log(error);
+    }
+    this.setState({ isBusy: false });
   }
 
   handleChangePage = async (event, page) => {
@@ -134,6 +136,7 @@ class CurrentProject extends React.Component {
             <TableRow>
               <CustomTableCell> Project Title </CustomTableCell>
               <CustomTableCell align="center">Budget</CustomTableCell>
+              <CustomTableCell align="center">Due Date</CustomTableCell>
               <CustomTableCell align="center">Discription</CustomTableCell>
               <CustomTableCell align="center">Action</CustomTableCell>
             </TableRow>
@@ -153,6 +156,12 @@ class CurrentProject extends React.Component {
                   onClick={() => this.handleSelectProject(row.id)}
                 >
                   {row.budget}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  {row.due && row.due.slice(0,10)}
                 </CustomTableCell>
                 <CustomTableCell
                   align="center"

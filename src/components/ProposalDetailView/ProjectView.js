@@ -1,11 +1,11 @@
-import React      from 'react';
-import PropTypes  from 'prop-types';
-import Grid       from '@material-ui/core/Grid';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Box        from '@material-ui/core/Box';
+import Box from '@material-ui/core/Box';
 
 import { withStyles } from '@material-ui/core/styles';
-import ReactMarkdown  from 'react-markdown';
+import ReactMarkdown from 'react-markdown';
 
 const styles = theme => ({
   root: {
@@ -53,7 +53,7 @@ const styles = theme => ({
     fontSize: '1em',
     textAlign: 'left',
     fontWeight: '600',
-    color: '#666',
+    color: '#444',
   },
   posttime: {
     display: 'inline-block',
@@ -118,6 +118,13 @@ const ProjectView = ({ classes, project, showFiles = true }) => {
               Posted: {postdate.toDateString()}
             </Typography>
           </Box>
+          {project.due && (
+            <Box className={classes.brief}>
+              <Typography className={classes.budget}>
+                Due Date: {project.due.slice(0, 10)}
+              </Typography>
+            </Box>
+          )}
           <Box className={classes.brief}>
             <Typography style={{ fontWeight: '700' }}>
               {' '}
