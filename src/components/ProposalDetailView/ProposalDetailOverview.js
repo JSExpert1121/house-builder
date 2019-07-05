@@ -1,32 +1,32 @@
-import Box                                 from '@material-ui/core/Box';
-import InputAdornment                      from '@material-ui/core/InputAdornment';
-import List                                from '@material-ui/core/List';
-import ListItem                            from '@material-ui/core/ListItem';
-import ListItemIcon                        from '@material-ui/core/ListItemIcon';
-import ListItemText                        from '@material-ui/core/ListItemText';
-import Paper                               from '@material-ui/core/Paper';
-import { withStyles }                      from '@material-ui/core/styles';
-import Table                               from '@material-ui/core/Table';
-import TableBody                           from '@material-ui/core/TableBody';
-import TableHead                           from '@material-ui/core/TableHead';
-import TableRow                            from '@material-ui/core/TableRow';
-import TextField                           from '@material-ui/core/TextField';
-import Typography                          from '@material-ui/core/Typography';
-import FiberIcon                           from '@material-ui/icons/FiberManualRecord';
-import clsx                                from 'clsx';
-import Button                              from 'components/CustomButtons/Button.jsx';
+import Box from '@material-ui/core/Box';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import FiberIcon from '@material-ui/icons/FiberManualRecord';
+import clsx from 'clsx';
+import Button from 'components/CustomButtons/Button.jsx';
 import 'easymde/dist/easymde.min.css';
-import React, { Component }                from 'react';
-import { connect }                         from 'react-redux';
-import SimpleMDE                           from 'react-simplemde-editor';
-import { compose }                         from 'redux';
-import { awardProject }                    from '../../actions/gen-actions';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import SimpleMDE from 'react-simplemde-editor';
+import { compose } from 'redux';
+import { awardProject } from '../../actions/gen-actions';
 import { deleteProposal, getProposalData } from '../../actions/global-actions';
-import ConfirmDialog                       from '../../components/shared/ConfirmDialog';
-import CustomTableCell                     from '../../components/shared/CustomTableCell';
-import SubContractorView                   from '../Contractor/SubContractor';
+import ConfirmDialog from '../../components/shared/ConfirmDialog';
+import CustomTableCell from '../../components/shared/CustomTableCell';
+import SubContractorView from '../Contractor/SubContractor';
 
-import ProjectView  from './ProjectView';
+import ProjectView from '../ProjectDetailView/ProjectView';
 import ProposalView from './ProposalView';
 
 const styles = theme => ({
@@ -159,7 +159,7 @@ class ProposalDetailOverview extends Component {
     let c_project = edit ? project : proposal.proposal.project;
     const btnTitle =
       match.url.includes('/s_cont') ||
-      (match.params.id === '-1' && this.props.proposal)
+        (match.params.id === '-1' && this.props.proposal)
         ? 'Update Proposal'
         : 'Submit Proposal';
     const isGen = match.url.includes('/gen-contractor');
@@ -177,54 +177,54 @@ class ProposalDetailOverview extends Component {
         {!edit || isGen ? (
           <ProposalView proposal={proposal.proposal} />
         ) : (
-          <>
-            <Typography variant="subtitle1" noWrap style={style_prop_title}>
-              Proposal
+            <>
+              <Typography variant="subtitle1" noWrap style={style_prop_title}>
+                Proposal
             </Typography>
-            <Box id="brief-desc" style={{ display: 'flex', flexWrap: 'wrap' }}>
-              <TextField
-                disabled={!edit}
-                label="Budget *"
-                id="budget"
-                type="number"
-                className={clsx(classes.margin, classes.textField)}
-                value={this.state.budget}
-                onChange={this.handleChange('budget')}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">USD</InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                disabled={!edit}
-                label="Duration *"
-                type="number"
-                className={clsx(classes.margin, classes.textField)}
-                value={this.state.duration}
-                onChange={this.handleChange('duration')}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">days</InputAdornment>
-                  ),
-                }}
-              />
-              <SimpleMDE
-                style={{
-                  height: '209px',
-                  overflow: 'auto',
-                  margin: '8px 0',
-                  textAlign: 'left',
-                  width: '100%',
-                }}
-                value={this.state.description}
-                onChange={val => this.setState({ description: val })}
-                options={{
-                  placeholder: 'Description here',
-                }}
-              />
+              <Box id="brief-desc" style={{ display: 'flex', flexWrap: 'wrap' }}>
+                <TextField
+                  disabled={!edit}
+                  label="Budget *"
+                  id="budget"
+                  type="number"
+                  className={clsx(classes.margin, classes.textField)}
+                  value={this.state.budget}
+                  onChange={this.handleChange('budget')}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">USD</InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  disabled={!edit}
+                  label="Duration *"
+                  type="number"
+                  className={clsx(classes.margin, classes.textField)}
+                  value={this.state.duration}
+                  onChange={this.handleChange('duration')}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="start">days</InputAdornment>
+                    ),
+                  }}
+                />
+                <SimpleMDE
+                  style={{
+                    height: '209px',
+                    overflow: 'auto',
+                    margin: '8px 0',
+                    textAlign: 'left',
+                    width: '100%',
+                  }}
+                  value={this.state.description}
+                  onChange={val => this.setState({ description: val })}
+                  options={{
+                    placeholder: 'Description here',
+                  }}
+                />
 
-              {/* <FormControl fullWidth className={classes.margin}>
+                {/* <FormControl fullWidth className={classes.margin}>
 								<InputLabel htmlFor="description">Description *</InputLabel>
 								<Input disabled={!edit}
 									id="description"
@@ -233,9 +233,9 @@ class ProposalDetailOverview extends Component {
 									multiline={true}
 								/>
 							</FormControl> */}
-            </Box>
-          </>
-        )}
+              </Box>
+            </>
+          )}
 
         {isGen && (
           <SubContractorView subContractor={proposal.proposal.subContractor} />
@@ -275,22 +275,22 @@ class ProposalDetailOverview extends Component {
             </TableBody>
           </Table>
         ) : (
-          <List>
-            {project &&
-              project.projectTemplates.map((templ, index) => (
-                <ListItem
-                  key={index}
-                  onClick={() => this.props.templateSelected(index)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <ListItemIcon>
-                    <FiberIcon style={{ fontSize: '16px' }} />
-                  </ListItemIcon>
-                  <ListItemText primary={templ.template.name} />
-                </ListItem>
-              ))}
-          </List>
-        )}
+            <List>
+              {project &&
+                project.projectTemplates.map((templ, index) => (
+                  <ListItem
+                    key={index}
+                    onClick={() => this.props.templateSelected(index)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <ListItemIcon>
+                      <FiberIcon style={{ fontSize: '16px' }} />
+                    </ListItemIcon>
+                    <ListItemText primary={templ.template.name} />
+                  </ListItem>
+                ))}
+            </List>
+          )}
 
         <Box style={{ textAlign: 'right', paddingTop: '16px' }}>
           {match.url.includes('/s_cont') && (

@@ -96,6 +96,8 @@ const styles = theme => ({
 const ProjectView = ({ classes, project, showFiles = true }) => {
   const posttime = project.updatedAt;
   const postdate = new Date(posttime);
+  console.log('ProjectView: ', project.description);
+  const desc = project.description.replace(/\n/g, '\n\n');
   return (
     <Box className={classes.root}>
       <Grid container id="project-description">
@@ -131,7 +133,7 @@ const ProjectView = ({ classes, project, showFiles = true }) => {
               Description:{' '}
             </Typography>
             <ReactMarkdown
-              source={project.description}
+              source={desc}
               className={classes.desc}
             />
           </Box>

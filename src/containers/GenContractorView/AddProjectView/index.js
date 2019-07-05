@@ -27,6 +27,7 @@ import {
 
 import { addFilesToProject, addProject } from 'actions/global-actions';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
+import ProjectEditView from 'components/ProjectDetailView/ProjectEditView';
 
 const styles = theme => createStyles({
   root: {
@@ -142,12 +143,30 @@ class AddProjectView extends Component {
     this.setState({ description: value });
   };
 
+  handleTitleChange = value => {
+    this.setState({ title: value });
+  }
+
+  handlePriceChange = value => {
+    this.setState({ price: value });
+  }
+
   render() {
     const { classes } = this.props;
 
     return (
       <Paper className={classes.root}>
         <Card className={classes.mainBoard}>
+          {/* <ProjectEditView
+            title={this.state.title}
+            price={this.state.price}
+            dueDate={this.state.dueDate}
+            description={this.state.description}
+            handleTitleChange={this.handleTitleChange}
+            handlePriceChange={this.handlePriceChange}
+            handleDateChange={this.handleDateChange}
+            handleDescChange={this.handleDescChange}
+          /> */}
           <CustomInput
             labelText="Project Title"
             id="title"
@@ -163,8 +182,6 @@ class AddProjectView extends Component {
             <TextField
               label="Price"
               className={classes.textFieldHalf}
-              value={this.state.lastname}
-              onChange={val => this.setState({ lastname: val.target.value })}
               margin="normal"
               type='number'
               value={this.state.price}
@@ -189,6 +206,7 @@ class AddProjectView extends Component {
             onChange={this.handleDescChange}
             options={{
               placeholder: 'Description here',
+              lineWrapping: false
             }}
           />
           <Box className={classes.fileUpload}>

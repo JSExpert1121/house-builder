@@ -1,12 +1,12 @@
-import Box           from '@material-ui/core/Box';
-import Grid          from '@material-ui/core/Grid';
-import {withStyles}  from '@material-ui/core/styles';
-import React         from 'react';
-import {connect}     from 'react-redux';
-import {compose}     from 'redux';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import GenContractor from '../Contractor/GenContractor';
 
-import ProjectView from '../ProposalDetailView/ProjectView';
+import ProjectView from './ProjectView';
 
 const styles = theme => ({
   root: {

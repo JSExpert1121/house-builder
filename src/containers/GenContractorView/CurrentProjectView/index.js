@@ -125,7 +125,7 @@ class CurrentProject extends React.Component {
   render() {
     const { classes, projects } = this.props;
 
-    if (projects === null) {
+    if (!projects) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
 

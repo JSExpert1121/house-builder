@@ -43,7 +43,6 @@ import {
 const styles = theme => createStyles({
   descTag: {
     padding: theme.spacing(1),
-    textAlign: 'center',
     color: theme.palette.text.secondary,
     whiteSpace: 'nowrap',
     margin: theme.spacing(1),
