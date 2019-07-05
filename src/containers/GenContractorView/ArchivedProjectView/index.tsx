@@ -107,7 +107,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         const { userProfile } = this.props;
         this.setState({ currentPage: page, isBusy: true });
         try {
-            this.props.getArchivedProjectsByGenId(
+            await this.props.getArchivedProjectsByGenId(
                 userProfile.user_metadata.contractor_id,
                 page,
                 this.state.rowsPerPage
@@ -127,7 +127,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
 
         this.setState({ rowsPerPage, currentPage });
         try {
-            this.props.getArchivedProjectsByGenId(
+            await this.props.getArchivedProjectsByGenId(
                 userProfile.user_metadata.contractor_id,
                 currentPage,
                 rowsPerPage

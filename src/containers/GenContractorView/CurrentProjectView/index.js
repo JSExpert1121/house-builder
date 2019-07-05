@@ -53,7 +53,7 @@ class CurrentProject extends React.Component {
     const { userProfile } = this.props;
     this.setState({ currentPage: page, isBusy: true });
     try {
-      this.props.getProjectsByGenId(
+      await this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,
         page,
         this.state.rowsPerPage
@@ -73,7 +73,7 @@ class CurrentProject extends React.Component {
 
     this.setState({ rowsPerPage, currentPage });
     try {
-      this.props.getProjectsByGenId(
+      await this.props.getProjectsByGenId(
         userProfile.user_metadata.contractor_id,
         currentPage,
         rowsPerPage
