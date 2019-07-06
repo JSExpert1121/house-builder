@@ -31,18 +31,8 @@ import ProjectView from '../ProjectDetailView/ProjectView';
 import ProposalView from './ProposalView';
 
 const styles = theme => ({
-  '@global': {
-    '.MuiListItemIcon-root': {
-      minWidth: '32px',
-    },
-    '.MuiListItem-root': {
-      paddingTop: '4px',
-      paddingBottom: '4px',
-    },
-  },
   root: {
     position: 'relative',
-    height: 'calc(100vh - 64px - 48px - 36px - 16px)',
     overflow: 'auto',
     flexGrow: 1,
     padding: theme.spacing(2),
