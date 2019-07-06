@@ -29,18 +29,12 @@ const {
   [CLEAR_SELECTED_TEMPLATE]: () => null,
 });
 
-export function createTemplate(template, cb) {
+export function createTemplate(template) {
   return function(dispatch) {
     dispatch(clearAllTemplates());
 
     return restAPI
       .post('templates', template)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-      });
   };
 }
 
