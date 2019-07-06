@@ -84,7 +84,11 @@ class ProjectTemplate extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getTemplates(0, 20);
+    this.fetchTemplates();
+  }
+
+  fetchTemplates = () => {
+    this.props.getTemplates(0, 20)
   }
   handleChangePage = (event, page) => {
     this.setState({ currentPage: page });
@@ -129,8 +133,10 @@ class ProjectTemplate extends React.Component {
     };
 
     this.props.createTemplate(data).then(res => {
+      this.fetchTemplates();
       this.setState({
         snackBar: true,
+        openCategoryForm: false,
         snackBarContent: res.data
           ? 'create template success'
           : 'create template failed',
@@ -320,7 +326,6 @@ class ProjectTemplate extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button
-              disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
             >
               Cancel
@@ -331,9 +336,6 @@ class ProjectTemplate extends React.Component {
               color="primary"
             >
               Add
-              {this.state.isSaving && (
-                <CircularProgress size={24} thickness={4} />
-              )}
             </Button>
           </DialogActions>
         </Dialog>
