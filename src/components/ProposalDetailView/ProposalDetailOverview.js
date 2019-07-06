@@ -337,6 +337,7 @@ const mapDispatchToProps = {
   getProposalData,
   deleteProposal,
   awardProject,
+  templateSelected: () => {},
 };
 
 const mapStateToProps = state => ({
