@@ -113,7 +113,7 @@ class ProjectTemplate extends React.Component {
   };
 
   addTemplateToProject = async () => {
-    const { project, addTemplate } = this.props;
+    const { project, createContractor } = this.props;
     const { template } = this.state;
 
     const result = await addTemplate(project.id, template);
