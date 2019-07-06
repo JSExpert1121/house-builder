@@ -8,6 +8,7 @@ export interface UserMetaData {
 
 export interface UserProfile {
   email: string;
+  name: string;
   user_metadata: UserMetaData;
   picture: string;
 }
