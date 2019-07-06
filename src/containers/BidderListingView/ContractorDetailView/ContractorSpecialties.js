@@ -13,24 +13,25 @@ import {withStyles}      from '@material-ui/core/styles';
 import Table             from '@material-ui/core/Table';
 import TableBody         from '@material-ui/core/TableBody';
 import TableHead         from '@material-ui/core/TableHead';
-import TablePagination   from '@material-ui/core/TablePagination';
-import TableRow          from '@material-ui/core/TableRow';
-import TextField         from '@material-ui/core/TextField';
-import AddIcon           from '@material-ui/icons/Add';
-import DeleteIcon        from '@material-ui/icons/Delete';
-import NoteAddIcon       from '@material-ui/icons/NoteAdd';
-import Button            from 'components/CustomButtons/Button.jsx';
-import React             from 'react';
-import {connect}         from 'react-redux';
-import {compose}         from 'redux';
+import TablePagination    from '@material-ui/core/TablePagination';
+import TableRow           from '@material-ui/core/TableRow';
+import TextField          from '@material-ui/core/TextField';
+import AddIcon            from '@material-ui/icons/Add';
+import DeleteIcon         from '@material-ui/icons/Delete';
+import NoteAddIcon        from '@material-ui/icons/NoteAdd';
+import Button             from 'components/CustomButtons/Button.jsx';
+import React              from 'react';
+import {connect}          from 'react-redux';
+import {compose}          from 'redux';
 import {
   addSpecialty,
   deleteSpecialty,
   getSpecialties,
   selectContractor,
   updateContractor,
-}                        from '../../../actions/cont-actions';
-import CustomTableCell   from '../../../components/shared/CustomTableCell';
+  createContractor
+}                         from '../../../actions/cont-actions';
+import CustomTableCell    from '../../../components/shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
@@ -113,15 +114,27 @@ class ContractorInfoView extends React.Component {
 
     this.props.getSpecialties(currentPage, rowsPerPage);
   };
-  createSortHandler = () => {
-    let order = 'desc';
 
-    if (this.state.order === 'desc') {
-      order = 'asc';
-    }
+  handleCreateContractor = async () => {
+    this.setState({ isSaving: true });
+    const { userProfile } = this.props;
 
-    this.setState({ order });
-  };
+    const data = {
+      name: this.state.name,
+      description: this.state.description,
+      updatedBy: userProfile.email,
+    };
+
+    await this.props.createContractor(data, res => {
+      this.setState({
+        snackBar: true,
+        openCategoryForm: false,
+        snackBarContent: res
+            ? 'create template success'
+            : 'create template failed',
+      });
+    });
+  }
 
   handleChange = event => {
     this.setState({
@@ -332,45 +345,16 @@ class ContractorInfoView extends React.Component {
           <DialogActions>
             <Button
               className={classes.marginRight}
-              disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
             >
               Cancel
             </Button>
             <Button
               disabled={this.state.isSaving}
-              onClick={async () => {
-                this.setState({ isSaving: true });
-                const { userProfile } = this.props;
-                const data = {
-                  name: this.state.name,
-                  description: this.state.description,
-                  updatedBy: userProfile.email,
-                };
-
-                await this.props.createContractor(data, res => {
-                  this.setState({
-                    snackBar: true,
-                    snackBarContent: res
-                      ? 'create template success'
-                      : 'create template failed',
-                  });
-                });
-                await this.props.getContrators0(0, this.state.rowsPerPage);
-
-                this.setState({
-                  openCategoryForm: false,
-                  isSaving: false,
-                  name: '',
-                  description: '',
-                });
-              }}
+              onClick={this.handleCreateContractor}
               color="primary"
             >
               Add
-              {this.state.isSaving && (
-                <CircularProgress size={24} thickness={4} />
-              )}
             </Button>
           </DialogActions>
         </Dialog>
@@ -395,6 +379,7 @@ class ContractorInfoView extends React.Component {
 const mapStateToProps = state => ({
   specialties: state.cont_data.specialties,
   selectedContractor: state.cont_data.selectedContractor,
+  userProfile: state.global_data.userProfile,
 });
 
 const mapDispatchToProps = {
@@ -403,6 +388,7 @@ const mapDispatchToProps = {
   deleteSpecialty,
   updateContractor,
   selectContractor,
+  createContractor,
 };
 
 export default compose(
