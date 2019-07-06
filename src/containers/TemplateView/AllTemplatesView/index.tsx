@@ -260,7 +260,6 @@ class AllTemplateView extends Component<
             <Button
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
-              size="small"
               className={classes.marginRight}
             >
               Cancel
@@ -294,7 +293,6 @@ class AllTemplateView extends Component<
                 });
               }}
               color="primary"
-              size="small"
             >
               Add
               {this.state.isSaving && (
