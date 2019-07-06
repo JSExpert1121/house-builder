@@ -74,8 +74,5 @@ export function getTemplates(page, size) {
   };
 }
 
-export const addTemplate = (proj_id, templ_id) => dispatch =>
-  ProjApi.addTemplate(proj_id, templ_id);
-
-export const deleteTemplate = (proj_id, templ_id) => dispatch =>
-  ProjApi.deleteTemplate(proj_id, templ_id);
+export const addTemplate = (projectId, templateId) => dispatch => ProjApi.addTemplate(projectId, templateId);
+export const deleteTemplate = (projectId, templateId) => dispatch => ProjApi.deleteTemplate(projectId, templateId);

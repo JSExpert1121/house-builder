@@ -71,12 +71,12 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
     flex: 1,
-    margin: '10px',
+    margin: theme.spacing(1),
     alignItems: 'center',
     overflow: 'hidden',
   },
   chip: {
-    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+    margin: theme.spacing(2, 1),
   },
   chipFocused: {
     backgroundColor: emphasize(
@@ -87,7 +87,7 @@ const styles = theme => ({
     ),
   },
   noOptionsMessage: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    padding: theme.spacing(1),
   },
   singleValue: {
     fontSize: 16,
@@ -100,7 +100,7 @@ const styles = theme => ({
   paper: {
     position: 'absolute',
     zIndex: 1,
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     left: 0,
     right: 0,
   },

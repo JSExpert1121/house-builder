@@ -29,6 +29,7 @@ import removeMd    from 'remove-markdown';
 
 import {addTemplate, deleteTemplate, getTemplates,} from '../../actions/gen-actions';
 import {getProjectData}                             from '../../actions/global-actions';
+import {createTemplate}                             from '../../actions/tem-actions';
 import Button                                       from '../CustomButtons/Button';
 import CustomTableCell                              from '../shared/CustomTableCell';
 
@@ -107,14 +108,34 @@ class ProjectTemplate extends React.Component {
     this.props.getTemplates(currentPage, rowsPerPage);
   };
 
-  createSortHandler = () => {
-    let order = 'desc';
+  addTemplateToProject = async () => {
+    const { project, addTemplate } = this.props;
+    const { template } = this.state;
 
-    if (this.state.order === 'desc') {
-      order = 'asc';
+    const result = await addTemplate(project.id, template);
+    this.setState({ template: '' });
+    if (result.data) {
+      this.props.getProjectData(project.id);
     }
+  };
 
-    this.setState({ order });
+  createTemplate = async () => {
+    this.setState({ isSaving: true });
+    const { userProfile } = this.props;
+    const data = {
+      name: this.state.name,
+      description: this.state.description,
+      updatedBy: userProfile.email,
+    };
+
+    this.props.createTemplate(data).then(res => {
+      this.setState({
+        snackBar: true,
+        snackBarContent: res.data
+          ? 'create template success'
+          : 'create template failed',
+      });
+    });
   };
 
   handleChange = event => {
@@ -156,12 +177,7 @@ class ProjectTemplate extends React.Component {
               color="primary"
               aria-label="Add"
               className={classes.fab}
-              onClick={() =>
-                this.props.addTemplate(project.id, template, result => {
-                  this.setState({ template: '' });
-                  if (result) this.props.getProjectData(project.id);
-                })
-              }
+              onClick={this.addTemplateToProject}
             >
               <AddIcon />
             </Fab>
@@ -277,7 +293,7 @@ class ProjectTemplate extends React.Component {
           onClose={() => this.setState({ openCategoryForm: false })}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">create template</DialogTitle>
+          <DialogTitle id="form-dialog-title">Create template</DialogTitle>
           <DialogContent>
             <DialogContentText>
               please input the correct template information
@@ -311,32 +327,7 @@ class ProjectTemplate extends React.Component {
             </Button>
             <Button
               disabled={this.state.isSaving}
-              onClick={async () => {
-                this.setState({ isSaving: true });
-                const { userProfile } = this.props;
-                const data = {
-                  name: this.state.name,
-                  description: this.state.description,
-                  updatedBy: userProfile.email,
-                };
-
-                await this.props.createProject(data, res => {
-                  this.setState({
-                    snackBar: true,
-                    snackBarContent: res
-                      ? 'create template success'
-                      : 'create template failed',
-                  });
-                });
-                await this.props.getContrators0(0, this.state.rowsPerPage);
-
-                this.setState({
-                  openCategoryForm: false,
-                  isSaving: false,
-                  name: '',
-                  description: '',
-                });
-              }}
+              onClick={this.createTemplate}
               color="primary"
             >
               Add
@@ -373,6 +364,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   getTemplates,
   addTemplate,
+  createTemplate,
   deleteTemplate,
   getProjectData,
 };
