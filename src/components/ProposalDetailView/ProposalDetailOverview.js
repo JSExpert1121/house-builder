@@ -18,7 +18,7 @@ import Button                              from 'components/CustomButtons/Button
 import 'easymde/dist/easymde.min.css';
 import React, { Component }                from 'react';
 import { connect }                         from 'react-redux';
-import { withRouter }                      from 'react-router';
+import { withRouter }                      from 'react-router-dom';
 import SimpleMDE                           from 'react-simplemde-editor';
 import { compose }                         from 'redux';
 import { awardProject }                    from '../../actions/gen-actions';
