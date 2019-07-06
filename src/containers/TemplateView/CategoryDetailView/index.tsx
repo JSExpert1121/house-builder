@@ -211,14 +211,7 @@ class CategoryDetailView extends Component<
               onChange={val => this.setState({ value: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
             />
-            // @ts-ignore:
             <SimpleMDE
-              style={{
-                height: '209px',
-                overflow: 'auto',
-                marginBottom: '8px',
-                textAlign: 'left',
-              }}
               value={this.state.description}
               onChange={val => this.setState({ description: val })}
               options={{
