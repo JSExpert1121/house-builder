@@ -9,6 +9,14 @@ export default (theme: Theme) =>
       fontWeight: 600,
       fontSize: '2.1rem',
     },
+    title: {
+      display: 'none',
+      padding: theme.spacing(0, 2),
+      flexGrow: 1,
+      [theme.breakpoints.up('sm')]: {
+        display: 'block',
+      },
+    },
     menuButton: {
       marginRight: 36,
     },
@@ -17,9 +25,6 @@ export default (theme: Theme) =>
     },
     toolbar: {
       paddingRight: 24, // keep right padding when drawer closed
-    },
-    title: {
-      flexGrow: 1,
     },
     toolbarIcon: {
       display: 'flex',

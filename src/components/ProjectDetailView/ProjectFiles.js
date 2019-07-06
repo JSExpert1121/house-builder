@@ -1,21 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-
-import { IconButton, Snackbar } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import DeleteIcon from '@material-ui/icons/Delete';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import CircularProgress   from '@material-ui/core/CircularProgress';
+import IconButton         from '@material-ui/core/IconButton';
+import { withStyles }     from '@material-ui/core/styles';
+import Table              from '@material-ui/core/Table';
+import TableBody          from '@material-ui/core/TableBody';
+import TableHead          from '@material-ui/core/TableHead';
+import TableRow           from '@material-ui/core/TableRow';
+import DeleteIcon         from '@material-ui/icons/Delete';
+import NoteAddIcon        from '@material-ui/icons/NoteAdd';
 import { DropzoneDialog } from 'material-ui-dropzone';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React              from 'react';
+import { connect }        from 'react-redux';
+import { compose }        from 'redux';
 
 import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../actions/global-actions';
-import CustomSnackbar from '../shared/CustomSnackbar';
-import CustomTableCell from '../shared/CustomTableCell';
+import CustomSnackbar                                               from '../shared/CustomSnackbar';
+import CustomTableCell                                              from '../shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
@@ -46,8 +45,6 @@ class ProjectFiles extends React.Component {
       message: '',
     };
   }
-
-  componentDidMount() { }
 
   handleUploadFiles = async files => {
     const { project } = this.props;

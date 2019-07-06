@@ -32,7 +32,6 @@ import { MenuProps }                     from '@material-ui/core/Menu';
 import ListItemIcon                      from '@material-ui/core/ListItemIcon';
 import ListItemText                      from '@material-ui/core/ListItemText';
 
-
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
@@ -154,6 +153,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <ListItemText primary="Logout" />
             </MenuItem>
           </StyledMenu>
+          <Typography className={classes.title} variant="h6" noWrap>
+            {this.props.profile.name}
+          </Typography>
           <IconButton
             aria-owns={isMenuOpen ? 'material-appbar' : undefined}
             aria-haspopup="true"
