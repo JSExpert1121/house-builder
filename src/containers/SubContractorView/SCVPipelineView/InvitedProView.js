@@ -1,26 +1,26 @@
-import CircularProgress                   from '@material-ui/core/CircularProgress';
-import Dialog                             from '@material-ui/core/Dialog';
-import DialogActions                      from '@material-ui/core/DialogActions';
-import DialogContent                      from '@material-ui/core/DialogContent';
-import DialogContentText                  from '@material-ui/core/DialogContentText';
-import DialogTitle                        from '@material-ui/core/DialogTitle';
-import IconButton                         from '@material-ui/core/IconButton';
-import Paper                              from '@material-ui/core/Paper';
-import Snackbar                           from '@material-ui/core/Snackbar';
-import {withStyles}                       from '@material-ui/core/styles';
-import Table                              from '@material-ui/core/Table';
-import TableBody                          from '@material-ui/core/TableBody';
-import TableHead                          from '@material-ui/core/TableHead';
-import TablePagination                    from '@material-ui/core/TablePagination';
-import TableRow                           from '@material-ui/core/TableRow';
-import DeleteIcon                         from '@material-ui/icons/Delete';
-import Button                             from "components/CustomButtons/Button.jsx";
-import {compose}                          from 'redux';
-import React                              from 'react';
-import {connect}                          from 'react-redux';
-import CustomTableCell                    from "components/shared/CustomTableCell";
-import {deleteProject, setCurrentProject} from '../../../actions/global-actions';
-import {getInvitedProjectsByGenId}        from '../../../actions/sub-actions';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Button from "components/CustomButtons/Button.jsx";
+import { compose } from 'redux';
+import React from 'react';
+import { connect } from 'react-redux';
+import CustomTableCell from "components/shared/CustomTableCell";
+import { deleteProject, setCurrentProject } from '../../../actions/global-actions';
+import { getInvitedProjectsByGenId } from '../../../actions/sub-actions';
 
 const styles = theme => ({
   root: {
@@ -154,47 +154,54 @@ class InvitedProView extends React.Component {
             <TableRow>
               <CustomTableCell> Project Title </CustomTableCell>
               <CustomTableCell align="center">Budget</CustomTableCell>
+              <CustomTableCell align="center">Due Date</CustomTableCell>
               <CustomTableCell align="center">Description</CustomTableCell>
               <CustomTableCell align="center">Action</CustomTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {projects.content.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                      component="th"
-                      scope="row"
-                      onClick={() => this.handleSelectProject(row.id)}
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  component="th"
+                  scope="row"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  {row.title}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  {row.budget}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  {row.due && row.due.slice(0, 10)}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={() => this.handleSelectProject(row.id)}
+                >
+                  {row.description}
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <IconButton
+                    aria-label="Delete"
+                    color="primary"
+                    onClick={() => {
+                      this.setState({
+                        alertConfirm: true,
+                        proId: row.id,
+                      });
+                    }}
                   >
-                    {row.title}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={() => this.handleSelectProject(row.id)}
-                  >
-                    {row.budget}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={() => this.handleSelectProject(row.id)}
-                  >
-                    {row.description}
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    <IconButton
-                        aria-label="Delete"
-                        color="primary"
-                        onClick={() => {
-                          this.setState({
-                            alertConfirm: true,
-                            proId: row.id,
-                          });
-                        }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </CustomTableCell>
-                </TableRow>
+                    <DeleteIcon />
+                  </IconButton>
+                </CustomTableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
@@ -260,9 +267,9 @@ class InvitedProView extends React.Component {
 }
 
 const mapDispatchToProps = {
-    getInvitedProjectsByGenId,
-    deleteProject,
-    setCurrentProject
+  getInvitedProjectsByGenId,
+  deleteProject,
+  setCurrentProject
 };
 
 const mapStateToProps = state => ({

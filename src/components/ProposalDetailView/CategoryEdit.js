@@ -1,10 +1,10 @@
-import React     from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 
 import OptionTableView from './OptionView';
-import OptionEdit      from './OptionEdit';
+import OptionEdit from './OptionEdit';
 
 const styles = theme => ({
   root: {
@@ -29,16 +29,14 @@ class CategoryEdit extends React.Component {
     };
   }
 
-  compareOpt = (opt, id) => {
-    return opt.id === id.toString();
-  };
+  compFunc = id => opt => opt.id === id.toString();
 
   handleAdd = () => {
     const options = this.props.category.options;
     let id = 0;
-    while (options.length > 0 && 1) {
+    while (options.length > 0) {
       // eslint-disable-line no-loop-func
-      if (options.some(opt => this.compareOpt(opt, id))) {
+      if (options.some(this.compFunc(id))) {
         id++;
         continue;
       }

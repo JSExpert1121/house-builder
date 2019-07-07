@@ -13,12 +13,12 @@ import TablePagination from '@material-ui/core/TablePagination';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import removeMd from 'remove-markdown';
-import CustomTableCell from '../../../components/shared/CustomTableCell';
-import CustomSnackbar from '../../../components/shared/CustomSnackbar';
-import ConfirmDialog from '../../../components/shared/ConfirmDialog';
+import CustomTableCell from 'components/shared/CustomTableCell';
+import CustomSnackbar from 'components/shared/CustomSnackbar';
+import ConfirmDialog from 'components/shared/ConfirmDialog';
 
-import { getProjectsByGenId } from '../../../actions/gen-actions';
-import { deleteProject, setCurrentProject, archiveProject } from '../../../actions/global-actions';
+import { getProjectsByGenId } from 'actions/gen-actions';
+import { setCurrentProject, archiveProject } from 'actions/global-actions';
 
 import style from './CurrentProject.style.ts';
 

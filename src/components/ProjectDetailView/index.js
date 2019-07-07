@@ -1,21 +1,21 @@
-import {IconButton}             from '@material-ui/core';
-import NoSsr                    from '@material-ui/core/NoSsr';
-import Paper                    from '@material-ui/core/Paper';
-import {withStyles}             from '@material-ui/core/styles';
-import Tab                      from '@material-ui/core/Tab';
-import Tabs                     from '@material-ui/core/Tabs';
-import ArrowBackIcon            from '@material-ui/icons/ArrowBack';
-import React                    from 'react';
-import {connect}                from 'react-redux';
-import {Link, Redirect, Switch} from 'react-router-dom';
-import {compose}                from 'redux';
+import { IconButton } from '@material-ui/core';
+import NoSsr from '@material-ui/core/NoSsr';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link, Redirect, Switch } from 'react-router-dom';
+import { compose } from 'redux';
 
-import {getProjectData} from '../../actions/global-actions';
-import SecuredRoute     from '../../routers/SecuredRoute';
-import ProjectBidders   from './ProjectBidders';
-import ProjectFiles     from './ProjectFiles';
+import { getProjectData } from 'actions/global-actions';
+import SecuredRoute from 'routers/SecuredRoute';
+import ProjectBidders from './ProjectBidders';
+import ProjectFiles from './ProjectFiles';
 
-import ProjectOverView  from './ProjectOverView';
+import ProjectOverView from './ProjectOverView';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
@@ -23,7 +23,7 @@ import ProposalsCompare from './ProposalsCompare';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 'calc(100vh - 64px - 48px - 16px)',
+    height: 'calc(100vh - 64px - 55px)',
   },
   backBtn: {
     color: theme.palette.primary.dark,
@@ -90,7 +90,7 @@ class ProjectDetailView extends React.Component {
     return (
       <NoSsr>
         <div className={classes.root}>
-          <Paper square style={{ height: '100%' }}>
+          <Paper square style={{ height: '100%', overflow: 'auto' }}>
             <div style={{ display: 'flex' }}>
               <IconButton className={classes.backBtn} onClick={this.handleBack}>
                 <ArrowBackIcon />
@@ -178,8 +178,8 @@ export default compose(
   withStyles(styles),
   connect(
     mapStateToProps,
-      {
-        getProjectData,
-      }
+    {
+      getProjectData,
+    }
   )
 )(ProjectDetailView);

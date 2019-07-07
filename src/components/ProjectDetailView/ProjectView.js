@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 
 import { withStyles } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown';
+import Button from "components/CustomButtons/Button.jsx";
 
 const styles = theme => ({
   root: {
@@ -73,27 +74,34 @@ const styles = theme => ({
     fontSize: '1em',
     textAlign: 'left',
     fontWeight: '600',
+    lineHeight: '1.5',
+    width: '100%',
     color: theme.palette.primary.light,
+    [theme.breakpoints.up('sm')]: {
+      textAlign: 'center'
+    }
   },
   margin: theme.spacing(1),
   minWidth: 120,
-  submitBtn: {
+  editBtn: {
     border: '1px solid #4a148c',
     borderRadius: 0,
-    backgroundColor: theme.palette.primary.light,
-    color: '#FFFFFF',
-    margin: 5,
-    float: 'right',
+    color: theme.palette.primary.light,
+    backgroundColor: '#FFF',
+    padding: theme.spacing(1),
+    width: '100%',
+    fontSize: '14px',
+    bottom: 0,
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: theme.palette.primary.light,
     },
     '&:disabled': {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: '#CCC',
     },
   },
 });
 
-const ProjectView = ({ classes, project, showFiles = true }) => {
+const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }) => {
   const posttime = project.updatedAt;
   const postdate = new Date(posttime);
   // console.log('ProjectView: ', project.description);
@@ -101,57 +109,64 @@ const ProjectView = ({ classes, project, showFiles = true }) => {
   return (
     <Box className={classes.root}>
       <Grid container id="project-description">
-        {/* <Grid container item sm={12} md={9} spacing={2}> */}
-        <Grid item xs={12} sm={10} className="desc">
+        <Grid container item xs={12} sm={10} className="desc">
           <h1 className={classes.title}>{project.title}</h1>
+          <Grid item xs={12}>
+            <Box className={classes.brief}>
+              <Typography className={classes.budget}>
+                Budget: {project.budget}
+              </Typography>
+              <Typography className={classes.posttime}>
+                Posted: {postdate.toDateString()}
+              </Typography>
+            </Box>
+            {project.due && (
+              <Box className={classes.brief}>
+                <Typography className={classes.budget}>
+                  Due Date: {project.due.slice(0, 10)}
+                </Typography>
+              </Box>
+            )}
+            <Box className={classes.brief}>
+              <Typography style={{ fontWeight: '700' }}>
+                {' '}
+                Description:{' '}
+              </Typography>
+              <ReactMarkdown
+                source={desc}
+                className={classes.desc}
+              />
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid container item xs={12} sm={2} alignContent='space-between' style={{ display: 'flex', flexWrap: 'wrap' }}>
           <p className={classes.status}>
             {project.status && project.status.toUpperCase()}
           </p>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Box className={classes.brief}>
-            <Typography className={classes.budget}>
-              Budget: {project.budget}
-            </Typography>
-            <Typography className={classes.posttime}>
-              Posted: {postdate.toDateString()}
-            </Typography>
-          </Box>
-          {project.due && (
-            <Box className={classes.brief}>
-              <Typography className={classes.budget}>
-                Due Date: {project.due.slice(0, 10)}
-              </Typography>
-            </Box>
-          )}
-          <Box className={classes.brief}>
-            <Typography style={{ fontWeight: '700' }}>
-              {' '}
-              Description:{' '}
-            </Typography>
-            <ReactMarkdown
-              source={desc}
-              className={classes.desc}
-            />
-          </Box>
-          {showFiles && (
-            <Box className={classes.brief}>
-              {project.projectFiles && project.projectFiles.length > 0 && (
-                <>
-                  <Typography style={{ fontWeight: '700' }}> Files </Typography>
-                  {project.projectFiles.map(file => (
-                    <Typography className={classes.desc} key={file.id}>
-                      {file.name}
-                    </Typography>
-                  ))}
-                </>
-              )}
-            </Box>
+          {setEdit && (
+            <Button
+              color="primary"
+              className={classes.editBtn}
+              onClick={() => setEdit(true)}
+            >
+              Edit
+            </Button>
           )}
         </Grid>
+        {showFiles && (
+          <Box className={classes.brief}>
+            {project.projectFiles && project.projectFiles.length > 0 && (
+              <>
+                <Typography style={{ fontWeight: '700' }}> Files </Typography>
+                {project.projectFiles.map(file => (
+                  <Typography className={classes.desc} key={file.id}>
+                    {file.name}
+                  </Typography>
+                ))}
+              </>
+            )}
+          </Box>
+        )}
       </Grid>
     </Box>
   );

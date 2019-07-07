@@ -111,6 +111,7 @@ export function getProposalsByProjectId(id, page, size) {
 }
 
 export const addProject = (cont_id, project) => dispatch => ContApi.addProject(cont_id, project).then(data => data.id);
+export const updateProject = (id, project) => dispatch => ProjApi.update(id, project);
 export const addFilesToProject = (id, files) => dispatch => ProjApi.addFiles(id, files);
 export const deleteProject = id => dispatch => ProjApi.delete(id);
 export const archiveProject = id => dispatch => ProjApi.archive(id);

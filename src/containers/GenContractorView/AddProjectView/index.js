@@ -5,8 +5,8 @@ import { compose } from "redux";
 
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
+// import TextField from '@material-ui/core/TextField';
+// import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
@@ -16,14 +16,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { createStyles, withStyles } from '@material-ui/core/styles';
 
 import Button from "components/CustomButtons/Button.jsx";
-import CustomInput from "components/CustomInput/CustomInput.jsx";
-import 'easymde/dist/easymde.min.css';
-import SimpleMDE from 'react-simplemde-editor';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+// import CustomInput from "components/CustomInput/CustomInput.jsx";
+// import 'easymde/dist/easymde.min.css';
+// import SimpleMDE from 'react-simplemde-editor';
+// import DateFnsUtils from '@date-io/date-fns';
+// import {
+//   MuiPickersUtilsProvider,
+//   DatePicker,
+// } from '@material-ui/pickers';
 
 import { addFilesToProject, addProject } from 'actions/global-actions';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
@@ -157,7 +157,7 @@ class AddProjectView extends Component {
     return (
       <Paper className={classes.root}>
         <Card className={classes.mainBoard}>
-          {/* <ProjectEditView
+          <ProjectEditView
             title={this.state.title}
             price={this.state.price}
             dueDate={this.state.dueDate}
@@ -166,8 +166,8 @@ class AddProjectView extends Component {
             handlePriceChange={this.handlePriceChange}
             handleDateChange={this.handleDateChange}
             handleDescChange={this.handleDescChange}
-          /> */}
-          <CustomInput
+          />
+          {/* <CustomInput
             labelText="Project Title"
             id="title"
             formControlProps={{
@@ -188,7 +188,7 @@ class AddProjectView extends Component {
               onChange={val => this.setState({ price: val.target.value })}
             />
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <KeyboardDatePicker
+              <DatePicker
                 className={classes.textFieldHalf}
                 margin="normal"
                 id="mui-pickers-date"
@@ -212,7 +212,7 @@ class AddProjectView extends Component {
                 singleLineBreaks: true
               }
             }}
-          />
+          /> */}
           <Box className={classes.fileUpload}>
             <input
               accept="text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*"
