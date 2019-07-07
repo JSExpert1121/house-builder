@@ -19,7 +19,7 @@ export interface IProjectEditViewProps {
     price: number;
     dueDate: Date;
     description: string;
-    handleDone?: () => void;
+    handleDone?: (save: boolean) => void;
     handleTitleChange: (value: string) => void;
     handlePriceChange: (value: number) => void;
     handleDateChange: (date: Date) => void;
@@ -47,7 +47,6 @@ const style = theme => createStyles({
     doneContainer: {
         display: 'block',
         textAlign: 'right',
-        paddingRight: theme.spacing(1)
     },
     doneBtn: {
         border: '1px solid #4a148c',
@@ -55,6 +54,7 @@ const style = theme => createStyles({
         color: theme.palette.primary.light,
         backgroundColor: '#FFF',
         padding: theme.spacing(1),
+        marginLeft: theme.spacing(2),
         width: '160px',
         fontSize: '14px',
         bottom: 0,
@@ -123,9 +123,16 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
                     <Button
                         color="primary"
                         className={classes.doneBtn}
-                        onClick={handleDone}
+                        onClick={() => handleDone(true)}
                     >
                         Done
+                    </Button>
+                    <Button
+                        color="primary"
+                        className={classes.doneBtn}
+                        onClick={() => handleDone(false)}
+                    >
+                        Cancel
                     </Button>
                 </div>
             )}

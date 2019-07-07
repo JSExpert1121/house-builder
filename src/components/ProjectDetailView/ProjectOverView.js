@@ -1,5 +1,6 @@
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,6 +15,7 @@ import CustomSnackbar from 'components/shared/CustomSnackbar';
 const styles = theme => ({
   root: {
     padding: theme.spacing(1, 1),
+    position: 'relative'
   },
   title: {
     fontSize: '20px',
@@ -26,6 +28,11 @@ const styles = theme => ({
     fontWeight: '600',
     color: theme.palette.primary.light,
     textDecoration: 'none',
+  },
+  busy: {
+    position: 'absolute',
+    left: 'calc(50% - 20px)',
+    top: 'calc(50% - 20px)',
   },
 });
 
@@ -41,11 +48,12 @@ class ProjectOverView extends React.Component {
       description: '',
       showMessage: false,
       variant: 'success',
-      message: ''
+      message: '',
+      isBusy: false
     };
   }
 
-  setEdit = async (editing) => {
+  setEdit = async (editing, save = true) => {
     if (editing) {
       this.setState({
         editing,
@@ -55,20 +63,36 @@ class ProjectOverView extends React.Component {
         description: this.props.project.description
       });
     } else {
-      try {
-        const proj = {
-          title: this.state.title,
-          budget: this.state.price,
-          due: this.state.dueDate,
-          description: this.state.description
-        };
-        console.log('ProjectOverview', proj);
-        await this.props.updateProject(this.props.project.id, proj);
-        await this.props.getProjectData(this.props.project.id);
-        this.setState({ editing: false, showMessage: true, variant: 'success', message: 'Update Project Success' });
-      } catch (error) {
-        this.setState({ showMessage: true, variant: 'error', message: 'Update Project failed' });
-        console.log(error);
+      if (save) {
+        this.setState({isBusy: true});
+        try {
+          const proj = {
+            title: this.state.title,
+            budget: this.state.price,
+            due: this.state.dueDate,
+            description: this.state.description
+          };
+          console.log('ProjectOverview', proj);
+          await this.props.updateProject(this.props.project.id, proj);
+          await this.props.getProjectData(this.props.project.id);
+          this.setState({ 
+            editing: false, 
+            showMessage: true, 
+            variant: 'success', 
+            message: 'Update Project Success', 
+            isBusy: false 
+          });
+        } catch (error) {
+          this.setState({ 
+            showMessage: true, 
+            variant: 'error', 
+            message: 'Update Project failed',
+            isBusy: false
+          });
+          console.log(error);
+        }
+      } else {
+        this.setState({ editing: false });
       }
     }
   }
@@ -108,7 +132,7 @@ class ProjectOverView extends React.Component {
                 price={this.state.price}
                 dueDate={this.state.dueDate}
                 description={this.state.description}
-                handleDone={() => this.setEdit(false)}
+                handleDone={(save) => this.setEdit(false, save)}
                 handleTitleChange={this.handleTitleChange}
                 handlePriceChange={this.handlePriceChange}
                 handleDateChange={this.handleDateChange}
@@ -126,6 +150,7 @@ class ProjectOverView extends React.Component {
           message={message}
           handleClose={() => this.setState({ showMessage: false })}
         />}
+        {this.state.isBusy && <CircularProgress className={classes.busy} />}
       </Box>
     );
   }

@@ -1,16 +1,17 @@
-import CircularProgress           from '@material-ui/core/CircularProgress';
-import Paper                      from '@material-ui/core/Paper';
-import {createStyles, withStyles} from '@material-ui/core/styles';
-import Table                      from '@material-ui/core/Table';
-import TableBody                  from '@material-ui/core/TableBody';
-import TableHead                  from '@material-ui/core/TableHead';
-import TablePagination            from '@material-ui/core/TablePagination';
-import TableRow                   from '@material-ui/core/TableRow';
-import React                      from 'react';
-import {connect}                  from 'react-redux';
-import {compose}                  from "redux";
-import {getAllProjects}           from '../../../actions/gen-actions';
-import CustomTableCell            from '../../../components/shared/CustomTableCell';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Paper from '@material-ui/core/Paper';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from "redux";
+import { getAllProjects } from '../../../actions/gen-actions';
+import CustomTableCell from '../../../components/shared/CustomTableCell';
+import removeMd from 'remove-markdown';
 
 const styles = theme => createStyles({
   root: {
@@ -79,23 +80,23 @@ class CurrentProjectView extends React.Component {
           </TableHead>
           <TableBody>
             {projects.content.map(row => (
-                <TableRow
-                    className={classes.row}
-                    key={row.id}
-                    hover
-                    onClick={() => {
-                      this.props.history.push('/projects/project_detail/' + row.id);
-                    }}
-                >
-                  <CustomTableCell component="th" scope="row">
-                    {row.title}
-                  </CustomTableCell>
-                  <CustomTableCell align="center">{row.budget}</CustomTableCell>
-                  <CustomTableCell align="center">{row.due && row.due.slice(0, 10)}</CustomTableCell>
-                  <CustomTableCell align="center">
-                    {row.description}
-                  </CustomTableCell>
-                </TableRow>
+              <TableRow
+                className={classes.row}
+                key={row.id}
+                hover
+                onClick={() => {
+                  this.props.history.push('/projects/project_detail/' + row.id);
+                }}
+              >
+                <CustomTableCell component="th" scope="row">
+                  {row.title}
+                </CustomTableCell>
+                <CustomTableCell align="center">{row.budget}</CustomTableCell>
+                <CustomTableCell align="center">{row.due && row.due.slice(0, 10)}</CustomTableCell>
+                <CustomTableCell align="center">
+                  {removeMd(row.description)}
+                </CustomTableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
