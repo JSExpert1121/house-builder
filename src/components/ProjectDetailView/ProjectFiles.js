@@ -8,10 +8,10 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import { DropzoneDialog } from 'material-ui-dropzone';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../actions/global-actions';
 import CustomSnackbar from '../shared/CustomSnackbar';
@@ -46,8 +46,6 @@ class ProjectFiles extends React.Component {
       message: '',
     };
   }
-
-  componentDidMount() { }
 
   handleUploadFiles = async files => {
     const { project } = this.props;

@@ -1,28 +1,21 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { getAllProjects } from '../../../actions/gen-actions';
-import { createStyles, withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import { CircularProgress, Table, TableBody, TableHead, TablePagination, TableRow } from '@material-ui/core';
-
-import CustomTableCell from '../../../components/shared/CustomTableCell';
-import { compose } from "redux";
+import CircularProgress           from '@material-ui/core/CircularProgress';
+import Paper                      from '@material-ui/core/Paper';
+import {createStyles, withStyles} from '@material-ui/core/styles';
+import Table                      from '@material-ui/core/Table';
+import TableBody                  from '@material-ui/core/TableBody';
+import TableHead                  from '@material-ui/core/TableHead';
+import TablePagination            from '@material-ui/core/TablePagination';
+import TableRow                   from '@material-ui/core/TableRow';
+import React                      from 'react';
+import {connect}                  from 'react-redux';
+import {compose}                  from "redux";
+import {getAllProjects}           from '../../../actions/gen-actions';
+import CustomTableCell            from '../../../components/shared/CustomTableCell';
 
 const styles = theme => createStyles({
   root: {
     flexGrow: 1,
     height: 'calc(100vh - 64px - 48px - 16px)',
-    overflow: 'hidden',
-  },
-  tableWrap: {
-    overflow: 'auto',
-    maxHeight: 'calc(100vh - 64px - 48px - 48px - 16px)',
-  },
-  row: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.background.default,
-    },
   },
   waitingSpin: {
     position: 'relative',
@@ -46,7 +39,6 @@ class CurrentProjectView extends React.Component {
   }
 
   handleChangePage = (event, page) => {
-    // const { userProfile } = this.props;
     this.setState({ currentPage: page });
 
     this.props.getAllProjects(page, this.state.rowsPerPage);
@@ -75,26 +67,25 @@ class CurrentProjectView extends React.Component {
     }
 
     return (
-      <Paper className={classes.root}>
-        <div className={classes.tableWrap}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell> Project Title </CustomTableCell>
-                <CustomTableCell align="center">Budget</CustomTableCell>
-                <CustomTableCell align="center">Due Date</CustomTableCell>
-                <CustomTableCell align="center">Discription</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {projects.content.map(row => (
+      <Paper square className={classes.root}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell> Project Title </CustomTableCell>
+              <CustomTableCell align="center">Budget</CustomTableCell>
+              <CustomTableCell align="center">Due Date</CustomTableCell>
+              <CustomTableCell align="center">Discription</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {projects.content.map(row => (
                 <TableRow
-                  className={classes.row}
-                  key={row.id}
-                  hover
-                  onClick={() => {
-                    this.props.history.push('/projects/project_detail/' + row.id);
-                  }}
+                    className={classes.row}
+                    key={row.id}
+                    hover
+                    onClick={() => {
+                      this.props.history.push('/projects/project_detail/' + row.id);
+                    }}
                 >
                   <CustomTableCell component="th" scope="row">
                     {row.title}
@@ -105,10 +96,9 @@ class CurrentProjectView extends React.Component {
                     {row.description}
                   </CustomTableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+            ))}
+          </TableBody>
+        </Table>
         <TablePagination
           style={{ overflow: 'auto' }}
           rowsPerPageOptions={[5, 10, 20]}
@@ -130,21 +120,16 @@ class CurrentProjectView extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getAllProjects: (page, size) => dispatch(getAllProjects(page, size)),
-  };
-};
-
 const mapStateToProps = state => ({
   projects: state.gen_data.allprojects,
 });
 
 export default compose(
-  withRouter,
   withStyles(styles),
   connect(
     mapStateToProps,
-    mapDispatchToProps
+    {
+      getAllProjects
+    }
   ),
 )(CurrentProjectView)

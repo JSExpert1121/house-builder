@@ -26,10 +26,7 @@ export const {
   [CLEAR_SELECTED_CONTRACTOR]: () => null,
   [CLEAR_SELECTED_OPTION]: () => null,
   [CLEAR_SPECIALTIES]: () => null,
-  [CONTRACTOR_DETAIL_LOADED]: (selectedProject, contractorFiles) => ({
-    selectedProject,
-    contractorFiles,
-  }),
+  [CONTRACTOR_DETAIL_LOADED]: (response) => response,
   [SET_SELECTED_CONTRACTOR]: contractor => contractor,
   [SPECIALTIES_LOADED]: specialties => specialties,
 });

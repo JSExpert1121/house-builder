@@ -211,14 +211,7 @@ class CategoryDetailView extends Component<
               onChange={val => this.setState({ value: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
             />
-            // @ts-ignore:
             <SimpleMDE
-              style={{
-                height: '209px',
-                overflow: 'auto',
-                marginBottom: '8px',
-                textAlign: 'left',
-              }}
               value={this.state.description}
               onChange={val => this.setState({ description: val })}
               options={{
@@ -399,15 +392,7 @@ class CategoryDetailView extends Component<
               onChange={val => this.setState({ ovalue: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
             />
-            // @ts-ignore
             <SimpleMDE
-              style={{
-                height: '209px',
-                overflow: 'auto',
-                marginBottom: '8px',
-                textAlign: 'left',
-              }}
-              value={this.state.odescription}
               onChange={val => this.setState({ odescription: val })}
               options={{
                 placeholder: 'Description here',
@@ -418,7 +403,6 @@ class CategoryDetailView extends Component<
             <Button
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
-              color="primary"
             >
               Cancel
             </Button>
@@ -448,7 +432,7 @@ class CategoryDetailView extends Component<
               }}
               color="primary"
             >
-              Add{' '}
+              Add
               {this.state.isAdding && (
                 <CircularProgress size={24} thickness={4} />
               )}

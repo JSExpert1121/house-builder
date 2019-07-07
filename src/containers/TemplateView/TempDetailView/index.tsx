@@ -330,7 +330,7 @@ class TemplateDetailView extends Component<
           onClose={() => this.setState({ openCategoryForm: false })}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">create category</DialogTitle>
+          <DialogTitle id="form-dialog-title">Create category</DialogTitle>
           <DialogContent>
             <DialogContentText>
               please input the correct category information
@@ -363,14 +363,7 @@ class TemplateDetailView extends Component<
               onChange={val => this.setState({ cvalue: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
             />
-            // @ts-ignore
             <SimpleMDE
-              style={{
-                height: '209px',
-                overflow: 'auto',
-                marginBottom: '8px',
-                textAlign: 'left',
-              }}
               value={this.state.cdescription}
               onChange={val => this.setState({ cdescription: val })}
               options={{
@@ -382,7 +375,6 @@ class TemplateDetailView extends Component<
             <Button
               disabled={this.state.isAdding}
               onClick={() => this.setState({ openCategoryForm: false })}
-              color="primary"
             >
               Cancel
             </Button>

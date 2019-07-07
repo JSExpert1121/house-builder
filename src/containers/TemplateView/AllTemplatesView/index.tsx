@@ -60,7 +60,7 @@ interface ConnAllTemplateViewProps extends MaterialThemeHOC {
   history: History;
   selectTemplate: (id: number) => any;
   deleteTemplate: (id: number, cb: any) => any;
-  createTemplate: (data: any, cb: any) => any;
+  createTemplate: (data: any) => any;
   userProfile: UserProfile;
 }
 
@@ -117,6 +117,34 @@ class AllTemplateView extends Component<
 
     this.props.getTemplatesO(currentPage, rowsPerPage);
   };
+
+  createTemplate = async () => {
+    this.setState({ isSaving: true });
+    const { userProfile } = this.props;
+    const data = {
+      name: this.state.name,
+      description: this.state.description,
+      updatedBy: userProfile.email,
+    };
+
+    this.props.createTemplate(data)
+      .then(res => {
+        this.setState({
+          snackBar: true,
+          SnackBarContent: res.data
+            ? 'create template success'
+            : 'create template failed',
+        });
+      });
+    await this.props.getTemplatesO(0, this.state.rowsPerPage);
+
+    this.setState({
+      openCategoryForm: false,
+      isSaving: false,
+      name: '',
+      description: '',
+    });
+  }
 
   render() {
     const { classes, templates } = this.props;
@@ -260,41 +288,14 @@ class AllTemplateView extends Component<
             <Button
               disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
-              size="small"
               className={classes.marginRight}
             >
               Cancel
             </Button>
             <Button
               disabled={this.state.isSaving}
-              onClick={async () => {
-                this.setState({ isSaving: true });
-                const { userProfile } = this.props;
-                const data = {
-                  name: this.state.name,
-                  description: this.state.description,
-                  updatedBy: userProfile.email,
-                };
-
-                await this.props.createTemplate(data, res => {
-                  this.setState({
-                    snackBar: true,
-                    SnackBarContent: res
-                      ? 'create template success'
-                      : 'create template failed',
-                  });
-                });
-                await this.props.getTemplatesO(0, this.state.rowsPerPage);
-
-                this.setState({
-                  openCategoryForm: false,
-                  isSaving: false,
-                  name: '',
-                  description: '',
-                });
-              }}
+              onClick={this.createTemplate}
               color="primary"
-              size="small"
             >
               Add
               {this.state.isSaving && (

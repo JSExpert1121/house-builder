@@ -1,36 +1,37 @@
-import Box               from '@material-ui/core/Box';
-import CircularProgress  from '@material-ui/core/CircularProgress';
-import Dialog            from '@material-ui/core/Dialog';
-import DialogActions     from '@material-ui/core/DialogActions';
-import DialogContent     from '@material-ui/core/DialogContent';
+import Box from '@material-ui/core/Box';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle       from '@material-ui/core/DialogTitle';
-import Fab               from '@material-ui/core/Fab';
-import IconButton        from '@material-ui/core/IconButton';
-import MenuItem          from '@material-ui/core/MenuItem';
-import Select            from '@material-ui/core/Select';
-import Snackbar          from '@material-ui/core/Snackbar';
-import {withStyles}      from '@material-ui/core/styles';
-import Table             from '@material-ui/core/Table';
-import TableBody         from '@material-ui/core/TableBody';
-import TableHead         from '@material-ui/core/TableHead';
-import TablePagination   from '@material-ui/core/TablePagination';
-import TableRow          from '@material-ui/core/TableRow';
-import TextField         from '@material-ui/core/TextField';
-import Typography        from '@material-ui/core/Typography';
-import AddIcon           from '@material-ui/icons/Add';
-import DeleteIcon        from '@material-ui/icons/Delete';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Snackbar from '@material-ui/core/Snackbar';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import React       from 'react';
-import {connect}   from 'react-redux';
-import {compose}   from 'redux';
-import removeMd    from 'remove-markdown';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import removeMd from 'remove-markdown';
 
-import {addTemplate, deleteTemplate, getTemplates,} from '../../actions/gen-actions';
-import {getProjectData}                             from '../../actions/global-actions';
-import Button                                       from '../CustomButtons/Button';
-import CustomTableCell                              from '../shared/CustomTableCell';
+import { addTemplate, deleteTemplate, getTemplates, } from '../../actions/gen-actions';
+import { getProjectData } from '../../actions/global-actions';
+import { createTemplate } from '../../actions/tem-actions';
+import Button from '../CustomButtons/Button';
+import CustomTableCell from '../shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
@@ -83,7 +84,11 @@ class ProjectTemplate extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getTemplates(0, 20);
+    this.fetchTemplates();
+  }
+
+  fetchTemplates = () => {
+    this.props.getTemplates(0, 20)
   }
   handleChangePage = (event, page) => {
     this.setState({ currentPage: page });
@@ -107,14 +112,36 @@ class ProjectTemplate extends React.Component {
     this.props.getTemplates(currentPage, rowsPerPage);
   };
 
-  createSortHandler = () => {
-    let order = 'desc';
+  addTemplateToProject = async () => {
+    const { project } = this.props;
+    const { template } = this.state;
 
-    if (this.state.order === 'desc') {
-      order = 'asc';
+    const result = await addTemplate(project.id, template);
+    this.setState({ template: '' });
+    if (result.data) {
+      this.props.getProjectData(project.id);
     }
+  };
 
-    this.setState({ order });
+  createTemplate = async () => {
+    this.setState({ isSaving: true });
+    const { userProfile } = this.props;
+    const data = {
+      name: this.state.name,
+      description: this.state.description,
+      updatedBy: userProfile.email,
+    };
+
+    this.props.createTemplate(data).then(res => {
+      this.fetchTemplates();
+      this.setState({
+        snackBar: true,
+        openCategoryForm: false,
+        snackBarContent: res.data
+          ? 'create template success'
+          : 'create template failed',
+      });
+    });
   };
 
   handleChange = event => {
@@ -156,24 +183,19 @@ class ProjectTemplate extends React.Component {
               color="primary"
               aria-label="Add"
               className={classes.fab}
-              onClick={() =>
-                this.props.addTemplate(project.id, template, result => {
-                  this.setState({ template: '' });
-                  if (result) this.props.getProjectData(project.id);
-                })
-              }
+              onClick={this.addTemplateToProject}
             >
               <AddIcon />
             </Fab>
             {templates
               ? templates.content.map(row =>
-                  row.id === template ? (
-                    <ul key={row.id}>
-                      <li>Name: {row.name}</li>
-                      <li>Description: {row.description}</li>
-                    </ul>
-                  ) : null
-                )
+                row.id === template ? (
+                  <ul key={row.id}>
+                    <li>Name: {row.name}</li>
+                    <li>Description: {row.description}</li>
+                  </ul>
+                ) : null
+              )
               : null}
           </Box>
         )}
@@ -277,7 +299,7 @@ class ProjectTemplate extends React.Component {
           onClose={() => this.setState({ openCategoryForm: false })}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">create template</DialogTitle>
+          <DialogTitle id="form-dialog-title">Create template</DialogTitle>
           <DialogContent>
             <DialogContentText>
               please input the correct template information
@@ -304,45 +326,16 @@ class ProjectTemplate extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button
-              disabled={this.state.isSaving}
               onClick={() => this.setState({ openCategoryForm: false })}
             >
               Cancel
             </Button>
             <Button
               disabled={this.state.isSaving}
-              onClick={async () => {
-                this.setState({ isSaving: true });
-                const { userProfile } = this.props;
-                const data = {
-                  name: this.state.name,
-                  description: this.state.description,
-                  updatedBy: userProfile.email,
-                };
-
-                await this.props.createProject(data, res => {
-                  this.setState({
-                    snackBar: true,
-                    snackBarContent: res
-                      ? 'create template success'
-                      : 'create template failed',
-                  });
-                });
-                await this.props.getContrators0(0, this.state.rowsPerPage);
-
-                this.setState({
-                  openCategoryForm: false,
-                  isSaving: false,
-                  name: '',
-                  description: '',
-                });
-              }}
+              onClick={this.createTemplate}
               color="primary"
             >
               Add
-              {this.state.isSaving && (
-                <CircularProgress size={24} thickness={4} />
-              )}
             </Button>
           </DialogActions>
         </Dialog>
@@ -373,6 +366,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   getTemplates,
   addTemplate,
+  createTemplate,
   deleteTemplate,
   getProjectData,
 };

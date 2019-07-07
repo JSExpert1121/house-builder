@@ -1,24 +1,23 @@
-import React          from 'react';
-import { connect }    from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import React from 'react';
+import { connect } from 'react-redux';
 
-import PropTypes        from 'prop-types';
-import Paper            from '@material-ui/core/Paper';
-import Tabs             from '@material-ui/core/Tabs';
-import Box              from '@material-ui/core/Box';
-import Tab              from '@material-ui/core/Tab';
-import NoSsr            from '@material-ui/core/NoSsr';
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Box from '@material-ui/core/Box';
+import Tab from '@material-ui/core/Tab';
+import NoSsr from '@material-ui/core/NoSsr';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton       from '@material-ui/core/IconButton';
+import IconButton from '@material-ui/core/IconButton';
 
 import { withStyles } from '@material-ui/core/styles';
-import ArrowBackIcon  from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { compose } from 'redux';
 
-import ProposalDetailFiles    from './ProposalDetailFiles';
+import ProposalDetailFiles from './ProposalDetailFiles';
 import ProposalDetailOverview from './ProposalDetailOverview';
 import ProposalDetailMessages from './ProposalDetailMessages';
-import ProposalEditView       from './ProposalEditView';
-import ConfirmDialog          from '../../components/shared/ConfirmDialog';
+import ProposalEditView from './ProposalEditView';
+import ConfirmDialog from '../../components/shared/ConfirmDialog';
 
 import {
   addOption,
@@ -28,23 +27,10 @@ import {
   submitProposal,
   updateOption,
   updateProposal,
-}                       from '../../actions/global-actions';
+} from '../../actions/global-actions';
 import { awardProject } from '../../actions/gen-actions';
 
 const styles = theme => ({
-  root: {
-    height: 'calc(100vh - 112px)',
-    overflowY: 'auto',
-    position: 'relative',
-  },
-  toolbarstyle: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.dark,
-    flexGrow: 1,
-  },
-  backBtn: {
-    color: theme.palette.primary.dark,
-  },
   busy: {
     position: 'absolute',
     left: 'calc(50% - 10px)',
@@ -57,7 +43,7 @@ const styles = theme => ({
   },
 });
 
-class ConnectedProposalDetailView extends React.Component {
+class ProposalDetailView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -467,16 +453,13 @@ class ConnectedProposalDetailView extends React.Component {
       return <CircularProgress className={classes.waitingSpin} />;
     }
 
-    // editable = editable || match.url.includes('/s_cont');
     return (
       <NoSsr>
-        <Box className={classes.root}>
-          <Paper
+        <Paper
             square
-            style={{ height: '100%', overflow: 'auto', position: 'relative' }}
           >
             <Box style={{ display: 'flex' }}>
-              <IconButton className={classes.backBtn} onClick={this.handleBack}>
+              <IconButton onClick={this.handleBack}>
                 <ArrowBackIcon />
               </IconButton>
               <Tabs
@@ -486,7 +469,6 @@ class ConnectedProposalDetailView extends React.Component {
                 indicatorColor="primary"
                 textColor="primary"
                 scrollButtons="off"
-                className={classes.toolbarstyle}
               >
                 <Tab label="Detail" />
                 <Tab label="Templates" />
@@ -536,51 +518,32 @@ class ConnectedProposalDetailView extends React.Component {
             />
             {this.state.busy && <CircularProgress className={classes.busy} />}
           </Paper>
-        </Box>
       </NoSsr>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProposalDetails: id => dispatch(getProposalDetails(id)),
-    submitProposal: (cont_id, pro_id, proposal) =>
-      dispatch(submitProposal(cont_id, pro_id, proposal)),
-    deleteProposal: id => dispatch(deleteProposal(id)),
-    updateProposal: (id, pro) => dispatch(updateProposal(id, pro)),
-    addOption: (propid, catid, option) =>
-      dispatch(addOption(propid, catid, option)),
-    updateOption: (id, pro) => dispatch(updateOption(id, pro)),
-    deleteOption: id => dispatch(deleteOption(id)),
-    awardProject: id => dispatch(awardProject(id)),
-  };
+const mapDispatchToProps = {
+  getProposalDetails,
+  submitProposal,
+  deleteProposal,
+  updateProposal,
+  addOption,
+  updateOption,
+  deleteOption,
+  awardProject,
 };
 
-const mapStateToProps = state => {
-  return {
-    proposal: state.global_data.proposalDetail,
-    project: state.global_data.project,
-    userProfile: state.global_data.userProfile,
-  };
-};
+const mapStateToProps = state => ({
+  proposal: state.global_data.proposalDetail,
+  project: state.global_data.project,
+  userProfile: state.global_data.userProfile,
+});
 
-ConnectedProposalDetailView.propTypes = {
-  classes: PropTypes.object.isRequired,
-  project: PropTypes.object,
-  getProposalDetails: PropTypes.func.isRequired,
-  submitProposal: PropTypes.func.isRequired,
-  deleteProposal: PropTypes.func.isRequired,
-  updateProposal: PropTypes.func.isRequired,
-  addOption: PropTypes.func.isRequired,
-  updateOption: PropTypes.func.isRequired,
-  deleteOption: PropTypes.func.isRequired,
-  awardProject: PropTypes.func.isRequired,
-};
-
-const ProposalDetailView = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectedProposalDetailView);
-
-export default withRouter(withStyles(styles)(ProposalDetailView));
+export default compose(
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(ProposalDetailView);

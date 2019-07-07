@@ -7,41 +7,32 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import FiberIcon from '@material-ui/icons/FiberManualRecord';
-import clsx from 'clsx';
-import Button from 'components/CustomButtons/Button.jsx';
+import TableBody                           from '@material-ui/core/TableBody';
+import TableHead                           from '@material-ui/core/TableHead';
+import TableRow                            from '@material-ui/core/TableRow';
+import TextField                           from '@material-ui/core/TextField';
+import Typography                          from '@material-ui/core/Typography';
+import FiberIcon                           from '@material-ui/icons/FiberManualRecord';
+import clsx                                from 'clsx';
+import Button                              from 'components/CustomButtons/Button.jsx';
 import 'easymde/dist/easymde.min.css';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import SimpleMDE from 'react-simplemde-editor';
-import { compose } from 'redux';
-import { awardProject } from '../../actions/gen-actions';
+import React, { Component }                from 'react';
+import { connect }                         from 'react-redux';
+import { withRouter }                      from 'react-router-dom';
+import SimpleMDE                           from 'react-simplemde-editor';
+import { compose }                         from 'redux';
+import { awardProject }                    from '../../actions/gen-actions';
 import { deleteProposal, getProposalData } from '../../actions/global-actions';
-import ConfirmDialog from '../../components/shared/ConfirmDialog';
-import CustomTableCell from '../../components/shared/CustomTableCell';
-import SubContractorView from '../Contractor/SubContractor';
+import ConfirmDialog                       from '../../components/shared/ConfirmDialog';
+import CustomTableCell                     from '../../components/shared/CustomTableCell';
+import SubContractorView                   from '../Contractor/SubContractor';
 
 import ProjectView from '../ProjectDetailView/ProjectView';
 import ProposalView from './ProposalView';
 
 const styles = theme => ({
-  '@global': {
-    '.MuiListItemIcon-root': {
-      minWidth: '32px',
-    },
-    '.MuiListItem-root': {
-      paddingTop: '4px',
-      paddingBottom: '4px',
-    },
-  },
   root: {
     position: 'relative',
-    height: 'calc(100vh - 64px - 48px - 36px - 16px)',
     overflow: 'auto',
     flexGrow: 1,
     padding: theme.spacing(2),
@@ -336,6 +327,7 @@ const mapDispatchToProps = {
   getProposalData,
   deleteProposal,
   awardProject,
+  templateSelected: () => {},
 };
 
 const mapStateToProps = state => ({
@@ -346,6 +338,7 @@ const mapStateToProps = state => ({
 
 export default compose(
   withStyles(styles),
+  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
