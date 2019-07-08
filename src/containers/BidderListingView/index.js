@@ -38,7 +38,7 @@ class BidderListingView extends React.Component {
               path={`${match.url}/contractor_detail`}
               component={ContractorDetailView}
             />
-            <Redirect path={`${match.url}`} to={`${match.url}/search_bidder`} />
+            <Redirect path="*" to={`${match.url}/search_bidder`} />
           </Switch>
         </div>
       </NoSsr>

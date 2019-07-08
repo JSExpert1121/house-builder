@@ -1,4 +1,5 @@
-import { createActions } from 'redux-actions';
+import { allContractorsLoaded } from "actions/cont-actions";
+import { createActions }        from 'redux-actions';
 
 import {
   CLEAR_PROPOSAL_MESSAGES,
@@ -7,7 +8,6 @@ import {
   PROJECT_BIDDERS_LOADED,
   PROJECT_DETAIL_LOADED,
   PROPOSALS_LOADED,
-  SEARCH_FILTER_LOADED,
   SET_CURRENT_PROJECT,
   SET_DETAIL_PROPOSAL,
   SET_PROPOSALS_COMPARE,
@@ -28,7 +28,6 @@ export const {
   projectBiddersLoaded,
   projectDetailLoaded,
   proposalsLoaded,
-  searchFilterLoaded,
   setCurrentProject,
   setDetailProposal,
   setProposalsCompare,
@@ -41,7 +40,6 @@ export const {
   [PROJECT_BIDDERS_LOADED]: projectBidders => projectBidders,
   [PROJECT_DETAIL_LOADED]: project => project,
   [PROPOSALS_LOADED]: proposals => proposals,
-  [SEARCH_FILTER_LOADED]: searchResult => searchResult,
   [SET_CURRENT_PROJECT]: currentProjectId => currentProjectId,
   [SET_DETAIL_PROPOSAL]: proposalDetail => proposalDetail,
   [SET_PROPOSALS_COMPARE]: compareProps => compareProps,
@@ -242,10 +240,7 @@ export function searchFilter(name, city, specialties) {
         },
       }
     )
-      .then(response => {
-        dispatch(projectBiddersLoaded(response.data));
-      })
-      .catch(err => console.log(err.message));
+      .then(response => dispatch(allContractorsLoaded(response.data)))
   };
 }
 

@@ -19,7 +19,7 @@ import DeleteIcon                                                             fr
 import React, {Component}                                                     from 'react';
 import {connect}                                                              from 'react-redux';
 import {compose}                                                              from 'redux';
-import {createContractor, deleteContractor, getContrators0, selectContractor} from '../../../actions/cont-actions';
+import {createContractor, deleteContractor, getContractors, selectContractor} from '../../../actions/cont-actions';
 import Button
                                                                               from '../../../components/CustomButtons/Button';
 import CustomTableCell
@@ -365,7 +365,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getContrators0,
+  getContrators0: getContractors,
   selectContractor,
   deleteContractor,
   createContractor,

@@ -96,7 +96,7 @@ class CustomDropdown extends React.Component {
             );
           } else if (
             prop.props !== undefined &&
-            prop.props["data-ref"] === "multi"
+            prop.props["data-ref"] === "specialties"
           ) {
             return (
               <MenuItem

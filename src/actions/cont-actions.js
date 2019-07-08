@@ -84,15 +84,13 @@ export function updateContractor(id) {
   };
 }
 
-export function getContrators0(page, size) {
+export function getContractors(page, size) {
   return function(dispatch) {
     dispatch(clearAllContractors());
 
     return restAPI
       .get('/contractors', { page, size })
-      .then(response => {
-        dispatch(allContractorsLoaded(response.data));
-      });
+      .then(response => dispatch(allContractorsLoaded(response.data)));
   };
 }
 

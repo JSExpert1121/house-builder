@@ -7,7 +7,6 @@ import {
   PROJECT_DETAIL_LOADED,
   PROPOSAL_MESSAGES_LOADED,
   PROPOSALS_LOADED,
-  SEARCH_FILTER_LOADED,
   SET_CURRENT_PROJECT,
   SET_DETAIL_PROPOSAL,
   SET_PROPOSALS_COMPARE,
@@ -23,7 +22,6 @@ const initialState = {
   project: null,
   proposalDetail: null,
   compareProps: null,
-  searchResult: null,
   currentProjectId: null,
 };
 
@@ -52,10 +50,6 @@ const globalReducer = handleActions(
     [PROJECT_BIDDERS_LOADED]: (state, action) => ({
       ...state,
       projectBidders: action.payload,
-    }),
-    [SEARCH_FILTER_LOADED]: (state, action) => ({
-      ...state,
-      searchResult: action.payload,
     }),
     [SET_CURRENT_PROJECT]: (state, action) => ({
       ...state,
