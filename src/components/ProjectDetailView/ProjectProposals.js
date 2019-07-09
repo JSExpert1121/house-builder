@@ -125,7 +125,12 @@ class ProjectProposals extends React.Component {
 
   handleRowSelected = id => {
     const { match, history } = this.props;
-    history.push(match.url.substring(0, 9) + '/proposal_detail/' + id);
+    console.log('ProjectProposal: ', match.url);
+    if (match.url.includes('/gen-contractor')) {
+      history.push('/gen-contractor/proposal_detail/' + id);
+    } else if (match.url.includes('/projects')) {
+      history.push('/projects/proposal_detail/' + id);
+    }
   };
 
   handleChecked = id => {

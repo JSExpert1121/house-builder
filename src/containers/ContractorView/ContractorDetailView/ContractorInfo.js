@@ -95,14 +95,6 @@ class ContractorInfoView extends React.Component {
   render() {
     const { classes, selectedContractor } = this.props;
 
-    // if (this.state.isProcessing) {
-    //   return (
-    //     <div className={classes.root}>
-    //       <CircularProgress className={classes.waitingSpin} />{' '}
-    //     </div>
-    //   );
-    // }
-
     return (
       <div className={classes.root}>
         <Table>
