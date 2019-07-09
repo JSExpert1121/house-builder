@@ -1,23 +1,23 @@
-import Card                                                from '@material-ui/core/Card';
-import CircularProgress                                    from '@material-ui/core/CircularProgress';
-import IconButton                                          from '@material-ui/core/IconButton';
-import Snackbar                                            from '@material-ui/core/Snackbar';
-import {emphasize, withStyles}                             from '@material-ui/core/styles';
-import Table                                               from '@material-ui/core/Table';
-import TableBody                                           from '@material-ui/core/TableBody';
-import TableHead                                           from '@material-ui/core/TableHead';
-import TablePagination                                     from '@material-ui/core/TablePagination';
-import TableRow                                            from '@material-ui/core/TableRow';
-import Typography                                          from '@material-ui/core/Typography';
-import AccessAlarmIcon                                     from '@material-ui/icons/AccessAlarm';
-import React                                               from 'react';
-import {connect}                                           from 'react-redux';
-import {compose}                                           from 'redux';
-import {getContractors, getSpecialties, selectContractor,} from '../../actions/cont-actions';
+import Card from '@material-ui/core/Card';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import { emphasize, withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { getContractors, getSpecialties, selectContractor, } from '../../actions/cont-actions';
 
-import {getProjectBiddersData, inviteContractor, searchFilter,} from '../../actions/global-actions';
-import Button                                                   from "../CustomButtons/Button";
-import CustomTableCell                                          from "../shared/CustomTableCell";
+import { getProjectBiddersData, inviteContractor, searchFilter, } from '../../actions/global-actions';
+import Button from "../CustomButtons/Button";
+import CustomTableCell from "../shared/CustomTableCell";
 import SpecialtySearchBar from 'components/SearchBar/SpecialtySearchBar';
 
 const styles = theme => ({
@@ -248,9 +248,9 @@ class ProjectBidders extends React.Component {
 
   async componentDidMount() {
     const { project } = this.props;
+    await this.props.getContrators0(0, 20);
     await this.props.getProjectBiddersData(project.id, 0, 20);
     await this.props.getSpecialties();
-    await this.props.getContrators0(0, 20);
   }
 
   componentWillReceiveProps({ projectBidders, contractors, searchResult }) {
@@ -326,7 +326,7 @@ class ProjectBidders extends React.Component {
     const suggestions = specialties ? specialties.content || [] : [];
 
     console.log(projectBidders, contractors, specialties);
-    if (projectBidders === null || contractors === null) {
+    if (!projectBidders || !contractors) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
     return (
@@ -529,33 +529,33 @@ class ProjectBidders extends React.Component {
                           <AccessAlarmIcon />
                         </IconButton>
                       ) : (
-                        <Button
-                          className={classes.button}
-                          aria-label="Delete"
+                          <Button
+                            className={classes.button}
+                            aria-label="Delete"
                             color="primary"
-                          onClick={async () => {
-                            await this.props.inviteContractor(
-                              project.id,
-                              row.id,
-                              result => {
-                                if (result) {
-                                  this.props.getContrators0(
-                                    this.state.currentPage1,
-                                    this.state.rowsPerPage1
-                                  );
-                                  this.props.getProjectBiddersData(
-                                    project.id,
-                                    this.state.currentPage,
-                                    this.state.rowsPerPage
-                                  );
+                            onClick={async () => {
+                              await this.props.inviteContractor(
+                                project.id,
+                                row.id,
+                                result => {
+                                  if (result) {
+                                    this.props.getContrators0(
+                                      this.state.currentPage1,
+                                      this.state.rowsPerPage1
+                                    );
+                                    this.props.getProjectBiddersData(
+                                      project.id,
+                                      this.state.currentPage,
+                                      this.state.rowsPerPage
+                                    );
+                                  }
                                 }
-                              }
-                            );
-                          }}
-                        >
-                          Invite
+                              );
+                            }}
+                          >
+                            Invite
                         </Button>
-                      )}
+                        )}
                     </CustomTableCell>
                   </TableRow>
                 ))}

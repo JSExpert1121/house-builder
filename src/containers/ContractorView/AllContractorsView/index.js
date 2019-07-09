@@ -1,29 +1,33 @@
-import CircularProgress                                                       from '@material-ui/core/CircularProgress';
-import Dialog                                                                 from '@material-ui/core/Dialog';
-import DialogActions                                                          from '@material-ui/core/DialogActions';
-import DialogContent                                                          from '@material-ui/core/DialogContent';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText
-                                                                              from '@material-ui/core/DialogContentText';
-import DialogTitle                                                            from '@material-ui/core/DialogTitle';
-import IconButton                                                             from '@material-ui/core/IconButton';
-import Snackbar                                                               from '@material-ui/core/Snackbar';
-import {withStyles}                                                           from '@material-ui/core/styles';
-import Table                                                                  from '@material-ui/core/Table';
-import TableBody                                                              from '@material-ui/core/TableBody';
-import TableHead                                                              from '@material-ui/core/TableHead';
-import TablePagination                                                        from '@material-ui/core/TablePagination';
-import TableRow                                                               from '@material-ui/core/TableRow';
-import TableSortLabel                                                         from '@material-ui/core/TableSortLabel';
-import TextField                                                              from '@material-ui/core/TextField';
-import DeleteIcon                                                             from '@material-ui/icons/Delete';
-import React, {Component}                                                     from 'react';
-import {connect}                                                              from 'react-redux';
-import {compose}                                                              from 'redux';
-import {createContractor, deleteContractor, getContractors, selectContractor} from '../../../actions/cont-actions';
-import Button
-                                                                              from '../../../components/CustomButtons/Button';
-import CustomTableCell
-                                                                              from "../../../components/shared/CustomTableCell";
+  from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import TextField from '@material-ui/core/TextField';
+import DeleteIcon from '@material-ui/icons/Delete';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import {
+  createContractor,
+  deleteContractor,
+  getContractors,
+  selectContractor
+} from '../../../actions/cont-actions';
+import Button from '../../../components/CustomButtons/Button';
+import CustomTableCell from "../../../components/shared/CustomTableCell";
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -118,23 +122,15 @@ class AllContractorsView extends Component {
           <TableHead>
             <TableRow>
               <CustomTableCell> Contractor Email </CustomTableCell>
-              <CustomTableCell align="center">
-                Contractor Name
-              </CustomTableCell>
-              <CustomTableCell align="center">
-                Contractor Street
-              </CustomTableCell>
-              <CustomTableCell align="center">
-                Contractor City
-              </CustomTableCell>
-              <CustomTableCell align="center">
-                Contractor Phone
-              </CustomTableCell>
+              <CustomTableCell align="center">Contractor Name</CustomTableCell>
+              <CustomTableCell align="center">Contractor Street</CustomTableCell>
+              <CustomTableCell align="center">Contractor City</CustomTableCell>
+              <CustomTableCell align="center">Contractor Phone</CustomTableCell>
               <CustomTableCell align="center">
                 <TableSortLabel
-                    active={true}
-                    direction={this.state.order}
-                    onClick={() => this.createSortHandler()}
+                  active={true}
+                  direction={this.state.order}
+                  onClick={() => this.createSortHandler()}
                 >
                   Contractor Status
                 </TableSortLabel>
@@ -144,108 +140,108 @@ class AllContractorsView extends Component {
           </TableHead>
           <TableBody>
             {contractors.content.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                      component="th"
-                      scope="row"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/m_cont/contractor_detail');
-                      }}
-                  >
-                    {row.email ? row.email : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/m_cont/contractor_detail');
-                      }}
-                  >
-                    {row.address ? row.address.name : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/m_cont/contractor_detail');
-                      }}
-                  >
-                    {row.address ? row.address.street : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/m_cont/contractor_detail');
-                      }}
-                  >
-                    {row.address ? row.address.city : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/m_cont/contractor_detail');
-                      }}
-                  >
-                    {row.address ? row.address.phone : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/m_cont/contractor_detail');
-                      }}
-                  >
-                    {row.status ? row.status : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    <IconButton
-                        className={classes.button}
-                        aria-label="Delete"
-                        color="primary"
-                        onClick={async () => {
-                          await this.props.deleteContractor(row.id, result => {
-                            this.setState({
-                              snackBar: true,
-                              snackBarContent: result
-                                  ? 'delete contractor success'
-                                  : 'please delete categories',
-                            });
-                            if (result)
-                              this.props.getContrators0(
-                                  this.state.currentPage,
-                                  this.state.rowsPerPage
-                              );
-                          });
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  component="th"
+                  scope="row"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.email ? row.email : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.address ? row.address.name : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.address ? row.address.street : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.address ? row.address.city : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.address ? row.address.phone : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/m_cont/contractor_detail');
+                  }}
+                >
+                  {row.status ? row.status : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <IconButton
+                    className={classes.button}
+                    aria-label="Delete"
+                    color="primary"
+                    onClick={async () => {
+                      await this.props.deleteContractor(row.id, result => {
+                        this.setState({
+                          snackBar: true,
+                          snackBarContent: result
+                            ? 'delete contractor success'
+                            : 'please delete categories',
+                        });
+                        if (result)
+                          this.props.getContrators0(
+                            this.state.currentPage,
+                            this.state.rowsPerPage
+                          );
+                      });
 
-                          if (
-                              this.state.rowsPerPage * this.state.currentPage <
-                              contractors.totalElements - 1
-                          ) {
-                            await this.props.getContrators0(
-                                this.state.currentPage,
-                                this.state.rowsPerPage
-                            );
-                          } else {
-                            const currentPage = this.state.currentPage - 1;
+                      if (
+                        this.state.rowsPerPage * this.state.currentPage <
+                        contractors.totalElements - 1
+                      ) {
+                        await this.props.getContrators0(
+                          this.state.currentPage,
+                          this.state.rowsPerPage
+                        );
+                      } else {
+                        const currentPage = this.state.currentPage - 1;
 
-                            this.setState({
-                              currentPage: currentPage,
-                            });
+                        this.setState({
+                          currentPage: currentPage,
+                        });
 
-                            await this.props.getContrators0(
-                                currentPage,
-                                this.state.rowsPerPage
-                            );
-                          }
-                        }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </CustomTableCell>
-                </TableRow>
+                        await this.props.getContrators0(
+                          currentPage,
+                          this.state.rowsPerPage
+                        );
+                      }
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </CustomTableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
