@@ -20,7 +20,7 @@ import React                                               from 'react';
 import {connect}                                           from 'react-redux';
 import Select                                              from 'react-select';
 import {compose}                                           from 'redux';
-import {getContrators0, getSpecialties, selectContractor,} from '../../actions/cont-actions';
+import {getContractors, getSpecialties, selectContractor,} from '../../actions/cont-actions';
 
 import {getProjectBiddersData, inviteContractor, searchFilter,} from '../../actions/global-actions';
 import Button                                                   from "../CustomButtons/Button";
@@ -275,8 +275,8 @@ class ProjectBidders extends React.Component {
   }
 
   handleSearch = () => {
-    const multi = this.state.multi
-      ? this.state.multi.map(specialty => specialty.value)
+    const multi = this.state.specialties
+      ? this.state.specialties.map(specialty => specialty.value)
       : [];
     this.props.searchFilter(
       this.state.filterName,
@@ -519,8 +519,8 @@ class ProjectBidders extends React.Component {
             }}
             options={suggestions}
             components={components}
-            value={this.state.multi}
-            onChange={this.handleChange('multi')}
+            value={this.state.specialties}
+            onChange={this.handleChange('specialties')}
             placeholder="Select multiple specialties"
             isMulti
           />
@@ -676,7 +676,7 @@ const mapDispatchToProps = {
   selectContractor,
   getSpecialties,
   searchFilter,
-  getContrators0,
+  getContrators0: getContractors,
   inviteContractor,
 };
 
