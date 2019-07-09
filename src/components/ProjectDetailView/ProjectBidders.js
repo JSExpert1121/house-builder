@@ -1,9 +1,6 @@
 import Card                                                from '@material-ui/core/Card';
-import Chip                                                from '@material-ui/core/Chip';
 import CircularProgress                                    from '@material-ui/core/CircularProgress';
 import IconButton                                          from '@material-ui/core/IconButton';
-import MenuItem                                            from '@material-ui/core/MenuItem';
-import Paper                                               from '@material-ui/core/Paper';
 import Snackbar                                            from '@material-ui/core/Snackbar';
 import {emphasize, withStyles}                             from '@material-ui/core/styles';
 import Table                                               from '@material-ui/core/Table';
@@ -11,20 +8,17 @@ import TableBody                                           from '@material-ui/co
 import TableHead                                           from '@material-ui/core/TableHead';
 import TablePagination                                     from '@material-ui/core/TablePagination';
 import TableRow                                            from '@material-ui/core/TableRow';
-import TextField                                           from '@material-ui/core/TextField';
 import Typography                                          from '@material-ui/core/Typography';
 import AccessAlarmIcon                                     from '@material-ui/icons/AccessAlarm';
-import CancelIcon                                          from '@material-ui/icons/Cancel';
-import classNames                                          from 'classnames';
 import React                                               from 'react';
 import {connect}                                           from 'react-redux';
-import Select                                              from 'react-select';
 import {compose}                                           from 'redux';
 import {getContractors, getSpecialties, selectContractor,} from '../../actions/cont-actions';
 
 import {getProjectBiddersData, inviteContractor, searchFilter,} from '../../actions/global-actions';
 import Button                                                   from "../CustomButtons/Button";
 import CustomTableCell                                          from "../shared/CustomTableCell";
+import SpecialtySearchBar from 'components/SearchBar/SpecialtySearchBar';
 
 const styles = theme => ({
   root: {
@@ -55,17 +49,12 @@ const styles = theme => ({
     lineHeight: '1.5rem',
   },
   title: {
-    padding: '20px',
-    fontSize: '21px',
-    color: 'grey',
+    padding: '16px',
+    fontSize: '20px',
+    color: theme.palette.primary.dark,
   },
   pos: {
     marginBottom: 12,
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
   },
   valueContainer: {
     display: 'flex',
@@ -116,6 +105,7 @@ const styles = theme => ({
   },
 });
 
+/*
 function NoOptionsMessage(props) {
   return (
     <Typography
@@ -233,6 +223,7 @@ const components = {
   SingleValue,
   ValueContainer,
 };
+*/
 
 class ProjectBidders extends React.Component {
   constructor(props) {
@@ -246,14 +237,11 @@ class ProjectBidders extends React.Component {
       isSaving: false,
       openCategoryForm: false,
       name: '',
-      filterName: '',
-      filterCity: '',
       description: '',
       snackBar: false,
       SnackBarContent: '',
       order: 'desc',
       projectBidders: null,
-      multi: null,
       contractors: null,
     };
   }
@@ -274,17 +262,11 @@ class ProjectBidders extends React.Component {
       this.setState({ contractors: { ...contractors, content: searchResult } });
   }
 
-  handleSearch = () => {
-    const multi = this.state.specialties
-      ? this.state.specialties.map(specialty => specialty.value)
-      : [];
-    this.props.searchFilter(
-      this.state.filterName,
-      this.state.filterCity,
-      multi,
+  handleSearch = (name, city, specs) => {
+    this.props.searchFilter(name, city, specs,
       result => {
         if (result) {
-          // this.props.updateContractor(selectedContractor.id);
+          console.log('BidderListingView: ', result);
         }
       }
     );
@@ -330,24 +312,6 @@ class ProjectBidders extends React.Component {
     this.props.getContrators0(currentPage1, rowsPerPage1);
   };
 
-  onNameChange = e => {
-    this.setState({ filterName: e.target.value });
-  };
-
-  onCityChange = e => {
-    this.setState({ filterCity: e.target.value });
-  };
-
-  handleChangeMulti = value => {
-    // setMulti(value);
-  };
-
-  handleChange = name => value => {
-    this.setState({
-      [name]: value,
-    });
-  };
-
   isInvited = id => {
     const value = this.props.projectBidders.map(row => {
       return row.id === id;
@@ -357,21 +321,11 @@ class ProjectBidders extends React.Component {
   };
 
   render() {
-    const { classes, project, theme, specialties, match } = this.props;
+    const { classes, project, specialties, match } = this.props;
     const { contractors, projectBidders } = this.state;
-    const suggestions = specialties
-      ? specialties.content.map(specialty => ({
-          value: specialty.id,
-          label: specialty.name,
-        }))
-      : [];
-    const selectStyles = {
-      input: base => ({
-        ...base,
-        color: theme.palette.text.primary,
-      }),
-    };
+    const suggestions = specialties ? specialties.content || [] : [];
 
+    console.log(projectBidders, contractors, specialties);
     if (projectBidders === null || contractors === null) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
@@ -491,47 +445,14 @@ class ProjectBidders extends React.Component {
           />
         </Card>
         <Card className={classes.card}>
-          <Typography className={classes.title}> Search Field </Typography>
-          <TextField
-            id="name"
-            label="Name"
-            className={classes.textField}
-            value={this.state.filterName}
-            onChange={e => this.onNameChange(e)}
-            margin="normal"
+          <Typography className={classes.title} style={{ paddingBottom: 0 }}>
+            Search Field
+          </Typography>
+          <SpecialtySearchBar
+            search={this.handleSearch}
+            suggestions={suggestions}
           />
-          <TextField
-            id="city"
-            label="City"
-            className={classes.textField}
-            value={this.state.filterCity}
-            onChange={e => this.onCityChange(e)}
-            margin="normal"
-          />
-          <Select
-            classes={classes}
-            styles={selectStyles}
-            textFieldProps={{
-              label: 'Specialty',
-              InputLabelProps: {
-                shrink: true,
-              },
-            }}
-            options={suggestions}
-            components={components}
-            value={this.state.specialties}
-            onChange={this.handleChange('specialties')}
-            placeholder="Select multiple specialties"
-            isMulti
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={this.handleSearch}
-          >
-            Search
-          </Button>
+
           <Typography className={classes.title}>Search result</Typography>
           <div className={classes.tableWrap}>
             <Table>
@@ -603,7 +524,7 @@ class ProjectBidders extends React.Component {
                         <IconButton
                           className={classes.button}
                           aria-label="Delete"
-                          color="rose"
+                          color="primary"
                         >
                           <AccessAlarmIcon />
                         </IconButton>
@@ -611,7 +532,7 @@ class ProjectBidders extends React.Component {
                         <Button
                           className={classes.button}
                           aria-label="Delete"
-                          color="rose"
+                            color="primary"
                           onClick={async () => {
                             await this.props.inviteContractor(
                               project.id,

@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import CustomTableCell from "components/shared/CustomTableCell";
 import { deleteProject, setCurrentProject } from '../../../actions/global-actions';
 import { getInvitedProjectsByGenId } from '../../../actions/sub-actions';
+import removeMd from 'remove-markdown';
 
 const styles = theme => ({
   root: {
@@ -185,7 +186,7 @@ class InvitedProView extends React.Component {
                   align="center"
                   onClick={() => this.handleSelectProject(row.id)}
                 >
-                  {row.description}
+                  {removeMd(row.description)}
                 </CustomTableCell>
                 <CustomTableCell align="center">
                   <IconButton

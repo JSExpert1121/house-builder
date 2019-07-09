@@ -1,22 +1,21 @@
-import CircularProgress                                     from '@material-ui/core/CircularProgress';
-import FormControl                                          from "@material-ui/core/FormControl";
-import Grid                                                 from '@material-ui/core/Grid';
-import { withStyles }                                       from '@material-ui/core/styles';
-import Table                                                from '@material-ui/core/Table';
-import TableBody                                            from '@material-ui/core/TableBody';
-import TableHead                                            from '@material-ui/core/TableHead';
-import TablePagination                                      from '@material-ui/core/TablePagination';
-import TableRow                                             from '@material-ui/core/TableRow';
-import CustomSelect
-                                                            from "containers/BidderListingView/SearchBidderListView/CustomSearch";
-import React                                                from 'react';
-import { connect }                                          from 'react-redux';
-import { compose }                                          from 'redux';
-import CustomTableCell                                      from "components/shared/CustomTableCell";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControl from "@material-ui/core/FormControl";
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import CustomSelect from "containers/BidderListingView/SearchBidderListView/CustomSearch";
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import CustomTableCell from "components/shared/CustomTableCell";
 import { getContractors, getSpecialties, selectContractor } from 'actions/cont-actions';
-import { searchFilter }                                     from 'actions/global-actions';
+import { searchFilter } from 'actions/global-actions';
 import Button from "components/CustomButtons/Button.jsx";
-import CustomInput                                          from "../../../components/CustomInput/CustomInput";
+import CustomInput from "../../../components/CustomInput/CustomInput";
 
 import style from './SearchBidderList.style';
 
@@ -93,9 +92,9 @@ class SearchBidderList extends React.Component {
     const { classes, specialties, userProfile, contractors } = this.props;
     const suggestions = specialties
       ? specialties.content.map(specialty => ({
-          value: specialty.id,
-          label: specialty.name,
-        }))
+        value: specialty.id,
+        label: specialty.name,
+      }))
       : [];
 
     if (contractors === null) {
@@ -160,68 +159,68 @@ class SearchBidderList extends React.Component {
           </TableHead>
           <TableBody>
             {contractors.content && contractors.content.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                      component="th"
-                      scope="row"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/b_list/contractor_detail');
-                      }}
-                  />
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/b_list/contractor_detail');
-                      }}
-                  >
-                    {row.address ? row.address.name : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/b_list/contractor_detail');
-                      }}
-                  >
-                    {row.email ? row.email : 'N/A'}
-                  </CustomTableCell>
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/b_list/contractor_detail');
-                      }}
-                  />
-                  <CustomTableCell
-                      align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        this.props.history.push('/b_list/contractor_detail');
-                      }}
-                  />
-                </TableRow>
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  component="th"
+                  scope="row"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                />
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                >
+                  {row.address ? row.address.name : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                >
+                  {row.email ? row.email : 'N/A'}
+                </CustomTableCell>
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                />
+                <CustomTableCell
+                  align="center"
+                  onClick={async () => {
+                    await this.props.selectContractor(row.id);
+                    this.props.history.push('/b_list/contractor_detail');
+                  }}
+                />
+              </TableRow>
             ))}
           </TableBody>
         </Table>
         {contractors.content && (
-            <TablePagination
-                style={{ overflow: 'auto' }}
-                rowsPerPageOptions={[5, 10, 20]}
-                component="div"
-                count={contractors.content.length}
-                rowsPerPage={this.state.rowsPerPage}
-                page={this.state.currentPage}
-                backIconButtonProps={{
-                  'aria-label': 'Previous Page',
-                }}
-                nextIconButtonProps={{
-                  'aria-label': 'Next Page',
-                }}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
+          <TablePagination
+            style={{ overflow: 'auto' }}
+            rowsPerPageOptions={[5, 10, 20]}
+            component="div"
+            count={contractors.content.length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.currentPage}
+            backIconButtonProps={{
+              'aria-label': 'Previous Page',
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page',
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
         )}
       </div>
     );
