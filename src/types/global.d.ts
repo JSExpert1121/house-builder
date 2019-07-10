@@ -1,6 +1,6 @@
 export interface UserMetaData {
   roles: string;
-  contractor_id: number;
+  contractor_id: string;
   firstname: string;
   lastname: string;
   email: string;
@@ -27,16 +27,27 @@ export interface File {
   name: string;
 }
 
-export interface ProjectInfo {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  updatedBy: string;
+export interface ProjectPostInfo {
   title: string;
   description: string;
   budget: number;
-  status: string;
+  updatedBy: string;
+  due?: Date;
+}
+
+export interface ProjectBaseInfo {
+  id: string;
+  title: string;
+  description: string;
+  budget: number;
   due?: string;
+}
+
+export interface ProjectInfo extends ProjectBaseInfo {
+  createdAt: string;
+  updatedAt: string;
+  updatedBy: string;
+  status: string;
   projectFiles: Array<string>;
   projectTemplates: Array;
   projectSpecialties: Array;

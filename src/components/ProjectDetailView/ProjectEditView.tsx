@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
@@ -15,7 +15,6 @@ import Button from "components/CustomButtons/Button.jsx";
 
 
 export interface IProjectEditViewProps {
-    classes: ClassNameMap<string>;
     title: string;
     price: number;
     dueDate: Date;
@@ -27,12 +26,11 @@ export interface IProjectEditViewProps {
     handleDescChange: (value: string) => void;
 }
 
-const style = theme => createStyles({
+const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
-        padding: theme.spacing(1),
         border: '1px solid #EEE',
-        margin: theme.spacing(1)
+        margin: theme.spacing(1),
+        padding: theme.spacing(1)
     },
     container: {
         display: 'flex',
@@ -69,12 +67,11 @@ const style = theme => createStyles({
             backgroundColor: '#CCC',
         },
     },
-});
+}));
 
 const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
 
     const {
-        classes,
         title,
         price,
         dueDate,
@@ -85,6 +82,9 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
         handleDateChange,
         handleDescChange
     } = props;
+
+    const classes: ClassNameMap<string> = useStyles({});
+
     return (
         <Card className={classes.root}>
             <TextField
@@ -144,4 +144,4 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
     );
 }
 
-export default withStyles(style)(ProjectEditView);
+export default ProjectEditView;

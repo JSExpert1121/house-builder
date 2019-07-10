@@ -72,7 +72,7 @@ class ProjectOverView extends React.Component {
             due: this.state.dueDate,
             description: this.state.description
           };
-          console.log('ProjectOverview', proj);
+
           await this.props.updateProject(this.props.project.id, proj);
           await this.props.getProjectData(this.props.project.id);
           this.setState({
@@ -124,7 +124,7 @@ class ProjectOverView extends React.Component {
     return (
       <Box className={classes.root}>
         <Grid container>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={9}>
             {!editing && <ProjectView project={project} setEdit={editFn} showFiles={false} />}
             {editing &&
               <ProjectEditView
@@ -140,7 +140,7 @@ class ProjectOverView extends React.Component {
               />
             }
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3}>
             <GenContractor contractor={project.genContractor} />
           </Grid>
         </Grid>

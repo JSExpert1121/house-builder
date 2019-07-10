@@ -27,9 +27,9 @@ import styles                                               from './ProfileFileV
 import Button                                               from '../../components/CustomButtons/Button';
 interface ProfileFileViewProps extends MaterialThemeHOC {
   user: UserProfile;
-  getContractorDetailById: (id: number) => any;
-  uploadFiles: (id: number, file: string) => any;
-  removeFile: (id: number, name: string) => any;
+  getContractorDetailById: (id: string) => any;
+  uploadFiles: (id: string, file: string) => any;
+  removeFile: (id: string, name: string) => any;
   files: File[];
 }
 

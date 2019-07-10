@@ -24,11 +24,12 @@ import { deleteProject, setCurrentProject } from '../../../actions/global-action
 import { UserProfile, Projects } from '../../../types/global';
 
 
-
 const style = (theme: Theme) => createStyles({
     root: {
         position: 'relative',
-        paddingTop: theme.spacing(1)
+        paddingTop: theme.spacing(1),
+        backgroundColor: 'white',
+        height: '100%'
     },
     row: {
         '&:nth-of-type(odd)': {
@@ -99,8 +100,6 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         }
 
         this.setState({ isBusy: false });
-    }
-    componentDidMount() {
     }
 
     handleChangePage = async (event, page) => {

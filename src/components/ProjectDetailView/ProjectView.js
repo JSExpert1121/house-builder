@@ -72,7 +72,7 @@ const styles = theme => ({
     display: 'inline-block',
     fontSize: '1em',
     textAlign: 'left',
-    float: 'left',
+    float: 'right',
     fontWeight: '500',
     color: theme.palette.primary.dark,
   },
@@ -103,8 +103,8 @@ const styles = theme => ({
 const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }) => {
   const posttime = project.updatedAt;
   const postdate = new Date(posttime);
-  // console.log('ProjectView: ', project.description);
   const desc = project.description.replace(/\n/g, '\n\n');
+
   return (
     <Card className={classes.root}>
       <List aria-label="project-view" style={{ padding: 0 }}>
@@ -126,13 +126,13 @@ const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }
           <ListItem button={false} style={{ paddingTop: 2, paddingBottom: 12 }}>
             <Box className={classes.brief}>
               {project.status && (
-                <Typography className={classes.status}>
-                  Status: {project.status.toUpperCase()}
+                <Typography className={classes.budget}>
+                  Due Date: {project.due.slice(0, 10)}
                 </Typography>
               )}
               {project.due && (
-                <Typography className={classes.posttime}>
-                  Due Date: {project.due.slice(0, 10)}
+                <Typography className={classes.status}>
+                  Status: {project.status.toUpperCase()}
                 </Typography>
               )}
             </Box>
@@ -179,66 +179,6 @@ const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }
           </>
         )}
       </List>
-      {/* <Grid container id="project-description">
-        <Grid container item xs={12} sm={10} className="desc">
-          <Divider variant="middle" />
-          <Grid item xs={12}>
-            <Box className={classes.brief}>
-              <Typography className={classes.budget}>
-                Budget: {project.budget}
-              </Typography>
-              <Typography className={classes.posttime}>
-                Posted: {postdate.toDateString()}
-              </Typography>
-            </Box>
-            {project.due && (
-              <Box className={classes.brief}>
-                <Typography className={classes.budget}>
-                  Due Date: {project.due.slice(0, 10)}
-                </Typography>
-              </Box>
-            )}
-            <Box className={classes.brief}>
-              <Typography style={{ fontWeight: '700' }}>
-                {' '}
-                Description:{' '}
-              </Typography>
-              <ReactMarkdown
-                source={desc}
-                className={classes.desc}
-              />
-            </Box>
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} sm={2} alignContent='space-between' style={{ display: 'flex', flexWrap: 'wrap' }}>
-          <p className={classes.status}>
-            {project.status && project.status.toUpperCase()}
-          </p>
-          {setEdit && (
-            <Button
-              color="primary"
-              className={classes.editBtn}
-              onClick={() => setEdit(true)}
-            >
-              Edit
-            </Button>
-          )}
-        </Grid>
-        {showFiles && (
-          <Box className={classes.brief}>
-            {project.projectFiles && project.projectFiles.length > 0 && (
-              <>
-                <Typography style={{ fontWeight: '700' }}> Files </Typography>
-                {project.projectFiles.map(file => (
-                  <Typography className={classes.desc} key={file.id}>
-                    {file.name}
-                  </Typography>
-                ))}
-              </>
-            )}
-          </Box>
-        )}
-      </Grid> */}
     </Card>
   );
 };
@@ -284,13 +224,4 @@ ProjectView.propTypes = {
   }).isRequired,
 };
 
-// const mapStateToProps = (state) => ({
-//   project: state.gen_data.selectedProject
-// })
-
-// const mapDispatchToProps = {
-
-// }
-
-// const ConnectedProjectView = connect(mapStateToProps)(ProjectView);
 export default withStyles(styles)(ProjectView);

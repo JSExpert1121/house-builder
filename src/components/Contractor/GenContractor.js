@@ -14,7 +14,7 @@ const styles = theme => ({
     margin: theme.spacing(1)
   },
   title: {
-    fontSize: '20px',
+    fontSize: '18px',
     fontWeight: '600',
     textAlign: 'left',
     marginTop: '0',
