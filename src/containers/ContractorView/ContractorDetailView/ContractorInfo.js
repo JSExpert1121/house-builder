@@ -1,4 +1,4 @@
-import { CircularProgress, Snackbar } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,8 +10,9 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { approveContractor, rejectContractor, updateContractor, } from '../../../actions/cont-actions';
-import CustomTableCell from '../../../components/shared/CustomTableCell';
+import { approveContractor, rejectContractor, updateContractor, } from 'actions/cont-actions';
+import CustomTableCell from 'components/shared/CustomTableCell';
+import CustomSnackbar from 'components/shared/CustomSnackbar';
 
 const styles = theme => ({
   root: {
@@ -39,9 +40,10 @@ class ContractorInfoView extends React.Component {
 
     this.state = {
       openUploadForm: false,
-      snackBar: false,
       isProcessing: false,
-      snackBarContent: '',
+      showMessage: false,
+      variant: '',
+      messge: '',
       reason: props.selectedContractor ? props.selectedContractor.statusReason || '' : ''
     };
   }
@@ -58,14 +60,16 @@ class ContractorInfoView extends React.Component {
       await approveContractor(
         selectedContractor.id,
         {
-          status: 'REJECTED',
+          status: 'ACTIVE',
           statusReason: this.state.reason
         }
       );
 
       await updateContractor(selectedContractor.id);
+      this.setState({ showMessage: true, message: 'Approve success', variant: 'success', isProcessing: false });
     } catch (error) {
       console.log('Approve: ', error);
+      this.setState({ showMessage: true, message: 'Approve failed', variant: 'error', isProcessing: false });
     }
 
     this.setState({ isProcessing: false });
@@ -85,11 +89,11 @@ class ContractorInfoView extends React.Component {
       );
 
       await updateContractor(selectedContractor.id);
+      this.setState({ showMessage: true, message: 'Reject success', variant: 'success', isProcessing: false });
     } catch (error) {
-      console.log('Approve: ', error);
+      console.log('reject: ', error);
+      this.setState({ showMessage: true, message: 'Reject failed', variant: 'error', isProcessing: false });
     }
-
-    this.setState({ isProcessing: false });
   }
 
   render() {
@@ -165,18 +169,11 @@ class ContractorInfoView extends React.Component {
             Approve
           </Button>
         </div>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          open={this.state.snackBar}
-          onClose={() =>
-            this.setState({
-              snackBar: false,
-            })
-          }
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id"> {this.state.snackBarContent}</span>}
+        <CustomSnackbar
+          open={this.state.showMessage}
+          variant={this.state.variant}
+          message={this.state.message}
+          handleClose={() => this.setState({ showMessage: false })}
         />
         {this.state.isProcessing && <CircularProgress className={classes.waitingSpin} />}
       </div>
