@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
-import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -27,8 +27,8 @@ import { UserProfile, Projects } from '../../../types/global';
 
 const style = (theme: Theme) => createStyles({
     root: {
-        marginTop: theme.spacing(1),
-        position: 'relative'
+        position: 'relative',
+        paddingTop: theme.spacing(1)
     },
     row: {
         '&:nth-of-type(odd)': {
@@ -185,7 +185,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         }
 
         return (
-            <Paper className={classes.root} elevation={0}>
+            <Box className={classes.root}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -216,7 +216,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                                     align="center"
                                     onClick={() => this.handleSelectProject(row.id)}
                                 >
-                                    {row.due && row.due.slice(0,10)}
+                                    {row.due && row.due.slice(0, 10)}
                                 </CustomTableCell>
                                 <CustomTableCell
                                     align="center"
@@ -266,7 +266,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                     message="Do you want to delete this project?"
                 />
                 {this.state.isBusy && <CircularProgress className={classes.busy} />}
-            </Paper>
+            </Box>
         );
     }
 }

@@ -1,23 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
 
 import { withStyles } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown';
 import Button from "components/CustomButtons/Button.jsx";
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 const styles = theme => ({
   root: {
-    padding: 0,
+    border: '1px solid #EEE',
+    margin: theme.spacing(1)
   },
   title: {
     fontSize: '1.8em',
+    fontWeight: '600',
     textAlign: 'left',
-    color: '#333',
-    marginTop: '0',
-    marginBottom: '0',
+    color: '#111',
+    padding: theme.spacing(1.5, 0)
   },
   subtitle: {
     fontSize: '1.2em',
@@ -38,12 +42,11 @@ const styles = theme => ({
     marginTop: '0',
   },
   brief: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    color: '#444',
+    width: '100%',
+    display: 'block'
   },
   desc: {
-    color: '#444',
+    color: '#222',
     marginTop: '0',
     '& > p': {
       margin: theme.spacing(1, 0),
@@ -53,45 +56,41 @@ const styles = theme => ({
     display: 'inline-block',
     fontSize: '1em',
     textAlign: 'left',
-    fontWeight: '600',
-    color: '#444',
+    fontWeight: '500',
+    color: '#222',
+    float: 'left'
   },
   posttime: {
     display: 'inline-block',
-    paddingLeft: theme.spacing(3),
     fontSize: '1em',
     textAlign: 'left',
     fontWeight: 'normal',
     color: '#666',
+    float: 'right'
+  },
+  status: {
+    display: 'inline-block',
+    fontSize: '1em',
+    textAlign: 'left',
+    float: 'left',
+    fontWeight: '500',
+    color: theme.palette.primary.dark,
   },
   busy: {
     position: 'absolute',
     left: 'calc(50% - 10px)',
     top: 'calc(50%-10px)',
   },
-  status: {
-    margin: theme.spacing(1, 0, 0, 0),
-    fontSize: '1em',
-    textAlign: 'left',
-    fontWeight: '600',
-    lineHeight: '1.5',
-    width: '100%',
-    color: theme.palette.primary.light,
-    [theme.breakpoints.up('sm')]: {
-      textAlign: 'center'
-    }
-  },
   margin: theme.spacing(1),
   minWidth: 120,
   editBtn: {
+    float: 'right',
     border: '1px solid #4a148c',
-    borderRadius: 0,
     color: theme.palette.primary.light,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     backgroundColor: '#FFF',
-    padding: theme.spacing(1),
-    width: '100%',
     fontSize: '14px',
-    bottom: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.light,
     },
@@ -107,10 +106,82 @@ const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }
   // console.log('ProjectView: ', project.description);
   const desc = project.description.replace(/\n/g, '\n\n');
   return (
-    <Box className={classes.root}>
-      <Grid container id="project-description">
+    <Card className={classes.root}>
+      <List aria-label="project-view" style={{ padding: 0 }}>
+        <ListItem button={false}>
+          <Typography variant='h1' className={classes.title}>{project.title}</Typography>
+        </ListItem>
+        <Divider />
+        <ListItem button={false} style={{ paddingTop: 12, paddingBottom: 2 }}>
+          <Box className={classes.brief}>
+            <Typography className={classes.budget}>
+              Budget: {project.budget}
+            </Typography>
+            <Typography className={classes.posttime}>
+              Posted: {postdate.toDateString()}
+            </Typography>
+          </Box>
+        </ListItem>
+        {project.status && project.due && (
+          <ListItem button={false} style={{ paddingTop: 2, paddingBottom: 12 }}>
+            <Box className={classes.brief}>
+              {project.status && (
+                <Typography className={classes.status}>
+                  Status: {project.status.toUpperCase()}
+                </Typography>
+              )}
+              {project.due && (
+                <Typography className={classes.posttime}>
+                  Due Date: {project.due.slice(0, 10)}
+                </Typography>
+              )}
+            </Box>
+          </ListItem>
+        )}
+        <Divider />
+        <ListItem button={false}>
+          <Typography>
+            <ReactMarkdown
+              source={desc}
+              className={classes.desc}
+            />
+          </Typography>
+        </ListItem>
+        {showFiles && project.projectFiles && project.projectFiles.length > 0 && (
+          <>
+            <Divider />
+            <ListItem button={false}>
+              <Box className={classes.brief}>
+                <Typography style={{ fontWeight: '700' }}> Files </Typography>
+                {project.projectFiles.map(file => (
+                  <Typography className={classes.desc} key={file.id}>
+                    {file.name}
+                  </Typography>
+                ))}
+              </Box>
+            </ListItem>
+          </>
+        )}
+        {setEdit && (
+          <>
+            <Divider />
+            <ListItem button={false} style={{ textAlign: 'right' }}>
+              <Box className={classes.brief}>
+                <Button
+                  color="primary"
+                  className={classes.editBtn}
+                  onClick={() => setEdit(true)}
+                >
+                  Edit
+                </Button>
+              </Box>
+            </ListItem>
+          </>
+        )}
+      </List>
+      {/* <Grid container id="project-description">
         <Grid container item xs={12} sm={10} className="desc">
-          <h1 className={classes.title}>{project.title}</h1>
+          <Divider variant="middle" />
           <Grid item xs={12}>
             <Box className={classes.brief}>
               <Typography className={classes.budget}>
@@ -167,8 +238,8 @@ const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }
             )}
           </Box>
         )}
-      </Grid>
-    </Box>
+      </Grid> */}
+    </Card>
   );
 };
 

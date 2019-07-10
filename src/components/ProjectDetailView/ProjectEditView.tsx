@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createStyles, withStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
+import Card from '@material-ui/core/Card';
 
 import 'easymde/dist/easymde.min.css';
 import SimpleMDE from 'react-simplemde-editor';
@@ -28,7 +29,10 @@ export interface IProjectEditViewProps {
 
 const style = theme => createStyles({
     root: {
-        width: '100%'
+        width: '100%',
+        padding: theme.spacing(1),
+        border: '1px solid #EEE',
+        margin: theme.spacing(1)
     },
     container: {
         display: 'flex',
@@ -82,7 +86,7 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
         handleDescChange
     } = props;
     return (
-        <div className={classes.root}>
+        <Card className={classes.root}>
             <TextField
                 label="Title"
                 margin="normal"
@@ -136,7 +140,7 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
                     </Button>
                 </div>
             )}
-        </div>
+        </Card>
     );
 }
 

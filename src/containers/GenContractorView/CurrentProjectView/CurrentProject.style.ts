@@ -3,7 +3,7 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 export default (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(1),
+      paddingTop: theme.spacing(1)
     },
     row: {
       '&:nth-of-type(odd)': {

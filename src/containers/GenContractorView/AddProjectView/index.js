@@ -9,7 +9,6 @@ import Card from '@material-ui/core/Card';
 // import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -32,7 +31,7 @@ import ProjectEditView from 'components/ProjectDetailView/ProjectEditView';
 const styles = theme => createStyles({
   root: {
     position: 'relative',
-    marginTop: theme.spacing(1),
+    paddingTop: theme.spacing(1)
   },
   mainBoard: {
     width: '100%',
@@ -155,7 +154,7 @@ class AddProjectView extends Component {
     const { classes } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <Box className={classes.root}>
         <Card className={classes.mainBoard}>
           <ProjectEditView
             title={this.state.title}
@@ -167,52 +166,6 @@ class AddProjectView extends Component {
             handleDateChange={this.handleDateChange}
             handleDescChange={this.handleDescChange}
           />
-          {/* <CustomInput
-            labelText="Project Title"
-            id="title"
-            formControlProps={{
-              fullWidth: true
-            }}
-            inputProps={{
-              value: this.state.title,
-              onChange: val => this.setState({ title: val.target.value })
-            }}
-          />
-          <Grid container justify="space-around">
-            <TextField
-              label="Price"
-              className={classes.textFieldHalf}
-              margin="normal"
-              type='number'
-              value={this.state.price}
-              onChange={val => this.setState({ price: val.target.value })}
-            />
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DatePicker
-                className={classes.textFieldHalf}
-                margin="normal"
-                id="mui-pickers-date"
-                label="Date picker"
-                value={this.state.dueDate}
-                onChange={this.handleDateChange}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />
-            </MuiPickersUtilsProvider>
-          </Grid>
-          <SimpleMDE
-            value={this.state.description}
-            onChange={this.handleDescChange}
-            options={{
-              placeholder: 'Description here',
-              lineWrapping: false,
-              hideIcons: ['toggleSideBySide', 'toggleFullScreen'],
-              renderingConfig: {
-                singleLineBreaks: true
-              }
-            }}
-          /> */}
           <Box className={classes.fileUpload}>
             <input
               accept="text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*"
@@ -261,7 +214,7 @@ class AddProjectView extends Component {
             handleClose={() => this.setState({ showMessage: false })}
           />
         </Card>
-      </Paper>
+      </Box>
     );
   }
 }

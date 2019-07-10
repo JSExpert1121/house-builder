@@ -64,7 +64,7 @@ class ProjectOverView extends React.Component {
       });
     } else {
       if (save) {
-        this.setState({isBusy: true});
+        this.setState({ isBusy: true });
         try {
           const proj = {
             title: this.state.title,
@@ -75,17 +75,17 @@ class ProjectOverView extends React.Component {
           console.log('ProjectOverview', proj);
           await this.props.updateProject(this.props.project.id, proj);
           await this.props.getProjectData(this.props.project.id);
-          this.setState({ 
-            editing: false, 
-            showMessage: true, 
-            variant: 'success', 
-            message: 'Update Project Success', 
-            isBusy: false 
+          this.setState({
+            editing: false,
+            showMessage: true,
+            variant: 'success',
+            message: 'Update Project Success',
+            isBusy: false
           });
         } catch (error) {
-          this.setState({ 
-            showMessage: true, 
-            variant: 'error', 
+          this.setState({
+            showMessage: true,
+            variant: 'error',
             message: 'Update Project failed',
             isBusy: false
           });
@@ -124,7 +124,7 @@ class ProjectOverView extends React.Component {
     return (
       <Box className={classes.root}>
         <Grid container>
-          <Grid item xs={12} md={8} style={{ paddingLeft: '8px' }}>
+          <Grid item xs={12} md={8}>
             {!editing && <ProjectView project={project} setEdit={editFn} showFiles={false} />}
             {editing &&
               <ProjectEditView
@@ -140,7 +140,7 @@ class ProjectOverView extends React.Component {
               />
             }
           </Grid>
-          <Grid item xs={12} md={4} style={{ paddingLeft: '16px' }}>
+          <Grid item xs={12} md={4}>
             <GenContractor contractor={project.genContractor} />
           </Grid>
         </Grid>

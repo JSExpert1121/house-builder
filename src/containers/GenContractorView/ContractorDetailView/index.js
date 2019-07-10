@@ -1,21 +1,19 @@
-import React       from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import Paper          from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import { withStyles } from '@material-ui/core/styles';
-import Tabs           from '@material-ui/core/Tabs';
-import Tab            from '@material-ui/core/Tab';
-import NoSsr          from '@material-ui/core/NoSsr';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
-import ContractorInfo        from './ContractorInfo';
+import ContractorInfo from './ContractorInfo';
 import ContractorSpecialties from './ContractorSpecialties';
-import ContractorFiles       from './ContractorFiles';
-import { IconButton }        from '@material-ui/core';
-import ArrowBackIcon         from '@material-ui/icons/ArrowBack';
+import ContractorFiles from './ContractorFiles';
+import { IconButton } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing(1),
   },
   toolbarstyle: {
     backgroundColor: theme.palette.background.paper,
@@ -42,8 +40,8 @@ class ContractorDetailView extends React.Component {
   handleBack = () => {
     this.props.history.push(
       '/gen-contractor/project_detail/' +
-        this.props.currentProjectId +
-        '/bidders'
+      this.props.currentProjectId +
+      '/bidders'
     );
   };
 
@@ -53,33 +51,29 @@ class ContractorDetailView extends React.Component {
 
     if (selectedContractor === null) return <div> no project is selected </div>;
     return (
-      <NoSsr>
-        <div className={classes.root}>
-          <Paper square>
-            <div style={{ display: 'flex' }}>
-              <IconButton onClick={this.handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-              <Tabs
-                value={curDetailTab}
-                onChange={this.handleTabChange}
-                variant="scrollable"
-                indicatorColor="primary"
-                textColor="primary"
-                scrollButtons="off"
-                className={classes.toolbarstyle}
-              >
-                <Tab label="Info" />
-                <Tab label="Files" />
-                <Tab label="Specialties" />
-              </Tabs>
-            </div>
-            {curDetailTab === 0 && <ContractorInfo />}
-            {curDetailTab === 1 && <ContractorFiles />}
-            {curDetailTab === 2 && <ContractorSpecialties />}
-          </Paper>
-        </div>
-      </NoSsr>
+      <Box className={classes.root}>
+        <Box style={{ display: 'flex' }}>
+          <IconButton onClick={this.handleBack}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Tabs
+            value={curDetailTab}
+            onChange={this.handleTabChange}
+            variant="scrollable"
+            indicatorColor="primary"
+            textColor="primary"
+            scrollButtons="off"
+            className={classes.toolbarstyle}
+          >
+            <Tab label="Info" />
+            <Tab label="Files" />
+            <Tab label="Specialties" />
+          </Tabs>
+        </Box>
+        {curDetailTab === 0 && <ContractorInfo />}
+        {curDetailTab === 1 && <ContractorFiles />}
+        {curDetailTab === 2 && <ContractorSpecialties />}
+      </Box>
     );
   }
 }
@@ -90,6 +84,6 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
-    withStyles(styles),
-    connect(mapStateToProps),
+  withStyles(styles),
+  connect(mapStateToProps),
 )(ContractorDetailView);
