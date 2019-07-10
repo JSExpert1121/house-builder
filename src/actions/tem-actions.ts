@@ -1,4 +1,4 @@
-import restAPI                     from '../services';
+import restAPI from '../services';
 import {
   ALL_TEMPLATES_LOADED,
   SET_SELECTED_CATEGORY,
@@ -6,11 +6,11 @@ import {
   SET_SELECTED_TEMPLATE,
   CLEAR_ALL_TEMPLATES,
   CLEAR_SELECTED_TEMPLATE
-}                                  from '../constants/tem-action-types';
-import { Dispatch }                from 'redux';
-import { AxiosResponse }           from 'axios';
-import { clearSelectedOption }     from './cont-actions';
-import { createActions }           from "redux-actions";
+} from '../constants/tem-action-types';
+import { Dispatch } from 'redux';
+import { AxiosResponse } from 'axios';
+import { clearSelectedOption } from './cont-actions';
+import { createActions } from "redux-actions";
 import { CLEAR_SELECTED_CATEGORY } from "../constants/cont-action-types";
 
 const {
@@ -30,7 +30,7 @@ const {
 });
 
 export function createTemplate(template) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(clearAllTemplates());
 
     return restAPI
@@ -39,7 +39,7 @@ export function createTemplate(template) {
 }
 
 export function selectTemplate(id) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(clearSelectedTemplate());
 
     return restAPI
@@ -52,7 +52,7 @@ export function selectTemplate(id) {
 }
 
 export function selectOption(id: number) {
-  return function(dispatch: Dispatch) {
+  return function (dispatch: Dispatch) {
     dispatch(clearSelectedOption());
 
     return restAPI
@@ -64,7 +64,7 @@ export function selectOption(id: number) {
 }
 
 export function selectCategory(id) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch({ type: CLEAR_SELECTED_CATEGORY });
     return restAPI
       .get(`/categories/${id}`)
@@ -75,7 +75,7 @@ export function selectCategory(id) {
 }
 
 export function getTemplatesO(page, size) {
-  return function(dispatch) {
+  return function (dispatch) {
     dispatch(clearAllTemplates());
     return restAPI
       .get('/templates', { page, size })
@@ -86,7 +86,7 @@ export function getTemplatesO(page, size) {
 }
 
 export function deleteTemplate(id, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return restAPI
       .delete(`/templates/${id}`)
       .then(response => {
@@ -99,7 +99,7 @@ export function deleteTemplate(id, cb) {
 }
 
 export function deleteCategory(id, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return restAPI
       .delete('categories/' + id)
       .then(response => {
@@ -113,7 +113,7 @@ export function deleteCategory(id, cb) {
 }
 
 export function deleteOption(id, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return restAPI
       .delete('options/' + id)
       .then(response => {
@@ -127,7 +127,7 @@ export function deleteOption(id, cb) {
 }
 
 export function addCategory(id, data, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return restAPI
       .post('templates/' + id + '/categories', data)
       .then(response => {
@@ -141,7 +141,7 @@ export function addCategory(id, data, cb) {
 }
 
 export function addOption(id, data, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return restAPI
       .post('categories/' + id + '/options', data)
       .then(response => {
@@ -155,7 +155,7 @@ export function addOption(id, data, cb) {
 }
 
 export function editOption(id, data, cb) {
-  return function(dispatch) {
+  return function (dispatch) {
     return restAPI
       .put('options/' + id, data)
       .then(response => {
@@ -168,30 +168,6 @@ export function editOption(id, data, cb) {
   };
 }
 
-export function editCategory(id, data, cb) {
-  return function(dispatch) {
-    return restAPI
-      .put('categories/' + id, data)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
+export const editCategory = (id, data) => dispatch => restAPI.put('categories/' + id, data);
+export const editTemplate = (id, data) => dispatch => restAPI.put('templates/' + id, data);
 
-export function editTemplate(id, data, cb) {
-  return function(dispatch) {
-    return restAPI
-      .put('templates/' + id, data)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}

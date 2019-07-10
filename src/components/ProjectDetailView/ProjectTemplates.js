@@ -116,9 +116,10 @@ class ProjectTemplate extends React.Component {
     const { project } = this.props;
     const { template } = this.state;
 
-    const result = await addTemplate(project.id, template);
-    this.setState({ template: '' });
-    if (result.data) {
+    const result = await this.props.addTemplate(project.id, template);
+    console.log('ProjectTemplates.addTemplateToProject: ', result);
+    if (result) {
+      this.setState({ template: '' });
       this.props.getProjectData(project.id);
     }
   };

@@ -1,25 +1,25 @@
-import CircularProgress     from '@material-ui/core/CircularProgress';
-import Dialog               from '@material-ui/core/Dialog';
-import DialogActions        from '@material-ui/core/DialogActions';
-import DialogContent        from '@material-ui/core/DialogContent';
-import DialogContentText    from '@material-ui/core/DialogContentText';
-import DialogTitle          from '@material-ui/core/DialogTitle';
-import IconButton           from '@material-ui/core/IconButton';
-import Link                 from '@material-ui/core/Link';
-import Paper                from '@material-ui/core/Paper';
-import Snackbar             from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
 import {
   createStyles,
   Theme,
   withStyles
-}                           from '@material-ui/core/styles';
-import Table                from '@material-ui/core/Table';
-import TableBody            from '@material-ui/core/TableBody';
-import TableHead            from '@material-ui/core/TableHead';
-import TableRow             from '@material-ui/core/TableRow';
-import TextField            from '@material-ui/core/TextField';
-import DeleteIcon           from '@material-ui/icons/Delete';
-import NoteAddIcon          from '@material-ui/icons/NoteAdd';
+} from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import DeleteIcon from '@material-ui/icons/Delete';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import {
   addOption,
   deleteCategory,
@@ -28,24 +28,24 @@ import {
   selectCategory,
   selectOption,
   selectTemplate,
-}                           from 'actions/tem-actions';
-import CustomTableCell      from "components/shared/CustomTableCell";
+} from 'actions/tem-actions';
+import CustomTableCell from "components/shared/CustomTableCell";
 import 'easymde/dist/easymde.min.css';
-import { History }          from 'history';
+import { History } from 'history';
 import React, { Component } from 'react';
-import { connect }          from 'react-redux';
-import { withRouter }       from 'react-router-dom';
-import SimpleMDE            from 'react-simplemde-editor';
-import SplitPane            from 'react-split-pane';
-import { compose }          from "redux";
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import SimpleMDE from 'react-simplemde-editor';
+import SplitPane from 'react-split-pane';
+import { compose } from "redux";
 
 import { MaterialThemeHOC, UserProfile, } from 'types/global';
-import Button                             from '../../../components/CustomButtons/Button';
+import Button from '../../../components/CustomButtons/Button';
 
 const styles = (theme: Theme) => createStyles({
   descTag: {
     padding: theme.spacing(1),
-    textAlign: 'center',
+    textAlign: 'left',
     color: theme.palette.text.secondary,
     whiteSpace: 'nowrap',
     margin: theme.spacing(1),
@@ -89,7 +89,7 @@ interface ConnCategoryDetailViewProps extends MaterialThemeHOC {
   category: any;
   selectTemplate: (id: number) => any;
   history: History;
-  editCategory: (id: number, data: any, cb: any) => any;
+  editCategory: (id: number, data: any) => any;
   addOption: (id: number, data: any, cb: any) => any;
   userProfile: UserProfile;
   selectCategory: (id: number) => any;
@@ -119,7 +119,7 @@ interface ConnCategoryDetailViewState {
 class CategoryDetailView extends Component<
   ConnCategoryDetailViewProps,
   ConnCategoryDetailViewState
-> {
+  > {
   constructor(props) {
     super(props);
 
@@ -154,6 +154,33 @@ class CategoryDetailView extends Component<
     });
   }
 
+  handleCancel = async (id) => {
+    await this.props.selectTemplate(id);
+    this.props.history.push('/m_temp/template_detail');
+  }
+
+  handleSave = async (id) => {
+    this.setState({ isSaving: true });
+    const { userProfile } = this.props;
+    const data = {
+      name: this.state.name,
+      type: this.state.type,
+      value: this.state.value,
+      description: this.state.description,
+      updatedBy: userProfile.email,
+    };
+
+    let message = 'edit category success';
+    try {
+      await this.props.editCategory(id, data);
+      await this.props.selectCategory(id);
+    } catch (error) {
+      console.log(error);
+      message = 'edit category failed';
+    }
+    this.setState({ openCategoryForm: false, isSaving: false, snackBar: true, snackBarContent: message });
+  }
+
   render() {
     const { classes, category } = this.props;
 
@@ -172,11 +199,8 @@ class CategoryDetailView extends Component<
           <Paper className={classes.descTag}>
             <div>
               <Link
-                style={{ float: 'left' }}
-                onClick={async () => {
-                  await this.props.selectTemplate(category.tem_name.id);
-                  this.props.history.push('/m_temp/template_detail');
-                }}
+                style={{ float: 'left', cursor: 'pointer' }}
+                onClick={() => this.handleCancel(category.tem_name.id)}
               >
                 {category.tem_name.name}
               </Link>
@@ -184,9 +208,7 @@ class CategoryDetailView extends Component<
             <TextField
               label="category name"
               margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
+              InputLabelProps={{ shrink: true }}
               value={this.state.name}
               onChange={val => this.setState({ name: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
@@ -194,9 +216,7 @@ class CategoryDetailView extends Component<
             <TextField
               label="category type"
               margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
+              InputLabelProps={{ shrink: true }}
               value={this.state.type}
               onChange={val => this.setState({ type: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
@@ -204,9 +224,7 @@ class CategoryDetailView extends Component<
             <TextField
               label="category value"
               margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
+              InputLabelProps={{ shrink: true }}
               value={this.state.value}
               onChange={val => this.setState({ value: val.target.value })}
               InputProps={{ classes: { input: classes.editField } }}
@@ -214,47 +232,20 @@ class CategoryDetailView extends Component<
             <SimpleMDE
               value={this.state.description}
               onChange={val => this.setState({ description: val })}
-              options={{
-                placeholder: 'Description here',
-              }}
+              options={{ placeholder: 'Description here' }}
             />
             <div>
               <Button
                 className={classes.marginRight}
                 disabled={this.state.isSaving}
-                onClick={() =>
-                  this.props.history.push('/m_temp/template_detail')
-                }
+                onClick={() => this.handleCancel(category.tem_name.id)}
               >
                 Cancel
               </Button>
               <Button
                 className={classes.marginRight}
                 disabled={this.state.isSaving}
-                onClick={async () => {
-                  this.setState({ isSaving: true });
-                  const { userProfile } = this.props;
-                  const data = {
-                    name: this.state.name,
-                    type: this.state.type,
-                    value: this.state.value,
-                    description: this.state.description,
-                    updatedBy: userProfile.email,
-                  };
-
-                  await this.props.editCategory(category.id, data, res => {
-                    this.setState({
-                      snackBar: true,
-                      snackBarContent: res
-                        ? 'edit category success'
-                        : 'edit category failed',
-                    });
-                  });
-
-                  await this.props.selectCategory(category.id);
-
-                  this.setState({ openCategoryForm: false, isSaving: false });
-                }}
+                onClick={() => this.handleSave(category.id)}
                 color="primary"
               >
                 Save

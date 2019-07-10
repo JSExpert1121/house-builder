@@ -1,10 +1,11 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { RouteComponentProps } from 'react-router-dom'
+
+import { withStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
-import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -19,52 +20,23 @@ import CustomTableCell from 'components/shared/CustomTableCell';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
 import ConfirmDialog from 'components/shared/ConfirmDialog';
 
-import { getArchivedProjectsByGenId } from 'actions/gen-actions';
-import { deleteProject, setCurrentProject } from 'actions/global-actions';
+import { getProjectsByGenId } from 'actions/gen-actions';
+import { setCurrentProject, archiveProject } from 'actions/global-actions';
 import { UserProfile, Projects } from 'types/global';
 
+import style from './CurrentProject.style';
 
-const style = (theme: Theme) => createStyles({
-    root: {
-        position: 'relative',
-        paddingTop: theme.spacing(1),
-        backgroundColor: 'white',
-        height: '100%'
-    },
-    row: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default,
-        },
-    },
-    waitingSpin: {
-        position: 'relative',
-        left: 'calc(50% - 10px)',
-        top: 'calc(40vh)',
-    },
-    desc: {
-        color: '#444',
-        marginTop: '0',
-        '& > p': {
-            margin: theme.spacing(0, 0),
-        },
-    },
-    busy: {
-        position: 'absolute',
-        left: 'calc(50% - 20px)',
-        top: 'calc(50% - 20px)',
-    },
-});
 
-interface ArchivedProjectProps extends RouteComponentProps {
-    userProfile: UserProfile | null;
-    getArchivedProjectsByGenId: Function;
-    projects: Projects | null;
-    deleteProject: (id: string) => Promise<void>;
-    setCurrentProject: (id: string) => Promise<void>;
+interface CurrentProjectProps extends RouteComponentProps {
     classes: ClassNameMap<string>;
+    userProfile: UserProfile | null;
+    projects: Projects | null;
+    getProjectsByGenId: (id: string, page: number, size: number) => void;
+    deleteProject: (id: string) => void;
+    setCurrentProject: (id: string) => void;
 }
 
-interface ArchivedProjectState {
+interface CurrentProjectState {
     rowsPerPage: number;
     currentPage: number;
     isBusy: boolean;
@@ -75,14 +47,14 @@ interface ArchivedProjectState {
     proId: string;
 }
 
-class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProjectState> {
-    constructor(props: Readonly<ArchivedProjectProps>) {
+class CurrentProject extends React.Component<CurrentProjectProps, CurrentProjectState> {
+    constructor(props) {
         super(props);
 
         this.state = {
             rowsPerPage: 20,
             currentPage: 0,
-            isBusy: true,
+            isBusy: false,
             showMessage: false,
             message: '',
             variant: 'success',
@@ -91,14 +63,14 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         };
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
         const { userProfile } = this.props;
+        this.setState({ isBusy: true });
         try {
-            await this.props.getArchivedProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
+            await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
         } catch (error) {
             console.log(error);
         }
-
         this.setState({ isBusy: false });
     }
 
@@ -106,7 +78,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         const { userProfile } = this.props;
         this.setState({ currentPage: page, isBusy: true });
         try {
-            await this.props.getArchivedProjectsByGenId(
+            await this.props.getProjectsByGenId(
                 userProfile.user_metadata.contractor_id,
                 page,
                 this.state.rowsPerPage
@@ -126,7 +98,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
 
         this.setState({ rowsPerPage, currentPage });
         try {
-            await this.props.getArchivedProjectsByGenId(
+            await this.props.getProjectsByGenId(
                 userProfile.user_metadata.contractor_id,
                 currentPage,
                 rowsPerPage
@@ -137,9 +109,8 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         this.setState({ isBusy: false });
     };
 
-    handleDeleteProject = async () => {
+    handleDeleteProject = async (id: string) => {
         const { userProfile, projects } = this.props;
-        let msg = 'delete project success';
 
         this.setState({ isBusy: true, showConfirm: false });
         try {
@@ -148,7 +119,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
             let curPage = this.state.currentPage;
             if (this.state.rowsPerPage * this.state.currentPage > (projects.totalElements - 1))
                 curPage--;
-            await this.props.getArchivedProjectsByGenId(
+            await this.props.getProjectsByGenId(
                 userProfile.user_metadata.contractor_id,
                 curPage,
                 this.state.rowsPerPage
@@ -156,8 +127,8 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
             this.setState({
                 isBusy: false,
                 showMessage: true,
+                message: 'delete project success',
                 variant: 'success',
-                message: msg,
                 currentPage: curPage,
             });
         } catch (error) {
@@ -171,20 +142,20 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         }
     };
 
-    handleSelectProject = id => {
-        this.props.setCurrentProject(id);
+    handleSelectProject = async (id: string) => {
+        await this.props.setCurrentProject(id);
         this.props.history.push('/gen-contractor/project_detail/' + id);
     };
 
     render() {
         const { classes, projects } = this.props;
 
-        if (projects === null) {
+        if (!projects) {
             return <CircularProgress className={classes.waitingSpin} />;
         }
 
         return (
-            <Box className={classes.root}>
+            <Paper className={classes.root} elevation={0}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -264,15 +235,15 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                     onCancel={() => this.setState({ showConfirm: false })}
                     message="Do you want to delete this project?"
                 />
-                {this.state.isBusy && <CircularProgress className={classes.busy} />}
-            </Box>
+                {this.state.isBusy && <CircularProgress className="busy" />}
+            </Paper>
         );
     }
 }
 
 const mapDispatchToProps = {
-    getArchivedProjectsByGenId,
-    deleteProject,
+    getProjectsByGenId,
+    deleteProject: archiveProject,
     setCurrentProject,
 };
 
@@ -287,4 +258,4 @@ export default compose(
         mapDispatchToProps
     ),
     withStyles(style)
-)(ArchivedProject);
+)(CurrentProject);

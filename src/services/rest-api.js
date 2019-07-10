@@ -38,11 +38,11 @@ export default class RestAPI {
     });
   }
 
-  put(url, params) {
+  put(url, data) {
     return this.execute({
       method: 'put',
       url,
-      params,
+      data,
     });
   }
 

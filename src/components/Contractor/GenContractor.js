@@ -46,6 +46,19 @@ const styles = theme => ({
 
 const TITLE = 'Contractor Information';
 const GenContractorView = ({ classes, contractor, fullview = false }) => {
+  let address = 'N/A';
+  if (contractor.address) {
+    if (contractor.address.street) {
+      address = contractor.address.street;
+    }
+    if (contractor.address.city) {
+      if (contractor.address.street) {
+        address += ', ';
+      }
+
+      address += contractor.address.city;
+    }
+  }
   return (
     <Card className={classes.root}>
       <List>
@@ -56,19 +69,21 @@ const GenContractorView = ({ classes, contractor, fullview = false }) => {
         </ListItem>
         <Divider />
         <ListItem button={false} style={{ paddingTop: 12, paddingBottom: 2 }}>
+          <Typography className={classes.info}>
+            Name: {contractor.address ? contractor.address.name || 'N/A' : 'N/A'}
+          </Typography>
+        </ListItem>
+        <ListItem button={false} style={{ paddingTop: 2, paddingBottom: 2 }}>
           <Typography className={classes.info}>Email: {contractor.email}</Typography>
+        </ListItem>
+        <ListItem button={false} style={{ paddingTop: 2, paddingBottom: 2 }}>
+          <Typography className={classes.info}>
+            Address: {address}
+          </Typography>
         </ListItem>
         <ListItem button={false} style={{ paddingTop: 2, paddingBottom: 12 }}>
           <Typography className={classes.status}>Status: {contractor.status}</Typography>
         </ListItem>
-        {contractor.address && (
-          <ListItem button={false}>
-            <Typography className={classes.desc}>
-              From {contractor.address.name}, {contractor.address.street},{' '}
-              {contractor.address.city}
-            </Typography>
-          </ListItem>
-        )}
       </List>
     </Card>
   );

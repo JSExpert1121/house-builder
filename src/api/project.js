@@ -30,7 +30,9 @@ export default {
     }).then(res => res.data),
 
   addTemplate: (projId, tempId) =>
-    Axios.post(PROJ_API_PATH + projId + '/templates/' + tempId),
+    Axios.post(PROJ_API_PATH + projId + '/templates/' + tempId).then(
+      res => res.data
+    ),
 
   deleteTemplate: (projId, tempId) =>
     Axios.delete(PROJ_API_PATH + projId + '/templates/' + tempId).then(

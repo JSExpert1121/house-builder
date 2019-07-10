@@ -1,31 +1,31 @@
 import Button from "components/CustomButtons/Button.jsx";
-import CircularProgress             from '@material-ui/core/CircularProgress';
-import Dialog                       from '@material-ui/core/Dialog';
-import DialogActions                from '@material-ui/core/DialogActions';
-import DialogContent                from '@material-ui/core/DialogContent';
-import DialogContentText            from '@material-ui/core/DialogContentText';
-import DialogTitle                  from '@material-ui/core/DialogTitle';
-import IconButton                   from '@material-ui/core/IconButton';
-import Paper                        from '@material-ui/core/Paper';
-import Snackbar                     from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
 import { createStyles, withStyles } from '@material-ui/core/styles';
-import Table                        from '@material-ui/core/Table';
-import TableBody                    from '@material-ui/core/TableBody';
-import TableHead                    from '@material-ui/core/TableHead';
-import TableRow                     from '@material-ui/core/TableRow';
-import TextField                    from '@material-ui/core/TextField';
-import DeleteIcon                   from '@material-ui/icons/Delete';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import NoteAddIcon          from '@material-ui/icons/NoteAdd';
-import CustomTableCell      from "components/shared/CustomTableCell";
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import CustomTableCell from "components/shared/CustomTableCell";
 import 'easymde/dist/easymde.min.css';
-import { History }          from 'history';
+import { History } from 'history';
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-import SimpleMDE   from 'react-simplemde-editor';
+import SimpleMDE from 'react-simplemde-editor';
 
-import SplitPane   from 'react-split-pane';
+import SplitPane from 'react-split-pane';
 import { compose } from 'redux';
 import {
   addCategory,
@@ -34,11 +34,11 @@ import {
   editTemplate,
   selectCategory,
   selectTemplate,
-}                  from 'actions/tem-actions';
+} from 'actions/tem-actions';
 import {
   MaterialThemeHOC,
   UserProfile
-}                  from 'types/global';
+} from 'types/global';
 
 const styles = theme => createStyles({
   descTag: {
@@ -115,7 +115,7 @@ interface ConnTempDetailViewState {
 class TemplateDetailView extends Component<
   ConnTempDetailViewProps,
   ConnTempDetailViewState
-> {
+  > {
   constructor(props) {
     super(props);
 
@@ -202,15 +202,21 @@ class TemplateDetailView extends Component<
                     updatedBy: userProfile.email,
                   };
 
-                  await this.props.editTemplate(template.id, data, res => {
+                  try {
+                    await this.props.editTemplate(template.id, data);
+                    await this.props.selectTemplate(template.id);
+
                     this.setState({
                       snackBar: true,
-                      snackBarContent: res
-                        ? 'edit template success'
-                        : 'edit template failed',
+                      snackBarContent: 'edit template success'
                     });
-                  });
-                  await this.props.selectTemplate(template.id);
+                  } catch (error) {
+                    console.log(error);
+                    this.setState({
+                      snackBar: true,
+                      snackBarContent: 'edit template success'
+                    });
+                  }
 
                   this.setState({ isSaving: false });
                 }}
