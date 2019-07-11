@@ -1,31 +1,31 @@
-import CircularProgress                                                   from '@material-ui/core/CircularProgress';
-import Dialog                                                             from '@material-ui/core/Dialog';
-import DialogActions                                                      from '@material-ui/core/DialogActions';
-import DialogContent                                                      from '@material-ui/core/DialogContent';
-import DialogContentText                                                  from '@material-ui/core/DialogContentText';
-import DialogTitle                                                        from '@material-ui/core/DialogTitle';
-import Fab                                                                from '@material-ui/core/Fab';
-import IconButton                                                         from '@material-ui/core/IconButton';
-import MenuItem                                                           from '@material-ui/core/MenuItem';
-import Select                                                             from '@material-ui/core/Select';
-import Snackbar                                                           from '@material-ui/core/Snackbar';
-import {withStyles}                                                       from '@material-ui/core/styles';
-import Table                                                              from '@material-ui/core/Table';
-import TableBody                                                          from '@material-ui/core/TableBody';
-import TableHead                                                          from '@material-ui/core/TableHead';
-import TablePagination                                                    from '@material-ui/core/TablePagination';
-import TableRow                                                           from '@material-ui/core/TableRow';
-import TextField                                                          from '@material-ui/core/TextField';
-import AddIcon                                                            from '@material-ui/icons/Add';
-import DeleteIcon                                                         from '@material-ui/icons/Delete';
-import NoteAddIcon                                                        from '@material-ui/icons/NoteAdd';
-import Button                                                             from 'components/CustomButtons/Button.jsx';
-import React                                                              from 'react';
-import {connect}                                                          from 'react-redux';
-import {compose}                                                          from 'redux';
-import {addSpecialty, deleteSpecialty, getSpecialties, updateContractor,} from '../../../actions/cont-actions';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Snackbar from '@material-ui/core/Snackbar';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import Button from 'components/CustomButtons/Button.jsx';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { addSpecialty, deleteSpecialty, getSpecialties, updateContractor, } from '../../../actions/cont-actions';
 import CustomTableCell
-                                                                          from '../../../components/shared/CustomTableCell';
+  from '../../../components/shared/CustomTableCell';
 const styles = theme => ({
   root: {
     padding: theme.spacing(1),
@@ -123,7 +123,7 @@ class ContractorInfoView extends React.Component {
   render() {
     const { classes, specialties, selectedContractor } = this.props;
     const { specialty } = this.state;
-    if (selectedContractor === null) {
+    if (!selectedContractor) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
     return (
@@ -140,10 +140,10 @@ class ContractorInfoView extends React.Component {
             </MenuItem>
             {specialties
               ? specialties.content.map(row => (
-                  <MenuItem value={row.id} key={row.id}>
-                    {row.name}
-                  </MenuItem>
-                ))
+                <MenuItem value={row.id} key={row.id}>
+                  {row.name}
+                </MenuItem>
+              ))
               : null}
           </Select>
           <Fab
@@ -166,13 +166,13 @@ class ContractorInfoView extends React.Component {
           </Fab>
           {specialties
             ? specialties.content.map(row =>
-                row.id === specialty ? (
-                  <ul key={row.id}>
-                    <li>Name: {row.name}</li>
-                    <li>Description: {row.description}</li>
-                  </ul>
-                ) : null
-              )
+              row.id === specialty ? (
+                <ul key={row.id}>
+                  <li>Name: {row.name}</li>
+                  <li>Description: {row.description}</li>
+                </ul>
+              ) : null
+            )
             : null}
         </div>
         <Table>

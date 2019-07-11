@@ -1,20 +1,20 @@
-import { IconButton } from '@material-ui/core';
-import NoSsr from '@material-ui/core/NoSsr';
-import Paper from '@material-ui/core/Paper';
-import { withStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, Switch } from 'react-router-dom';
 import { compose } from 'redux';
 
+import { IconButton } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 import { getProjectData } from 'actions/global-actions';
 import SecuredRoute from 'routers/SecuredRoute';
+
 import ProjectBidders from './ProjectBidders';
 import ProjectFiles from './ProjectFiles';
-
 import ProjectOverView from './ProjectOverView';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
@@ -85,87 +85,85 @@ class ProjectDetailView extends React.Component {
 
     if (location.pathname === match.url) curTabPos = 0;
 
-    if (project === null) return <div />;
+    if (!project) return <div />;
 
     return (
-      <NoSsr>
-        <div className={classes.root}>
-          <Paper square style={{ height: '100%', overflow: 'auto' }}>
-            <div style={{ display: 'flex' }}>
-              <IconButton className={classes.backBtn} onClick={this.handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-              <Tabs
-                value={curTabPos}
-                variant="scrollable"
-                indicatorColor="primary"
-                textColor="primary"
-                scrollButtons="off"
-                className={classes.toolbarstyle}
-              >
-                <Tab
-                  component={Link}
-                  to={`${match.url}/overview`}
-                  label="Overview"
-                />
-                <Tab component={Link} to={`${match.url}/files`} label="Files" />
-                <Tab
-                  component={Link}
-                  to={`${match.url}/templates`}
-                  label="Templates"
-                />
-                <Tab
-                  component={Link}
-                  to={`${match.url}/proposals`}
-                  label="Proposals"
-                />
-                <Tab
-                  component={Link}
-                  to={`${match.url}/bidders`}
-                  label="Bidders"
-                />
-                {owner && (
-                  <Tab
-                    component={Link}
-                    to={`${match.url}/compare`}
-                    label="Compare"
-                  />
-                )}
-              </Tabs>
-            </div>
-
-            <Switch>
-              <SecuredRoute
-                path={`${match.url}/overview`}
-                component={ProjectOverView}
+      <div className={classes.root}>
+        <Paper square style={{ height: '100%', overflow: 'auto' }}>
+          <div style={{ display: 'flex' }}>
+            <IconButton className={classes.backBtn} onClick={this.handleBack}>
+              <ArrowBackIcon />
+            </IconButton>
+            <Tabs
+              value={curTabPos}
+              variant="scrollable"
+              indicatorColor="primary"
+              textColor="primary"
+              scrollButtons="off"
+              className={classes.toolbarstyle}
+            >
+              <Tab
+                component={Link}
+                to={`${match.url}/overview`}
+                label="Overview"
               />
-              <SecuredRoute
-                path={`${match.url}/files`}
-                component={ProjectFiles}
+              <Tab component={Link} to={`${match.url}/files`} label="Files" />
+              <Tab
+                component={Link}
+                to={`${match.url}/templates`}
+                label="Templates"
               />
-              <SecuredRoute
-                path={`${match.url}/templates`}
-                component={ProjectTemplates}
+              <Tab
+                component={Link}
+                to={`${match.url}/proposals`}
+                label="Proposals"
               />
-              <SecuredRoute
-                path={`${match.url}/proposals`}
-                component={ProjectProposals}
-              />
-              <SecuredRoute
-                path={`${match.url}/bidders`}
-                component={ProjectBidders}
+              <Tab
+                component={Link}
+                to={`${match.url}/bidders`}
+                label="Bidders"
               />
               {owner && (
-                <SecuredRoute
-                  path={`${match.url}/compare`}
-                  component={ProposalsCompare}
+                <Tab
+                  component={Link}
+                  to={`${match.url}/compare`}
+                  label="Compare"
                 />
               )}
-              <Redirect path={`${match.url}`} to={`${match.url}/overview`} />
-            </Switch>
-          </Paper>
-        </div>
-      </NoSsr>
+            </Tabs>
+          </div>
+
+          <Switch>
+            <SecuredRoute
+              path={`${match.url}/overview`}
+              component={ProjectOverView}
+            />
+            <SecuredRoute
+              path={`${match.url}/files`}
+              component={ProjectFiles}
+            />
+            <SecuredRoute
+              path={`${match.url}/templates`}
+              component={ProjectTemplates}
+            />
+            <SecuredRoute
+              path={`${match.url}/proposals`}
+              component={ProjectProposals}
+            />
+            <SecuredRoute
+              path={`${match.url}/bidders`}
+              component={ProjectBidders}
+            />
+            {owner && (
+              <SecuredRoute
+                path={`${match.url}/compare`}
+                component={ProposalsCompare}
+              />
+            )}
+            <Redirect path={`${match.url}`} to={`${match.url}/overview`} />
+          </Switch>
+        </Paper>
+      </div>
     );
   }
 }

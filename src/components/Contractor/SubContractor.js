@@ -1,15 +1,18 @@
-import React          from 'react';
-import Grid           from '@material-ui/core/Grid';
-import Typography     from '@material-ui/core/Typography';
-import Box            from '@material-ui/core/Box';
+import React from 'react';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
-    paddingTop: theme.spacing(2),
+    height: 'calc(100% - 16px)',
+    border: '1px solid #EEE',
+    margin: theme.spacing(1)
   },
   title: {
-    fontSize: '20px',
+    fontSize: '18px',
     fontWeight: '600',
     textAlign: 'left',
     marginTop: '0',
@@ -54,7 +57,7 @@ const styles = theme => ({
 const TITLE = 'SubContractor Information';
 const SubContractorView = ({ classes, subContractor }) => {
   return (
-    <Box className={classes.root}>
+    <Card className={classes.root}>
       <Typography variant="subtitle1" className={classes.title}>
         {TITLE}
       </Typography>
@@ -76,7 +79,7 @@ const SubContractorView = ({ classes, subContractor }) => {
           )}
         </Grid>
       </Box>
-    </Box>
+    </Card>
   );
 };
 

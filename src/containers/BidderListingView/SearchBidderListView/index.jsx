@@ -97,7 +97,7 @@ class SearchBidderList extends React.Component {
       }))
       : [];
 
-    if (contractors === null) {
+    if (!contractors) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
 

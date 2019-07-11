@@ -5,9 +5,9 @@ import Card from '@material-ui/core/Card';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     height: 'calc(100% - 16px)',
     border: '1px solid #EEE',
@@ -42,10 +42,12 @@ const styles = theme => ({
     color: theme.palette.primary.dark,
     fontSize: '16px'
   }
-});
+}));
 
 const TITLE = 'Contractor Information';
-const GenContractorView = ({ classes, contractor, fullview = false }) => {
+const GenContractorView = ({ contractor, fullview = false }) => {
+
+  const classes = useStyles({});
   let address = 'N/A';
   if (contractor.address) {
     if (contractor.address.street) {
@@ -59,8 +61,9 @@ const GenContractorView = ({ classes, contractor, fullview = false }) => {
       address += contractor.address.city;
     }
   }
+
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} style={{ cursor: 'pointer' }}>
       <List>
         <ListItem button={false}>
           <Typography variant="subtitle1" className={classes.title}>
@@ -103,4 +106,5 @@ GenContractorView.propTypes = {
     }),
   }),
 };
-export default withStyles(styles)(GenContractorView);
+
+export default GenContractorView;

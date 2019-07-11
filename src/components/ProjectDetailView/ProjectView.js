@@ -104,6 +104,7 @@ const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }
   const posttime = project.updatedAt;
   const postdate = new Date(posttime);
   const desc = project.description.replace(/\n/g, '\n\n');
+  const remoteRoot = process.env.REACT_APP_PROJECT_API + '/projects/' + project.id + '/files/';
 
   return (
     <Card className={classes.root}>
@@ -140,12 +141,10 @@ const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }
         )}
         <Divider />
         <ListItem button={false}>
-          <Typography>
-            <ReactMarkdown
-              source={desc}
-              className={classes.desc}
-            />
-          </Typography>
+          <ReactMarkdown
+            source={desc}
+            className={classes.desc}
+          />
         </ListItem>
         {showFiles && project.projectFiles && project.projectFiles.length > 0 && (
           <>
@@ -153,11 +152,15 @@ const ProjectView = ({ classes, project, setEdit = undefined, showFiles = true }
             <ListItem button={false}>
               <Box className={classes.brief}>
                 <Typography style={{ fontWeight: '700' }}> Files </Typography>
-                {project.projectFiles.map(file => (
-                  <Typography className={classes.desc} key={file.id}>
-                    {file.name}
-                  </Typography>
-                ))}
+                <ul>
+                  {project.projectFiles.map(file => (
+                    <li key={file.id} style={{ listStyleType: 'disc', padding: '4px 0' }}>
+                      <a download={file.name} href={remoteRoot + file.name}>
+                        {file.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </Box>
             </ListItem>
           </>

@@ -1,20 +1,20 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton       from '@material-ui/core/IconButton';
-import {withStyles}     from '@material-ui/core/styles';
-import Table            from '@material-ui/core/Table';
-import TableBody        from '@material-ui/core/TableBody';
-import TableHead        from '@material-ui/core/TableHead';
-import TablePagination  from '@material-ui/core/TablePagination';
-import TableRow         from '@material-ui/core/TableRow';
-import DeleteIcon       from '@material-ui/icons/Delete';
-import React            from 'react';
-import {connect}        from 'react-redux';
-import {compose}        from 'redux'
-import removeMd         from 'remove-markdown';
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux'
+import removeMd from 'remove-markdown';
 
-import {deleteProposal, getProposals} from '../../../actions/global-actions';
-import CustomSnackbar                 from '../../../components/shared/CustomSnackbar';
-import CustomTableCell                from '../../../components/shared/CustomTableCell';
+import { deleteProposal, getProposals } from '../../../actions/global-actions';
+import CustomSnackbar from '../../../components/shared/CustomSnackbar';
+import CustomTableCell from '../../../components/shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
@@ -165,7 +165,7 @@ class SubmittedProView extends React.Component {
   render() {
     const { classes, proposals } = this.props;
 
-    if (proposals === null)
+    if (!proposals)
       return (
         <div className={classes.root}>
           <CircularProgress className={classes.waitingSpin} />
@@ -175,70 +175,70 @@ class SubmittedProView extends React.Component {
     return (
       <div className={classes.root}>
         <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell align="center">Proposal To</CustomTableCell>
-                <CustomTableCell align="center">Price($)</CustomTableCell>
-                <CustomTableCell align="center">Duration</CustomTableCell>
-                <CustomTableCell align="center">Status</CustomTableCell>
-                <CustomTableCell align="center">Description</CustomTableCell>
-                <CustomTableCell align="center">Actions</CustomTableCell>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell align="center">Proposal To</CustomTableCell>
+              <CustomTableCell align="center">Price($)</CustomTableCell>
+              <CustomTableCell align="center">Duration</CustomTableCell>
+              <CustomTableCell align="center">Status</CustomTableCell>
+              <CustomTableCell align="center">Description</CustomTableCell>
+              <CustomTableCell align="center">Actions</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {proposals.content.map(row => (
+              <TableRow className={classes.row} key={row.id} hover>
+                <CustomTableCell
+                  onClick={() => this.handleSelectProposal(row.id)}
+                  component="th"
+                  scope="row"
+                  align="center"
+                >
+                  {row.project.title}
+                </CustomTableCell>
+                <CustomTableCell
+                  onClick={() => this.handleSelectProposal(row.id)}
+                  component="th"
+                  scope="row"
+                  align="center"
+                >
+                  {row.budget}
+                </CustomTableCell>
+                <CustomTableCell
+                  onClick={() => this.handleSelectProposal(row.id)}
+                  component="th"
+                  scope="row"
+                  align="center"
+                >
+                  {row.duration}
+                </CustomTableCell>
+                <CustomTableCell
+                  onClick={() => this.handleSelectProposal(row.id)}
+                  component="th"
+                  scope="row"
+                  align="center"
+                >
+                  {row.status}
+                </CustomTableCell>
+                <CustomTableCell
+                  onClick={() => this.handleSelectProposal(row.id)}
+                  align="center"
+                >
+                  {removeMd(row.description)}
+                </CustomTableCell>
+                <CustomTableCell align="center">
+                  <IconButton
+                    className={classes.button}
+                    aria-label="Delete"
+                    color="primary"
+                    onClick={() => this.handleDeleteProposal(row.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </CustomTableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {proposals.content.map(row => (
-                <TableRow className={classes.row} key={row.id} hover>
-                  <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
-                  >
-                    {row.project.title}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
-                  >
-                    {row.budget}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
-                  >
-                    {row.duration}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    component="th"
-                    scope="row"
-                    align="center"
-                  >
-                    {row.status}
-                  </CustomTableCell>
-                  <CustomTableCell
-                    onClick={() => this.handleSelectProposal(row.id)}
-                    align="center"
-                  >
-                    {removeMd(row.description)}
-                  </CustomTableCell>
-                  <CustomTableCell align="center">
-                    <IconButton
-                      className={classes.button}
-                      aria-label="Delete"
-                      color="primary"
-                      onClick={() => this.handleDeleteProposal(row.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </CustomTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            ))}
+          </TableBody>
         </Table>
         <TablePagination
           style={{ overflow: 'auto' }}

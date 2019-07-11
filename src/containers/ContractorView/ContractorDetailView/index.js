@@ -1,18 +1,18 @@
-import React       from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
-import PropTypes      from 'prop-types';
-import Paper          from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
-import Tabs           from '@material-ui/core/Tabs';
-import Tab            from '@material-ui/core/Tab';
-import NoSsr          from '@material-ui/core/NoSsr';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import NoSsr from '@material-ui/core/NoSsr';
 
-import ContractorInfo        from './ContractorInfo';
+import ContractorInfo from './ContractorInfo';
 import ContractorSpecialties from './ContractorSpecialties';
-import ContractorFiles       from './ContractorFiles';
-import { IconButton }        from '@material-ui/core';
-import ArrowBackIcon         from '@material-ui/icons/ArrowBack';
+import ContractorFiles from './ContractorFiles';
+import { IconButton } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 // import ContractorMessages from './ContractorMessages';
 // import ContractorProposals from './ContractorProposals';
 
@@ -55,7 +55,7 @@ class ConnectedContractorDetailView extends React.Component {
     const { classes, selectedContractor } = this.props;
     const curDetailTab = this.state.curDetailTab;
 
-    if (selectedContractor === null) return <div> no project is selected </div>;
+    if (!selectedContractor) return <div> no project is selected </div>;
 
     return (
       <NoSsr>

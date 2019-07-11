@@ -17,7 +17,8 @@ import CustomSnackbar from 'components/shared/CustomSnackbar';
 import ProjectEditView from 'components/ProjectDetailView/ProjectEditView';
 import { addFilesToProject, addProject } from 'actions/global-actions';
 
-import { UserProfile, ProjectPostInfo } from 'types/global';
+import { UserProfile } from 'types/global';
+import { ProjectPostInfo } from 'types/project';
 
 const styles = theme => createStyles({
     root: {
@@ -215,7 +216,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
                             onClick={this.handleAddProject}
                         >
                             Add Project
-                </Button>
+                        </Button>
                     </Box>
                     {this.state.isBusy && <CircularProgress className={classes.busy} />}
                     <CustomSnackbar

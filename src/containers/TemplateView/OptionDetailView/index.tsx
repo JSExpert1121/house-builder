@@ -1,20 +1,20 @@
 import CircularProgress
-                                                                                  from '@material-ui/core/CircularProgress'
-import Link                                                                       from '@material-ui/core/Link'
-import Paper                                                                      from '@material-ui/core/Paper'
-import Snackbar                                                                   from '@material-ui/core/Snackbar'
-import { createStyles, Theme, withStyles }                                        from '@material-ui/core/styles';
-import TextField                                                                  from '@material-ui/core/TextField'
+  from '@material-ui/core/CircularProgress'
+import Link from '@material-ui/core/Link'
+import Paper from '@material-ui/core/Paper'
+import Snackbar from '@material-ui/core/Snackbar'
+import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField'
 import { deleteOption, editOption, selectCategory, selectOption, selectTemplate } from 'actions/tem-actions';
 import 'easymde/dist/easymde.min.css';
-import { History }                                                                from 'history';
-import React, { Component }                                                       from 'react';
-import { connect }                       from 'react-redux';
-import SimpleMDE                         from 'react-simplemde-editor';
-import SplitPane                         from 'react-split-pane';
-import { compose }                       from "redux";
+import { History } from 'history';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import SimpleMDE from 'react-simplemde-editor';
+import SplitPane from 'react-split-pane';
+import { compose } from "redux";
 import { MaterialThemeHOC, UserProfile } from 'types/global';
-import Button                            from '../../../components/CustomButtons/Button';
+import Button from '../../../components/CustomButtons/Button';
 
 const styles = (theme: Theme) => createStyles({
   descTag: {
@@ -94,7 +94,7 @@ interface ConnOptionDetailViewState {
 class OptionDetailView extends Component<
   ConnOptionDetailViewProps,
   ConnOptionDetailViewState
-> {
+  > {
   constructor(props) {
     super(props);
 
@@ -126,7 +126,7 @@ class OptionDetailView extends Component<
   render() {
     const { classes, option } = this.props;
 
-    if (option === null) return <div> </div>;
+    if (!option) return <div> </div>;
 
     if (option['isLoading'] === true)
       return <CircularProgress className={classes.waitingSpin} />;
@@ -234,7 +234,7 @@ class OptionDetailView extends Component<
                 disabled={this.state.isDeleting}
                 onClick={async () => {
                   this.setState({ isDeleting: true });
-                  await this.props.deleteOption(option.id, res => {});
+                  await this.props.deleteOption(option.id, res => { });
 
                   await this.props.selectCategory(option.cat_name.id);
                   this.props.history.push('/m_temp/category_detail');

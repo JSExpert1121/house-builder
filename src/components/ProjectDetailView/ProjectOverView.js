@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import GenContractor from '../Contractor/GenContractor';
+import GenContractor from '../Contractor';
 
 import ProjectView from './ProjectView';
 import ProjectEditView from './ProjectEditView';
@@ -113,6 +113,10 @@ class ProjectOverView extends React.Component {
     this.setState({ price: value });
   }
 
+  gotoContractor = () => {
+    console.log('ProjectOverView: gotoContractor');
+  }
+
   render() {
     const { classes, project, match } = this.props;
     const { editing, showMessage, variant, message } = this.state;
@@ -141,7 +145,10 @@ class ProjectOverView extends React.Component {
             }
           </Grid>
           <Grid item xs={12} md={3}>
-            <GenContractor contractor={project.genContractor} />
+            <GenContractor
+              contractor={project.genContractor}
+              onClick={this.gotoContractor}
+            />
           </Grid>
         </Grid>
         {showMessage && <CustomSnackbar

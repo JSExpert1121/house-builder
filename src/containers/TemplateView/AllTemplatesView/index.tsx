@@ -1,32 +1,32 @@
-import CircularProgress                                                  from '@material-ui/core/CircularProgress';
-import Dialog                                                            from '@material-ui/core/Dialog';
-import DialogActions                                                     from '@material-ui/core/DialogActions';
-import DialogContent                                                     from '@material-ui/core/DialogContent';
-import DialogContentText                                                 from '@material-ui/core/DialogContentText';
-import DialogTitle                                                       from '@material-ui/core/DialogTitle';
-import IconButton                                                        from '@material-ui/core/IconButton';
-import Paper                                                             from '@material-ui/core/Paper';
-import Snackbar                                                          from '@material-ui/core/Snackbar';
-import { createStyles, withStyles }                                      from '@material-ui/core/styles';
-import Table                                                             from '@material-ui/core/Table';
-import TableBody                                                         from '@material-ui/core/TableBody';
-import TableHead                                                         from '@material-ui/core/TableHead';
-import TablePagination      from '@material-ui/core/TablePagination';
-import TableRow             from '@material-ui/core/TableRow';
-import TextField            from '@material-ui/core/TextField';
-import DeleteIcon           from '@material-ui/icons/Delete';
-import NoteAddIcon          from '@material-ui/icons/NoteAdd';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
+import DeleteIcon from '@material-ui/icons/Delete';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import 'easymde/dist/easymde.min.css';
-import CustomTableCell      from "components/shared/CustomTableCell";
-import { History }          from 'history';
+import CustomTableCell from "components/shared/CustomTableCell";
+import { History } from 'history';
 import React, { Component } from 'react';
-import { connect }          from 'react-redux';
-import { withRouter }       from 'react-router-dom';
-import SimpleMDE            from 'react-simplemde-editor';
-import { compose }          from "redux";
-import removeMd                                                          from 'remove-markdown';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import SimpleMDE from 'react-simplemde-editor';
+import { compose } from "redux";
+import removeMd from 'remove-markdown';
 import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from 'actions/tem-actions';
-import { MaterialThemeHOC, UserProfile }                                 from 'types/global';
+import { MaterialThemeHOC, UserProfile } from 'types/global';
 import Button from 'components/CustomButtons/Button';
 
 const styles = theme => createStyles({
@@ -78,7 +78,7 @@ interface ConnAllTemplateViewState {
 class AllTemplateView extends Component<
   ConnAllTemplateViewProps,
   ConnAllTemplateViewState
-> {
+  > {
   constructor(props) {
     super(props);
 
@@ -149,7 +149,7 @@ class AllTemplateView extends Component<
   render() {
     const { classes, templates } = this.props;
 
-    if (templates === null) {
+    if (!templates) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
 

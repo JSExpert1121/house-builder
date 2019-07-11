@@ -93,7 +93,7 @@ const styles = theme => ({
   },
 });
 
-class ProposalEditView extends React.Component {
+class ProposalTemplEditView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -200,7 +200,7 @@ class ProposalEditView extends React.Component {
   }
 }
 
-ProposalEditView.propTypes = {
+ProposalTemplEditView.propTypes = {
   edit: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   proposal: PropTypes.object.isRequired,
@@ -209,4 +209,4 @@ ProposalEditView.propTypes = {
   handleDelete: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(ProposalEditView);
+export default withStyles(styles)(ProposalTemplEditView);

@@ -117,10 +117,7 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
             <SimpleMDE
                 value={description}
                 onChange={handleDescChange}
-                options={{
-                    placeholder: 'Description here',
-                    lineWrapping: false
-                }}
+                options={{ placeholder: 'Description here' }}
             />
             {handleDone && (
                 <div className={classes.doneContainer}>

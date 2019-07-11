@@ -325,7 +325,6 @@ class ProjectBidders extends React.Component {
     const { contractors, projectBidders } = this.state;
     const suggestions = specialties ? specialties.content || [] : [];
 
-    console.log(projectBidders, contractors, specialties);
     if (!projectBidders || !contractors) {
       return <CircularProgress className={classes.waitingSpin} />;
     }

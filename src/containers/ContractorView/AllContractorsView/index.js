@@ -113,7 +113,7 @@ class AllContractorsView extends Component {
   render() {
     const { classes } = this.props;
     const { contractors } = this.state;
-    if (contractors === null) {
+    if (!contractors) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
     return (

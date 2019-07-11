@@ -1,22 +1,23 @@
-import React          from 'react';
-import { connect }    from 'react-redux';
-import { match }      from 'react-router-dom';
+import React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
-import Card           from '@material-ui/core/Card';
-import ListItem       from '@material-ui/core/ListItem';
-import Divider        from '@material-ui/core/Divider';
-import ListItemText   from '@material-ui/core/ListItemText';
+import { ClassNameMap } from '@material-ui/styles/withStyles';
+import Card from '@material-ui/core/Card';
+import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar         from '@material-ui/core/Avatar';
-import LinkIcon       from '@material-ui/icons/Link';
-import LinkOffIcon    from '@material-ui/icons/LinkOff';
+import Avatar from '@material-ui/core/Avatar';
+import LinkIcon from '@material-ui/icons/Link';
+import LinkOffIcon from '@material-ui/icons/LinkOff';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import { Button, CircularProgress, IconButton, ListItemSecondaryAction, TextField, Theme } from '@material-ui/core';
-import { addFileToPropMessage, addMessageToProposal, getProposalMessages }                 from '../../actions/global-actions';
-import { DropzoneDialog }                                                                  from 'material-ui-dropzone';
-import { UserProfile }                                                                     from '../../types/global';
-import { FlexDirectionProperty, PositionProperty }                                         from 'csstype';
+import { addFileToPropMessage, addMessageToProposal, getProposalMessages } from '../../actions/global-actions';
+import { DropzoneDialog } from 'material-ui-dropzone';
+import { UserProfile } from '../../types/global';
+import { FlexDirectionProperty, PositionProperty } from 'csstype';
 
 const styles = (theme: Theme) => ({
   root: {
@@ -84,7 +85,7 @@ const styles = (theme: Theme) => ({
   },
 });
 
-interface ProposalDetailMessagesProps {
+interface ProposalDetailMessagesProps extends RouteComponentProps {
   proposal: any;
   getProposalMessages: (
     id: number,
@@ -100,8 +101,7 @@ interface ProposalDetailMessagesProps {
   ) => any;
   addFileToPropMessage: (msg_id: number, files: any, cb: any) => any;
   userProfile: UserProfile;
-  match: match;
-  classes: any;
+  classes: ClassNameMap<string>;
 }
 
 interface ProposalDetailMessagesState {
@@ -119,7 +119,7 @@ interface ProposalDetailMessagesState {
 class ConnectedProposalDetailMessages extends React.Component<
   ProposalDetailMessagesProps,
   ProposalDetailMessagesState
-> {
+  > {
   private messageEndRef: React.RefObject<HTMLInputElement> = React.createRef();
 
   constructor(props) {
@@ -173,9 +173,9 @@ class ConnectedProposalDetailMessages extends React.Component<
 
     if (
       this.state.messageInput.length -
-        this.state.messageInput.split('\n') -
-        1 ===
-        0 &&
+      this.state.messageInput.split('\n') -
+      1 ===
+      0 &&
       this.state.files.length === 0
     )
       return;
@@ -401,9 +401,9 @@ class ConnectedProposalDetailMessages extends React.Component<
                 this.state.isSending ||
                 (this.state.files.length === 0 &&
                   this.state.messageInput.length -
-                    this.state.messageInput.split('\n').length +
-                    1 ===
-                    0)
+                  this.state.messageInput.split('\n').length +
+                  1 ===
+                  0)
               }
             >
               Send
@@ -474,4 +474,4 @@ const ProposalDetailMessages = connect(
   mapStateToProps,
   mapDispatchToProps
 )(ConnectedProposalDetailMessages);
-export default withStyles(styles)(ProposalDetailMessages);
+export default withRouter(withStyles(styles)(ProposalDetailMessages));

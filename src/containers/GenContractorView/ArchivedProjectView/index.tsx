@@ -21,7 +21,8 @@ import ConfirmDialog from 'components/shared/ConfirmDialog';
 
 import { getArchivedProjectsByGenId } from 'actions/gen-actions';
 import { deleteProject, setCurrentProject } from 'actions/global-actions';
-import { UserProfile, Projects } from 'types/global';
+import { UserProfile } from 'types/global';
+import { Projects } from 'types/project';
 
 
 const style = (theme: Theme) => createStyles({
@@ -179,7 +180,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
     render() {
         const { classes, projects } = this.props;
 
-        if (projects === null) {
+        if (!projects) {
             return <CircularProgress className={classes.waitingSpin} />;
         }
 

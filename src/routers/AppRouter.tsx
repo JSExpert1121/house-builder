@@ -71,7 +71,7 @@ class AppRouterConnect extends React.Component<AppRouterProps, AppRouterState> {
     const { userProfile, classes } = this.props;
     if (
       this.state.checkingSession ||
-      (auth0Client.isAuthenticated() && userProfile === null)
+      (auth0Client.isAuthenticated() && !userProfile)
     ) {
       return <CircularProgress className={classes.waitingSpin}/>;
     }

@@ -1,27 +1,27 @@
-import Checkbox         from '@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton       from '@material-ui/core/IconButton';
-import Snackbar         from '@material-ui/core/Snackbar';
-import {withStyles}     from '@material-ui/core/styles';
-import Table            from '@material-ui/core/Table';
-import TableBody        from '@material-ui/core/TableBody';
-import TableHead        from '@material-ui/core/TableHead';
-import TablePagination  from '@material-ui/core/TablePagination';
-import TableRow         from '@material-ui/core/TableRow';
-import CompareIcon      from '@material-ui/icons/Compare';
-import Button           from "components/CustomButtons/Button.jsx";
-import React            from 'react';
-import {connect}        from 'react-redux';
-import {compose}        from 'redux';
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import CompareIcon from '@material-ui/icons/Compare';
+import Button from "components/CustomButtons/Button.jsx";
+import React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 
-import removeMd        from 'remove-markdown';
+import removeMd from 'remove-markdown';
 import {
   getProposalData,
   getProposalsByProjectId,
   setDetailProposal,
   setProposalsCompare
-}                      from '../../actions/global-actions';
-import ConfirmDialog   from '../shared/ConfirmDialog';
+} from '../../actions/global-actions';
+import ConfirmDialog from '../shared/ConfirmDialog';
 import CustomTableCell from "../shared/CustomTableCell";
 
 const MAX_COMPARE = 3;
@@ -162,7 +162,7 @@ class ProjectProposals extends React.Component {
     const { classes, proposals, match } = this.props;
     const { compares } = this.state;
 
-    if (proposals === null)
+    if (!proposals)
       return (
         <div className={classes.root}>
           <CircularProgress className={classes.waitingSpin} />
@@ -301,9 +301,9 @@ const mapStateToProps = state => ({
 })
 
 export default compose(
-    withStyles(styles),
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )
+  withStyles(styles),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(ProjectProposals);

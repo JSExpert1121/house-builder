@@ -102,8 +102,10 @@ class ProjectFiles extends React.Component {
     const projectFiles = project.projectFiles;
 
     const readonly = location.pathname.includes('/projects');
+    const remoteRoot = process.env.REACT_APP_PROJECT_API + '/projects/' + project.id + '/files/';
 
     return (
+
       <div className={classes.root}>
         <Table className={classes.table} size="small">
           <TableHead>
@@ -127,16 +129,7 @@ class ProjectFiles extends React.Component {
             {projectFiles.map(row => (
               <TableRow className={classes.row} key={row.id} hover>
                 <CustomTableCell component="th" scope="row" align="center">
-                  <a
-                    download={row.name}
-                    href={
-                      process.env.REACT_APP_PROJECT_API +
-                      '/projects/' +
-                      project.id +
-                      '/files/' +
-                      row.name
-                    }
-                  >
+                  <a download={row.name} href={remoteRoot + row.name}>
                     {row.name}
                   </a>
                 </CustomTableCell>

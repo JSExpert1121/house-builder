@@ -22,7 +22,8 @@ import ConfirmDialog from 'components/shared/ConfirmDialog';
 
 import { getProjectsByGenId } from 'actions/gen-actions';
 import { setCurrentProject, archiveProject } from 'actions/global-actions';
-import { UserProfile, Projects } from 'types/global';
+import { UserProfile } from 'types/global';
+import { Projects } from 'types/project';
 
 import style from './CurrentProject.style';
 

@@ -151,7 +151,7 @@ class TemplateDetailView extends Component<
   render() {
     const { classes, template } = this.props;
 
-    if (template === null) return <div></div>;
+    if (!template) return <div></div>;
     if (template['isLoading'] === true)
       return <CircularProgress className={classes.waitingSpin} />;
 

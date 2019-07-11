@@ -21,7 +21,7 @@ import NoteAddIcon         from '@material-ui/icons/NoteAdd';
 import CustomTableCell     from '../../components/shared/CustomTableCell';
 
 import { getContractorDetailById, removeFile, uploadFiles } from '../../actions/cont-actions';
-import { File, MaterialThemeHOC, UserProfile }              from '../../types/global';
+import { FileInfo, MaterialThemeHOC, UserProfile }              from '../../types/global';
 import { compose }                                          from 'redux';
 import styles                                               from './ProfileFileView.style'
 import Button                                               from '../../components/CustomButtons/Button';
@@ -30,7 +30,7 @@ interface ProfileFileViewProps extends MaterialThemeHOC {
   getContractorDetailById: (id: string) => any;
   uploadFiles: (id: string, file: string) => any;
   removeFile: (id: string, name: string) => any;
-  files: File[];
+  files: FileInfo[];
 }
 
 interface ProfileFileViewState {

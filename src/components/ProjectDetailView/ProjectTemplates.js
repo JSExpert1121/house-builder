@@ -156,7 +156,7 @@ class ProjectTemplate extends React.Component {
     const { template } = this.state;
     const editable = match.url.includes('/gen-contractor');
 
-    if (project === null) {
+    if (!project) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
 

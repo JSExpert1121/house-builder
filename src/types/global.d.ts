@@ -1,3 +1,7 @@
+export interface CmnObject<T> {
+  [key in string]: T;
+}
+
 export interface UserMetaData {
   roles: string;
   contractor_id: string;
@@ -13,55 +17,70 @@ export interface UserProfile {
   picture: string;
 }
 
-export interface Proposal {
-  id: number;
-}
-
 export interface MaterialThemeHOC {
   classes: any;
   theme: any;
 }
 
-export interface File {
-  id: number;
+export type AddrInfo = {
+  name: string;
+  street?: string;
+  city?: string;
+}
+
+export type CommonInfo = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  updatedBy?: string;
+}
+
+export interface FileInfo extends CommonInfo {
   name: string;
 }
 
-export interface ProjectPostInfo {
-  title: string;
+export interface SpecInfo extends CommonInfo {
+  name: string;
+}
+
+export interface OptionPostInfo {
+  name: string;
+  value: string;
   description: string;
   budget: number;
-  updatedBy: string;
-  due?: Date;
+  duration: number;
 }
 
-export interface ProjectBaseInfo {
-  id: string;
-  title: string;
+export type OptionInfo = CommonInfo & OptionPostInfo;
+
+export interface CategoryInfo extends CommonInfo {
+  name: string;
+  type: string;
+  value: string;
   description: string;
-  budget: number;
-  due?: string;
+  optionList?: Array<OptionInfo>;
+  proposalOptions?: object;
 }
 
-export interface ProjectInfo extends ProjectBaseInfo {
-  createdAt: string;
-  updatedAt: string;
-  updatedBy: string;
-  status: string;
-  projectFiles: Array<string>;
-  projectTemplates: Array;
-  projectSpecialties: Array;
-  projectInvites: Array | null;
-  relationships: Array;
+interface TemplateDetailInfo extends CommonInfo {
+  name: string;
+  description: string;
+  categoryList: Array<CategoryInfo>;
 }
 
-type SortInfo = {
+export interface TemplateInfo extends CommonInfo {
+  name: string;
+  template: TemplateDetailInfo;
+  projectTemplates?: Array<object>;
+}
+
+export type SortInfo = {
   sorted: boolean;
   unsorted: boolean;
   empty: boolean;
 }
 
-type PageableInfo = {
+export type PageableInfo = {
   sort: SortInfo;
   pageSize: number;
   pageNumber: number;
@@ -70,17 +89,3 @@ type PageableInfo = {
   paged: boolean;
 }
 
-export interface Projects {
-  content: Array<ProjectInfo>;
-  pageable: PageableInfo;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
-  first: boolean;
-  sort: PageableInfo;
-  numberOfElements: number;
-  size: number;
-  empty: boolean;
-  allprojects: Array | null;
-  templates: Array | null;
-}

@@ -184,7 +184,7 @@ class CategoryDetailView extends Component<
   render() {
     const { classes, category } = this.props;
 
-    if (category === null) return <div> </div>;
+    if (!category) return <div> </div>;
 
     if (category['isLoading'] === true)
       return <CircularProgress className={classes.waitingSpin} />;

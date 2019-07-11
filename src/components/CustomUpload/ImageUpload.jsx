@@ -55,7 +55,7 @@ export default class ImageUpload extends React.Component {
           <img src={this.state.imagePreviewUrl} alt="..." />
         </div>
         <div>
-          {this.state.file === null ? (
+          {(!this.state.file) ? (
             <Button color="primary" {...addButtonProps} onClick={() => this.handleClick()}>
               {avatar ? "Add Photo" : "Select image"}
             </Button>

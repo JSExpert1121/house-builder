@@ -1,6 +1,6 @@
-import React                                                                from 'react';
-import { connect }                                                          from 'react-redux';
-import { withStyles }                                                       from '@material-ui/core/styles';
+import React from 'react';
+import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 import {
   CircularProgress,
   IconButton,
@@ -14,26 +14,26 @@ import {
   TablePagination,
   TableRow,
   TextField,
-}                                                                           from '@material-ui/core';
-import NoteAddIcon                                                          from '@material-ui/icons/NoteAdd';
-import DeleteIcon                                                           from '@material-ui/icons/Delete';
-import Dialog                                                               from '@material-ui/core/Dialog';
-import DialogActions                                                        from '@material-ui/core/DialogActions';
-import DialogContent     from '@material-ui/core/DialogContent';
+} from '@material-ui/core';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle       from '@material-ui/core/DialogTitle';
-import Fab               from '@material-ui/core/Fab';
-import AddIcon           from '@material-ui/icons/Add';
-import Button            from "components/CustomButtons/Button.jsx";
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import Button from "components/CustomButtons/Button.jsx";
 import {
   addSpecialty,
   deleteSpecialty,
   getSpecialties,
   selectContractor,
   updateContractor
-}                        from '../../../actions/cont-actions';
-import {compose}         from "redux";
-import {withRouter}      from "react-router-dom";
+} from '../../../actions/cont-actions';
+import { compose } from "redux";
+import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -149,7 +149,7 @@ class ContractorInfoView extends React.Component {
   render() {
     const { classes, specialties, selectedContractor } = this.props;
     const { specialty } = this.state;
-    if (selectedContractor === null) {
+    if (!selectedContractor) {
       return <CircularProgress className={classes.waitingSpin} />;
     }
     return (
@@ -166,10 +166,10 @@ class ContractorInfoView extends React.Component {
             </MenuItem>
             {specialties
               ? specialties.content.map(row => (
-                  <MenuItem value={row.id} key={row.id}>
-                    {row.name}
-                  </MenuItem>
-                ))
+                <MenuItem value={row.id} key={row.id}>
+                  {row.name}
+                </MenuItem>
+              ))
               : null}
           </Select>
           <Fab
@@ -192,13 +192,13 @@ class ContractorInfoView extends React.Component {
           </Fab>
           {specialties
             ? specialties.content.map(row =>
-                row.id === specialty ? (
-                  <ul key={row.id}>
-                    <li>Name: {row.name}</li>
-                    <li>Description: {row.description}</li>
-                  </ul>
-                ) : null
-              )
+              row.id === specialty ? (
+                <ul key={row.id}>
+                  <li>Name: {row.name}</li>
+                  <li>Description: {row.description}</li>
+                </ul>
+              ) : null
+            )
             : null}
         </div>
         <div className={classes.tableWrap}>
@@ -418,7 +418,7 @@ const mapStateToProps = state => ({
   selectedContractor: state.cont_data.selectedContractor,
 });
 
-const mapDispatchToProps =  {
+const mapDispatchToProps = {
   getSpecialties,
   addSpecialty,
   deleteSpecialty,

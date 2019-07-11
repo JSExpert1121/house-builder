@@ -1,42 +1,36 @@
-import Box from '@material-ui/core/Box';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody                           from '@material-ui/core/TableBody';
-import TableHead                           from '@material-ui/core/TableHead';
-import TableRow                            from '@material-ui/core/TableRow';
-import TextField                           from '@material-ui/core/TextField';
-import Typography                          from '@material-ui/core/Typography';
-import FiberIcon                           from '@material-ui/icons/FiberManualRecord';
-import clsx                                from 'clsx';
-import Button                              from 'components/CustomButtons/Button.jsx';
-import 'easymde/dist/easymde.min.css';
-import React, { Component }                from 'react';
-import { connect }                         from 'react-redux';
-import { withRouter }                      from 'react-router-dom';
-import SimpleMDE                           from 'react-simplemde-editor';
-import { compose }                         from 'redux';
-import { awardProject }                    from '../../actions/gen-actions';
-import { deleteProposal, getProposalData } from '../../actions/global-actions';
-import ConfirmDialog                       from '../../components/shared/ConfirmDialog';
-import CustomTableCell                     from '../../components/shared/CustomTableCell';
-import SubContractorView                   from '../Contractor/SubContractor';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'redux';
 
-import ProjectView from '../ProjectDetailView/ProjectView';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
+
+import Button from 'components/CustomButtons/Button.jsx';
+import ConfirmDialog from 'components/shared/ConfirmDialog';
+import ContractorView from 'components/Contractor';
+// import GenContractorView from 'components/Contractor/GenContractor';
 import ProposalView from './ProposalView';
+import ProposalEditView from './ProposalEditView';
+import { awardProject } from 'actions/gen-actions';
+import { deleteProposal, getProposalData } from 'actions/global-actions';
+import 'easymde/dist/easymde.min.css';
+
 
 const styles = theme => ({
   root: {
     position: 'relative',
     overflow: 'auto',
     flexGrow: 1,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     width: '100%',
+  },
+  container: {
+    margin: theme.spacing(1),
+    padding: 0,
+    textAlign: 'right'
   },
   editField: {
     lineHeight: '1.5rem',
@@ -62,9 +56,9 @@ class ProposalDetailOverview extends Component {
     super(props);
 
     this.state = {
-      budget: props.brief.budget,
-      duration: props.brief.duration,
-      description: props.brief.description,
+      budget: props.brief.budget || 0,
+      duration: props.brief.duration || 0,
+      description: props.brief.description || '',
 
       isSaving: false,
       showConfirm: false,
@@ -73,10 +67,6 @@ class ProposalDetailOverview extends Component {
     };
   }
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
-
   componentWillUnmount() {
     this.props.handleOverviewChange({
       budget: this.state.budget,
@@ -84,6 +74,10 @@ class ProposalDetailOverview extends Component {
       description: this.state.description,
     });
   }
+
+  handleChange = name => val => {
+    this.setState({ [name]: val });
+  };
 
   submit = () => {
     this.setState({
@@ -96,8 +90,8 @@ class ProposalDetailOverview extends Component {
   handleSubmit = async () => {
     this.setState({ showConfirm: false, isSaving: true });
     await this.props.handleSubmit({
-      budget: this.state.budget,
-      duration: this.state.duration,
+      budget: this.state.budget.toString(),
+      duration: this.state.duration.toString(),
       description: this.state.description,
     });
     this.setState({ isSaving: false });
@@ -135,190 +129,107 @@ class ProposalDetailOverview extends Component {
     this.setState({ showConfirm: false });
   };
 
+  gotoContractor = () => {
+    console.log('ProposalDetailOverview: gotoContractor');
+  }
+
   render() {
     const { classes, match, proposal, edit } = this.props;
 
     // let edit = match.params.id === '-1';
-    const project =
-      edit && !match.url.includes('/s_cont')
-        ? this.props.project
-        : proposal.proposal.project;
-
-    if (!project) return <div className={classes.root} />;
     if (!edit && !proposal) return <div className={classes.root} />;
 
-    let c_project = edit ? project : proposal.proposal.project;
+    let project = this.props.project;
+    if (proposal && proposal.proposal && proposal.proposal.project) {
+      project = proposal.proposal.project;
+    }
+
+    if (!project) return <div className={classes.root} />;
+
+    // let c_project = edit ? project : proposal.proposal.project;
     const btnTitle =
       match.url.includes('/s_cont') ||
         (match.params.id === '-1' && this.props.proposal)
         ? 'Update Proposal'
         : 'Submit Proposal';
-    const isGen = match.url.includes('/gen-contractor');
-    const style_prop_title = {
-      fontWeight: '600',
-      fontSize: '20px',
-      marginTop: '0',
-    };
-    // if (isGen) style_prop_title.marginTop = '0';
+    // const isGen = match.url.includes('/gen-contractor');
+
+    const templates = project ? project.projectTemplates || [] : [];
+    const Buttons = (
+      <Box className={classes.container}>
+        {match.url.includes('/s_cont') && (
+          <Button
+            disabled={this.state.isSaving}
+            onClick={this.delete}
+            color="warning"
+          >
+            Delete Proposal
+        </Button>
+        )}
+        {match.url.includes('/gen-contractor') && (
+          <Button
+            disabled={this.state.isSaving || proposal.status === 'AWARDED'}
+            onClick={this.award}
+            color="success"
+          >
+            Award Project
+        </Button>
+        )}
+        {edit && (
+          <Button
+            disabled={this.state.isSaving}
+            onClick={this.submit}
+            color="primary"
+          >
+            {btnTitle}
+          </Button>
+        )}
+      </Box>
+    )
 
     return (
       <Paper className={classes.root}>
-        {!isGen && <ProjectView project={c_project} />}
-
-        {!edit || isGen ? (
-          <ProposalView proposal={proposal.proposal} />
-        ) : (
-            <>
-              <Typography variant="subtitle1" noWrap style={style_prop_title}>
-                Proposal
-            </Typography>
-              <Box id="brief-desc" style={{ display: 'flex', flexWrap: 'wrap' }}>
-                <TextField
-                  disabled={!edit}
-                  label="Budget *"
-                  id="budget"
-                  type="number"
-                  className={clsx(classes.margin, classes.textField)}
-                  value={this.state.budget}
-                  onChange={this.handleChange('budget')}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">USD</InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  disabled={!edit}
-                  label="Duration *"
-                  type="number"
-                  className={clsx(classes.margin, classes.textField)}
-                  value={this.state.duration}
-                  onChange={this.handleChange('duration')}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">days</InputAdornment>
-                    ),
-                  }}
-                />
-                <SimpleMDE
-                  style={{
-                    height: '209px',
-                    overflow: 'auto',
-                    margin: '8px 0',
-                    textAlign: 'left',
-                    width: '100%',
-                  }}
-                  value={this.state.description}
-                  onChange={val => this.setState({ description: val })}
-                  options={{
-                    placeholder: 'Description here',
-                  }}
-                />
-
-                {/* <FormControl fullWidth className={classes.margin}>
-								<InputLabel htmlFor="description">Description *</InputLabel>
-								<Input disabled={!edit}
-									id="description"
-									value={this.state.description}
-									onChange={this.handleChange('description')}
-									multiline={true}
-								/>
-							</FormControl> */}
-              </Box>
-            </>
-          )}
-
-        {isGen && (
-          <SubContractorView subContractor={proposal.proposal.subContractor} />
+        {/* {(!isGen || edit) && <ProjectView project={c_project} />} */}
+        {!edit && (
+          <Grid container>
+            <Grid item xs={12} md={9}>
+              <ProposalView
+                proposal={proposal.proposal}
+                selectTemplate={this.props.templateSelected}
+              />
+              {Buttons}
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <ContractorView
+                contractor={proposal.proposal.subContractor}
+                onClick={this.gotoContractor}
+              />
+            </Grid>
+          </Grid>
         )}
-        <Typography
-          variant="subtitle1"
-          noWrap
-          style={{ fontWeight: '600', fontSize: '20px', marginTop: '16px' }}
-        >
-          Templates
-        </Typography>
-        {!isGen ? (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <CustomTableCell>Name</CustomTableCell>
-                <CustomTableCell align="center">Discription</CustomTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {project &&
-                project.projectTemplates.map((templ, index) => (
-                  <TableRow
-                    className={classes.row}
-                    key={index}
-                    hover
-                    onClick={() => this.props.templateSelected(index)}
-                  >
-                    <CustomTableCell component="th" scope="row">
-                      {templ.template.name}
-                    </CustomTableCell>
-                    <CustomTableCell align="center">
-                      {templ.template.description}
-                    </CustomTableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        ) : (
-            <List>
-              {project &&
-                project.projectTemplates.map((templ, index) => (
-                  <ListItem
-                    key={index}
-                    onClick={() => this.props.templateSelected(index)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <ListItemIcon>
-                      <FiberIcon style={{ fontSize: '16px' }} />
-                    </ListItemIcon>
-                    <ListItemText primary={templ.template.name} />
-                  </ListItem>
-                ))}
-            </List>
-          )}
 
-        <Box style={{ textAlign: 'right', paddingTop: '16px' }}>
-          {match.url.includes('/s_cont') && (
-            <Button
-              disabled={this.state.isSaving}
-              onClick={this.delete}
-              color="warning"
-            >
-              Delete Proposal
-            </Button>
-          )}
-          {match.url.includes('/gen-contractor') && (
-            <Button
-              disabled={this.state.isSaving || proposal.status === 'AWARDED'}
-              onClick={this.award}
-              color="success"
-            >
-              Award Project
-            </Button>
-          )}
-          {edit && (
-            <Button
-              disabled={this.state.isSaving}
-              onClick={this.submit}
-              color="primary"
-            >
-              {btnTitle}
-            </Button>
-          )}
-        </Box>
+        {edit && (
+          <>
+            <ProposalEditView
+              budget={this.state.budget}
+              duration={this.state.duration}
+              description={this.state.description}
+              templates={templates}
+              selectTemplate={this.props.templateSelected}
+              budgetChange={this.handleChange('budget')}
+              durationChange={this.handleChange('duration')}
+              descriptionChange={this.handleChange('description')} />
+            {Buttons}
+          </>
+        )}
+
         <ConfirmDialog
           open={this.state.showConfirm}
           message={this.state.message}
           onYes={this.state.handleOK}
           onCancel={this.closeConfirm}
         />
-      </Paper>
+      </Paper >
     );
   }
 }

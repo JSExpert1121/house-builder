@@ -49,7 +49,7 @@ class ContractorDetailView extends React.Component {
     const { classes, selectedContractor } = this.props;
     const curDetailTab = this.state.curDetailTab;
 
-    if (selectedContractor === null) return <div> no project is selected </div>;
+    if (!selectedContractor) return <div> no project is selected </div>;
     return (
       <Box className={classes.root}>
         <Box style={{ display: 'flex' }}>
