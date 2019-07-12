@@ -23,7 +23,6 @@ import ProposalsCompare from './ProposalsCompare';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 'calc(100vh - 64px - 55px)',
   },
   backBtn: {
     color: theme.palette.primary.dark,

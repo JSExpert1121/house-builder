@@ -19,7 +19,6 @@ import CustomTableCell from '../shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing(1),
     position: 'relative'
   },
   waitingSpin: {

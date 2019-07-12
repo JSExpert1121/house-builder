@@ -73,7 +73,13 @@ export function selectContractor(id) {
   };
 }
 
-export const updateContractor = id => dispatch => restAPI.get('contractors/' + id).then(response => dispatch(setSelectedContractor(response.data)));
+export const updateContractor = id => dispatch => {
+  return restAPI.get('contractors/' + id).then(
+    response => dispatch({
+      type: SET_SELECTED_CONTRACTOR,
+      payload: response.data,
+    }));
+}
 // export function updateContractor(id) {
 //   return function(dispatch) {
 //     return restAPI
@@ -109,28 +115,44 @@ export function deleteContractor(id, cb) {
   };
 }
 
-export function addFiles(id, files, cb) {
-  return function (dispatch) {
-    const formData = new FormData();
-    files.forEach(async file => {
-      await formData.append('file', file);
+export const addFiles = (id, files) => dispatch => {
+  const formData = new FormData();
+  files.forEach(async file => {
+    formData.append('file', file);
+  });
+
+  return restAPI
+    .post('contractors/' + id + '/files/upload/multiple', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
-    return restAPI
-      .post('contractors/' + id + '/files/upload/multiple', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then(response => {
-        cb(true);
-        console.log(response);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
 }
+
+// export function addFiles(id, files, cb) {
+//   return function (dispatch) {
+//     const formData = new FormData();
+//     files.forEach(async file => {
+//       await formData.append('file', file);
+//     });
+//     return restAPI
+//       .post('contractors/' + id + '/files/upload/multiple', formData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//         },
+//       })
+//       .then(response => {
+//         cb(true);
+//         console.log(response);
+//       })
+//       .catch(err => {
+//         cb(false);
+//         console.log(err.message);
+//       });
+//   };
+// }
+
+export const deleteFile = (id, name) => dispatch => restAPI.delete('contractors/' + id + '/files/' + name);
 
 export const getContractorDetailById = id => dispatch => {
   return restAPI.get('contractors/' + id).then(response => {
@@ -138,19 +160,19 @@ export const getContractorDetailById = id => dispatch => {
   });
 };
 
-export function deleteFile(id, name, cb) {
-  return function (dispatch) {
-    return restAPI
-      .delete('contractors/' + id + '/files/' + name)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
+// export function deleteFile(id, name, cb) {
+//   return function (dispatch) {
+//     return restAPI
+//       .delete('contractors/' + id + '/files/' + name)
+//       .then(response => {
+//         cb(true);
+//       })
+//       .catch(err => {
+//         cb(false);
+//         console.log(err.message);
+//       });
+//   };
+// }
 
 export const removeFile = (id, name) => dispatch => {
   return restAPI.delete('contractors/' + id + '/files/' + name);
@@ -187,45 +209,55 @@ export const rejectContractor = (id, data) => dispatch => restAPI.post('contract
 //   };
 // }
 
-export function getSpecialties(page, size) {
-  return function (dispatch) {
-    dispatch(clearSpecialties());
-    return restAPI
-      .get('specialties', { page, size })
-      .then(response => {
-        dispatch(specialtiesLoaded(response.data));
-      })
-      .catch(err => console.log(err.message));
-  };
+export const getSpecialties = (page, size) => dispatch => {
+  return restAPI.get('specialties', { page, size }).then(
+    response => {
+      dispatch(specialtiesLoaded(response.data));
+    });
 }
 
-export function addSpecialty(contractorId, specialtyId, cb) {
-  return function (dispatch) {
-    return restAPI
-      .post('contractors/' + contractorId + '/specialties/' + specialtyId)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
+export const addSpecialty = (contid, specid) => dispatch => restAPI.post('contractors/' + contid + '/specialties/' + specid);
+export const deleteSpecialty = (contid, specid) => dispatch => restAPI.delete('contractors/' + contid + '/specialties/' + specid);
 
-export function deleteSpecialty(contractorId, specialtyId, cb) {
-  return function (dispatch) {
-    return restAPI
-      .delete('contractors/' + contractorId + '/specialties/' + specialtyId)
-      .then(response => {
-        cb(true);
-      })
-      .catch(err => {
-        cb(false);
-        console.log(err.message);
-      });
-  };
-}
+// export function getSpecialties(page, size) {
+//   return function (dispatch) {
+//     dispatch(clearSpecialties());
+//     return restAPI
+//       .get('specialties', { page, size })
+//       .then(response => {
+//         dispatch(specialtiesLoaded(response.data));
+//       })
+//       .catch(err => console.log(err.message));
+//   };
+// }
+
+// export function addSpecialty(contractorId, specialtyId, cb) {
+//   return function (dispatch) {
+//     return restAPI
+//       .post('contractors/' + contractorId + '/specialties/' + specialtyId)
+//       .then(response => {
+//         cb(true);
+//       })
+//       .catch(err => {
+//         cb(false);
+//         console.log(err.message);
+//       });
+//   };
+// }
+
+// export function deleteSpecialty(contractorId, specialtyId, cb) {
+//   return function (dispatch) {
+//     return restAPI
+//       .delete('contractors/' + contractorId + '/specialties/' + specialtyId)
+//       .then(response => {
+//         cb(true);
+//       })
+//       .catch(err => {
+//         cb(false);
+//         console.log(err.message);
+//       });
+//   };
+// }
 
 /*export function deleteCategory(id, cb) {
   return function(dispatch) {

@@ -35,7 +35,6 @@ import CustomTableCell from '../shared/CustomTableCell';
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing(1),
   },
   row: {
     '&:nth-of-type(odd)': {

@@ -22,7 +22,6 @@ import SpecialtySearchBar from 'components/SearchBar/SpecialtySearchBar';
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing(1),
   },
   tableWrap: {
     overflow: 'auto',

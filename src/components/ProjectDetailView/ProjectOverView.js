@@ -14,7 +14,6 @@ import CustomSnackbar from 'components/shared/CustomSnackbar';
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing(1, 1),
     position: 'relative'
   },
   title: {

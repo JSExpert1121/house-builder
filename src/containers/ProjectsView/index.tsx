@@ -17,9 +17,13 @@ import { UserProfile } from 'types/global'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    height: 'calc(100vh - 64px)',
+    overflow: 'auto',
   },
   contentWrapper: {
-    marginTop: theme.spacing(1),
+    height: 'calc(100vh - 64px - 55px)',
+    padding: theme.spacing(1),
+    backgroundColor: 'white'
   },
   buttonAdditional: {
     position: 'absolute',

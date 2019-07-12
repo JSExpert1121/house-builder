@@ -26,6 +26,7 @@ export type AddrInfo = {
   name: string;
   street?: string;
   city?: string;
+  phone?: string;
 }
 
 export type CommonInfo = {
@@ -36,10 +37,6 @@ export type CommonInfo = {
 }
 
 export interface FileInfo extends CommonInfo {
-  name: string;
-}
-
-export interface SpecInfo extends CommonInfo {
   name: string;
 }
 
@@ -89,3 +86,30 @@ export type PageableInfo = {
   paged: boolean;
 }
 
+export interface Pageable {
+  pageable: PageableInfo;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+  sort: SortInfo;
+  numberOfElements: number;
+  size: number;
+  empty: boolean;
+}
+
+export interface Specialty extends CommonInfo {
+  name: string;
+  description: string;
+  value: string;
+  contractorSpecialties: object;
+  projectSpecialties: object;
+}
+
+export interface SpecialtyInfo extends CommonInfo {
+  specialty: Specialty;
+}
+
+export interface Specialties extends Pageable {
+  content: Array<Specialty>;
+}

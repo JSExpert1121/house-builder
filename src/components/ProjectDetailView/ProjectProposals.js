@@ -27,7 +27,6 @@ import CustomTableCell from "../shared/CustomTableCell";
 const MAX_COMPARE = 3;
 const styles = theme => ({
   root: {
-    padding: theme.spacing(1),
   },
   tableWrap: {
     overflowX: 'hidden',

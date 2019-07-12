@@ -1,4 +1,4 @@
-import { PageableInfo, TemplateInfo, SpecInfo, SortInfo } from './global'
+import { Pageable, TemplateInfo, SpecialtyInfo, SortInfo } from './global'
 export interface ProjectPostInfo {
     title: string;
     description: string;
@@ -22,22 +22,13 @@ export interface ProjectInfo extends ProjectBaseInfo {
     status: string;
     projectFiles: Array<string>;
     projectTemplates: Array<TemplateInfo>;
-    projectSpecialties: Array<SpecInfo>;
+    projectSpecialties: Array<SpecialtyInfo>;
     projectInvites?: Array<object>;
     relationships: Array<object>;
 }
 
-export interface Projects {
+export interface Projects extends Pageable {
     content: Array<ProjectInfo>;
-    pageable: PageableInfo;
-    totalElements: number;
-    totalPages: number;
-    last: boolean;
-    first: boolean;
-    sort: SortInfo;
-    numberOfElements: number;
-    size: number;
-    empty: boolean;
     allprojects: Array<object> | null;
     templates: Array<object> | null;
 }
