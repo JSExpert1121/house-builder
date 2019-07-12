@@ -129,8 +129,14 @@ class ProposalDetailOverview extends Component {
     this.setState({ showConfirm: false });
   };
 
-  gotoContractor = () => {
-    console.log('ProposalDetailOverview: gotoContractor');
+  gotoContractor = (id) => {
+    const { match } = this.props;
+    if (match.url.includes('gen-contractor')) {
+      this.props.history.push(`/gen-contractor/contractor_detail/${id}`);
+    }
+    if (match.url.includes('s_cont')) {
+      this.props.history.push(`/s_cont/contractor_detail/${id}`);
+    }
   }
 
   render() {
@@ -202,7 +208,7 @@ class ProposalDetailOverview extends Component {
             <Grid item xs={12} md={3}>
               <ContractorView
                 contractor={proposal.proposal.subContractor}
-                onClick={this.gotoContractor}
+                onClick={() => this.gotoContractor(proposal.proposal.subContractor.id)}
               />
             </Grid>
           </Grid>

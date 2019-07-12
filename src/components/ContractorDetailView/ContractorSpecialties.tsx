@@ -24,7 +24,7 @@ import {
     addSpecialty,
     deleteSpecialty,
     getSpecialties,
-} from '../../../actions/cont-actions';
+} from 'actions/cont-actions';
 import { ContractorInfo } from 'types/contractor';
 import { ISnackbarProps } from 'types/components';
 import { Specialties } from 'types/global';
@@ -85,9 +85,10 @@ export interface IContractorSpecialtiesProps {
     addSpecialty: (contid: string, specid: string) => Promise<void>;
     deleteSpecialty: (contid: string, specid: string) => Promise<void>;
     contractorUpdated: () => Promise<void>;
-    selectedContractor: ContractorInfo;
+    contractor: ContractorInfo;
     classes: ClassNameMap<string>;
     specialties: Specialties;
+    edit: boolean;
 }
 
 export interface IContractorSpecialtiesState extends ISnackbarProps {
@@ -133,9 +134,9 @@ class ContractorSpecialties extends React.Component<IContractorSpecialtiesProps,
     }
 
     handleChangeRowsPerPage = event => {
-        const { selectedContractor } = this.props;
+        const { contractor } = this.props;
         const rowsPerPage = event.target.value;
-        const currentPage = (rowsPerPage >= selectedContractor.contractorSpecialties.length)
+        const currentPage = (rowsPerPage >= contractor.contractorSpecialties.length)
             ? 0 : this.state.currentPage;
 
         this.setState({
@@ -165,7 +166,7 @@ class ContractorSpecialties extends React.Component<IContractorSpecialtiesProps,
     handleAddSpec = async () => {
         this.setState({ isBusy: true });
         try {
-            await this.props.addSpecialty(this.props.selectedContractor.id, this.state.specialty);
+            await this.props.addSpecialty(this.props.contractor.id, this.state.specialty);
             await this.props.contractorUpdated();
             await this.props.getSpecialties(this.state.currentPage, this.state.rowsPerPage);
             this.setState({
@@ -193,14 +194,14 @@ class ContractorSpecialties extends React.Component<IContractorSpecialtiesProps,
     }
 
     handleDelete = async (id: string) => {
-        const { selectedContractor } = this.props;
+        const { contractor } = this.props;
 
         this.setState({ isBusy: true });
         try {
-            await this.props.deleteSpecialty(selectedContractor.id, id);
+            await this.props.deleteSpecialty(contractor.id, id);
             await this.props.contractorUpdated();
             let curPage = this.state.currentPage;
-            if (this.state.rowsPerPage * this.state.currentPage >= (selectedContractor.contractorSpecialties.length - 1)) {
+            if (this.state.rowsPerPage * this.state.currentPage >= (contractor.contractorSpecialties.length - 1)) {
                 curPage--;
             }
             await this.props.getSpecialties(curPage, this.state.rowsPerPage);
@@ -225,51 +226,53 @@ class ContractorSpecialties extends React.Component<IContractorSpecialtiesProps,
 
     public render() {
 
-        const { classes, specialties, selectedContractor } = this.props;
+        const { classes, specialties, contractor, edit } = this.props;
         const { specialty } = this.state;
-        if (!selectedContractor) {
+        if (!contractor) {
             return <CircularProgress className={classes.waitingSpin} />;
         }
 
         return (
             <Box className={classes.root}>
-                <Box className={classes.specialty}>
-                    <Select
-                        className={classes.select}
-                        value={specialty}
-                        onChange={this.specialtyChange}
-                        name="specialties"
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
+                {edit && (
+                    <Box className={classes.specialty}>
+                        <Select
+                            className={classes.select}
+                            value={specialty}
+                            onChange={this.specialtyChange}
+                            name="specialties"
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {specialties
+                                ? specialties.content.map(row => (
+                                    <MenuItem value={row.id} key={row.id}>
+                                        {row.name}
+                                    </MenuItem>
+                                )) : null
+                            }
+                        </Select>
+                        <Fab
+                            color="primary"
+                            aria-label="Add"
+                            className={classes.fab}
+                            onClick={this.handleAddSpec}
+                        >
+                            <AddIcon />
+                        </Fab>
                         {specialties
-                            ? specialties.content.map(row => (
-                                <MenuItem value={row.id} key={row.id}>
-                                    {row.name}
-                                </MenuItem>
-                            )) : null
-                        }
-                    </Select>
-                    <Fab
-                        color="primary"
-                        aria-label="Add"
-                        className={classes.fab}
-                        onClick={this.handleAddSpec}
-                    >
-                        <AddIcon />
-                    </Fab>
-                    {specialties
-                        ? specialties.content.map(row =>
-                            row.id === specialty ? (
-                                <ul key={row.id}>
-                                    <li>Name: {row.name}</li>
-                                    <li>Description: {row.description}</li>
-                                </ul>
+                            ? specialties.content.map(row =>
+                                row.id === specialty ? (
+                                    <ul key={row.id}>
+                                        <li>Name: {row.name}</li>
+                                        <li>Description: {row.description}</li>
+                                    </ul>
+                                ) : null
                             ) : null
-                        ) : null
-                    }
-                </Box>
+                        }
+                    </Box>
+                )}
 
                 <Box className={classes.tableWrap}>
                     <Table>
@@ -278,11 +281,11 @@ class ContractorSpecialties extends React.Component<IContractorSpecialtiesProps,
                                 <CustomTableCell>Name</CustomTableCell>
                                 <CustomTableCell align="center">Desc</CustomTableCell>
                                 <CustomTableCell align="center">Value</CustomTableCell>
-                                <CustomTableCell align="center">Action</CustomTableCell>
+                                {edit && <CustomTableCell align="center">Action</CustomTableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {selectedContractor.contractorSpecialties.map(row => (
+                            {contractor.contractorSpecialties.map(row => (
                                 <TableRow className={classes.row} key={row.id} hover>
                                     <CustomTableCell
                                         component="th"
@@ -303,16 +306,18 @@ class ContractorSpecialties extends React.Component<IContractorSpecialtiesProps,
                                     >
                                         {row.specialty.value ? row.specialty.value : 'N/A'}
                                     </CustomTableCell>
-                                    <CustomTableCell align="center">
-                                        <IconButton
-                                            className={classes.button}
-                                            aria-label="Delete"
-                                            color="primary"
-                                            onClick={() => this.handleDelete(row.specialty.id)}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </CustomTableCell>
+                                    {edit && (
+                                        <CustomTableCell align="center">
+                                            <IconButton
+                                                className={classes.button}
+                                                aria-label="Delete"
+                                                color="primary"
+                                                onClick={() => this.handleDelete(row.specialty.id)}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </CustomTableCell>
+                                    )}
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -323,7 +328,7 @@ class ContractorSpecialties extends React.Component<IContractorSpecialtiesProps,
                     style={{ overflow: 'auto' }}
                     rowsPerPageOptions={[5, 10, 20]}
                     component="div"
-                    count={selectedContractor.contractorSpecialties.length}
+                    count={contractor.contractorSpecialties.length}
                     rowsPerPage={this.state.rowsPerPage}
                     page={this.state.currentPage}
                     backIconButtonProps={{ 'aria-label': 'Previous Page' }}

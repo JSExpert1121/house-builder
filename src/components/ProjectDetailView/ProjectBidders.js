@@ -319,8 +319,18 @@ class ProjectBidders extends React.Component {
     return value.includes(true);
   };
 
+  gotoContractor = id => {
+    const { match } = this.props;
+    if (match.url.includes('gen-contractor')) {
+      this.props.history.push(`/gen-contractor/contractor_detail/${id}`);
+    }
+    if (match.url.includes('s_cont')) {
+      this.props.history.push(`/s_cont/contractor_detail/${id}`);
+    }
+  }
+
   render() {
-    const { classes, project, specialties, match } = this.props;
+    const { classes, project, specialties } = this.props;
     const { contractors, projectBidders } = this.state;
     const suggestions = specialties ? specialties.content || [] : [];
 
@@ -346,66 +356,26 @@ class ProjectBidders extends React.Component {
                 {projectBidders.map(row => (
                   <TableRow className={classes.row} key={row.id} hover>
                     <CustomTableCell
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     />
                     <CustomTableCell
                       align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     >
                       {row.address ? row.address.name : 'N/A'}
                     </CustomTableCell>
                     <CustomTableCell
                       component="th"
                       scope="row"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     >
                       {row.email ? row.email : 'N/A'}
                     </CustomTableCell>
                     <CustomTableCell
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     />
                     <CustomTableCell
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     />
                   </TableRow>
                 ))}
@@ -469,53 +439,21 @@ class ProjectBidders extends React.Component {
                     <CustomTableCell
                       component="th"
                       scope="row"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     />
                     <CustomTableCell
                       align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     >
                       {row.address ? row.address.name : 'N/A'}
                     </CustomTableCell>
                     <CustomTableCell
                       align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     />
                     <CustomTableCell
                       align="center"
-                      onClick={async () => {
-                        await this.props.selectContractor(row.id);
-                        if (match.url.includes('gen-contractor'))
-                          this.props.history.push(
-                            '/gen-contractor/contractor_detail'
-                          );
-                        if (match.url.includes('s_cont'))
-                          this.props.history.push('/s_cont/contractor_detail');
-                      }}
+                      onClick={() => this.gotoContractor(row.id)}
                     />
                     <CustomTableCell align="center">
                       {this.isInvited(row.id) ? (

@@ -1,6 +1,6 @@
 import {
     AddrInfo,
-    SpecInfo,
+    SpecialtyInfo,
     FileInfo,
     Pageable,
     CommonInfo
@@ -21,7 +21,7 @@ export interface ContractorInfo extends CommonInfo, ContractorStatus {
     email: string;
     address?: AddrInfo;
     contractorFiles: Array<FileInfo>;
-    contractorSpecialties: Array<SpecInfo>;
+    contractorSpecialties: Array<SpecialtyInfo>;
 }
 
 export interface Contractors extends Pageable {

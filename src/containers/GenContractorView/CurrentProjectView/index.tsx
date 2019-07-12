@@ -67,6 +67,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
     async componentDidMount() {
         const { userProfile } = this.props;
         this.setState({ isBusy: true });
+        console.log('componentDidMount: ', userProfile);
         try {
             await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
         } catch (error) {

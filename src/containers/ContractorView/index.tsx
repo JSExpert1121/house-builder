@@ -9,15 +9,16 @@ import AppsIcon from '@material-ui/icons/Apps';
 import CustomTabs from 'components/shared/CustomTabs';
 import SecuredRoute from 'routers/SecuredRoute';
 import AllContractorsView from './AllContractorsView';
-import ContractorDetailView from './ContractorDetailView';
+import ContractorDetailView from 'components/ContractorDetailView';
 import { UserProfile } from 'types/global';
 
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
+        backgroundColor: 'white'
     },
     contentWrapper: {
-        padding: theme.spacing(1),
+        paddingTop: theme.spacing(1),
     },
 }));
 

@@ -112,8 +112,14 @@ class ProjectOverView extends React.Component {
     this.setState({ price: value });
   }
 
-  gotoContractor = () => {
-    console.log('ProjectOverView: gotoContractor');
+  gotoContractor = (id) => {
+    const { match } = this.props;
+    if (match.url.includes('gen-contractor')) {
+      this.props.history.push(`/gen-contractor/contractor_detail/${id}`);
+    }
+    if (match.url.includes('s_cont')) {
+      this.props.history.push(`/s_cont/contractor_detail/${id}`);
+    }
   }
 
   render() {
@@ -146,7 +152,7 @@ class ProjectOverView extends React.Component {
           <Grid item xs={12} md={3}>
             <GenContractor
               contractor={project.genContractor}
-              onClick={this.gotoContractor}
+              onClick={() => this.gotoContractor(project.genContractor.id)}
             />
           </Grid>
         </Grid>

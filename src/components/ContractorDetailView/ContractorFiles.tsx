@@ -21,7 +21,7 @@ import {
     addFiles,
     deleteFile,
     getContractorDetailById
-} from '../../../actions/cont-actions';
+} from 'actions/cont-actions';
 import { ContractorInfo } from 'types/contractor';
 import { ISnackbarProps } from 'types/components';
 
@@ -48,8 +48,9 @@ export interface IContractorFilesProps {
     addFiles: (id: string, files: File[]) => Promise<void>;
     deleteFile: (id: string, name: string) => Promise<void>;
     getContractorDetailById: (id: string) => Promise<void>;
-    selectedContractor: ContractorInfo;
+    contractor: ContractorInfo;
     classes: ClassNameMap<string>;
+    edit: boolean;
 }
 
 export interface IContractorFilesState extends ISnackbarProps {
@@ -78,11 +79,11 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
     }
 
     handleUploadFiles = async files => {
-        const { selectedContractor } = this.props;
+        const { contractor } = this.props;
 
         this.setState({ isBusy: true });
         try {
-            await this.props.addFiles(selectedContractor.id, files);
+            await this.props.addFiles(contractor.id, files);
             await this.props.contractorUpdated();
             this.setState({
                 openUploadForm: false,
@@ -104,16 +105,16 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
     }
 
     handleDeleteFile = async name => {
-        const { selectedContractor } = this.props;
+        const { contractor } = this.props;
 
         this.setState({
             isBusy: true,
         });
 
         try {
-            await this.props.deleteFile(selectedContractor.id, name);
+            await this.props.deleteFile(contractor.id, name);
             await this.props.contractorUpdated();
-            // await this.props.getContractorDetailById(selectedContractor.id);
+            // await this.props.getContractorDetailById(contractor.id);
             this.setState({
                 isBusy: false,
                 showMessage: true,
@@ -134,9 +135,9 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
 
     public render() {
 
-        const { classes, selectedContractor } = this.props;
-        const contractorFiles = selectedContractor.contractorFiles;
-        const remoteRoot = process.env.REACT_APP_PROJECT_API + '/contractors/' + selectedContractor.id + '/files/';
+        const { classes, contractor, edit } = this.props;
+        const contractorFiles = contractor.contractorFiles;
+        const remoteRoot = process.env.REACT_APP_PROJECT_API + '/contractors/' + contractor.id + '/files/';
 
         return (
             <Box className={classes.root}>
@@ -144,14 +145,16 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
                     <TableHead>
                         <TableRow>
                             <CustomTableCell align="center">Name</CustomTableCell>
-                            <CustomTableCell align="center">
-                                <IconButton
-                                    className={classes.titleBtn}
-                                    onClick={() => this.setState({ openUploadForm: true })}
-                                >
-                                    <NoteAddIcon />
-                                </IconButton>
-                            </CustomTableCell>
+                            {edit && (
+                                <CustomTableCell align="center">
+                                    <IconButton
+                                        className={classes.titleBtn}
+                                        onClick={() => this.setState({ openUploadForm: true })}
+                                    >
+                                        <NoteAddIcon />
+                                    </IconButton>
+                                </CustomTableCell>
+                            )}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -162,16 +165,18 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
                                         {row.name}
                                     </a>
                                 </CustomTableCell>
-                                <CustomTableCell align="center">
-                                    <IconButton
-                                        className={classes.button}
-                                        aria-label="Delete"
-                                        color="primary"
-                                        onClick={() => this.handleDeleteFile(row.name)}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </CustomTableCell>
+                                {edit && (
+                                    <CustomTableCell align="center">
+                                        <IconButton
+                                            className={classes.button}
+                                            aria-label="Delete"
+                                            color="primary"
+                                            onClick={() => this.handleDeleteFile(row.name)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </CustomTableCell>
+                                )}
                             </TableRow>
                         ))}
                     </TableBody>

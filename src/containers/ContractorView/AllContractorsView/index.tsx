@@ -30,7 +30,7 @@ import { UserProfile } from 'types/global';
 const styles = createStyles(theme => ({
     root: {
         flexGrow: 1,
-        height: 'calc(100vh - 64px - 56px - 16px)',
+        height: 'calc(100vh - 64px - 56px - 8px)',
     },
     row: {
         cursor: 'pointer',

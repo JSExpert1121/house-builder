@@ -2,7 +2,6 @@ import React from 'react';
 import { RouteComponentProps } from 'react-router-dom'
 import { connect } from 'react-redux';
 
-import Paper from '@material-ui/core/Paper';
 import { withStyles, createStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import Tabs from '@material-ui/core/Tabs';
@@ -22,7 +21,12 @@ import { ContractorInfo } from 'types/contractor';
 const styles = createStyles(theme => ({
     root: {
         flexGrow: 1,
-        height: 'calc(100vh - 64px - 56px - 16px)',
+        height: 'calc(100vh - 64px - 56px - 8px)',
+        overflow: 'auto',
+        backgroundColor: 'white'
+    },
+    content: {
+        padding: theme.spacing(1)
     },
     toolbarstyle: {
         backgroundColor: theme.palette.background.paper,
@@ -56,7 +60,7 @@ class ContractorDetailView extends React.Component<IContractorDetailViewProps, I
     }
 
     componentDidMount() {
-        this.props.selectContractor(this.props.match.params.id);
+        this.props.match.params.id && this.props.selectContractor(this.props.match.params.id);
     }
 
     handleTabChange = (event, value) => {
@@ -75,53 +79,57 @@ class ContractorDetailView extends React.Component<IContractorDetailViewProps, I
 
     public render() {
 
-        const { classes, selectedContractor } = this.props;
+        const { classes, selectedContractor, match } = this.props;
         const curDetailTab = this.state.curDetailTab;
 
         if (!selectedContractor) {
             return <CircularProgress style={{ position: 'relative', left: 'calc(50% - 10px)', top: '40vh' }} />;
         }
 
+        const isAdmin = match.url.includes('/m_cont');
         return (
             <Box className={classes.root}>
-                <Paper square>
-                    <Box style={{ display: 'flex' }}>
-                        <IconButton className={classes.backBtn} onClick={this.handleBack}>
-                            <ArrowBackIcon />
-                        </IconButton>
-                        <Tabs
-                            value={curDetailTab}
-                            onChange={this.handleTabChange}
-                            variant="scrollable"
-                            indicatorColor="primary"
-                            textColor="primary"
-                            scrollButtons="off"
-                            className={classes.toolbarstyle}
-                        >
-                            <Tab label="Info" />
-                            <Tab label="Files" />
-                            <Tab label="Specialties" />
-                        </Tabs>
-                    </Box>
+                <Box style={{ display: 'flex' }}>
+                    <IconButton className={classes.backBtn} onClick={this.handleBack}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Tabs
+                        value={curDetailTab}
+                        onChange={this.handleTabChange}
+                        variant="scrollable"
+                        indicatorColor="primary"
+                        textColor="primary"
+                        scrollButtons="off"
+                        className={classes.toolbarstyle}
+                    >
+                        <Tab label="Info" />
+                        <Tab label="Files" />
+                        <Tab label="Specialties" />
+                    </Tabs>
+                </Box>
+                <Box className={classes.content}>
                     {curDetailTab === 0 && (
                         <ContractorInfoView
-                            selectedContractor={selectedContractor}
+                            isAdmin={isAdmin}
+                            contractor={selectedContractor}
                             contractorUpdated={this.contractorUpdated}
                         />
                     )}
                     {curDetailTab === 1 && (
                         <ContractorFiles
-                            selectedContractor={selectedContractor}
+                            edit={isAdmin}
+                            contractor={selectedContractor}
                             contractorUpdated={this.contractorUpdated}
                         />
                     )}
                     {curDetailTab === 2 && (
                         <ContractorSpecialties
-                            selectedContractor={selectedContractor}
+                            edit={isAdmin}
+                            contractor={selectedContractor}
                             contractorUpdated={this.contractorUpdated}
                         />
                     )}
-                </Paper>
+                </Box>
             </Box>
         );
     }

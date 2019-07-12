@@ -7,12 +7,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Switch } from 'react-router-dom';
 import { compose } from 'redux';
-import ProjectDetailView from '../../components/ProjectDetailView';
-import ProposalDetailView from '../../components/ProposalDetailView';
-import CustomTabs from "../../components/shared/CustomTabs";
-import SecuredRoute from '../../routers/SecuredRoute';
+import ProjectDetailView from 'components/ProjectDetailView';
+import ProposalDetailView from 'components/ProposalDetailView';
+import CustomTabs from "components/shared/CustomTabs";
+import ContractorDetailView from 'components/ContractorDetailView';
+import SecuredRoute from 'routers/SecuredRoute';
 import AddProjectView from './AddProjectView';
-import ContractorDetailView from './ContractorDetailView';
 import CurrentProjectView from './CurrentProjectView';
 import ArchivedProject from './ArchivedProjectView';
 
@@ -76,7 +76,7 @@ class GenContView extends React.Component {
               component={ProjectDetailView}
             />
             <SecuredRoute
-              path={`${match.url}/contractor_detail`}
+              path={`${match.url}/contractor_detail/:id`}
               component={ContractorDetailView}
             />
             <Redirect path={`${match.url}`} to={`${match.url}/current_pros`} />
