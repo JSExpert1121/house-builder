@@ -88,6 +88,10 @@ class SearchBidderList extends React.Component {
     }
   };
 
+  rowSelected = (id) => {
+    this.props.history.push('/b_list/contractor_detail/' + id);
+  }
+
   render() {
     const { classes, specialties, userProfile, contractors } = this.props;
     const suggestions = specialties
@@ -159,47 +163,23 @@ class SearchBidderList extends React.Component {
           </TableHead>
           <TableBody>
             {contractors.content && contractors.content.map(row => (
-              <TableRow className={classes.row} key={row.id} hover>
-                <CustomTableCell
-                  component="th"
-                  scope="row"
-                  onClick={async () => {
-                    await this.props.selectContractor(row.id);
-                    this.props.history.push('/b_list/contractor_detail');
-                  }}
-                />
-                <CustomTableCell
-                  align="center"
-                  onClick={async () => {
-                    await this.props.selectContractor(row.id);
-                    this.props.history.push('/b_list/contractor_detail');
-                  }}
-                >
+              <TableRow
+                className={classes.row}
+                key={row.id}
+                hover
+                onClick={() => this.rowSelected(row.id)}
+              >
+                <CustomTableCell component="th" scope="row" />
+                <CustomTableCell align="center">
                   {row.address ? row.address.name : 'N/A'}
                 </CustomTableCell>
-                <CustomTableCell
-                  align="center"
-                  onClick={async () => {
-                    await this.props.selectContractor(row.id);
-                    this.props.history.push('/b_list/contractor_detail');
-                  }}
-                >
+                <CustomTableCell align="center">
                   {row.email ? row.email : 'N/A'}
                 </CustomTableCell>
                 <CustomTableCell
                   align="center"
-                  onClick={async () => {
-                    await this.props.selectContractor(row.id);
-                    this.props.history.push('/b_list/contractor_detail');
-                  }}
                 />
-                <CustomTableCell
-                  align="center"
-                  onClick={async () => {
-                    await this.props.selectContractor(row.id);
-                    this.props.history.push('/b_list/contractor_detail');
-                  }}
-                />
+                <CustomTableCell align="center" />
               </TableRow>
             ))}
           </TableBody>
@@ -212,12 +192,8 @@ class SearchBidderList extends React.Component {
             count={contractors.content.length}
             rowsPerPage={this.state.rowsPerPage}
             page={this.state.currentPage}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page',
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page',
-            }}
+            backIconButtonProps={{ 'aria-label': 'Previous Page' }}
+            nextIconButtonProps={{ 'aria-label': 'Next Page' }}
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />

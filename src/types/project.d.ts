@@ -1,9 +1,17 @@
-import { Pageable, TemplateInfo, SpecialtyInfo, SortInfo } from './global'
+import {
+    Pageable,
+    TemplateInfo,
+    SpecialtyInfo,
+    SortInfo,
+    FileInfo
+} from './global';
+import { ContractorInfo } from './contractor';
+
 export interface ProjectPostInfo {
     title: string;
     description: string;
     budget: number;
-    updatedBy: string;
+    updatedBy?: string;
     due?: Date;
 }
 
@@ -20,7 +28,8 @@ export interface ProjectInfo extends ProjectBaseInfo {
     updatedAt: string;
     updatedBy: string;
     status: string;
-    projectFiles: Array<string>;
+    genContractor: ContractorInfo;
+    projectFiles: Array<FileInfo>;
     projectTemplates: Array<TemplateInfo>;
     projectSpecialties: Array<SpecialtyInfo>;
     projectInvites?: Array<object>;

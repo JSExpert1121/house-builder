@@ -1,12 +1,13 @@
-import React                from 'react';
+import React from 'react';
 import { Redirect, Switch } from 'react-router-dom';
-import SecuredRoute         from '../../routers/SecuredRoute';
-import { connect }          from 'react-redux';
-import { withStyles }       from '@material-ui/core/styles';
-import NoSsr                from '@material-ui/core/NoSsr';
-import ContractorDetailView from './ContractorDetailView';
+import SecuredRoute from '../../routers/SecuredRoute';
+import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import NoSsr from '@material-ui/core/NoSsr';
+// import ContractorDetailView from './ContractorDetailView';
+import ContractorDetailView from 'components/ContractorDetailView';
 import SearchBidderListView from './SearchBidderListView';
-import { compose }          from 'redux';
+import { compose } from 'redux';
 
 const styles = theme => ({
   root: {
@@ -35,7 +36,7 @@ class BidderListingView extends React.Component {
               component={SearchBidderListView}
             />
             <SecuredRoute
-              path={`${match.url}/contractor_detail`}
+              path={`${match.url}/contractor_detail/:id`}
               component={ContractorDetailView}
             />
             <Redirect path="*" to={`${match.url}/search_bidder`} />
@@ -46,7 +47,7 @@ class BidderListingView extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({userProfile: state.global_data.userProfile});
+const mapStateToProps = state => ({ userProfile: state.global_data.userProfile });
 
 export default compose(
   connect(

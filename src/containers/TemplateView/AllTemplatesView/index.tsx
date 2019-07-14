@@ -6,7 +6,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import Snackbar from '@material-ui/core/Snackbar';
 import { createStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,13 +24,21 @@ import { withRouter } from 'react-router-dom';
 import SimpleMDE from 'react-simplemde-editor';
 import { compose } from "redux";
 import removeMd from 'remove-markdown';
-import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from 'actions/tem-actions';
-import { MaterialThemeHOC, UserProfile } from 'types/global';
 import Button from 'components/CustomButtons/Button';
+import {
+  createTemplate,
+  deleteTemplate,
+  getTemplatesO,
+  selectTemplate
+} from 'actions/tem-actions';
+import { MaterialThemeHOC, UserProfile, TemplatePostInfo } from 'types/global';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
+
 
 const styles = theme => createStyles({
   root: {
     marginTop: theme.spacing(1),
+    position: 'relative'
   },
   marginRight: {
     marginRight: '5px',
@@ -52,27 +59,30 @@ const styles = theme => createStyles({
   editField: {
     lineHeight: '1.5rem',
   },
+  busy: {
+    position: 'absolute',
+    left: 'calc(50% - 20px)',
+    top: 'calc(50% - 20px)',
+  }
 });
 
 interface ConnAllTemplateViewProps extends MaterialThemeHOC {
-  getTemplatesO: (currentPage: number, rowsPerPage: number) => any;
+  getTemplatesO: (currentPage: number, rowsPerPage: number) => Promise<void>;
+  selectTemplate: (id: string) => Promise<void>;
+  deleteTemplate: (id: string) => Promise<void>;
+  createTemplate: (data: TemplatePostInfo) => Promise<void>;
   templates: any;
   history: History;
-  selectTemplate: (id: number) => any;
-  deleteTemplate: (id: number, cb: any) => any;
-  createTemplate: (data: any) => any;
   userProfile: UserProfile;
 }
 
-interface ConnAllTemplateViewState {
+interface ConnAllTemplateViewState extends ISnackbarProps {
   rowsPerPage: number;
   currentPage: number;
-  isSaving: boolean;
+  isBusy: boolean;
   openCategoryForm: boolean;
   name: any;
   description: any;
-  snackBar: boolean;
-  SnackBarContent: any;
 }
 
 class AllTemplateView extends Component<
@@ -85,13 +95,19 @@ class AllTemplateView extends Component<
     this.state = {
       rowsPerPage: 20,
       currentPage: 0,
-      isSaving: false,
+      isBusy: false,
       openCategoryForm: false,
       name: '',
       description: '',
-      snackBar: false,
-      SnackBarContent: '',
+      showMessage: false,
+      message: '',
+      variant: 'success',
+      handleClose: this.closeMessage
     };
+  }
+
+  closeMessage = () => {
+    this.setState({ showMessage: false });
   }
 
   componentDidMount() {
@@ -119,7 +135,6 @@ class AllTemplateView extends Component<
   };
 
   createTemplate = async () => {
-    this.setState({ isSaving: true });
     const { userProfile } = this.props;
     const data = {
       name: this.state.name,
@@ -127,23 +142,58 @@ class AllTemplateView extends Component<
       updatedBy: userProfile.email,
     };
 
-    this.props.createTemplate(data)
-      .then(res => {
-        this.setState({
-          snackBar: true,
-          SnackBarContent: res.data
-            ? 'create template success'
-            : 'create template failed',
-        });
+    this.setState({ isBusy: true, openCategoryForm: false });
+    try {
+      await this.props.createTemplate(data);
+      await this.props.getTemplatesO(0, this.state.rowsPerPage);
+      this.setState({
+        showMessage: true,
+        message: 'Create Template success',
+        variant: 'success',
+        isBusy: false,
+        name: '',
+        description: ''
       });
-    await this.props.getTemplatesO(0, this.state.rowsPerPage);
+    } catch (error) {
+      console.log('AllTemplatesView.createTemplate: ', error);
+      this.setState({
+        showMessage: true,
+        message: 'Create Template failed',
+        variant: 'error',
+        isBusy: false
+      });
+    }
+  }
 
-    this.setState({
-      openCategoryForm: false,
-      isSaving: false,
-      name: '',
-      description: '',
-    });
+  deleteTemplate = async (id) => {
+
+    const { templates } = this.props;
+    this.setState({ isBusy: true });
+    try {
+      await this.props.deleteTemplate(id);
+
+      let curPage = this.state.currentPage;
+      if (this.state.rowsPerPage * this.state.currentPage >= templates.totalElements - 1) {
+        curPage--;
+      }
+
+      await this.props.getTemplatesO(curPage, this.state.rowsPerPage);
+      this.setState({
+        isBusy: false,
+        showMessage: true,
+        variant: 'success',
+        message: 'Delete Template success',
+        currentPage: curPage
+      });
+    } catch (error) {
+      console.log('AllTemplatesView.deleteTemplate: ', error);
+      this.setState({
+        isBusy: false,
+        showMessage: true,
+        variant: 'error',
+        message: 'Please delete categories'
+      });
+    }
   }
 
   render() {
@@ -200,37 +250,7 @@ class AllTemplateView extends Component<
                     className={classes.button}
                     aria-label="Delete"
                     color="primary"
-                    onClick={async () => {
-                      await this.props.deleteTemplate(row.id, result => {
-                        this.setState({
-                          snackBar: true,
-                          SnackBarContent: result
-                            ? 'delete template success'
-                            : 'please delete categories',
-                        });
-                      });
-
-                      if (
-                        this.state.rowsPerPage * this.state.currentPage <
-                        templates.totalElements - 1
-                      ) {
-                        await this.props.getTemplatesO(
-                          this.state.currentPage,
-                          this.state.rowsPerPage
-                        );
-                      } else {
-                        const currentPage = this.state.currentPage - 1;
-
-                        this.setState({
-                          currentPage: currentPage,
-                        });
-
-                        await this.props.getTemplatesO(
-                          currentPage,
-                          this.state.rowsPerPage
-                        );
-                      }
-                    }}
+                    onClick={() => this.deleteTemplate(row.id)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -286,37 +306,30 @@ class AllTemplateView extends Component<
           </DialogContent>
           <DialogActions>
             <Button
-              disabled={this.state.isSaving}
+              disabled={this.state.isBusy}
               onClick={() => this.setState({ openCategoryForm: false })}
               className={classes.marginRight}
             >
               Cancel
             </Button>
             <Button
-              disabled={this.state.isSaving}
+              disabled={this.state.isBusy}
               onClick={this.createTemplate}
               color="primary"
             >
               Add
-              {this.state.isSaving && (
-                <CircularProgress size={24} thickness={4} />
-              )}
+              
             </Button>
           </DialogActions>
         </Dialog>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          open={this.state.snackBar}
-          onClose={() =>
-            this.setState({
-              snackBar: false,
-            })
-          }
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id"> {this.state.SnackBarContent}</span>}
+        {this.state.isBusy && <CircularProgress className={classes.busy} />}
+        <CustomSnackbar
+          open={this.state.showMessage}
+          variant={this.state.variant}
+          message={this.state.message}
+          handleClose={this.state.handleClose}
         />
+
       </Paper>
     );
   }

@@ -9,6 +9,7 @@ export default (theme: Theme) =>
       '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.background.default,
       },
+      cursor: 'pointer'
     },
     input: {
       display: 'flex',

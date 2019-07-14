@@ -210,17 +210,23 @@ class OptionDetailView extends Component<
                     updatedBy: userProfile.email,
                   };
 
-                  await this.props.editOption(option.id, data, res => {
+                  try {
+                    await this.props.editOption(option.id, data);  
+                    await this.props.selectOption(option.id);
                     this.setState({
                       snackBar: true,
-                      snackBarContent: res
-                        ? 'edit option success'
-                        : 'edit option failed',
+                      snackBarContent: 'edit option success',
+                      openCategoryForm: false,
+                      isSaving: false
                     });
-                  });
-                  await this.props.selectOption(option.id);
-
-                  this.setState({ openCategoryForm: false, isSaving: false });
+                  } catch (error) {
+                    this.setState({
+                      snackBar: true,
+                      snackBarContent: 'edit option success',
+                      openCategoryForm: false,
+                      isSaving: false
+                    });
+                  }
                 }}
                 color="primary"
               >
@@ -234,8 +240,7 @@ class OptionDetailView extends Component<
                 disabled={this.state.isDeleting}
                 onClick={async () => {
                   this.setState({ isDeleting: true });
-                  await this.props.deleteOption(option.id, res => { });
-
+                  await this.props.deleteOption(option.id);
                   await this.props.selectCategory(option.cat_name.id);
                   this.props.history.push('/m_temp/category_detail');
                   this.setState({ isDeleting: false });

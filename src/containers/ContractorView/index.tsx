@@ -18,7 +18,9 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: 'white'
     },
     contentWrapper: {
+        height: 'calc(100vh - 64px - 56px)',
         paddingTop: theme.spacing(1),
+        overflow: 'auto'
     },
 }));
 

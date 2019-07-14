@@ -1,4 +1,4 @@
-import { FileInfo, CommonInfo } from './global';
+import { FileInfo, CommonInfo, Pageable } from './global';
 import { ContractorInfo } from './contractor';
 import { ProjectInfo } from './project';
 
@@ -9,11 +9,7 @@ export interface ProposalPostInfo {
     description?: string;
 }
 
-export interface ProposalInfo {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    updatedBy?: string;
+export interface ProposalInfo extends CommonInfo {
     description: string;
     budget: number;
     status: string;
@@ -31,4 +27,8 @@ export interface TemplCatOptionInfo {
 export interface ProposalDetailInfo {
     proposal: ProposalInfo;
     temCatOptionDetail: TemplCatOptionInfo;
+}
+
+export interface Proposals extends Pageable {
+    content: Array<ProposalInfo>;
 }

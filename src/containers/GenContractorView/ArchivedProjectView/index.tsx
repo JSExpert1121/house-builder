@@ -12,12 +12,12 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import IconButton from '@material-ui/core/IconButton';
 import TablePagination from '@material-ui/core/TablePagination';
-import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import removeMd from 'remove-markdown';
 import CustomTableCell from 'components/shared/CustomTableCell';
-import CustomSnackbar from 'components/shared/CustomSnackbar';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import ConfirmDialog from 'components/shared/ConfirmDialog';
+import Ellipsis from 'components/Typography/Ellipsis';
 
 import { getArchivedProjectsByGenId } from 'actions/gen-actions';
 import { deleteProject, setCurrentProject } from 'actions/global-actions';
@@ -28,9 +28,6 @@ import { Projects } from 'types/project';
 const style = (theme: Theme) => createStyles({
     root: {
         position: 'relative',
-        paddingTop: theme.spacing(1),
-        backgroundColor: 'white',
-        height: '100%'
     },
     row: {
         '&:nth-of-type(odd)': {
@@ -65,13 +62,10 @@ interface ArchivedProjectProps extends RouteComponentProps {
     classes: ClassNameMap<string>;
 }
 
-interface ArchivedProjectState {
+interface ArchivedProjectState extends ISnackbarProps {
     rowsPerPage: number;
     currentPage: number;
     isBusy: boolean;
-    showMessage: boolean;
-    message: string;
-    variant: string;
     showConfirm: boolean;
     proId: string;
 }
@@ -87,12 +81,17 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
             showMessage: false,
             message: '',
             variant: 'success',
+            handleClose: this.closeMessage,
             showConfirm: false,
             proId: '',
         };
     }
 
-    async componentWillMount() {
+    closeMessage = () => {
+        this.setState({ showMessage: false });
+      }
+    
+        async componentWillMount() {
         const { userProfile } = this.props;
         try {
             await this.props.getArchivedProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
@@ -204,7 +203,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                                     scope="row"
                                     onClick={() => this.handleSelectProject(row.id)}
                                 >
-                                    <Typography className="nowrap">{row.title}</Typography>
+                                    <Ellipsis maxLines={2}>{row.title}</Ellipsis>
                                 </CustomTableCell>
                                 <CustomTableCell
                                     align="center"
@@ -222,9 +221,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                                     align="center"
                                     onClick={() => this.handleSelectProject(row.id)}
                                 >
-                                    <Typography className="nowrap">
-                                        {removeMd(row.description)}
-                                    </Typography>
+                                    <Ellipsis maxLines={2}>{removeMd(row.description)}</Ellipsis>
                                 </CustomTableCell>
                                 <CustomTableCell align="center">
                                     <IconButton

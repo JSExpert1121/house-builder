@@ -20,7 +20,7 @@
     "classnames": "^2.2.6",
     "clsx": "^1.0.4",
     "date-fns": "^2.0.0-beta.2",
-    "material-ui-dropzone": "^2.3.5",
+    "material-ui-dropzone": "^2.4.0",
     "mdbreact": "^4.16.0",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",

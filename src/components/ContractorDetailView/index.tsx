@@ -70,7 +70,7 @@ class ContractorDetailView extends React.Component<IContractorDetailViewProps, I
     };
 
     handleBack = () => {
-        this.props.history.push('/m_cont');
+        this.props.history.goBack();
     };
 
     contractorUpdated = () => {

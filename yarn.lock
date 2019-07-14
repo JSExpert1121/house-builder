@@ -7099,7 +7099,7 @@ marked@^0.6.2:
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.6.3.tgz#79babad78af638ba4d522a9e715cdfdd2429e946"
   integrity sha512-Fqa7eq+UaxfMriqzYLayfqAE40WN03jf+zHjT18/uXNuzjq3TY0XTbrAoPeqSJrAmPz11VuUA+kBPYOhHt9oOQ==
 
-material-ui-dropzone@^2.3.5:
+material-ui-dropzone@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/material-ui-dropzone/-/material-ui-dropzone-2.4.0.tgz#69849073eac5554c21d47dfd40a2f78fa1dc4f72"
   integrity sha512-/0vwpW6ur7K4CDG8/nOlyKVgoIZHZPziIDN1fdTXDjzAY5SjdAx1s07P8nKBn3MhTfIfMXEtItHeWQCusTxXcA==

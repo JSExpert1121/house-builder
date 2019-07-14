@@ -1,5 +1,9 @@
-import Button from "components/CustomButtons/Button.jsx";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -7,26 +11,22 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import Snackbar from '@material-ui/core/Snackbar';
-import { createStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
-
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import CustomTableCell from "components/shared/CustomTableCell";
-import 'easymde/dist/easymde.min.css';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+
 import { History } from 'history';
-import React, { Component } from 'react';
-
-import { connect } from 'react-redux';
+import 'easymde/dist/easymde.min.css';
 import SimpleMDE from 'react-simplemde-editor';
-
 import SplitPane from 'react-split-pane';
-import { compose } from 'redux';
+import Button from "components/CustomButtons/Button.jsx";
+import CustomTableCell from "components/shared/CustomTableCell";
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import {
   addCategory,
   deleteCategory,
@@ -97,7 +97,7 @@ interface ConnTempDetailViewProps extends MaterialThemeHOC {
   userProfile: UserProfile;
 }
 
-interface ConnTempDetailViewState {
+interface ConnTempDetailViewState extends ISnackbarProps {
   name: any;
   description: any;
   cname: any;
@@ -108,8 +108,6 @@ interface ConnTempDetailViewState {
   isSaving: boolean;
   isDeleting: boolean;
   isAdding: boolean;
-  snackBar: boolean;
-  snackBarContent: any;
 }
 
 class TemplateDetailView extends Component<
@@ -130,9 +128,15 @@ class TemplateDetailView extends Component<
       isSaving: false,
       isDeleting: false,
       isAdding: false,
-      snackBar: false,
-      snackBarContent: '',
+      showMessage: false,
+      message: '',
+      variant: 'success',
+      handleClose: this.closeMessage
     };
+  }
+
+  closeMessage = () => {
+    this.setState({ showMessage: false });
   }
 
   async componentDidMount() {
@@ -151,12 +155,12 @@ class TemplateDetailView extends Component<
   render() {
     const { classes, template } = this.props;
 
-    if (!template) return <div></div>;
+    if (!template) return <Box></Box>;
     if (template['isLoading'] === true)
       return <CircularProgress className={classes.waitingSpin} />;
 
     return (
-      <div>
+      <Box>
         <SplitPane
           split="vertical"
           minSize={50}
@@ -181,7 +185,7 @@ class TemplateDetailView extends Component<
                 placeholder: 'Description here',
               }}
             />
-            <div>
+            <Box>
               <Button
                 disabled={this.state.isSaving}
                 className={classes.marginRight}
@@ -207,14 +211,16 @@ class TemplateDetailView extends Component<
                     await this.props.selectTemplate(template.id);
 
                     this.setState({
-                      snackBar: true,
-                      snackBarContent: 'edit template success'
+                      showMessage: true,
+                      message: 'edit template success',
+                      variant: 'success'
                     });
                   } catch (error) {
                     console.log(error);
                     this.setState({
-                      snackBar: true,
-                      snackBarContent: 'edit template success'
+                      showMessage: true,
+                      message: 'edit template success',
+                      variant: 'error'
                     });
                   }
 
@@ -231,19 +237,22 @@ class TemplateDetailView extends Component<
                 disabled={this.state.isDeleting}
                 onClick={async () => {
                   this.setState({ isDeleting: true });
-                  await this.props.deleteTemplate(template.id, result => {
-                    if (result) {
-                      this.props.history.push('/m_temp');
-                      return;
-                    }
-
+                  try {
+                    await this.props.deleteTemplate(template.id);
                     this.setState({
-                      snackBar: true,
-                      snackBarContent:
-                        'please delete categories and options first',
+                      showMessage: true,
+                      message: 'Template deleted',
+                      variant: 'success',
+                      isDeleting: false
                     });
-                  });
-                  this.setState({ isDeleting: false });
+                  } catch (error) {
+                    this.setState({
+                      showMessage: true,
+                      message: 'please delete categories and options first',
+                      variant: 'error',
+                      isDeleting: false
+                    });
+                  }
                 }}
                 color="danger"
               >
@@ -252,7 +261,7 @@ class TemplateDetailView extends Component<
                   <CircularProgress size={24} thickness={4} />
                 )}
               </Button>
-            </div>
+            </Box>
           </Paper>
           <Paper className={classes.cateList}>
             <Table>
@@ -309,17 +318,21 @@ class TemplateDetailView extends Component<
                         aria-label="Delete"
                         color="primary"
                         onClick={async () => {
-                          await this.props.deleteCategory(row.id, res => {
+                          try {
+                            await this.props.deleteCategory(row.id);
+                            await this.props.selectTemplate(template.id);
                             this.setState({
-                              snackBar: true,
-                              snackBarContent: res
-                                ? 'delete category success'
-                                : 'please delete options',
+                              showMessage: true,
+                              message: 'Delete Category success',
+                              variant: 'success'
                             });
-
-                            if (res === true)
-                              this.props.selectTemplate(template.id);
-                          });
+                          } catch (error) {
+                            this.setState({
+                              showMessage: true,
+                              message: 'Please delete options',
+                              variant: 'error'
+                            });
+                          }
                         }}
                       >
                         <DeleteIcon />
@@ -397,24 +410,29 @@ class TemplateDetailView extends Component<
                   updatedBy: userProfile.email,
                 };
 
-                await this.props.addCategory(template.id, data, res => {
+                try {
+                  await this.props.addCategory(template.id, data);
+                  await this.props.selectTemplate(template.id);
                   this.setState({
-                    snackBar: true,
-                    snackBarContent: res
-                      ? 'add category success'
-                      : 'add category failed',
+                    showMessage: true,
+                    message: 'Add Category success',
+                    variant: 'success',
+                    openCategoryForm: false,
+                    isAdding: false,
+                    cname: '',
+                    ctype: '',
+                    cvalue: '',
+                    cdescription: ''
                   });
-                });
-                await this.props.selectTemplate(template.id);
-
-                this.setState({
-                  openCategoryForm: false,
-                  isAdding: false,
-                  cname: '',
-                  ctype: '',
-                  cvalue: '',
-                  cdescription: '',
-                });
+                } catch (error) {
+                  this.setState({
+                    showMessage: true,
+                    message: 'Add Category failed',
+                    variant: 'error',
+                    openCategoryForm: false,
+                    isAdding: false
+                  });
+                }
               }}
               color="primary"
             >
@@ -425,20 +443,13 @@ class TemplateDetailView extends Component<
             </Button>
           </DialogActions>
         </Dialog>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          open={this.state.snackBar}
-          onClose={() =>
-            this.setState({
-              snackBar: false,
-            })
-          }
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id"> {this.state.snackBarContent}</span>}
+        <CustomSnackbar
+          open={this.state.showMessage}
+          variant={this.state.variant}
+          message={this.state.message}
+          handleClose={this.state.handleClose}
         />
-      </div>
+      </Box>
     );
   }
 }

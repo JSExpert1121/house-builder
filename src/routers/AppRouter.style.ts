@@ -2,6 +2,14 @@ import { createStyles, Theme } from '@material-ui/core/styles';
 
 export default (theme: Theme) =>
   createStyles({
+    '@global': {
+        '.MuiTab-root': {
+            minWidth: '80px',
+            [theme.breakpoints.up('md')]: {
+                minWidth: '140px'
+            }
+        },
+    },
     root: {
       display: 'flex',
     },

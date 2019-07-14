@@ -15,16 +15,16 @@ import DialogContent     from '@material-ui/core/DialogContent';
 import Paper             from '@material-ui/core/Paper';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
-import CustomizedSnackbars from '../../components/shared/CustomSnackbar';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import DeleteIcon          from '@material-ui/icons/Delete';
 import NoteAddIcon         from '@material-ui/icons/NoteAdd';
-import CustomTableCell     from '../../components/shared/CustomTableCell';
+import CustomTableCell     from 'components/shared/CustomTableCell';
 
-import { getContractorDetailById, removeFile, uploadFiles } from '../../actions/cont-actions';
-import { FileInfo, MaterialThemeHOC, UserProfile }              from '../../types/global';
+import { getContractorDetailById, removeFile, uploadFiles } from 'actions/cont-actions';
+import { FileInfo, MaterialThemeHOC, UserProfile }              from 'types/global';
 import { compose }                                          from 'redux';
 import styles                                               from './ProfileFileView.style'
-import Button                                               from '../../components/CustomButtons/Button';
+import Button                                               from 'components/CustomButtons/Button';
 interface ProfileFileViewProps extends MaterialThemeHOC {
   user: UserProfile;
   getContractorDetailById: (id: string) => any;
@@ -33,33 +33,36 @@ interface ProfileFileViewProps extends MaterialThemeHOC {
   files: FileInfo[];
 }
 
-interface ProfileFileViewState {
+interface ProfileFileViewState extends ISnackbarProps {
   openUploadForm: boolean;
-  showMessage: boolean;
   loading: boolean;
   busy: boolean;
-  message: string;
-  variant: string;
   showConfirmDlg: boolean;
   nameToDel: string;
   saving: boolean;
 }
 
-class ProfileFileView extends React.Component<
-  ProfileFileViewProps,
-  ProfileFileViewState
-> {
-  state = {
-    openUploadForm: false,
-    showMessage: false,
-    loading: true,
-    busy: false,
-    message: '',
-    variant: 'success',
-    showConfirmDlg: false,
-    nameToDel: '',
-    saving: false,
-  };
+class ProfileFileView extends React.Component<ProfileFileViewProps, ProfileFileViewState> {
+  constructor(props: Readonly<ProfileFileViewProps>) {
+    super(props);
+
+    this.state = {
+      openUploadForm: false,
+      showMessage: false,
+      loading: true,
+      busy: false,
+      message: '',
+      variant: 'success',
+      showConfirmDlg: false,
+      nameToDel: '',
+      saving: false,
+      handleClose: this.closeMessage
+    };
+  }
+
+  closeMessage = () => {
+    this.setState({ showMessage: false });
+  }
 
   async componentDidMount() {
     this.setState({ loading: true });
@@ -81,25 +84,27 @@ class ProfileFileView extends React.Component<
   handleUploadFiles = async files => {
     const { user } = this.props;
     this.setState({ busy: true });
-    let message = 'Files were uploaded successfully.';
-    let variant = 'success';
     let id = user.user_metadata.contractor_id;
 
     try {
       await this.props.uploadFiles(id, files);
       await this.props.getContractorDetailById(id);
+      this.setState({
+        openUploadForm: false,
+        busy: false,
+        showMessage: true,
+        message: 'Files were uploaded successfully.',
+        variant: 'success'
+      });
     } catch {
-      message = 'Some error occured.';
-      variant = 'error';
+      this.setState({
+        openUploadForm: false,
+        busy: false,
+        showMessage: true,
+        message: 'Some error occured.',
+        variant: 'error',
+      });
     }
-
-    this.setState({
-      openUploadForm: false,
-      busy: false,
-      showMessage: true,
-      message,
-      variant,
-    });
   };
 
   closeConfirmDialog = () => {
@@ -113,24 +118,26 @@ class ProfileFileView extends React.Component<
   handleremoveFile = async () => {
     this.setState({ busy: true });
     let id = this.props.user.user_metadata.contractor_id;
-    let message = 'File deleted successfully.';
-    let variant = 'success';
 
     try {
       await this.props.removeFile(id, this.state.nameToDel);
       await this.props.getContractorDetailById(id);
+      this.setState({
+        openUploadForm: false,
+        busy: false,
+        showMessage: true,
+        message: 'Files deleted successfully.',
+        variant: 'success'
+      });
     } catch (error) {
-      message = 'Some error occured.' + error.toString();
-      variant = 'error';
+      this.setState({
+        openUploadForm: false,
+        busy: false,
+        showMessage: true,
+        message: 'Some error occured.',
+        variant: 'error'
+      });
     }
-
-    this.setState({
-      showConfirmDlg: false,
-      busy: false,
-      showMessage: true,
-      message,
-      variant,
-    });
   };
 
   render() {
@@ -209,7 +216,7 @@ class ProfileFileView extends React.Component<
           // dropZoneClass={classes.dropzone}
           onClose={() => this.setState({ openUploadForm: false })}
         />
-        <CustomizedSnackbars
+        <CustomSnackbar
           variant={this.state.variant}
           message={this.state.message}
           open={this.state.showMessage}

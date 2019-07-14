@@ -13,12 +13,12 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import IconButton from '@material-ui/core/IconButton';
 import TablePagination from '@material-ui/core/TablePagination';
-import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import removeMd from 'remove-markdown';
 import CustomTableCell from 'components/shared/CustomTableCell';
-import CustomSnackbar from 'components/shared/CustomSnackbar';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import ConfirmDialog from 'components/shared/ConfirmDialog';
+import Ellipsis from 'components/Typography/Ellipsis';
 
 import { getProjectsByGenId } from 'actions/gen-actions';
 import { setCurrentProject, archiveProject } from 'actions/global-actions';
@@ -37,13 +37,10 @@ interface CurrentProjectProps extends RouteComponentProps {
     setCurrentProject: (id: string) => void;
 }
 
-interface CurrentProjectState {
+interface CurrentProjectState extends ISnackbarProps {
     rowsPerPage: number;
     currentPage: number;
     isBusy: boolean;
-    showMessage: boolean;
-    message: string;
-    variant: string;
     showConfirm: boolean;
     proId: string;
 }
@@ -61,6 +58,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
             variant: 'success',
             showConfirm: false,
             proId: '',
+            handleClose: () => this.setState({showMessage: false})
         };
     }
 
@@ -176,7 +174,8 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
                                     scope="row"
                                     onClick={() => this.handleSelectProject(row.id)}
                                 >
-                                    <Typography className="nowrap">{row.title}</Typography>
+                                    <Ellipsis maxLines={2}>{row.title}</Ellipsis>
+                                    {/* <Typography className="nowrap">{row.title}</Typography> */}
                                 </CustomTableCell>
                                 <CustomTableCell
                                     align="center"
@@ -194,9 +193,8 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
                                     align="center"
                                     onClick={() => this.handleSelectProject(row.id)}
                                 >
-                                    <Typography className="nowrap">
-                                        {removeMd(row.description)}
-                                    </Typography>
+                                    <Ellipsis maxLines={2}>{removeMd(row.description)}</Ellipsis>
+                                    {/* {removeMd(row.description)} */}
                                 </CustomTableCell>
                                 <CustomTableCell align="center">
                                     <IconButton
@@ -229,7 +227,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
                     open={this.state.showMessage}
                     variant={this.state.variant}
                     message={this.state.message}
-                    handleClose={() => this.setState({ showMessage: false })}
+                    handleClose={this.state.handleClose}
                 />
                 <ConfirmDialog
                     open={this.state.showConfirm}

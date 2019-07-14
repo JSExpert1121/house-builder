@@ -22,7 +22,7 @@ import {
     getContractors,
 } from 'actions/cont-actions';
 import CustomTableCell from 'components/shared/CustomTableCell';
-import CustomSnackbar from 'components/shared/CustomSnackbar';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import { ContractorPostInfo, Contractors } from 'types/contractor';
 import { UserProfile } from 'types/global';
 
@@ -30,7 +30,6 @@ import { UserProfile } from 'types/global';
 const styles = createStyles(theme => ({
     root: {
         flexGrow: 1,
-        height: 'calc(100vh - 64px - 56px - 8px)',
     },
     row: {
         cursor: 'pointer',
@@ -61,7 +60,7 @@ interface IAllContractorsViewProps extends RouteComponentProps {
     classes: ClassNameMap<string>;
 }
 
-interface IAllContractorsViewState {
+interface IAllContractorsViewState extends ISnackbarProps {
     // pagination info
     rowsPerPage: number;
     currentPage: number;
@@ -73,11 +72,6 @@ interface IAllContractorsViewState {
     // contractor info
     name: string;
     description: string;
-
-    // snackbar
-    showMessage: boolean;
-    message: string;
-    variant: string;
 
     contractors?: Contractors;   // contractor list
 }
@@ -101,9 +95,14 @@ class AllContractorsView extends React.Component<IAllContractorsViewProps, IAllC
             showMessage: false,
             message: '',
             variant: 'success',
+            handleClose: this.closeMessage,
 
             contractors: undefined
         }
+    }
+
+    closeMessage = () => {
+        this.setState({ showMessage: false });
     }
 
     componentDidMount() {

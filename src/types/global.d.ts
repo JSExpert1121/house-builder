@@ -61,6 +61,7 @@ export interface CategoryInfo extends CommonInfo {
 
 interface TemplateDetailInfo extends CommonInfo {
   name: string;
+  value: string;
   description: string;
   categoryList: Array<CategoryInfo>;
 }
@@ -112,4 +113,14 @@ export interface SpecialtyInfo extends CommonInfo {
 
 export interface Specialties extends Pageable {
   content: Array<Specialty>;
+}
+
+export interface Templates extends Pageable {
+  content: Array<TemplateDetailInfo>;
+}
+
+export interface TemplatePostInfo {
+  name: string;
+  description: string;
+  updatedBy: string;
 }

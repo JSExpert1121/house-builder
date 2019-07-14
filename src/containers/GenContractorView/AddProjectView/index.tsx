@@ -13,7 +13,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import Button from "components/CustomButtons/Button.jsx";
-import CustomSnackbar from 'components/shared/CustomSnackbar';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import ProjectEditView from 'components/ProjectDetailView/ProjectEditView';
 import { addFilesToProject, addProject } from 'actions/global-actions';
 
@@ -23,7 +23,6 @@ import { ProjectPostInfo } from 'types/project';
 const styles = theme => createStyles({
     root: {
         position: 'relative',
-        paddingTop: theme.spacing(1),
         backgroundColor: 'white'
     },
     mainBoard: {
@@ -63,16 +62,13 @@ interface IAddProjectViewProps extends RouteComponentProps {
     addProject: (contId: string, data: ProjectPostInfo) => Promise<string>;
 }
 
-interface IAddProjectViewState {
+interface IAddProjectViewState extends ISnackbarProps {
     title: string;
     price: number;
     description: string;
     dueDate: Date;
     isBusy: boolean;
     files: Array<File>;
-    showMessage: boolean;
-    message: string;
-    variant: string;
 }
 
 class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectViewState> {
@@ -89,7 +85,12 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
             showMessage: false,
             message: '',
             variant: 'error',
+            handleClose: this.closeMessage
         }
+    }
+
+    closeMessage = () => {
+        this.setState({ showMessage: false });
     }
 
     handleAddProject = async () => {
@@ -223,7 +224,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
                         open={this.state.showMessage}
                         variant={this.state.variant}
                         message={this.state.message}
-                        handleClose={() => this.setState({ showMessage: false })}
+                        handleClose={this.state.handleClose}
                     />
                 </Card>
             </Box>
