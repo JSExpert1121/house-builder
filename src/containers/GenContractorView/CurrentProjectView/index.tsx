@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom'
 
 import { withStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
-import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -65,9 +65,8 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
     async componentDidMount() {
         const { userProfile } = this.props;
         this.setState({ isBusy: true });
-        console.log('componentDidMount: ', userProfile);
         try {
-            await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
+            await this.props.getProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 20);
         } catch (error) {
             console.log(error);
         }
@@ -155,7 +154,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
         }
 
         return (
-            <Paper className={classes.root} elevation={0}>
+            <Box className={classes.root}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -236,7 +235,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
                     message="Do you want to delete this project?"
                 />
                 {this.state.isBusy && <CircularProgress className="busy" />}
-            </Paper>
+            </Box>
         );
     }
 }

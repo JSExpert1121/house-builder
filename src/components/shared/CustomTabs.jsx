@@ -1,9 +1,9 @@
-import AppBar            from '@material-ui/core/AppBar';
-import {withStyles}      from '@material-ui/core/styles';
-import Tab               from '@material-ui/core/Tab';
-import Tabs              from '@material-ui/core/Tabs';
-import React, {useState} from 'react';
-import {Link}            from 'react-router-dom';
+import AppBar from '@material-ui/core/AppBar';
+import { withStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const style = (theme) => ({
   toolbarstyle: {
@@ -16,8 +16,8 @@ const style = (theme) => ({
   }
 });
 
-const CustomTabs = ({ classes, tabs }) => {
-  const [value, setValue] = useState(0);
+const CustomTabs = ({ classes, tabs, init = 0 }) => {
+  const [value, setValue] = useState(init);
 
   return (
     <AppBar position="static" className={classes.toolbarstyle}>

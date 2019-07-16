@@ -11,6 +11,7 @@ import ProposalDetailView from 'components/ProposalDetailView';
 import CustomTabs from 'components/shared/CustomTabs';
 import SecuredRoute from 'routers/SecuredRoute';
 import CurrentProjectView from './CurrentProjectView/index';
+import ContractorDetailView from 'components/ContractorDetailView';
 import { UserProfile } from 'types/global'
 
 
@@ -39,7 +40,7 @@ interface IProjectsViewProps extends RouteComponentProps {
 const ProjectsView: React.FunctionComponent<IProjectsViewProps> = (props) => {
 
   const classes = useStyles({});
-  const { userProfile } = props;
+  const { userProfile, match } = props;
 
   if (!userProfile.user_metadata.roles.includes('Gen') &&
     !userProfile.user_metadata.roles.includes('GenSub') &&
@@ -59,18 +60,22 @@ const ProjectsView: React.FunctionComponent<IProjectsViewProps> = (props) => {
       <main className={classes.contentWrapper}>
         <Switch>
           <SecuredRoute
-            path="/projects/current"
+            path={`${match.url}/current`}
             component={CurrentProjectView}
           />
           <SecuredRoute
-            path="/projects/proposal_detail/:id"
+            path={`${match.url}/proposal_detail/:id`}
             component={ProposalDetailView}
           />
           <SecuredRoute
-            path="/projects/project_detail/:id"
+            path={`${match.url}/project_detail/:id`}
             component={ProjectDetailView}
           />
-          <Redirect path="/projects" to={`/projects/current`} />
+          <SecuredRoute
+            path={`${match.url}/contractor_detail/:id`}
+            component={ContractorDetailView}
+          />
+          <Redirect path='/projects' to='/projects/current' />
         </Switch>
       </main>
     </Box>

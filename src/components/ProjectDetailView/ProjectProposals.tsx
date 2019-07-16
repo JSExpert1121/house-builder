@@ -35,6 +35,8 @@ import { Proposals } from 'types/proposal';
 const MAX_COMPARE = 3;
 const styles = createStyles(theme => ({
     root: {
+        position: 'relative',
+        minHeight: 'calc(100vh - 64px - 56px - 48px - 16px)'
     },
     tableWrap: {
         overflowX: 'hidden',
@@ -164,7 +166,6 @@ class ProjectProposals extends React.Component<IProjectProposalsProps, IProjectP
 
     handleChecked = id => {
         const compares = [...this.state.compares];
-        console.log(id);
         const pos = compares.indexOf(id);
         if (pos >= 0) {
             compares.splice(pos, 1);
@@ -180,7 +181,6 @@ class ProjectProposals extends React.Component<IProjectProposalsProps, IProjectP
         }
 
         this.setState({ compares });
-        console.log(compares);
     };
 
     handleConfirm = () => {

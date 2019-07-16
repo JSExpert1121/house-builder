@@ -142,11 +142,14 @@ class ProjectOverview extends React.Component<IProjectOverviewProps, IProjectOve
 
     gotoContractor = (id) => {
         const { match } = this.props;
-        if (match.url.includes('gen-contractor')) {
+        if (match.url.includes('gen-contractor/')) {
             this.props.history.push(`/gen-contractor/contractor_detail/${id}`);
         }
-        if (match.url.includes('s_cont')) {
+        if (match.url.includes('s_cont/')) {
             this.props.history.push(`/s_cont/contractor_detail/${id}`);
+        }
+        if (match.url.includes('projects/')) {
+            this.props.history.push(`/projects/contractor_detail/${id}`);
         }
     }
 

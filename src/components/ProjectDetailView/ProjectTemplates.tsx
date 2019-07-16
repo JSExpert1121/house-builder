@@ -33,6 +33,8 @@ import { UserProfile } from 'types/global';
 
 const styles = createStyles(theme => ({
     root: {
+        position: 'relative',
+        minHeight: 'calc(100vh - 64px - 56px - 48px - 16px)'
     },
     row: {
         '&:nth-of-type(odd)': {
@@ -54,12 +56,17 @@ const styles = createStyles(theme => ({
         lineHeight: '1.5rem',
     },
     template: {
-        margin: theme.spacing(1),
+        padding: theme.spacing(1),
     },
     fab: {
         width: '40px',
         height: '40px',
         marginLeft: '20px',
+    },
+    busy: {
+        position: 'absolute',
+        left: 'calc(50% - 20px)',
+        top: 'calc(50% - 20px)',
     },
 }));
 
@@ -130,6 +137,7 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
         const { project } = this.props;
         const { template } = this.state;
 
+        this.setState({isBusy: true});
         try {
             await this.props.addTemplate(project.id, template);
             await this.props.getProjectData(project.id);
@@ -137,7 +145,8 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
                 template: '',
                 showMessage: true,
                 message: 'Add Template success',
-                variant: 'success'
+                variant: 'success',
+                isBusy: false
             });
         } catch (error) {
             console.log('ProjectTemplates.addTemplateToProject: ', error);
@@ -145,7 +154,8 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
                 template: '',
                 showMessage: true,
                 message: 'Add Template failed',
-                variant: 'error'
+                variant: 'error',
+                isBusy: false
             });
         }
     };
@@ -159,6 +169,7 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
     handleDelete = async (templ_id: string) => {
         const { project } = this.props;
 
+        this.setState({isBusy: true});
         try {
             await this.props.deleteTemplate(project.id, templ_id);
             await this.props.getProjectData(project.id);
@@ -175,14 +186,16 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
                 showMessage: true,
                 message: 'Delete Template success',
                 variant: 'success',
-                currentPage: curPage
+                currentPage: curPage,
+                isBusy: false
             });
         } catch (error) {
             console.log(error);
             this.setState({
                 showMessage: true,
                 variant: 'error',
-                message: 'Delete Template failed'
+                message: 'Delete Template failed',
+                isBusy: false
             });
         }
     }
@@ -299,6 +312,7 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
                     message={this.state.message}
                     handleClose={this.state.handleClose}
                 />
+                {this.state.isBusy && <CircularProgress className={classes.busy} />}
             </Box>
         );
     }

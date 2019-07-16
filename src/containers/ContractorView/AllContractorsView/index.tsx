@@ -30,6 +30,8 @@ import { UserProfile } from 'types/global';
 const styles = createStyles(theme => ({
     root: {
         flexGrow: 1,
+        position: 'relative',
+        minHeight: 'calc(100vh - 64px - 56px - 8px)'
     },
     row: {
         cursor: 'pointer',
@@ -41,6 +43,11 @@ const styles = createStyles(theme => ({
         position: 'relative',
         left: 'calc(50% - 10px)',
         top: 'calc(40vh)',
+    },
+    busy: {
+        position: 'absolute',
+        left: 'calc(50% - 20px)',
+        top: 'calc(50% - 20px)',
     },
     marginRight: {
         marginRight: theme.spacing(1),
@@ -176,16 +183,30 @@ class AllContractorsView extends React.Component<IAllContractorsViewProps, IAllC
     delete = async (id: string) => {
         const { currentPage, rowsPerPage, contractors } = this.state;
         let curPage = currentPage;
+
+        this.setState({ isBusy: true });
         try {
             await this.props.deleteContractor(id);
             if (curPage * rowsPerPage >= (contractors.totalElements - 1)) {
                 curPage--;
             }
 
-            this.setState({ currentPage: curPage });
+            this.setState({
+                currentPage: curPage,
+                showMessage: true,
+                message: 'Contractor Delete success',
+                variant: 'success',
+                isBusy: false
+            });
             await this.props.getContractors(curPage, rowsPerPage);
         } catch (error) {
             console.log('AllContractorsView.delete: ', error);
+            this.setState({
+                showMessage: true,
+                message: 'Some errors occured',
+                variant: 'error',
+                isBusy: false
+            })
         }
     }
 
@@ -292,7 +313,7 @@ class AllContractorsView extends React.Component<IAllContractorsViewProps, IAllC
                     message={this.state.message}
                     handleClose={() => this.setState({ showMessage: false })}
                 />
-                {this.state.isBusy && <CircularProgress className={classes.waitingSpin} />}
+                {this.state.isBusy && <CircularProgress className={classes.busy} />}
             </Box>
         );
     }

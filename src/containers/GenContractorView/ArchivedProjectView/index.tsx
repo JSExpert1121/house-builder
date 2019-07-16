@@ -89,16 +89,17 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
 
     closeMessage = () => {
         this.setState({ showMessage: false });
-      }
-    
-        async componentWillMount() {
+    }
+
+    async componentDidMount() {
         const { userProfile } = this.props;
+
+        this.setState({ isBusy: true });
         try {
             await this.props.getArchivedProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
         } catch (error) {
             console.log(error);
         }
-
         this.setState({ isBusy: false });
     }
 
@@ -124,7 +125,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
         const currentPage =
             rowsPerPage >= projects.totalElements ? 0 : this.state.currentPage;
 
-        this.setState({ rowsPerPage, currentPage });
+        this.setState({ rowsPerPage, currentPage, isBusy: true });
         try {
             await this.props.getArchivedProjectsByGenId(
                 userProfile.user_metadata.contractor_id,
@@ -139,7 +140,6 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
 
     handleDeleteProject = async () => {
         const { userProfile, projects } = this.props;
-        let msg = 'delete project success';
 
         this.setState({ isBusy: true, showConfirm: false });
         try {
@@ -157,7 +157,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
                 isBusy: false,
                 showMessage: true,
                 variant: 'success',
-                message: msg,
+                message: 'delete project success',
                 currentPage: curPage,
             });
         } catch (error) {

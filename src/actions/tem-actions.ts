@@ -6,7 +6,7 @@ import {
   SET_SELECTED_CATEGORY,
   SET_SELECTED_OPTION,
   SET_SELECTED_TEMPLATE,
-  CLEAR_ALL_TEMPLATES,
+  // CLEAR_ALL_TEMPLATES,
   CLEAR_SELECTED_TEMPLATE
 } from '../constants/tem-action-types';
 // import { Dispatch } from 'redux';

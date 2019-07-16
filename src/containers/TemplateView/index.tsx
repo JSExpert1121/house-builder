@@ -1,100 +1,101 @@
-import NoSsr                               from '@material-ui/core/NoSsr';
-import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
-import AppsIcon                            from '@material-ui/icons/Apps';
-import BallotIcon                          from '@material-ui/icons/Ballot';
-import ViewHeadlineIcon                  from '@material-ui/icons/ViewHeadline';
-import CustomTabs                        from 'components/shared/CustomTabs';
-import React                             from 'react';
-import { connect }                       from 'react-redux';
-import { Redirect, Switch }              from 'react-router-dom';
-import { compose }                       from 'redux';
-import SecuredRoute                      from '../../routers/SecuredRoute';
-import { MaterialThemeHOC, UserProfile } from 'types/global';
-import AllTemplatesView                  from './AllTemplatesView';
-import CategoryDetailView                from './CategoryDetailView';
-import OptionDetailView                  from './OptionDetailView';
-import TempDetailView                    from './TempDetailView';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Redirect, Switch, RouteComponentProps } from 'react-router-dom';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    contentWrapper: {
-      marginTop: theme.spacing(1),
-    },
-  });
+import Box from '@material-ui/core/Box';
+import { Theme, makeStyles } from '@material-ui/core/styles';
+import AppsIcon from '@material-ui/icons/Apps';
+import BallotIcon from '@material-ui/icons/Ballot';
+import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
 
-interface TemplatesViewProps extends MaterialThemeHOC {
-  userProfile: UserProfile;
-  location: Location;
+import CustomNavTabs from 'components/shared/CustomNavTabs';
+import SecuredRoute from 'routers/SecuredRoute';
+import { UserProfile } from 'types/global';
+import AllTemplatesView from './AllTemplatesView';
+import CategoryDetailView from './CategoryDetailView';
+// import OptionDetailView from './OptionDetailView';
+import TempDetailView from './TempDetailView';
+
+const useStyles = makeStyles((theme: Theme) => ({
+	root: {
+		flexGrow: 1,
+		minHeight: 'calc(100vh - 64px - 56px)'
+	},
+	contentWrapper: {
+		paddingTop: theme.spacing(1),
+	},
+}));
+
+interface TemplatesViewProps extends RouteComponentProps {
+	userProfile: UserProfile;
 }
 
-class TemplatesView extends React.Component<TemplatesViewProps> {
-  render() {
-    const {classes, userProfile} = this.props;
-    if (!userProfile.user_metadata.roles.includes('SuperAdmin'))
-      return <div> Access Forbidden </div>;
+const TemplatesView: React.SFC<TemplatesViewProps> = (props) => {
 
-    return (
-      <NoSsr>
-        <div className={classes.root}>
-          <CustomTabs
-            tabs={[
-              {
-                href: `/m_temp/all_templates`,
-                label: 'All Templates',
-                icon: AppsIcon,
-              },
-              {
-                href: `/m_temp/template_detail`,
-                label: 'Template Detail',
-                icon: BallotIcon,
-              },
-              {
-                href: `/m_temp/category_detail`,
-                label: 'Category Detail',
-                icon: ViewHeadlineIcon,
-              },
-              {
-                href: `/m_temp/option_detail`,
-                label: 'Option Detail',
-                icon: ViewHeadlineIcon,
-              },
-            ]}
-          />
-          <main className={classes.contentWrapper}>
-            <Switch>
-              <SecuredRoute
-                path="/m_temp/all_templates"
-                component={AllTemplatesView}
-              />
-              <SecuredRoute
-                path="/m_temp/template_detail"
-                component={TempDetailView}
-              />
-              <SecuredRoute
-                path="/m_temp/category_detail"
-                component={CategoryDetailView}
-              />
-              <SecuredRoute
-                path="/m_temp/option_detail"
-                component={OptionDetailView}
-              />
-              <Redirect path="/m_temp" to={`/m_temp/all_templates`}/>
-            </Switch>
-          </main>
-        </div>
-      </NoSsr>
-    );
-  }
+	const { userProfile, location } = props;
+	const classes = useStyles({});
+	if (!userProfile.user_metadata.roles.includes('SuperAdmin')) {
+		return <Box> Access Forbidden </Box>;
+	}
+
+	let tab = 0;
+	if (location.pathname.includes('template_detail')) tab = 1;
+	if (location.pathname.includes('category_detail')) tab = 2;
+	if (location.pathname.includes('option_detail')) tab = 3;
+	return (
+		<Box className={classes.root}>
+			<CustomNavTabs
+				tabs={[
+					{
+						href: `/m_temp/all_templates`,
+						label: 'All Templates',
+						icon: AppsIcon,
+					},
+					{
+						href: `/m_temp/template_detail`,
+						label: 'Template Detail',
+						icon: BallotIcon,
+					},
+					{
+						href: `/m_temp/category_detail`,
+						label: 'Category Detail',
+						icon: ViewHeadlineIcon,
+					},
+					// {
+					// 	href: `/m_temp/option_detail`,
+					// 	label: 'Option Detail',
+					// 	icon: ViewHeadlineIcon,
+					// },
+				]}
+				value={tab}
+			/>
+			<main className={classes.contentWrapper}>
+				<Switch>
+					<SecuredRoute
+						path="/m_temp/all_templates"
+						component={AllTemplatesView}
+					/>
+					<SecuredRoute
+						path="/m_temp/template_detail"
+						component={TempDetailView}
+					/>
+					<SecuredRoute
+						path="/m_temp/category_detail"
+						component={CategoryDetailView}
+					/>
+					{/* <SecuredRoute
+						path="/m_temp/option_detail"
+						component={OptionDetailView}
+					/> */}
+					<Redirect path="/m_temp" to={`/m_temp/all_templates`} />
+				</Switch>
+			</main>
+		</Box>
+	);
 }
 
 const mapStateToProps = state => ({
-  userProfile: state.global_data.userProfile,
+	userProfile: state.global_data.userProfile,
 });
 
-export default compose(
-  connect(mapStateToProps),
-  withStyles(styles)
-)(TemplatesView);
+export default connect(mapStateToProps)(TemplatesView);

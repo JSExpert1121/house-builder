@@ -25,7 +25,8 @@ import { addFilesToProject, deleteFileFromProject, getProjectData } from '../../
 
 const styles = createStyles(theme => ({
     root: {
-        position: 'relative'
+        position: 'relative',
+        minHeight: 'calc(100vh - 64px - 56px - 48px - 16px)'
     },
     waitingSpin: {
         position: 'relative',

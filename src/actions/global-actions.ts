@@ -1,5 +1,5 @@
 import { allContractorsLoaded } from "actions/cont-actions";
-import { createActions }        from 'redux-actions';
+import { createActions } from 'redux-actions';
 
 import {
   CLEAR_PROPOSAL_MESSAGES,
@@ -116,7 +116,7 @@ export const archiveProject = id => dispatch => ProjApi.archive(id);
 
 export function getProjectData(id) {
   return function (dispatch) {
-    dispatch(clearSelectedProject());
+    // dispatch(clearSelectedProject());
     return Axios.get(process.env.REACT_APP_PROJECT_API + 'projects/' + id).then(
       response => {
         dispatch(projectDetailLoaded(response.data));
@@ -240,7 +240,9 @@ export function searchFilter(name, city, specialties) {
         },
       }
     )
-      .then(response => dispatch(allContractorsLoaded(response.data)))
+      .then(response => {
+        dispatch(allContractorsLoaded(response.data));
+      })
   };
 }
 

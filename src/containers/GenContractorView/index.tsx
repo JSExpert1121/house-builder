@@ -24,7 +24,7 @@ interface IGenContractorViewProps extends RouteComponentProps {
 
 const GenContractorView: React.SFC<IGenContractorViewProps> = (props) => {
 
-    const { userProfile, match } = props;
+    const { userProfile, match, location } = props;
 
     if (
         !userProfile.user_metadata.roles.includes('Gen') &&
@@ -33,6 +33,10 @@ const GenContractorView: React.SFC<IGenContractorViewProps> = (props) => {
     )
         return <Box> Access Forbidden </Box>;
 
+    let tab = 0;
+    if (location.pathname.includes('add_project')) tab = 1;
+    if (location.pathname.includes('archived')) tab = 2;
+    // console.log(location.pathname);
     return (
         <Box style={{ flexGrow: 1, backgroundColor: 'white' }}>
             <CustomTabs
@@ -51,6 +55,7 @@ const GenContractorView: React.SFC<IGenContractorViewProps> = (props) => {
                     icon: ArchiveIcon
                 }
                 ]}
+                init={tab}
             />
             <Box style={{ height: 'calc(100vh - 64px - 56px)', paddingTop: '8px', overflow: 'auto' }}>
                 <Switch>
