@@ -134,3 +134,26 @@ export interface TemplatePostInfo {
 	description: string;
 	updatedBy: string;
 }
+
+export interface PastWorkInfo extends CommonInfo {
+	title: string;
+	rate: number;
+	start: string;
+	end: string;
+	review: string;
+}
+
+export interface HistoryInfo extends CommonInfo {
+	title: string;
+	description: string;
+	from: string;
+	to: string;
+	images: Array<string>;
+}
+
+export type PortfolioItem = string;
+// export interface PortfolioItem {
+// 	title?: string;
+// 	description?: string;
+// 	image: string;
+// }

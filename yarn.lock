@@ -1600,6 +1600,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-image-gallery@^0.8.4":
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@types/react-image-gallery/-/react-image-gallery-0.8.4.tgz#b37f2461fc9ac01b485aaa91ef1ac8f40c711fdf"
+  integrity sha512-/C/XtlXiE8sdVCT7MuGuxw5JmMXCWLC6vgirefv+5q22KPdW4dS+GskywigJYZjgCF4GcXPxZzwlnICOOPglSw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^7.1.0":
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.1.tgz#eb01e89cf71cad77df9f442b819d5db692b997cb"
@@ -6955,6 +6962,11 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
+lodash.debounce@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
+
 lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -9294,6 +9306,18 @@ react-event-listener@^0.6.2, react-event-listener@^0.6.6:
     prop-types "^15.6.0"
     warning "^4.0.1"
 
+react-image-gallery@^0.8.18:
+  version "0.8.18"
+  resolved "https://registry.yarnpkg.com/react-image-gallery/-/react-image-gallery-0.8.18.tgz#bfc4698cbe22cbaa0b4e000994e7d248b2f098f2"
+  integrity sha512-2uRF4+wTm3oLj+ijJkcTpgH55V+QHKPjItJocNY/MFGIqK+qeNx3mBzxWaPUP8hX6onwGHY/zRos7zIkSQFqsw==
+  dependencies:
+    lodash.debounce "^4.0.8"
+    lodash.throttle "^4.1.1"
+    prop-types "^15.5.8"
+    react "^16.4.0"
+    react-swipeable "^5.2.0"
+    resize-observer-polyfill "^1.5.0"
+
 react-image-lightbox@5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-image-lightbox/-/react-image-lightbox-5.1.0.tgz#b47b904b027c918acdd9efa94dc0a0ddd8125c86"
@@ -9515,6 +9539,13 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
+react-swipeable@^5.2.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/react-swipeable/-/react-swipeable-5.3.0.tgz#861bcecab2d5ff462e5737b1a20da2bfe35d8b21"
+  integrity sha512-mOfRfPxbcfl0jC/3DHSYWRkTElr8aU+ZVc4qv+VOhOQfw8+UM7Mhlky+1YhpRQ/5F9NRR36NZHhHP0kC1yEjGQ==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-text-mask@^5.4.3:
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/react-text-mask/-/react-text-mask-5.4.3.tgz#991efb4299e30c2e6c2c46d13f617169463e0d2d"
@@ -9561,7 +9592,7 @@ react-transition-group@^4.0.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@^16.8.6:
+react@^16.4.0, react@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
   integrity sha512-pC0uMkhLaHm11ZSJULfOBqV4tIZkx87ZLvbbQYunNixAAvjnC+snJCg0XQXn9VIsttVsbZP/H/ewzgsd5fxKXw==
@@ -9931,6 +9962,11 @@ requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
+
+resize-observer-polyfill@^1.5.0:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
+  integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
 
 resolve-cwd@^2.0.0:
   version "2.0.0"

@@ -32,32 +32,38 @@ interface TemplatesViewProps extends RouteComponentProps {
 
 const TemplatesView: React.SFC<TemplatesViewProps> = (props) => {
 
-	const { userProfile, location } = props;
+	const { userProfile, location, match } = props;
 	const classes = useStyles({});
 	if (!userProfile.user_metadata.roles.includes('SuperAdmin')) {
 		return <Box> Access Forbidden </Box>;
 	}
 
-	let tab = 0;
-	if (location.pathname.includes('template_detail')) tab = 1;
-	if (location.pathname.includes('category_detail')) tab = 2;
-	if (location.pathname.includes('option_detail')) tab = 3;
+	const tabPaths = [
+		match.url + '/all_templates',
+		match.url + '/template_detail',
+		match.url + '/category_detail',
+		match.url + '/option_detail'
+	];
+	const tab = tabPaths.indexOf(location.pathname);
+	// if (location.pathname.includes('template_detail')) tab = 1;
+	// if (location.pathname.includes('category_detail')) tab = 2;
+	// if (location.pathname.includes('option_detail')) tab = 3;
 	return (
 		<Box className={classes.root}>
 			<CustomNavTabs
 				tabs={[
 					{
-						href: `/m_temp/all_templates`,
+						href: `${tabPaths[0]}`,
 						label: 'All Templates',
 						icon: AppsIcon,
 					},
 					{
-						href: `/m_temp/template_detail`,
+						href: `${tabPaths[1]}`,
 						label: 'Template Detail',
 						icon: BallotIcon,
 					},
 					{
-						href: `/m_temp/category_detail`,
+						href: `${tabPaths[2]}`,
 						label: 'Category Detail',
 						icon: ViewHeadlineIcon,
 					},

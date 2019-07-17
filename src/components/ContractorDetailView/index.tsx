@@ -1,21 +1,21 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, Switch, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 
-import { withStyles, createStyles } from '@material-ui/core/styles';
-import { ClassNameMap } from '@material-ui/styles/withStyles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles, createStyles } from '@material-ui/core/styles';
+import { ClassNameMap } from '@material-ui/styles/withStyles';
 
+import CustomNavTabs from 'components/shared/CustomNavTabs';
+import SecuredRoute from 'routers/SecuredRoute';
 import ContractorInfoView from './ContractorInfo';
-import ContractorSpecialties from './ContractorSpecialties';
 import ContractorFiles from './ContractorFiles';
-import { IconButton } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { selectContractor, updateContractor } from 'actions/cont-actions';
+import ContractorSpecialties from './ContractorSpecialties';
+import ContractorWorkHistory from './ContractorWorkHistory';
+import HistoryDetail from './HistoryDetail';
 import { ContractorInfo } from 'types/contractor';
+import { selectContractor, updateContractor } from 'actions/cont-actions';
 
 
 const styles = createStyles(theme => ({
@@ -33,9 +33,6 @@ const styles = createStyles(theme => ({
         color: theme.palette.primary.dark,
         flexGrow: 1,
     },
-    backBtn: {
-        color: theme.palette.primary.dark,
-    },
 }));
 
 interface IContractorDetailViewProps extends RouteComponentProps<{ id: string }> {
@@ -45,17 +42,13 @@ interface IContractorDetailViewProps extends RouteComponentProps<{ id: string }>
     classes: ClassNameMap<string>;
 }
 
-interface IContractorDetailViewState {
-    curDetailTab: number;
-}
-
-class ContractorDetailView extends React.Component<IContractorDetailViewProps, IContractorDetailViewState> {
+class ContractorDetailView extends React.Component<IContractorDetailViewProps> {
 
     constructor(props: Readonly<IContractorDetailViewProps>) {
         super(props);
 
         this.state = {
-            curDetailTab: 0,
+            history: undefined
         };
     }
 
@@ -63,37 +56,65 @@ class ContractorDetailView extends React.Component<IContractorDetailViewProps, I
         this.props.match.params.id && this.props.selectContractor(this.props.match.params.id);
     }
 
-    handleTabChange = (event, value) => {
-        this.setState({
-            curDetailTab: value,
-        });
-    };
-
     handleBack = () => {
         this.props.history.goBack();
-    };
+    }
 
-    contractorUpdated = () => {
-        this.props.updateContractor(this.props.match.params.id);
+    contractorUpdated = async () => {
+        await this.props.updateContractor(this.props.match.params.id);
     }
 
     public render() {
 
-        const { classes, selectedContractor, match } = this.props;
-        const curDetailTab = this.state.curDetailTab;
+        const { classes, selectedContractor, match, location } = this.props;
 
         if (!selectedContractor) {
             return <CircularProgress style={{ position: 'relative', left: 'calc(50% - 10px)', top: '40vh' }} />;
         }
 
         const isAdmin = match.url.includes('/m_cont');
+        const tabPaths = [
+            match.url + '/info',
+            match.url + '/files',
+            match.url + '/specialties',
+            match.url + '/history',
+            match.url + '/history_detail',
+            match.url
+        ];
+        const tab = tabPaths.indexOf(location.pathname) % 5;
         return (
             <Box className={classes.root}>
                 <Box style={{ display: 'flex' }}>
-                    <IconButton className={classes.backBtn} onClick={this.handleBack}>
+                    {/* <IconButton className={classes.backBtn} onClick={this.handleBack}>
                         <ArrowBackIcon />
-                    </IconButton>
-                    <Tabs
+                    </IconButton> */}
+                    <CustomNavTabs
+                        value={tab}
+                        goBack={this.handleBack}
+                        tabs={[
+                            {
+                                href: tabPaths[0],
+                                label: 'Info'
+                            },
+                            {
+                                href: tabPaths[1],
+                                label: 'Files'
+                            },
+                            {
+                                href: tabPaths[2],
+                                label: 'Specialties'
+                            },
+                            {
+                                href: tabPaths[3],
+                                label: 'History'
+                            },
+                            {
+                                href: tabPaths[4],
+                                label: 'History Detail'
+                            }
+                        ]}
+                    />
+                    {/* <Tabs
                         value={curDetailTab}
                         onChange={this.handleTabChange}
                         variant="scrollable"
@@ -105,10 +126,69 @@ class ContractorDetailView extends React.Component<IContractorDetailViewProps, I
                         <Tab label="Info" />
                         <Tab label="Files" />
                         <Tab label="Specialties" />
-                    </Tabs>
+                        <Tab label="Work History" />
+                    </Tabs> */}
                 </Box>
                 <Box className={classes.content}>
-                    {curDetailTab === 0 && (
+                    <Switch>
+                        <SecuredRoute
+                            path={tabPaths[0]}
+                            render={(props) => (
+                                <ContractorInfoView
+                                    {...props}
+                                    isAdmin={isAdmin}
+                                    contractor={selectedContractor}
+                                    contractorUpdated={this.contractorUpdated}
+                                />
+                            )}
+                        />
+                        <SecuredRoute
+                            path={tabPaths[1]}
+                            render={(props) => (
+                                <ContractorFiles
+                                    {...props}
+                                    edit={isAdmin}
+                                    contractor={selectedContractor}
+                                    contractorUpdated={this.contractorUpdated}
+                                />
+                            )}
+                        />
+                        <SecuredRoute
+                            path={tabPaths[2]}
+                            render={(props) => (
+                                <ContractorSpecialties
+                                    {...props}
+                                    edit={isAdmin}
+                                    contractor={selectedContractor}
+                                    contractorUpdated={this.contractorUpdated}
+                                />
+                            )}
+                        />
+                        <SecuredRoute
+                            path={tabPaths[3]}
+                            render={(props) => (
+                                <ContractorWorkHistory
+                                    {...props}
+                                    edit={isAdmin}
+                                    contractor={selectedContractor}
+                                    contractorUpdated={this.contractorUpdated}
+                                />
+                            )}
+                        />
+                        <SecuredRoute
+                            path={tabPaths[4]}
+                            render={(props) => (
+                                <HistoryDetail
+                                    {...props}
+                                    edit={isAdmin}
+                                    contractor={selectedContractor}
+                                    contractorUpdated={this.contractorUpdated}
+                                />
+                            )}
+                        />
+                        <Redirect path={`${match.url}`} to={tabPaths[0]} />
+                    </Switch>
+                    {/* {curDetailTab === 0 && (
                         <ContractorInfoView
                             isAdmin={isAdmin}
                             contractor={selectedContractor}
@@ -129,6 +209,13 @@ class ContractorDetailView extends React.Component<IContractorDetailViewProps, I
                             contractorUpdated={this.contractorUpdated}
                         />
                     )}
+                    {curDetailTab === 3 && (
+                        <ContractorWorkHistory
+                            edit={isAdmin}
+                            contractor={selectedContractor}
+                            contractorUpdated={this.contractorUpdated}
+                        />
+                    )} */}
                 </Box>
             </Box>
         );

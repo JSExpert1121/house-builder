@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -14,13 +14,11 @@ import { withStyles, createStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import clsx from 'clsx';
 
-import Button from 'components/CustomButtons/Button.jsx';
-import CustomSnackbar from 'components/shared/CustomSnackbar';
 import Rate from 'components/Rate';
-import { approveContractor, rejectContractor } from 'actions/cont-actions';
-
+import Button from 'components/CustomButtons/Button.jsx';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import { ContractorStatus, ContractorInfo } from 'types/contractor';
-import { ISnackbarProps } from 'types/components';
+import { approveContractor, rejectContractor } from 'actions/cont-actions';
 
 
 const styles = createStyles(theme => ({
@@ -138,7 +136,7 @@ class ContractorInfoView extends React.Component<IContractorInfoViewProps, ICont
         this.setState({ showMessage: false });
     }
 
-    reasonChange = (event: ChangeEvent<HTMLInputElement>) => {
+    reasonChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ statusReason: event.target.value });
     }
 
@@ -298,7 +296,7 @@ class ContractorInfoView extends React.Component<IContractorInfoViewProps, ICont
                 <br />
                 <br />
                 <Paper square>
-                    <List aria-label='contractor-detail' style={{ padding: 0 }}>
+                    <List aria-label='contractor-history' style={{ padding: 0 }}>
                         <ListItem button={false} className={classes.titlebar}>
                             <Typography className={classes.title}>
                                 Work History
@@ -333,43 +331,6 @@ class ContractorInfoView extends React.Component<IContractorInfoViewProps, ICont
                         }
                     </List>
                 </Paper>
-                {/* <Table>
-                    <TableHead>
-                        <TableRow>
-                            <CustomTableCell align="center">Email</CustomTableCell>
-                            <CustomTableCell align="center">Name</CustomTableCell>
-                            <CustomTableCell align="center">City</CustomTableCell>
-                            <CustomTableCell align="center">Street</CustomTableCell>
-                            <CustomTableCell align="center">Status</CustomTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow className={classes.row} hover>
-                            <CustomTableCell component="th" scope="row" align="center">
-                                {contractor ? contractor.email : 'N/A'}
-                            </CustomTableCell>
-                            <CustomTableCell align="center">
-                                {contractor.address
-                                    ? contractor.address.name
-                                    : 'N/A'}
-                            </CustomTableCell>
-                            <CustomTableCell align="center">
-                                {contractor.address
-                                    ? contractor.address.city
-                                    : 'N/A'}
-                            </CustomTableCell>
-                            <CustomTableCell align="center">
-                                {contractor.address
-                                    ? contractor.address.street
-                                    : 'N/A'}
-                            </CustomTableCell>
-                            <CustomTableCell align="center">
-                                {contractor.status ? contractor.status : 'N/A'}
-                            </CustomTableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table> */}
-
                 {
                     isAdmin && (
                         <>
