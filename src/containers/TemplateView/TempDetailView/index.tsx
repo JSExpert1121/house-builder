@@ -34,6 +34,7 @@ import {
 	editTemplate,
 	selectCategory,
 	selectTemplate,
+	getTemplatesO
 } from 'actions/tem-actions';
 import { MaterialThemeHOC, UserProfile, TemplateDetailInfo, CategoryPostInfo, TemplatePostInfo } from 'types/global';
 
@@ -91,6 +92,7 @@ const styles = theme => createStyles({
 });
 
 interface ConnTempDetailViewProps extends MaterialThemeHOC, RouteComponentProps {
+	getTemplatesO: (currentPage: number, rowsPerPage: number) => Promise<void>;
 	selectCategory: (id: string) => Promise<void>;
 	addCategory: (id: string, data: CategoryPostInfo) => Promise<void>;
 	selectTemplate: (id: string) => Promise<TemplateDetailInfo>;
@@ -194,6 +196,7 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 		this.setState({ isBusy: true });
 		try {
 			await this.props.deleteTemplate(template.id);
+			await this.props.getTemplatesO(0, 20);
 			this.setState({
 				showMessage: true,
 				message: 'Template deleted',
@@ -267,6 +270,7 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 				cdescription: ''
 			});
 		} catch (error) {
+			console.error('TemplateDetailView.addCategory: ', error);
 			this.setState({
 				showMessage: true,
 				message: 'Add Category failed',
@@ -305,7 +309,6 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 								disabled={this.state.isBusy}
 								className={classes.marginRight}
 								onClick={this.handleCancel}
-								color="warning"
 							>
 								Cancel
               				</Button>
@@ -460,6 +463,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+	getTemplatesO,
 	selectTemplate,
 	selectCategory,
 	deleteCategory,

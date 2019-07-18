@@ -44,7 +44,8 @@ const TemplatesView: React.SFC<TemplatesViewProps> = (props) => {
 		match.url + '/category_detail',
 		match.url + '/option_detail'
 	];
-	const tab = tabPaths.indexOf(location.pathname);
+	let tab = tabPaths.indexOf(location.pathname);
+	if (tab < 0) tab = 0;
 	// if (location.pathname.includes('template_detail')) tab = 1;
 	// if (location.pathname.includes('category_detail')) tab = 2;
 	// if (location.pathname.includes('option_detail')) tab = 3;

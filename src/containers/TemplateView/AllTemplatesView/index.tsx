@@ -57,9 +57,9 @@ const styles = theme => createStyles({
 		lineHeight: '1.5rem',
 	},
 	busy: {
-		position: 'absolute',
-		left: 'calc(50% - 20px)',
-		top: 'calc(50% - 20px)',
+		position: 'fixed',
+		left: 'calc(50vw - 20px)',
+		top: 'calc(50vh - 20px)',
 	}
 });
 

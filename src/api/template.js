@@ -13,8 +13,8 @@ export default {
 
   create: (data) => Axios.post(TEMPL_API_PATH, data).then(res => res.data),
 
-  addCat: (id, data) => Axios.post(TEMPL_API_PATH + id + '/categories', data).then(res => res.data),
-  addOpt: (id, data) => Axios.post(CATEGORY_API_PATH + id + '/options', data).then(res => res.data),
+  addCat: (id, data) => Axios.post(TEMPL_API_PATH + id + '/categories', data).then(res => res),
+  addOpt: (id, data) => Axios.post(CATEGORY_API_PATH + id + '/options', data).then(res => res),
 
   editTemplate: (id, data) => Axios.put(TEMPL_API_PATH + id, data).then(res => res.data),
   editCategory: (id, data) => Axios.put(CATEGORY_API_PATH + id, data).then(res => res.data),

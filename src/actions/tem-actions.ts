@@ -30,10 +30,7 @@ const {
   [CLEAR_SELECTED_TEMPLATE]: () => null,
 });
 
-export const createTemplate = template => dispatch => {
-  // dispatch(clearAllTemplates());
-  return TempApi.create(template);
-}
+export const createTemplate = template => dispatch => TempApi.create(template);
 
 export const selectTemplate = id => dispatch => {
   dispatch(clearSelectedTemplate());
@@ -149,12 +146,12 @@ export const deleteOption = id => dispatch => TempApi.deleteOption(id);
 //   };
 // }
 
-export const addCategory = (id, data) => TempApi.addCat(id, data);
-export const addOption = (id, data) => TempApi.addOpt(id, data);
+export const addCategory = (id, data) => dispatch => TempApi.addCat(id, data);
+export const addOption = (id, data) => dispatch => TempApi.addOpt(id, data);
 
 export const editTemplate = (id, data) => dispatch => TempApi.editTemplate(id, data);
 export const editCategory = (id, data) => dispatch => TempApi.editCategory(id, data);
-export const editOption = (id, data) => TempApi.editOption(id, data);
+export const editOption = (id, data) => dispatch => TempApi.editOption(id, data);
 
 
 // export function addCategory(id, data, cb) {

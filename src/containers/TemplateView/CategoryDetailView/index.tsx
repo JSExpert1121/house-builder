@@ -97,6 +97,7 @@ const styles = (theme: Theme) => createStyles({
 interface ConnCategoryDetailViewProps extends RouteComponentProps {
 	category: CategoryInfo;
 	userProfile: UserProfile;
+	template: TemplateDetailInfo;
 	classes: ClassNameMap<string>;
 
 	selectTemplate: (id: string) => Promise<void>;
@@ -104,9 +105,9 @@ interface ConnCategoryDetailViewProps extends RouteComponentProps {
 	selectCategory: (id: string) => Promise<void>;
 	deleteCategory: (id: string) => Promise<void>;
 
-	addOption: (id: string, data: any, cb: any) => any;
-	selectOption: (id: string) => any;
-	deleteOption: (id: string, cb: any) => any;
+	addOption: (id: string, data: any) => Promise<void>;
+	selectOption: (id: string) => Promise<void>;
+	deleteOption: (id: string) => Promise<void>;
 }
 
 interface ConnCategoryDetailViewState extends ISnackbarProps {
@@ -120,7 +121,6 @@ interface ConnCategoryDetailViewState extends ISnackbarProps {
 	odescription: string;
 	openCategoryForm: boolean;
 	isBusy: boolean;
-	template: TemplateDetailInfo;
 	showMessage: boolean;
 	message: string;
 }
@@ -140,7 +140,6 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 			odescription: '',
 			openCategoryForm: false,
 			isBusy: false,
-			template: null,
 			showMessage: false,
 			message: '',
 			variant: 'success',
@@ -165,15 +164,18 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 	}
 
 	handleCancel = async () => {
+		const { template } = this.props;
+		template && template.id && await this.props.selectTemplate(template.id);
 		this.props.history.goBack();
 	}
 
 	handleDelete = async () => {
-		const { category } = this.props;
+		const { category, template } = this.props;
 		this.setState({ isBusy: true });
 		try {
 			await this.props.deleteCategory(category.id);
 			this.setState({ isBusy: false });
+			template && template.id && await this.props.selectTemplate(template.id);
 			this.props.history.goBack();
 		} catch (error) {
 			console.log('CategoryDetailView.handleDelete: ', error);
@@ -217,6 +219,64 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 				isBusy: false
 			});
 		}
+	}
+
+	addOption = async () => {
+		const { userProfile, category } = this.props;
+		const data = {
+			name: this.state.oname,
+			value: this.state.ovalue,
+			description: this.state.odescription,
+			updatedBy: userProfile.email,
+		};
+
+		this.setState({ isBusy: true, openCategoryForm: false });
+		try {
+			await this.props.addOption(category.id, data);
+			await this.props.selectCategory(category.id);
+			this.setState({
+				showMessage: true,
+				message: 'Add Option Success',
+				variant: 'success',
+				isBusy: false
+			});
+		} catch (error) {
+			console.log('CategoryDetailView.addOption: ', error);
+			this.setState({
+				showMessage: true,
+				message: 'Add Option failed',
+				variant: 'error',
+				isBusy: false
+			});
+		}
+	}
+
+	deleteOption = async (id: string) => {
+		const { category } = this.props;
+		this.setState({ isBusy: true });
+		try {
+			await this.props.deleteOption(id);
+			await this.props.selectCategory(category.id);
+			this.setState({
+				showMessage: true,
+				message: 'Delete Option Success',
+				variant: 'success',
+				isBusy: false
+			});
+		} catch (error) {
+			console.log('CategoryDetailView.deleteOption: ', error);
+			this.setState({
+				showMessage: true,
+				message: 'Delete Option failed',
+				variant: 'error',
+				isBusy: false
+			});
+		}
+	}
+
+	selectOption = async (id: string) => {
+		// await this.props.selectOption(id);
+		// this.props.history.push('/m_temp/option_detail');
 	}
 
 	render() {
@@ -281,7 +341,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 								className={classes.marginRight}
 								disabled={this.state.isBusy}
 								onClick={() => this.handleSave(category.id)}
-								color="primary"
+								color="success"
 							>
 								Save
 							</Button>
@@ -321,24 +381,18 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{category.optionList.map(row => (
+								{category.optionList && category.optionList.map(row => (
 									<TableRow className={classes.row} key={row.id} hover>
 										<CustomTableCell
 											component="th"
 											scope="row"
-											onClick={async () => {
-												await this.props.selectOption(row.id);
-												this.props.history.push('/m_temp/option_detail');
-											}}
+											onClick={() => this.selectOption(row.id)}
 										>
 											{row.name}
 										</CustomTableCell>
 										<CustomTableCell
 											align="center"
-											onClick={async () => {
-												await this.props.selectOption(row.id);
-												this.props.history.push('/m_temp/option_detail');
-											}}
+											onClick={() => this.selectOption(row.id)}
 										>
 											{row.value}
 										</CustomTableCell>
@@ -348,17 +402,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 												className={classes.button}
 												aria-label="Delete"
 												color="primary"
-												onClick={async () => {
-													await this.props.deleteOption(row.id, res => {
-														this.setState({
-															showMessage: true,
-															message: res
-																? 'delete option success'
-																: 'delete option failed',
-														});
-													});
-													await this.props.selectCategory(category.id);
-												}}
+												onClick={() => this.deleteOption(row.id)}
 											>
 												<DeleteIcon />
 											</IconButton>
@@ -414,28 +458,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
             			</Button>
 						<Button
 							disabled={this.state.isBusy}
-							onClick={async () => {
-								this.setState({ isBusy: true });
-								const { userProfile } = this.props;
-								const data = {
-									name: this.state.oname,
-									value: this.state.ovalue,
-									description: this.state.odescription,
-									updatedBy: userProfile.email,
-								};
-
-								await this.props.addOption(category.id, data, res => {
-									this.setState({
-										showMessage: true,
-										message: res
-											? 'add option success'
-											: 'add option failed',
-									});
-								});
-								await this.props.selectCategory(category.id);
-
-								this.setState({ openCategoryForm: false, isBusy: false });
-							}}
+							onClick={(e) => this.addOption()}
 							color="primary"
 						>
 							Add
@@ -456,6 +479,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 
 const mapStateToProps = state => ({
 	category: state.tem_data.selectedCategory,
+	template: state.tem_data.selectedTemplate,
 	userProfile: state.global_data.userProfile,
 });
 
