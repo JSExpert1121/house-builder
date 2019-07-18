@@ -9,12 +9,12 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
+// import Divider from '@material-ui/core/Divider';
 import { withStyles, createStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import clsx from 'clsx';
 
-import Rate from 'components/Rate';
+// import Rate from 'components/Rate';
 import Button from 'components/CustomButtons/Button.jsx';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import { ContractorStatus, ContractorInfo } from 'types/contractor';
@@ -212,36 +212,36 @@ class ContractorInfoView extends React.Component<IContractorInfoViewProps, ICont
 
     public render() {
 
-        const past_works = [
-            {
-                title: 'Wordpress tigovit Website',
-                rate: 4.6,
-                start: 'Apr 2016',
-                end: 'May 2019',
-                review: 'I was very happy with him. He has an excellent knowledge about Wordpress'
-            },
-            {
-                title: 'Wordpress installation and speed optimization',
-                rate: 5.0,
-                start: 'Nov 2018',
-                end: 'Feb 2019',
-                review: ''
-            },
-            {
-                title: 'Wordpress tigovit Website',
-                rate: 4.1,
-                start: 'Dec 2017',
-                end: 'Mar 2018',
-                review: 'Good work and nice guy'
-            },
-            {
-                title: 'Web design and development',
-                rate: 3.7,
-                start: 'Apr 2019',
-                end: 'June 2019',
-                review: 'He was a very dilligent web developer whilst working with us. I would hire again!'
-            }
-        ];
+        // const past_works = [
+        //     {
+        //         title: 'Wordpress tigovit Website',
+        //         rate: 4.6,
+        //         start: 'Apr 2016',
+        //         end: 'May 2019',
+        //         review: 'I was very happy with him. He has an excellent knowledge about Wordpress'
+        //     },
+        //     {
+        //         title: 'Wordpress installation and speed optimization',
+        //         rate: 5.0,
+        //         start: 'Nov 2018',
+        //         end: 'Feb 2019',
+        //         review: ''
+        //     },
+        //     {
+        //         title: 'Wordpress tigovit Website',
+        //         rate: 4.1,
+        //         start: 'Dec 2017',
+        //         end: 'Mar 2018',
+        //         review: 'Good work and nice guy'
+        //     },
+        //     {
+        //         title: 'Web design and development',
+        //         rate: 3.7,
+        //         start: 'Apr 2019',
+        //         end: 'June 2019',
+        //         review: 'He was a very dilligent web developer whilst working with us. I would hire again!'
+        //     }
+        // ];
         const { classes, contractor, isAdmin } = this.props;
 
         const name = contractor.address ? contractor.address.name || 'N/A' : 'N/A';
@@ -295,7 +295,7 @@ class ContractorInfoView extends React.Component<IContractorInfoViewProps, ICont
                 </Paper>
                 <br />
                 <br />
-                <Paper square>
+                {/* <Paper square>
                     <List aria-label='contractor-history' style={{ padding: 0 }}>
                         <ListItem button={false} className={classes.titlebar}>
                             <Typography className={classes.title}>
@@ -330,7 +330,7 @@ class ContractorInfoView extends React.Component<IContractorInfoViewProps, ICont
                             ))
                         }
                     </List>
-                </Paper>
+                </Paper> */}
                 {
                     isAdmin && (
                         <>
