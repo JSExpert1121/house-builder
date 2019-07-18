@@ -154,7 +154,7 @@ class HistoryDetail extends React.Component<IHistoryDetailProps, IHistoryDetailS
 							onClick={() => this.setState({ showDialog: false })}>
 							<CloseIcon />
 						</IconButton>
-						<img src={this.state.selected} className={classes.image} alt='image' />
+						<img src={this.state.selected} className={classes.image} alt='item' />
 					</Box>
 				</Dialog>
 

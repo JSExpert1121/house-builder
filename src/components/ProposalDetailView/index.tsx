@@ -14,9 +14,9 @@ import { withStyles, createStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import ProposalDetailFiles from './ProposalDetailFiles';
-import ProposalDetailOverview from './ProposalDetailOverview';
-import ProposalDetailMessages from './ProposalDetailMessages';
+import ProposalDetailFiles from './ProposalFiles';
+import ProposalDetailOverview from './ProposalOverview';
+import ProposalDetailMessages from './ProposalMessages';
 import ProposalTemplEditView from './ProposalTemplEditView';
 import ConfirmDialog from '../../components/shared/ConfirmDialog';
 
@@ -28,15 +28,15 @@ import {
     submitProposal,
     updateOption,
     updateProposal,
-} from '../../actions/global-actions';
-import { awardProject } from '../../actions/gen-actions';
+} from 'actions/global-actions';
+import { awardProject } from 'actions/gen-actions';
 
-import { ProposalPostInfo, ProposalDetailInfo, ProposalInfo } from '../../types/proposal';
-import { ProjectInfo } from '../../types/project';
-import { OptionPostInfo, OptionInfo, UserProfile, CmnObject } from '../../types/global';
+import { ProposalPostInfo, ProposalDetailInfo, ProposalInfo } from 'types/proposal';
+import { ProjectInfo } from 'types/project';
+import { OptionPostInfo, OptionInfo, UserProfile } from 'types/global';
+import { TemplProposal } from './types';
 
-
-const styles = theme => createStyles({
+const styles = createStyles(theme => ({
     busy: {
         position: 'absolute',
         left: 'calc(50% - 10px)',
@@ -47,21 +47,7 @@ const styles = theme => createStyles({
         left: 'calc(50% - 10px)',
         top: 'calc(40vh)',
     },
-});
-
-interface CateInfo {
-    name: string;
-    type: string;
-    value: string;
-    description: string;
-    options: Array<OptionInfo>;
-}
-interface TemplProposal extends CmnObject<CateInfo> {
-    id: string;
-    name: string;
-    budget: number;
-    duration: number;
-}
+}));
 
 export interface IProposalDetailViewProps extends RouteComponentProps<{ id: string; }> {
     getProposalDetails: (id: string) => Promise<ProposalDetailInfo>;
