@@ -13,6 +13,9 @@ import {
     MuiPickersUtilsProvider,
     DatePicker,
 } from '@material-ui/pickers';
+import 'easymde/dist/easymde.min.css';
+import SimpleMDE from 'react-simplemde-editor';
+
 import Button from "components/CustomButtons/Button.jsx";
 
 
@@ -147,7 +150,7 @@ class HistoryEditItem extends React.Component<IHistoryEditItemProps, IHistoryEdi
                     margin="normal"
                     fullWidth={true}
                     value={title}
-                    FormHelperTextProps={{error: true}}
+                    FormHelperTextProps={{ error: true }}
                     helperText={this.state.titleError ? "Title can't be empty" : undefined}
                     onChange={e => this.setState({ title: e.target.value })}
                 />
@@ -177,6 +180,12 @@ class HistoryEditItem extends React.Component<IHistoryEditItemProps, IHistoryEdi
                         />
                     </MuiPickersUtilsProvider>
                 </Box>
+                <SimpleMDE
+                    value={description}
+                    onChange={value => this.setState({ description: value })}
+                    options={{ placeholder: 'Description here' }}
+                />
+
                 <TextField
                     label="Description"
                     margin="normal"

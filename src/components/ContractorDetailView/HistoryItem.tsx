@@ -1,15 +1,20 @@
 import * as React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import { makeStyles, Theme } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import removeMd from 'remove-markdown';
+
 import { HistoryInfo } from 'types/global';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+        position: 'relative'
+    },
     title: {
         fontWeight: 600,
         fontSize: '1.2em',
@@ -24,7 +29,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     action: {
         display: 'flex',
-        flexDirection: 'column'
+        position: 'absolute',
+        right: theme.spacing(2),
+        top: theme.spacing(1)
+    },
+    item: {
+        padding: theme.spacing(1)
     }
 }));
 
@@ -44,6 +54,7 @@ const HistoryItem: React.SFC<IHistoryItemProps> = (props) => {
 
     return (
         <ListItem
+            className={classes.root}
             onMouseEnter={e => setEnter(true)}
             onMouseLeave={() => setEnter(false)}
             alignItems='flex-start'
@@ -65,21 +76,25 @@ const HistoryItem: React.SFC<IHistoryItemProps> = (props) => {
                         >
                             {item.from} - {item.to}
                         </Typography>
-                        {item.description}
+                        {removeMd(item.description)}
                     </React.Fragment>
                 }
             />
             {enter && (
-                <ListItemSecondaryAction className={classes.action} onMouseEnter={e => setEnter(true)}>
-                    <React.Fragment>
-                        <IconButton edge="end" aria-label="Edit" onClick={() => handleEdit(item.id)} >
-                            <EditIcon fontSize='small' />
-                        </IconButton>
-                        <IconButton edge="end" aria-label="Delete" onClick={() => handleDelete(item.id)} >
-                            <DeleteIcon fontSize='small' />
-                        </IconButton>
-                    </React.Fragment>
-                </ListItemSecondaryAction>
+                <Box className={classes.action}>
+                    <IconButton className={classes.item} aria-label="Edit" onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(item.id);
+                    }} >
+                        <EditIcon fontSize='small' />
+                    </IconButton>
+                    <IconButton className={classes.item} aria-label="Delete" onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item.id);
+                    }} >
+                        <DeleteIcon fontSize='small' />
+                    </IconButton>
+                </Box>
             )}
         </ListItem>
     );

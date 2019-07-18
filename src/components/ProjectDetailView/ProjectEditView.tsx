@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 
 import 'easymde/dist/easymde.min.css';
 import SimpleMDE from 'react-simplemde-editor';
@@ -94,7 +95,7 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
                 value={title}
                 onChange={e => handleTitleChange(e.target.value)}
             />
-            <div className={classes.container}>
+            <Box className={classes.container}>
                 <TextField
                     className={classes.textFieldHalf}
                     label="Price"
@@ -113,14 +114,14 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
                         onChange={handleDateChange}
                     />
                 </MuiPickersUtilsProvider>
-            </div>
+            </Box>
             <SimpleMDE
                 value={description}
                 onChange={handleDescChange}
                 options={{ placeholder: 'Description here' }}
             />
             {handleDone && (
-                <div className={classes.doneContainer}>
+                <Box className={classes.doneContainer}>
                     <Button
                         color="primary"
                         className={classes.doneBtn}
@@ -135,7 +136,7 @@ const ProjectEditView: React.SFC<IProjectEditViewProps> = (props) => {
                     >
                         Cancel
                     </Button>
-                </div>
+                </Box>
             )}
         </Card>
     );

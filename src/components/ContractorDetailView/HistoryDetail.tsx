@@ -13,7 +13,7 @@ import { withStyles, createStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';// import 'react-image-gallery/styles/css/image-gallery.css';
-// import ImageGallery from 'react-image-gallery';
+import ReactMarkdown from 'react-markdown';
 import ImageGallery from 'components/ImageGallery';
 import { ContractorInfo } from 'types/contractor';
 import { HistoryInfo } from 'types/global';
@@ -125,7 +125,7 @@ class HistoryDetail extends React.Component<IHistoryDetailProps, IHistoryDetailS
 						</Typography>
 					</ListItem>
 					<ListItem button={false} className={classes.description}>
-						{historyItem.description}
+						<ReactMarkdown source={historyItem.description} />
 					</ListItem>
 					{
 						historyItem.images && historyItem.images.length > 0 && (
