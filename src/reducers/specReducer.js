@@ -10,11 +10,8 @@ import {
 } from '../constants/spec-action-types';
 
 const initialState = {
-  specialties: [],
-  totalItems: 0,
-  totalPages: 0,
-  currentPage: 0,
-  pageSize: 10,
+  specialties: undefined,
+  specialty: undefined,
   currentSpecId: '',
   dirty: true,
 };
@@ -23,17 +20,11 @@ const specReducer = handleActions(
   {
     [SPEC_CREATED]: (state, action) => ({ ...state, dirty: action.payload }),
     [SPEC_DELETED]: (state, action) => ({ ...state, dirty: action.payload }),
-    [SPEC_LOADED]: (state, action) => state,
-    [SPEC_SELECTED]: (state, action) => ({
-      ...state,
-      currentSpecId: action.payload,
-    }),
-    [SPEC_SET_PAGEINFO]: (state, action) => ({
-      ...state,
-      ...action.payload,
-    }),
+    [SPEC_LOADED]: (state, action) => ({ ...state, specialty: action.payload }),
+    [SPECS_LOADED]: (state, action) => ({ ...state, specialties: action.payload, dirty: false }),
+    [SPEC_SELECTED]: (state, action) => ({ ...state, specialty: action.payload }),
+    [SPEC_SET_PAGEINFO]: (state, action) => ({ ...state, ...action.payload }),
     [SPEC_UPDATED]: (state, action) => ({ ...state, dirty: action.payload }),
-    [SPECS_LOADED]: (state, action) => ({ ...state, ...action.payload }),
   },
   initialState
 );

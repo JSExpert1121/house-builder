@@ -363,9 +363,10 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 		const { match } = this.props;
 		if (match.url.includes('gen-contractor')) {
 			this.props.history.push(`/gen-contractor/contractor_detail/${id}`);
-		}
-		if (match.url.includes('s_cont')) {
+		} else if (match.url.includes('s_cont')) {
 			this.props.history.push(`/s_cont/contractor_detail/${id}`);
+		} else if (match.url.includes('/projects')) {
+			this.props.history.push(`/projects/contractor_detail/${id}`);
 		}
 	}
 
@@ -461,12 +462,8 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 						count={projectBidders.length}
 						rowsPerPage={this.state.rowsPerPage}
 						page={this.state.currentPage}
-						backIconButtonProps={{
-							'aria-label': 'Previous Page',
-						}}
-						nextIconButtonProps={{
-							'aria-label': 'Next Page',
-						}}
+						backIconButtonProps={{ 'aria-label': 'Previous Page' }}
+						nextIconButtonProps={{ 'aria-label': 'Next Page' }}
 						onChangePage={this.handleChangePage}
 						onChangeRowsPerPage={this.handleChangeRowsPerPage}
 					/>
@@ -546,12 +543,8 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 						count={contractors.numberOfElements}
 						rowsPerPage={this.state.rowsPerPage1}
 						page={this.state.currentPage1}
-						backIconButtonProps={{
-							'aria-label': 'Previous Page',
-						}}
-						nextIconButtonProps={{
-							'aria-label': 'Next Page',
-						}}
+						backIconButtonProps={{ 'aria-label': 'Previous Page' }}
+						nextIconButtonProps={{ 'aria-label': 'Next Page' }}
 						onChangePage={this.handleChangePage1}
 						onChangeRowsPerPage={this.handleChangeRowsPerPage1}
 					/>

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Table, TableBody, TableHead, TableRow, Typography } from '@material-ui/core';
@@ -35,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 const OptionView = ({ edit, option, handleEdit, handleDelete }) => {
     const classes = useStyles({});
     return (
-        <TableRow key={option.id}>
+        <TableRow>
             <CustomTableCell className={classes.actions} component="th" scope="row">
                 <Typography variant="subtitle1">{option.name}</Typography>
             </CustomTableCell>
@@ -63,21 +62,6 @@ const OptionView = ({ edit, option, handleEdit, handleDelete }) => {
             )}
         </TableRow>
     );
-};
-
-OptionView.propTypes = {
-    edit: PropTypes.bool.isRequired,
-    option: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        value: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        budget: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-            .isRequired,
-        duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-            .isRequired,
-    }).isRequired,
-    handleDelete: PropTypes.func.isRequired,
-    handleEdit: PropTypes.func.isRequired,
 };
 
 const OptionTableView = ({
@@ -127,7 +111,7 @@ const OptionTableView = ({
                                 handleEdit={() => handleEdit(opt.id)}
                             />
                         ) : (
-                                <TableRow>
+                                <TableRow key={index}>
                                     <CustomTableCell colSpan={colcnt}>
                                         <OptionEdit
                                             option={opt}
@@ -142,17 +126,6 @@ const OptionTableView = ({
             </Table>
         </>
     );
-};
-
-OptionTableView.propTypes = {
-    edit: PropTypes.bool.isRequired,
-    options: PropTypes.arrayOf(PropTypes.object).isRequired,
-    editingId: PropTypes.string.isRequired,
-    handleSave: PropTypes.func.isRequired,
-    handleDelete: PropTypes.func.isRequired,
-    handleEdit: PropTypes.func.isRequired,
-    handleCancel: PropTypes.func.isRequired,
-    handleAdd: PropTypes.func.isRequired,
 };
 
 export default OptionTableView;

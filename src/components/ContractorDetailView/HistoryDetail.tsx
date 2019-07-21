@@ -22,7 +22,7 @@ import { HistoryInfo } from 'types/global';
 const styles = theme => createStyles({
 	root: {
 		position: 'relative',
-		backgroundColor: 'white'
+        minHeight: 'calc(100vh - 64px - 56px - 48px - 16px)'
 	},
 	titlebar: {
 		padding: theme.spacing(3, 2),
@@ -108,7 +108,7 @@ class HistoryDetail extends React.Component<IHistoryDetailProps, IHistoryDetailS
 	render() {
 		const { classes, historyItem } = this.props;
 		if (!historyItem) {
-			return <Box>History Item not selected</Box>
+			return <Box className={classes.root}>History Item not selected</Box>
 		}
 		return (
 			<Paper square className={classes.root}>

@@ -22,8 +22,7 @@ import { ProjectPostInfo } from 'types/project';
 
 const styles = theme => createStyles({
     root: {
-        position: 'relative',
-        backgroundColor: 'white'
+        position: 'relative'
     },
     mainBoard: {
         width: '100%',

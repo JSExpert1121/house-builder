@@ -67,12 +67,13 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
     }
 
     handleBack = () => {
-        const { match } = this.props;
-        if (match.url.includes('gen-contractor'))
-            this.props.history.push('/gen-contractor');
-        if (match.url.includes('s_cont')) this.props.history.push('/s_cont');
-        else if (match.url.includes('projects'))
-            this.props.history.push('/projects');
+        const { history } = this.props;
+        history.goBack();
+        // if (match.url.includes('gen-contractor'))
+        //     this.props.history.push('/gen-contractor');
+        // if (match.url.includes('s_cont')) this.props.history.push('/s_cont');
+        // else if (match.url.includes('projects'))
+        //     this.props.history.push('/projects');
     };
 
     public render() {

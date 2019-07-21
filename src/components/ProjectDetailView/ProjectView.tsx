@@ -15,6 +15,7 @@ import { ProjectInfo } from 'types/project';
 
 const useStyles = makeStyles(theme => ({
 	root: {
+		height: 'calc(100% - 16px)',
 		border: '1px solid #EEE',
 		margin: theme.spacing(1)
 	},

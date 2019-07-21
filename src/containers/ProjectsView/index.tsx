@@ -16,74 +16,73 @@ import { UserProfile } from 'types/global'
 
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    height: 'calc(100vh - 64px)',
-    overflow: 'auto',
-  },
-  contentWrapper: {
-    height: 'calc(100vh - 64px - 55px)',
-    padding: theme.spacing(1),
-    backgroundColor: 'white'
-  },
-  buttonAdditional: {
-    position: 'absolute',
-    float: 'right',
-    right: 0,
-  }
+	root: {
+		flexGrow: 1,
+		height: 'calc(100vh - 64px)',
+		overflow: 'auto',
+	},
+	contentWrapper: {
+		height: 'calc(100vh - 64px - 56px)',
+		paddingTop: theme.spacing(1)
+	},
+	buttonAdditional: {
+		position: 'absolute',
+		float: 'right',
+		right: 0,
+	}
 }));
 
 interface IProjectsViewProps extends RouteComponentProps {
-  userProfile: UserProfile;
+	userProfile: UserProfile;
 }
 
 const ProjectsView: React.FunctionComponent<IProjectsViewProps> = (props) => {
 
-  const classes = useStyles({});
-  const { userProfile, match } = props;
+	const classes = useStyles({});
+	const { userProfile, match } = props;
 
-  if (!userProfile.user_metadata.roles.includes('Gen') &&
-    !userProfile.user_metadata.roles.includes('GenSub') &&
-    !userProfile.user_metadata.roles.includes('SuperAdmin')) {
-    return <div> Access Forbidden </div>;
-  }
+	if (!userProfile.user_metadata.roles.includes('Gen') &&
+		!userProfile.user_metadata.roles.includes('GenSub') &&
+		!userProfile.user_metadata.roles.includes('SuperAdmin')) {
+		return <div> Access Forbidden </div>;
+	}
 
-  return (
-    <Box className={classes.root}>
-      <CustomTabs
-        tabs={[{
-          href: `/projects/current`,
-          label: "Current Projects",
-          icon: AppsIcon,
-        }]}
-      />
-      <main className={classes.contentWrapper}>
-        <Switch>
-          <SecuredRoute
-            path={`${match.url}/current`}
-            component={CurrentProjectView}
-          />
-          <SecuredRoute
-            path={`${match.url}/proposal_detail/:id`}
-            component={ProposalDetailView}
-          />
-          <SecuredRoute
-            path={`${match.url}/project_detail/:id`}
-            component={ProjectDetailView}
-          />
-          <SecuredRoute
-            path={`${match.url}/contractor_detail/:id`}
-            component={ContractorDetailView}
-          />
-          <Redirect path='/projects' to='/projects/current' />
-        </Switch>
-      </main>
-    </Box>
-  )
+	return (
+		<Box className={classes.root}>
+			<CustomTabs
+				tabs={[{
+					href: `/projects/current`,
+					label: "Current Projects",
+					icon: AppsIcon,
+				}]}
+			/>
+			<Box className={classes.contentWrapper}>
+				<Switch>
+					<SecuredRoute
+						path={`${match.url}/current`}
+						component={CurrentProjectView}
+					/>
+					<SecuredRoute
+						path={`${match.url}/proposal_detail/:id`}
+						component={ProposalDetailView}
+					/>
+					<SecuredRoute
+						path={`${match.url}/project_detail/:id`}
+						component={ProjectDetailView}
+					/>
+					<SecuredRoute
+						path={`${match.url}/contractor_detail/:id`}
+						component={ContractorDetailView}
+					/>
+					<Redirect path='/projects' to='/projects/current' />
+				</Switch>
+			</Box>
+		</Box>
+	)
 };
 
 const mapStateToProps = state => ({
-  userProfile: state.global_data.userProfile,
+	userProfile: state.global_data.userProfile,
 })
 
 export default connect(mapStateToProps)(ProjectsView);

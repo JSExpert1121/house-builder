@@ -32,8 +32,8 @@ import { Specialties } from 'types/global';
 
 const styles = createStyles(theme => ({
     root: {
-        padding: theme.spacing(1),
-        position: 'relative'
+        position: 'relative',
+        minHeight: 'calc(100vh - 64px - 56px - 48px - 16px)'
     },
     row: {
         '&:nth-of-type(odd)': {

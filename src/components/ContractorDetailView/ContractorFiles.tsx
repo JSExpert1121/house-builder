@@ -16,18 +16,18 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
 import CustomTableCell from 'components/shared/CustomTableCell';
-import CustomSnackbar from 'components/shared/CustomSnackbar';
+import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import {
     addFiles,
     deleteFile,
     getContractorDetailById
 } from 'actions/cont-actions';
 import { ContractorInfo } from 'types/contractor';
-import { ISnackbarProps } from 'types/components';
 
 const styles = createStyles(theme => ({
     root: {
-        padding: theme.spacing(1),
+        position: 'relative',
+        minHeight: 'calc(100vh - 64px - 56px - 48px - 16px)'
     },
     titleBtn: {
         color: '#fff',
@@ -41,6 +41,11 @@ const styles = createStyles(theme => ({
         left: 'calc(50% - 10px)',
         top: 'calc(40vh)',
     },
+    busy: {
+        position: 'absolute',
+        left: 'calc(50% - 20px)',
+        top: 'calc(50% - 20px)'
+    }
 }));
 
 export interface IContractorFilesProps {
@@ -200,7 +205,7 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
                     message={this.state.message}
                     handleClose={this.state.handleClose}
                 />
-                {this.state.isBusy && <CircularProgress className={classes.waitingSpin} />}
+                {this.state.isBusy && <CircularProgress className={classes.busy} />}
             </Box>
         );
     }

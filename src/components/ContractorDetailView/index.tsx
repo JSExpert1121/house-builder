@@ -22,11 +22,10 @@ const styles = createStyles(theme => ({
     root: {
         flexGrow: 1,
         height: 'calc(100vh - 64px - 56px - 8px)',
-        overflow: 'auto',
-        backgroundColor: 'white'
+        overflow: 'auto'
     },
     content: {
-        padding: theme.spacing(1)
+        paddingTop: theme.spacing(1)
     },
     toolbarstyle: {
         backgroundColor: theme.palette.background.paper,

@@ -199,6 +199,7 @@ class ProjectProposals extends React.Component<IProjectProposalsProps, IProjectP
     public render() {
         const { classes, proposals, match } = this.props;
         const { compares } = this.state;
+        const submitable = match.url.includes('/projects');
 
         if (!proposals) {
             return (
@@ -211,7 +212,7 @@ class ProjectProposals extends React.Component<IProjectProposalsProps, IProjectP
         return (
             <Box className={classes.root}>
                 <Box className={classes.tableWrap}>
-                    {match.url.includes('/projects') && (
+                    {submitable && (
                         <Button
                             color="primary"
                             onClick={this.handleSubmit}

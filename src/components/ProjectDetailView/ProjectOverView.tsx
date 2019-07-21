@@ -187,12 +187,12 @@ class ProjectOverview extends React.Component<IProjectOverviewProps, IProjectOve
                         />
                     </Grid>
                 </Grid>
-                {showMessage && <CustomSnackbar
+                <CustomSnackbar
                     open={showMessage}
                     variant={variant}
                     message={message}
-                    handleClose={() => this.setState({ showMessage: false })}
-                />}
+                    handleClose={this.state.handleClose}
+                />
                 {this.state.isBusy && <CircularProgress className={classes.busy} />}
             </Box>
         );

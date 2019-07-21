@@ -109,10 +109,13 @@ export interface Pageable {
 	empty: boolean;
 }
 
-export interface Specialty extends CommonInfo {
+export interface SpecialtyPostInfo {
 	name: string;
 	description: string;
 	value: string;
+}
+
+export interface Specialty extends CommonInfo, SpecialtyPostInfo {
 	contractorSpecialties: object;
 	projectSpecialties: object;
 }

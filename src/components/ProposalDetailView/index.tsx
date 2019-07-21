@@ -18,7 +18,7 @@ import ProposalDetailFiles from './ProposalFiles';
 import ProposalDetailOverview from './ProposalOverview';
 import ProposalDetailMessages from './ProposalMessages';
 import ProposalTemplEditView from './ProposalTemplEditView';
-import ConfirmDialog from '../../components/shared/ConfirmDialog';
+import ConfirmDialog from 'components/shared/ConfirmDialog';
 
 import {
     addOption,
@@ -493,6 +493,7 @@ class ProposalDetailView extends React.Component<IProposalDetailViewProps, IProp
             return <CircularProgress className={classes.waitingSpin} />;
         }
 
+        editable = editable || (match.url.includes('/s_cont') && status !== 'AWARDED');
         return (
             <Paper square>
                 <Box style={{ display: 'flex' }}>
@@ -522,7 +523,7 @@ class ProposalDetailView extends React.Component<IProposalDetailViewProps, IProp
                 {currentTab === 0 && (
                     <ProposalDetailOverview
                         templateSelected={this.handleTemplateChange}
-                        edit={editable || match.url.includes('/s_cont')}
+                        edit={editable}
                         project={project}
                         brief={brief}
                         handleSubmit={this.handleSubmit}
@@ -534,7 +535,7 @@ class ProposalDetailView extends React.Component<IProposalDetailViewProps, IProp
                 {currentTab === 1 && (
                     <ProposalTemplEditView
                         proposal={proposal[templateNo]}
-                        edit={editable || match.url.includes('/s_cont')}
+                        edit={editable}
                         handleAdd={this.AddOption}
                         handleUpdate={this.UpdateOption}
                         handleDelete={this.DeleteOption}
@@ -542,7 +543,7 @@ class ProposalDetailView extends React.Component<IProposalDetailViewProps, IProp
                 )}
                 {currentTab === 2 && (
                     <ProposalDetailFiles
-                        edit={editable || match.url.includes('/s_cont')}
+                        edit={editable}
                     />
                 )}
                 {currentTab === 3 && <ProposalDetailMessages />}

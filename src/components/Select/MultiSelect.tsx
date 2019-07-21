@@ -9,17 +9,12 @@ import FormControl from '@material-ui/core/FormControl';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles(theme => ({
     control: {
-        margin: theme.spacing(1),
-        minWidth: 300
+        width: '100%'
     },
-    chip: {
-        marginLeft: theme.spacing(0.5),
-        marginRight: theme.spacing(0.5)
-    }
 }));
 
 const ITEM_HEIGHT = 48;
@@ -43,7 +38,6 @@ interface MultiSelectProps {
     suggestions: Array<SelectObject>;
     values: Array<string>;
     selectChange: (values: Array<string>) => void;
-    handleDelete: (id: string) => void;
     className?: string;
 }
 
@@ -54,19 +48,18 @@ const MultiSelect: React.SFC<MultiSelectProps> = (props) => {
         values,
         suggestions,
         className,
-        handleDelete
     } = props;
 
-    const CustomFormControl = withStyles({
-        root: (values.length > 0) ? {} : {
-            '& .MuiInputBase-input': {
-                paddingTop: '1.1875em'
-            },
-            '& .MuiInputLabel-formControl': {
-                paddingTop: '0.75em'
-            }
-        },
-    })(FormControl);
+    // const CustomFormControl = withStyles({
+    //     root: (values.length > 0) ? {} : {
+    //         '& .MuiInputBase-input': {
+    //             paddingTop: '1.1875em'
+    //         },
+    //         '& .MuiInputLabel-formControl': {
+    //             paddingTop: '0.75em'
+    //         }
+    //     },
+    // })(FormControl);
 
     const [open, setOpen] = React.useState(false);
     const handleChange = (event: React.ChangeEvent<{ name?: string; value: Array<string> }>) => {
@@ -75,7 +68,7 @@ const MultiSelect: React.SFC<MultiSelectProps> = (props) => {
     }
 
     return (
-        <CustomFormControl
+        <FormControl
             className={className || classes.control}
             margin='normal'
         >
@@ -88,16 +81,9 @@ const MultiSelect: React.SFC<MultiSelectProps> = (props) => {
                 value={values}
                 onChange={handleChange}
                 input={<Input id="select-multiple-checkbox" />}
-                renderValue={(selected: Array<string>) => {
-                    return selected.map((sel, index) => (
-                        <Chip
-                            className={classes.chip}
-                            key={index}
-                            label={sel}
-                            onDelete={() => handleDelete(sel)}
-                        />
-                    ));
-                }}
+                renderValue={(selected: Array<string>) => <Box>
+                    {selected.join(', ')}
+                </Box>}
                 MenuProps={MenuProps}
             >
                 {suggestions.map(suggest => (
@@ -107,7 +93,7 @@ const MultiSelect: React.SFC<MultiSelectProps> = (props) => {
                     </MenuItem>
                 ))}
             </Select>
-        </CustomFormControl>
+        </FormControl>
     );
 }
 

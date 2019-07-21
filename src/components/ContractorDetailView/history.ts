@@ -1,4 +1,4 @@
-import { HistoryInfo } from '../../types/global';
+import { HistoryInfo } from 'types/global';
 
 class HistoryManager {
     constructor() {

@@ -22,8 +22,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import removeMd from 'remove-markdown';
 
-import { addTemplate, deleteTemplate, getTemplates } from '../../actions/gen-actions';
-import { getProjectData } from '../../actions/global-actions';
+import { addTemplate, deleteTemplate, getTemplates } from 'actions/gen-actions';
+import { getProjectData } from 'actions/global-actions';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
 import CustomTableCell from '../shared/CustomTableCell';
 import { ISnackbarProps } from 'types/components';
