@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/es/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
   palette: {
@@ -50,22 +50,22 @@ const theme = createMuiTheme({
         zIndex: '2000',
       }
     },
-    Muit: {
-      root: {
-        fontSize: '0.8125rem',
-        minWidth: '120px',
-        maxWidth: '200px',
-        lineHeight: '1',
-        minHeight: '36px',
-        maxHeight: '48px',
-      },
-      labelIcon: {
-        margin: '6px 0px',
-        lineHeight: '1',
-        padding: '0px',
-        minHeight: '56px',
-      },
-    },
+    // Muit: {
+    //   root: {
+    //     fontSize: '0.8125rem',
+    //     minWidth: '120px',
+    //     maxWidth: '200px',
+    //     lineHeight: '1',
+    //     minHeight: '36px',
+    //     maxHeight: '48px',
+    //   },
+    //   labelIcon: {
+    //     margin: '6px 0px',
+    //     lineHeight: '1',
+    //     padding: '0px',
+    //     minHeight: '56px',
+    //   },
+    // },
     MuiTabs: {
       root: {
         minHeight: '36px',
@@ -101,7 +101,13 @@ const theme = createMuiTheme({
         height: '48px',
       },
     },
-  },
+    MuiContainer: {
+      root: {
+        padding: 0
+      }
+    }
+  }
 });
 
+console.log(theme);
 export default theme;

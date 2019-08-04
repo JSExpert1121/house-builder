@@ -3,7 +3,8 @@ import {
     TemplateInfo,
     SpecialtyInfo,
     SortInfo,
-    FileInfo
+    FileInfo,
+    CmnObject
 } from './global';
 import { ContractorInfo } from './contractor';
 
@@ -40,4 +41,18 @@ export interface Projects extends Pageable {
     content: Array<ProjectInfo>;
     allprojects: Array<object> | null;
     templates: Array<object> | null;
+}
+
+export interface ProjectLevelCategory {
+    id: number;
+    title: string;
+    description?: string;
+    contents: CmnObject<number | string>;
+}
+
+export interface ProjectLevel {
+    id: number;
+    name: string;
+    description: string;
+    categories: ProjectLevelCategory[];
 }

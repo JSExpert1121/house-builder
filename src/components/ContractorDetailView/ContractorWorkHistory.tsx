@@ -33,18 +33,6 @@ const styles = createStyles(theme => ({
         left: 'calc(50% - 10px)',
         top: 'calc(40vh)',
     },
-    title: {
-        fontWeight: 600,
-        fontSize: '1.2em',
-        color: '#111'
-    },
-    subtitle: {
-        fontWeight: 500,
-        fontSize: '1.1em',
-        paddingRight: theme.spacing(1.5),
-        display: 'inline',
-        color: '#222'
-    },
     action: {
         display: 'flex',
         flexDirection: 'column'

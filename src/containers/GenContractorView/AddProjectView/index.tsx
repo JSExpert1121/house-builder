@@ -1,24 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Switch, Redirect } from 'react-router-dom';
 import { compose } from "redux";
 
 import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
 import { createStyles, withStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import DeleteIcon from '@material-ui/icons/Delete';
 
-import Button from "components/CustomButtons/Button.jsx";
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
-import ProjectEditView from 'components/ProjectDetailView/ProjectEditView';
+import CustomTabs from "components/shared/CustomTabs";
+import AddProjectOverview, { ProjectBriefInfo } from './Overview';
+import AddProjectLevels from './Levels';
+import SecuredRoute from 'routers/SecuredRoute';
 import { addFilesToProject, addProject } from 'actions/global-actions';
 
 import { UserProfile } from 'types/global';
-import { ProjectPostInfo } from 'types/project';
+import { ProjectLevel, ProjectPostInfo, ProjectLevelCategory } from 'types/project';
 
 const styles = theme => createStyles({
     root: {
@@ -61,13 +59,9 @@ interface IAddProjectViewProps extends RouteComponentProps {
     addProject: (contId: string, data: ProjectPostInfo) => Promise<string>;
 }
 
-interface IAddProjectViewState extends ISnackbarProps {
-    title: string;
-    price: number;
-    description: string;
-    dueDate: Date;
+interface IAddProjectViewState extends ISnackbarProps, ProjectBriefInfo {
     isBusy: boolean;
-    files: Array<File>;
+    levels: ProjectLevel[];
 }
 
 class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectViewState> {
@@ -81,6 +75,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
             dueDate: new Date(),
             isBusy: false,
             files: [],
+            levels: undefined,
             showMessage: false,
             message: '',
             variant: 'error',
@@ -129,7 +124,6 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
     };
 
     handleFileChange = e => {
-        // console.log(this.state.files, e.target.files);
         this.setState({ files: [...this.state.files, ...e.target.files] });
     };
 
@@ -162,70 +156,134 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
         this.setState({ price: value });
     }
 
+    addLevel = (name, desc) => {
+        const levels = this.state.levels || [];
+        levels.push({
+            id: levels.length,
+            name: name,
+            description: desc,
+            categories: []
+        });
+
+        this.setState({ levels: [...levels] });
+    }
+
+    deleteLevel = (id: number) => {
+        const { levels } = this.state;
+        if (!levels) return;
+
+        levels.splice(id, 1);
+        const len = levels.length;
+        for (let i = id; i < len; i++) {
+            levels[i].id--;
+        }
+
+        if (levels.length === 0) {
+            this.setState({ levels: undefined });
+        } else {
+            this.setState({ levels: [...levels] });
+        }
+    }
+
+    addCategory = (id: number, cat: ProjectLevelCategory) => {
+        const { levels } = this.state;
+        if (!levels) return;
+
+        const level = levels[id];
+        if (!level) return;
+
+        cat.id = level.categories.length;
+        level.categories.push(cat);
+        console.log(levels);
+        this.setState({ levels: [...levels] });
+    }
+
+    updateCategory = (lvlId: number, cat: ProjectLevelCategory) => {
+        const { levels } = this.state;
+        if (!levels) return;
+
+        const level = levels[lvlId];
+        if (!level) return;
+
+        level.categories[cat.id] = cat;
+        this.setState({ levels: [...levels] });
+    }
+
+    deleteCategory = (lvlId: number, catId: number) => {
+        const { levels } = this.state;
+        if (!levels) return;
+
+        const level = levels[lvlId];
+        if (!level) return;
+
+        const cats = level.categories;
+        cats.splice(catId, 1);
+        const len = cats.length;
+        for (let i = catId; i < len; i++) {
+            cats[i].id--;
+        }
+        this.setState({ levels: [...levels] });
+    }
+
     public render() {
-        const { classes } = this.props;
+        const { classes, match, location } = this.props;
+        const { title, price, description, dueDate, files, isBusy, levels } = this.state;
+        const tabs = [
+            { href: `${match.url}/submitted`, label: 'Overview' },
+            { href: `${match.url}/add-levels`, label: 'Levels' },
+        ];
+
+        let tab = tabs.map(tab => tab.href).indexOf(location.pathname);
+        if (tab < 0) tab = 0;
 
         return (
             <Box className={classes.root}>
-                <Card className={classes.mainBoard}>
-                    <ProjectEditView
-                        title={this.state.title}
-                        price={this.state.price}
-                        dueDate={this.state.dueDate}
-                        description={this.state.description}
-                        handleTitleChange={this.handleTitleChange}
-                        handlePriceChange={this.handlePriceChange}
-                        handleDateChange={this.handleDateChange}
-                        handleDescChange={this.handleDescChange}
-                    />
-                    <Box className={classes.fileUpload}>
-                        <input
-                            accept="text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*"
-                            id="upload-file"
-                            multiple
-                            type="file"
-                            style={{ display: 'none' }}
-                            onChange={this.handleFileChange}
+                <CustomTabs init={tab} tabs={tabs} />
+                <Box className={classes.contents}>
+                    <Switch>
+                        <SecuredRoute
+                            path={tabs[0].href}
+                            render={props => (
+                                <AddProjectOverview {...props}
+                                    title={title}
+                                    price={price}
+                                    description={description}
+                                    dueDate={dueDate}
+                                    files={files}
+                                    isBusy={isBusy}
+                                    handleFileChange={this.handleFileChange}
+                                    handleRemove={this.handleRemove}
+                                    handleDateChange={this.handleDateChange}
+                                    handleDescChange={this.handleDescChange}
+                                    handleTitleChange={this.handleTitleChange}
+                                    handlePriceChange={this.handlePriceChange}
+                                    handleAdd={this.handleAddProject}
+                                />
+                            )}
                         />
-                        <label htmlFor="upload-file" style={{ display: 'inline' }}>
-                            <Button
-                                variant="contained"
-                                component="span"
-                            >
-                                <CloudUploadIcon />
-                                &nbsp;&nbsp;Upload
-                          </Button>
-                        </label>
-                        {this.state.files.map(file => (
-                            <span className={classes.fileItem} key={file.name + file.size}>
-                                {file.name}
-                                <IconButton
-                                    onClick={() => this.handleRemove(file)}
-                                    style={{ padding: '0px' }}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </span>
-                        ))}
-                    </Box>
-                    <Box style={{ width: '100%', textAlign: 'center' }}>
-                        <Button
-                            color="primary"
-                            disabled={this.state.isBusy}
-                            className={classes.submitButton}
-                            onClick={this.handleAddProject}
-                        >
-                            Add Project
-                        </Button>
-                    </Box>
-                    {this.state.isBusy && <CircularProgress className={classes.busy} />}
-                    <CustomSnackbar
-                        open={this.state.showMessage}
-                        variant={this.state.variant}
-                        message={this.state.message}
-                        handleClose={this.state.handleClose}
-                    />
-                </Card>
+                        <SecuredRoute
+                            path={tabs[1].href}
+                            render={props => (
+                                <AddProjectLevels {...props}
+                                    levels={levels}
+                                    addLevel={this.addLevel}
+                                    deleteLevel={this.deleteLevel}
+                                    addCategory={this.addCategory}
+                                    updateCategory={this.updateCategory}
+                                    deleteCategory={this.deleteCategory}
+                                />
+                            )}
+                        />
+                        <Redirect path={`${match.url}`} to={tabs[0].href} />
+                    </Switch>
+                </Box>
+                {this.state.isBusy && <CircularProgress className={classes.busy} />}
+                <CustomSnackbar
+                    open={this.state.showMessage}
+                    variant={this.state.variant}
+                    message={this.state.message}
+                    handleClose={this.state.handleClose}
+                />
             </Box>
         );
     }
@@ -241,7 +299,6 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
-    withRouter,
     connect(
         mapStateToProps,
         mapDispatchToProps

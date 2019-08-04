@@ -1,7 +1,7 @@
 import { createStyles, Theme } from '@material-ui/core/styles';
 
-export default (theme: Theme) =>
-  createStyles({
+export default createStyles((theme: Theme) =>
+  ({
     list: {
       width: '60px',
       float: 'left',
@@ -24,7 +24,10 @@ export default (theme: Theme) =>
     activeIcon: {
       color: theme.palette.primary.main,
     },
+    nonactiveIcon: {
+      color: theme.palette.primary.dark
+    },
     nested: {
       paddingLeft: theme.spacing(4),
     },
-  });
+  }));

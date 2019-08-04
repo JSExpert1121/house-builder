@@ -1,14 +1,15 @@
 import React from 'react';
 
-import AppTheme  from './containers/AppTheme';
+import { ThemeProvider } from '@material-ui/styles';
+// import AppTheme  from './containers/AppTheme';
 import theme     from './config/theme';
 import AppRouter from './routers/AppRouter';
 
 const App: React.FC = () => {
   return (
-    <AppTheme theme={theme}>
+    <ThemeProvider theme={theme}>
       <AppRouter />
-    </AppTheme>
+    </ThemeProvider>
   );
 };
 

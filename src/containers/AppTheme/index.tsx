@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { MuiThemeProvider }         from '@material-ui/core/es/styles';
-import { Theme }                    from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles';
+import { Theme } from '@material-ui/core';
 
 type AppThemeProps = {
   theme: Theme;
@@ -8,7 +8,11 @@ type AppThemeProps = {
 };
 
 const AppTheme: FunctionComponent<AppThemeProps> = ({ theme, children }) => {
-  return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      {children}
+    </ThemeProvider>
+  );
 };
 
 export default AppTheme;

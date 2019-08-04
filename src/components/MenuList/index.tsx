@@ -61,7 +61,10 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
           <ListItemIcon>
             <HomeIcon
               color="secondary"
-              className={clx({ [classes.activeIcon]: pathname === '/' })}
+              className={clx({
+                [classes.activeIcon]: pathname === '/',
+                [classes.nonactiveIcon]: pathname !== '/',
+              })}
             />
           </ListItemIcon>
           <ListItemText primary="Home" className={classes.listItemText} />
@@ -82,6 +85,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                   color="secondary"
                   className={clx({
                     [classes.activeIcon]: pathname.includes('/gen-contractor'),
+                    [classes.nonactiveIcon]: !pathname.includes('/gen-contractor'),
                   })}
                 />
               </ListItemIcon>
@@ -107,6 +111,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                   color="secondary"
                   className={clx({
                     [classes.activeIcon]: pathname.includes('/s_cont'),
+                    [classes.nonactiveIcon]: !pathname.includes('/s_cont'),
                   })}
                 />
               </ListItemIcon>
@@ -132,6 +137,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                   color="secondary"
                   className={clx({
                     [classes.activeIcon]: pathname.includes('/b_list'),
+                    [classes.nonactiveIcon]: !pathname.includes('/b_list'),
                   })}
                 />
               </ListItemIcon>
@@ -157,6 +163,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                   color="secondary"
                   className={clx({
                     [classes.activeIcon]: pathname.includes('/projects'),
+                    [classes.nonactiveIcon]: !pathname.includes('/projects'),
                   })}
                 />
               </ListItemIcon>
@@ -177,6 +184,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                 color="secondary"
                 className={clx({
                   [classes.activeIcon]: pathname.includes('/m_temp'),
+                  [classes.nonactiveIcon]: !pathname.includes('/m_temp'),
                 })}
               />
             </ListItemIcon>
@@ -200,6 +208,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                 color="secondary"
                 className={clx({
                   [classes.activeIcon]: pathname.includes('/m_cont'),
+                  [classes.nonactiveIcon]: !pathname.includes('/m_cont'),
                 })}
               />
             </ListItemIcon>
@@ -223,6 +232,7 @@ class MenuList extends React.Component<ConnectedMenuListProps> {
                 color="secondary"
                 className={clx({
                   [classes.activeIcon]: pathname.includes('/m_spec'),
+                  [classes.nonactiveIcon]: !pathname.includes('/m_spec'),
                 })}
               />
             </ListItemIcon>
