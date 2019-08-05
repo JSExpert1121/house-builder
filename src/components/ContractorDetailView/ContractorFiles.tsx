@@ -18,8 +18,8 @@ import { DropzoneDialog } from 'material-ui-dropzone';
 import CustomTableCell from 'components/shared/CustomTableCell';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import {
-    addFiles,
-    deleteFile,
+    uploadFiles,
+    removeFile,
     getContractorDetailById
 } from 'actions/cont-actions';
 import { ContractorInfo } from 'types/contractor';
@@ -50,8 +50,8 @@ const styles = createStyles(theme => ({
 
 export interface IContractorFilesProps {
     contractorUpdated: () => Promise<void>;
-    addFiles: (id: string, files: File[]) => Promise<void>;
-    deleteFile: (id: string, name: string) => Promise<void>;
+    uploadFiles: (id: string, files: File[]) => Promise<void>;
+    removeFile: (id: string, name: string) => Promise<void>;
     getContractorDetailById: (id: string) => Promise<void>;
     contractor: ContractorInfo;
     classes: ClassNameMap<string>;
@@ -88,7 +88,7 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
 
         this.setState({ isBusy: true });
         try {
-            await this.props.addFiles(contractor.id, files);
+            await this.props.uploadFiles(contractor.id, files);
             await this.props.contractorUpdated();
             this.setState({
                 openUploadForm: false,
@@ -117,7 +117,7 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
         });
 
         try {
-            await this.props.deleteFile(contractor.id, name);
+            await this.props.removeFile(contractor.id, name);
             await this.props.contractorUpdated();
             // await this.props.getContractorDetailById(contractor.id);
             this.setState({
@@ -212,8 +212,8 @@ class ContractorFiles extends React.Component<IContractorFilesProps, IContractor
 }
 
 const mapDispatchToProps = {
-    addFiles,
-    deleteFile,
+    uploadFiles,
+    removeFile,
     getContractorDetailById
 };
 

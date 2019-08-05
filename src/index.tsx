@@ -1,28 +1,28 @@
-import './styles/index.scss';
+import './index.scss';
 
-import React             from 'react';
-import ReactDOM          from 'react-dom';
-import { Provider }      from 'react-redux';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import WebFont           from 'webfontloader';
+import WebFont from 'webfontloader';
 
-import App                from './App';
-import store              from './store';
+import App from './App';
+import store from './store';
 import * as serviceWorker from './serviceWorker';
 
 WebFont.load({
-  google: {
-    families: ['Roboto:300,400,500,600,700', 'sans-serif'],
-  },
+	google: {
+		families: ['Roboto:300,400,500,600,700', 'sans-serif'],
+	},
 });
 
 ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('root')
+	<Provider store={store}>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</Provider>,
+	document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

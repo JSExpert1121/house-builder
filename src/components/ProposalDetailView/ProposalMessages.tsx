@@ -87,19 +87,9 @@ const styles = createStyles((theme: Theme) => ({
 
 interface ProposalDetailMessagesProps extends RouteComponentProps {
 	proposal: any;
-	getProposalMessages: (
-		id: number,
-		something: number,
-		pageSize: number,
-		cb: any
-	) => Promise<void>;
-	addMessageToProposal: (
-		prop_id: number,
-		message: any,
-		cb: any,
-		cont_type: any
-	) => Promise<void>;
-	addFileToPropMessage: (msg_id: number, files: any, cb: any) => Promise<void>;
+	getProposalMessages: (id: number, something: number, pageSize: number) => Promise<any>;
+	addMessageToProposal: (prop_id: number, message: any, cont_type: any) => Promise<any>;
+	addFileToPropMessage: (msg_id: number, files: File[]) => Promise<void>;
 	userProfile: UserProfile;
 	classes: ClassNameMap<string>;
 }
@@ -112,14 +102,11 @@ interface ProposalDetailMessagesState {
 	canLoadMore: boolean;
 	toBottom: boolean;
 	pageSize: number;
-	files: any;
+	files: File[];
 	isLoadingMore: boolean;
 }
 
-class ConnectedProposalDetailMessages extends React.Component<
-	ProposalDetailMessagesProps,
-	ProposalDetailMessagesState
-	> {
+class ConnectedProposalDetailMessages extends React.Component<ProposalDetailMessagesProps, ProposalDetailMessagesState> {
 	private messageEndRef: React.RefObject<HTMLInputElement> = React.createRef();
 
 	constructor(props) {
@@ -140,21 +127,18 @@ class ConnectedProposalDetailMessages extends React.Component<
 	async componentWillMount() {
 		const { proposal } = this.props;
 
-		await this.props.getProposalMessages(
-			proposal.proposal.id,
-			0,
-			this.state.pageSize,
-			res => {
-				let { messageList } = this.state;
-
-				messageList = messageList.concat(res.content.reverse());
-				this.setState({
-					messageList: messageList,
-					canLoadMore: !res.last,
-					toBottom: true,
-				});
-			}
-		);
+		try {
+			const res = await this.props.getProposalMessages(proposal.proposal.id, 0, this.state.pageSize);
+			let { messageList } = this.state;
+			messageList = messageList.concat(res.content.reverse());
+			this.setState({
+				messageList: messageList,
+				canLoadMore: !res.last,
+				toBottom: true,
+			});
+		} catch (error) {
+			console.log('ProposalMessages.CWM: ', error);
+		}
 	}
 
 	componentDidUpdate() {
@@ -177,46 +161,40 @@ class ConnectedProposalDetailMessages extends React.Component<
 			1 ===
 			0 &&
 			this.state.files.length === 0
-		)
-			return;
+		) return;
 
-		this.setState({
-			isSending: true,
-		});
+		this.setState({ isSending: true });
+		try {
+			const res = await this.props.addMessageToProposal(
+				proposal.proposal.id,
+				{
+					content: this.state.messageInput,
+					updatedBy: userProfile.email,
+				},
+				match.url.substring(1, 7)
+			);
 
-		this.props.addMessageToProposal(
-			proposal.proposal.id,
-			{
-				content: this.state.messageInput,
-				updatedBy: userProfile.email,
-			},
-			async res => {
-				await this.props.addFileToPropMessage(
-					res.id,
-					this.state.files,
-					async res1 => {
-						let message = res;
+			await this.props.addFileToPropMessage(res.id, this.state.files);
+			let message = res;
 
-						message.proposalMessageFiles = [];
-						for (let k = 0; k < this.state.files.length; k++) {
-							message.proposalMessageFiles.push({
-								name: this.state.files[k].name,
-							});
-						}
+			message.proposalMessageFiles = [];
+			for (let k = 0; k < this.state.files.length; k++) {
+				message.proposalMessageFiles.push({
+					name: this.state.files[k].name,
+				});
+			}
 
-						messageList.push(res);
-						this.setState({
-							messageList: messageList,
-							toBottom: true,
-							isSending: false,
-							messageInput: '',
-							files: [],
-						});
-					}
-				);
-			},
-			match.url.substring(1, 7)
-		);
+			messageList.push(res);
+			this.setState({
+				messageList: messageList,
+				toBottom: true,
+				isSending: false,
+				messageInput: '',
+				files: [],
+			});
+		} catch (error) {
+			console.log('ProposalMessages.handleSendMessage: ', error);
+		}
 	};
 
 	handleMessageKey = ev => {
@@ -234,33 +212,34 @@ class ConnectedProposalDetailMessages extends React.Component<
 		if (this.state.isLoadingMore) return;
 
 		this.setState({ isLoadingMore: true, toBottom: false });
+		try {
+			const res = await this.props.getProposalMessages(
+				proposal.proposal.id,
+				pagen,
+				this.state.pageSize);
 
-		await this.props.getProposalMessages(
-			proposal.proposal.id,
-			pagen,
-			this.state.pageSize,
-			res => {
-				let contents = res.content.reverse();
+			let contents = res.content.reverse();
 
-				let i = 0;
+			let i = 0;
 
-				for (i = 0; i < contents.length; i++) {
-					if (contents[i].id === messageList[0].id) {
-						break;
-					}
+			for (i = 0; i < contents.length; i++) {
+				if (contents[i].id === messageList[0].id) {
+					break;
 				}
-
-				contents.splice(i, contents.length - i);
-				messageList = contents.concat(messageList);
-
-				this.setState({
-					messageList: messageList,
-					isLoadingMore: false,
-					canLoadMore: !res.last,
-					toBottom: false,
-				});
 			}
-		);
+
+			contents.splice(i, contents.length - i);
+			messageList = contents.concat(messageList);
+
+			this.setState({
+				messageList: messageList,
+				isLoadingMore: false,
+				canLoadMore: !res.last,
+				toBottom: false,
+			});
+		} catch (error) {
+			console.log('ProposalMessages.handleLoadMore: ', error);
+		}
 	};
 
 	handleUploadFiles = extraFiles => {

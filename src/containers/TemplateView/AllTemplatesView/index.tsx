@@ -28,7 +28,7 @@ import removeMd from 'remove-markdown';
 
 import CustomTableCell from "components/shared/CustomTableCell";
 import Button from 'components/CustomButtons/Button';
-import { createTemplate, deleteTemplate, getTemplatesO, selectTemplate } from 'actions/tem-actions';
+import { createTemplate, deleteTemplate, getTemplates, selectTemplate } from 'actions/tem-actions';
 import { MaterialThemeHOC, UserProfile, TemplatePostInfo, Templates } from 'types/global';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 
@@ -64,7 +64,7 @@ const styles = theme => createStyles({
 });
 
 interface ConnAllTemplateViewProps extends MaterialThemeHOC {
-	getTemplatesO: (currentPage: number, rowsPerPage: number) => Promise<void>;
+	getTemplates: (currentPage: number, rowsPerPage: number) => Promise<void>;
 	selectTemplate: (id: string) => Promise<void>;
 	deleteTemplate: (id: string) => Promise<void>;
 	createTemplate: (data: TemplatePostInfo) => Promise<void>;
@@ -105,13 +105,13 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 	}
 
 	componentDidMount() {
-		this.props.getTemplatesO(0, 20);
+		this.props.getTemplates(0, 20);
 	}
 
 	handleChangePage = (event, page) => {
 		this.setState({ currentPage: page });
 
-		this.props.getTemplatesO(page, this.state.rowsPerPage);
+		this.props.getTemplates(page, this.state.rowsPerPage);
 	};
 
 	handleChangeRowsPerPage = event => {
@@ -125,7 +125,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 			currentPage: currentPage,
 		});
 
-		this.props.getTemplatesO(currentPage, rowsPerPage);
+		this.props.getTemplates(currentPage, rowsPerPage);
 	};
 
 	createTemplate = async () => {
@@ -139,7 +139,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 		this.setState({ isBusy: true, openCategoryForm: false });
 		try {
 			await this.props.createTemplate(data);
-			await this.props.getTemplatesO(0, this.state.rowsPerPage);
+			await this.props.getTemplates(0, this.state.rowsPerPage);
 			this.setState({
 				showMessage: true,
 				message: 'Create Template success',
@@ -171,7 +171,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 				curPage--;
 			}
 
-			await this.props.getTemplatesO(curPage, this.state.rowsPerPage);
+			await this.props.getTemplates(curPage, this.state.rowsPerPage);
 			this.setState({
 				isBusy: false,
 				showMessage: true,
@@ -330,7 +330,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-	getTemplatesO,
+	getTemplates,
 	selectTemplate,
 	deleteTemplate,
 	createTemplate,

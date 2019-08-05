@@ -16,7 +16,7 @@ import ContractorView from 'components/Contractor';
 import ProposalView from './ProposalView';
 import ProposalEditView from './ProposalEditView';
 import { awardProject } from 'actions/gen-actions';
-import { deleteProposal, getProposalData } from 'actions/global-actions';
+import { deleteProposal } from 'actions/sub-actions';
 import { ProjectInfo } from 'types/project';
 import { UserProfile, CmnObject } from 'types/global';
 import { ProposalPostInfo, ProposalDetailInfo } from 'types/proposal';
@@ -55,7 +55,6 @@ const styles = createStyles(theme => ({
 }));
 
 interface IProposalOverviewProps extends RouteComponentProps<{ id: string; }> {
-    getProposalData: (id: string) => Promise<void>;
     deleteProposal: (id: string) => Promise<void>;
     awardProject: (id: string) => Promise<void>;
     handleOverviewChange: (data: ProposalPostInfo) => void;
@@ -278,7 +277,6 @@ class ProposalOverview extends Component<IProposalOverviewProps, IProposalOvervi
 }
 
 const mapDispatchToProps = {
-    getProposalData,
     deleteProposal,
     awardProject,
 };

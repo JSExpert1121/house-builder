@@ -22,7 +22,6 @@ import ConfirmDialog from 'components/shared/ConfirmDialog';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
 import CustomTableCell from "components/shared/CustomTableCell";
 import {
-    getProposalData,
     getProposalsByProjectId,
     setDetailProposal,
     setProposalsCompare
@@ -71,7 +70,6 @@ const styles = createStyles(theme => ({
 
 export interface IProjectProposalsProps extends RouteComponentProps {
     classes: ClassNameMap<string>;
-    getProposalData: (id: string) => Promise<void>;
     getProposalsByProjectId: (id: string, page: number, size: number) => Promise<void>;
     setProposals4Compare: (proposals: Array<string>) => void;
     setProposalDetail: (proposal: ProjectInfo) => void;
@@ -320,7 +318,6 @@ class ProjectProposals extends React.Component<IProjectProposalsProps, IProjectP
 }
 
 const mapDispatchToProps = {
-    getProposalData,
     getProposalsByProjectId,
     setProposals4Compare: setProposalsCompare,
     setProposalDetail: setDetailProposal,

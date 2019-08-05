@@ -20,7 +20,8 @@ import ConfirmDialog from 'components/shared/ConfirmDialog';
 import Ellipsis from 'components/Typography/Ellipsis';
 
 import { getArchivedProjectsByGenId } from 'actions/gen-actions';
-import { deleteProject, setCurrentProject } from 'actions/global-actions';
+import { setCurrentProject } from 'actions/global-actions';
+import { deleteProject } from 'actions/gen-actions';
 import { UserProfile } from 'types/global';
 import { Projects } from 'types/project';
 
@@ -96,7 +97,7 @@ class ArchivedProject extends React.Component<ArchivedProjectProps, ArchivedProj
 
         this.setState({ isBusy: true });
         try {
-            await this.props.getArchivedProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 0);
+            await this.props.getArchivedProjectsByGenId(userProfile.user_metadata.contractor_id, 0, 20);
         } catch (error) {
             console.log(error);
         }

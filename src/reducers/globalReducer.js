@@ -3,7 +3,6 @@ import {
 	CLEAR_PROPOSAL_MESSAGES,
 	CLEAR_SELECTED_PROJECT,
 	CLEAR_SELECTED_PROPOSAL,
-	PROJECT_BIDDERS_LOADED,
 	PROJECT_DETAIL_LOADED,
 	PROPOSAL_MESSAGES_LOADED,
 	PROPOSALS_LOADED,
@@ -48,10 +47,6 @@ const globalReducer = handleActions(
 		[PROJECT_DETAIL_LOADED]: (state, action) => ({
 			...state,
 			project: action.payload,
-		}),
-		[PROJECT_BIDDERS_LOADED]: (state, action) => ({
-			...state,
-			projectBidders: action.payload,
 		}),
 		[SET_CURRENT_PROJECT]: (state, action) => ({
 			...state,

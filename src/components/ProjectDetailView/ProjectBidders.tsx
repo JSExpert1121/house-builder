@@ -21,7 +21,8 @@ import CustomTableCell from 'components/shared/CustomTableCell';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import SpecialtySearchBar from 'components/SearchBar/SpecialtySearchBar';
 import { getContractors, getSpecialties, selectContractor, } from 'actions/cont-actions';
-import { getProjectBiddersData, inviteContractor, searchFilter, } from 'actions/global-actions';
+import { searchContractors } from 'actions/cont-actions';
+import { getInvitedBidders, inviteContractor } from 'actions/gen-actions';
 import { ProjectInfo } from 'types/project';
 import { Contractors, ContractorInfo } from 'types/contractor';
 import { Specialties } from 'types/global';
@@ -29,7 +30,7 @@ import { Specialties } from 'types/global';
 const styles = createStyles(theme => ({
 	root: {
 		padding: theme.spacing(1),
-        minHeight: 'calc(100vh - 64px - 56px - 48px - 8px)'
+		minHeight: 'calc(100vh - 64px - 56px - 48px - 8px)'
 	},
 	tableWrap: {
 		overflow: 'auto',
@@ -233,13 +234,13 @@ const components = {
 */
 
 interface IProjectBiddersProps extends RouteComponentProps {
-	getProjectBiddersData: (id: string, page: number, size: number) => Promise<void>;
+	getInvitedBidders: (id: string, page: number, size: number) => Promise<void>;
 	selectContractor: (id: string) => Promise<void>;
 	getSpecialties: (page: number, size: number) => Promise<void>;
-	searchFilter: (name: string, city: string, specs: Array<string>) => Promise<void>;
+	searchContractors: (name: string, city: string, specs: Array<string>) => Promise<void>;
 	getContrators0: (page: number, size: number) => Promise<void>;
 	inviteContractor: (id: string, sudid: string) => Promise<void>;
-	projectBidders: ContractorInfo[];
+	invited: ContractorInfo[];
 	project: ProjectInfo;
 	searchResult: ContractorInfo[];
 	specialties: Specialties;
@@ -248,7 +249,7 @@ interface IProjectBiddersProps extends RouteComponentProps {
 }
 
 interface IProjectBiddersState extends ISnackbarProps {
-	projectBidders?: ContractorInfo[];
+	invited?: ContractorInfo[];
 	contractors?: Contractors;
 	rowsPerPage: number;
 	currentPage: number;
@@ -275,7 +276,7 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 			name: '',
 			description: '',
 			order: 'desc',
-			projectBidders: undefined,
+			invited: undefined,
 			contractors: undefined,
 			showMessage: false,
 			message: '',
@@ -288,7 +289,7 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 		const { project } = this.props;
 		this.setState({ isBusy: true });
 		await this.props.getContrators0(0, 20);
-		await this.props.getProjectBiddersData(project.id, 0, 20);
+		await this.props.getInvitedBidders(project.id, 0, 20);
 		await this.props.getSpecialties(0, 20);
 		this.setState({ isBusy: false });
 	}
@@ -297,9 +298,9 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 		this.setState({ showMessage: false });
 	}
 
-	componentWillReceiveProps({ projectBidders, contractors, searchResult }) {
+	componentWillReceiveProps({ invited, contractors, searchResult }) {
 		this.setState({
-			projectBidders: projectBidders,
+			invited: invited,
 			contractors: contractors,
 		});
 		if (searchResult)
@@ -307,13 +308,13 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 	}
 
 	handleSearch = (name, city, specs) => {
-		this.props.searchFilter(name, city, specs);
+		this.props.searchContractors(name, city, specs);
 	}
 
 	handleChangePage = (event, page) => {
 		const { project } = this.props;
 		this.setState({ currentPage: page });
-		this.props.getProjectBiddersData(project.id, page, this.state.rowsPerPage);
+		this.props.getInvitedBidders(project.id, page, this.state.rowsPerPage);
 	};
 
 	handleChangePage1 = (event, page) => {
@@ -322,18 +323,18 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 	};
 
 	handleChangeRowsPerPage = event => {
-		// const { projectBidders } = this.state;
+		// const { invited } = this.state;
 		// const { project } = this.props;
 		// const rowsPerPage = event.target.value;
 		// const currentPage =
-		// 	rowsPerPage >= projectBidders.totalElements ? 0 : this.state.currentPage;
+		// 	rowsPerPage >= invited.totalElements ? 0 : this.state.currentPage;
 
 		// this.setState({
 		// 	rowsPerPage: rowsPerPage,
 		// 	currentPage: currentPage,
 		// });
 
-		// this.props.getProjectBiddersData(project.id, currentPage, rowsPerPage);
+		// this.props.getInvitedBidders(project.id, currentPage, rowsPerPage);
 	};
 
 	handleChangeRowsPerPage1 = event => {
@@ -351,8 +352,8 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 	};
 
 	isInvited = id => {
-		return this.props.projectBidders.some(bidder => bidder.id === id);
-		// const value = this.props.projectBidders.map(row => {
+		return this.props.invited.some(bidder => bidder.id === id);
+		// const value = this.props.invited.map(row => {
 		// 	return row.id === id;
 		// });
 
@@ -380,7 +381,7 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 				this.state.currentPage1,
 				this.state.rowsPerPage1
 			);
-			await this.props.getProjectBiddersData(
+			await this.props.getInvitedBidders(
 				project.id,
 				this.state.currentPage,
 				this.state.rowsPerPage
@@ -404,10 +405,10 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 
 	render() {
 		const { classes, specialties } = this.props;
-		const { contractors, projectBidders } = this.state;
+		const { contractors, invited } = this.state;
 		const suggestions = specialties ? specialties.content || [] : [];
 
-		if (!projectBidders || !contractors) {
+		if (!invited || !contractors) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}
 		return (
@@ -426,7 +427,7 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{projectBidders.map(row => (
+								{invited.map(row => (
 									<TableRow className={classes.row} key={row.id} hover>
 										<CustomTableCell
 											onClick={() => this.gotoContractor(row.id)}
@@ -459,7 +460,7 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 						style={{ overflow: 'auto' }}
 						rowsPerPageOptions={[5, 10, 20]}
 						component="div"
-						count={projectBidders.length}
+						count={invited.length}
 						rowsPerPage={this.state.rowsPerPage}
 						page={this.state.currentPage}
 						backIconButtonProps={{ 'aria-label': 'Previous Page' }}
@@ -561,7 +562,7 @@ class ProjectBidders extends React.Component<IProjectBiddersProps, IProjectBidde
 }
 
 const mapStateToProps = state => ({
-	projectBidders: state.global_data.projectBidders,
+	invited: state.gen_data.invited,
 	project: state.global_data.project,
 	searchResult: state.global_data.searchResult,
 	specialties: state.cont_data.specialties,
@@ -569,10 +570,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-	getProjectBiddersData,
+	getInvitedBidders,
 	selectContractor,
 	getSpecialties,
-	searchFilter,
+	searchContractors,
 	getContrators0: getContractors,
 	inviteContractor,
 };

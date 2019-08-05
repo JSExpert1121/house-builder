@@ -17,7 +17,7 @@ import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar
 import SpecialtySearchBar from 'components/SearchBar/SpecialtySearchBar';
 
 import { getContractors, getSpecialties, selectContractor } from 'actions/cont-actions';
-import { searchFilter } from 'actions/global-actions';
+import { searchContractors } from 'actions/cont-actions';
 import { UserProfile, Specialties } from 'types/global';
 import { Contractors } from 'types/contractor';
 import style from './SearchBidderList.style';
@@ -26,7 +26,7 @@ interface ISearchBidderListProps extends RouteComponentProps, StyledComponentPro
 	getContractors: (page: number, size: number) => Promise<void>;
 	selectContractor: (id: string) => Promise<void>;
 	getSpecialties: (page?: number, size?: number) => Promise<void>;
-	searchFilter: (name: string, city: string, specs: string[]) => Promise<void>;
+	searchContractors: (name: string, city: string, specs: string[]) => Promise<void>;
     userProfile: UserProfile;
     contractors: Contractors;
     specialties: Specialties
@@ -90,7 +90,7 @@ class SearchBidderList extends React.Component<ISearchBidderListProps, ISearchBi
 
 	handleSearch = (name, city, specs) => {
 		if (specs && specs.length > 0) {
-			this.props.searchFilter(name, city, specs);
+			this.props.searchContractors(name, city, specs);
 		} else {
 			this.props.getContractors(0, 20);
 		}
@@ -188,7 +188,7 @@ const mapDispatchToProps = {
 	getContractors,
 	selectContractor,
 	getSpecialties,
-	searchFilter,
+	searchContractors,
 };
 
 const mapStateToProps = state => ({

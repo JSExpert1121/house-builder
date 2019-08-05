@@ -21,7 +21,7 @@ import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar
 import CustomTableCell from 'components/shared/CustomTableCell';
 import Ellipsis from 'components/Typography/Ellipsis';
 import { UserProfile } from 'types/global';
-import { deleteProposal, getProposals } from 'actions/global-actions';
+import { deleteProposal, getProposals } from 'actions/sub-actions';
 import { Proposals } from 'types/proposal';
 
 const styles = createStyles((theme: Theme) => ({

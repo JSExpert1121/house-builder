@@ -20,15 +20,8 @@ import ProposalDetailMessages from './ProposalMessages';
 import ProposalTemplEditView from './ProposalTemplEditView';
 import ConfirmDialog from 'components/shared/ConfirmDialog';
 
-import {
-    addOption,
-    deleteOption,
-    deleteProposal,
-    getProposalDetails,
-    submitProposal,
-    updateOption,
-    updateProposal,
-} from 'actions/global-actions';
+import { addOption, deleteOption, getProposalDetails, updateOption } from 'actions/global-actions';
+import { deleteProposal, submitProposal, updateProposal } from 'actions/sub-actions';
 import { awardProject } from 'actions/gen-actions';
 
 import { ProposalPostInfo, ProposalDetailInfo, ProposalInfo } from 'types/proposal';

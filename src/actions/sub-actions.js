@@ -1,35 +1,26 @@
-import restAPI                                    from '../services';
-import {createActions}                            from 'redux-actions';
-import {proposalsLoaded}                          from './global-actions';
-import {clearProjects}                            from './gen-actions';
-import {CLEAR_PROPOSALS, INVITED_PROJECT_LOADED,} from '../constants/sub-action-types';
+import { createActions } from 'redux-actions';
+import { proposalsLoaded } from './global-actions';
+import { CLEAR_PROPOSALS, INVITED_PROJECT_LOADED, } from '../constants/sub-action-types';
+import ContApi from '../api/contractor';
+import PropApi from '../api/proposal';
 
-export const {clearProposals, invitedProjectLoaded} = createActions({
-  [CLEAR_PROPOSALS]: () => null,
-  [INVITED_PROJECT_LOADED]: (payload) => payload,
+export const { clearProposals, invitedProjectLoaded } = createActions({
+	[CLEAR_PROPOSALS]: () => null,
+	[INVITED_PROJECT_LOADED]: (payload) => payload,
 });
 
-export function getProposals(cont_id, page, row, filterStr) {
-  return function (dispatch) {
-    dispatch(clearProposals());
-    return restAPI
-        .get('contractors/' + cont_id + '/proposals', {
-          page: page,
-          size: row,
-          status: filterStr
-        })
-        .then(res => dispatch(proposalsLoaded(res.data)));
-  };
-}
+export const getInvitedProjects = (id, page, size) => dispatch => ContApi.getInvitedProjects(id, page, size).then(data => {
+	dispatch(invitedProjectLoaded(data));
+});
 
-export function getInvitedProjectsByGenId(id, page, rowSize) {
-  return function (dispatch) {
-    dispatch(clearProjects);
-    return restAPI
-        .get('projects/invites/' + id, {
-          page: page,
-          size: rowSize,
-        })
-        .then(response => dispatch(invitedProjectLoaded(response.data)));
-  };
-}
+
+export const submitProposal = (cont_id, pro_id, proposal) => dispatch => PropApi.submit(cont_id, pro_id, proposal);
+export const updateProposal = (prop_id, proposal) => dispatch => PropApi.update(prop_id, proposal);
+export const deleteProposal = prop_id => dispatch => PropApi.delete(prop_id);
+
+export const getProposals = (cont_id, page, size, status) => dispatch => {
+	return ContApi.getProposals(cont_id, page, size, status).then(data => {
+		dispatch(proposalsLoaded(data));
+	});
+};
+

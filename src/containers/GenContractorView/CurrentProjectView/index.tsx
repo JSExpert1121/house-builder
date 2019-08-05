@@ -21,7 +21,8 @@ import ConfirmDialog from 'components/shared/ConfirmDialog';
 import Ellipsis from 'components/Typography/Ellipsis';
 
 import { getProjectsByGenId } from 'actions/gen-actions';
-import { setCurrentProject, archiveProject } from 'actions/global-actions';
+import { setCurrentProject } from 'actions/global-actions';
+import { archiveProject } from 'actions/gen-actions';
 import { UserProfile } from 'types/global';
 import { Projects } from 'types/project';
 

@@ -3,12 +3,9 @@ import Axios from 'axios';
 const SPEC_API_PATH = process.env.REACT_APP_PROJECT_API + 'specialties/';
 
 export default {
-	loadPage: (pageNo, pageSize) => {
+	loadPage: (page, size) => {
 		return Axios.get(SPEC_API_PATH, {
-			params: {
-				page: pageNo,
-				size: pageSize,
-			},
+			params: { page, size }
 		}).then(res => res.data);
 	},
 

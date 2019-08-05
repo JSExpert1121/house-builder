@@ -24,8 +24,8 @@ import removeMd from 'remove-markdown';
 
 import Button from "components/CustomButtons/Button.jsx";
 import CustomTableCell from "components/shared/CustomTableCell";
-import { deleteProject } from 'actions/global-actions';
-import { getInvitedProjectsByGenId } from 'actions/sub-actions';
+import { deleteProject } from 'actions/gen-actions';
+import { getInvitedProjects } from 'actions/sub-actions';
 import { Projects } from 'types/project';
 import { UserProfile } from 'types/global';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
@@ -51,7 +51,7 @@ const styles = createStyles((theme: Theme) => ({
 
 interface InvitedProViewProps extends RouteComponentProps {
 	classes: ClassNameMap<string>;
-	getInvitedProjectsByGenId: (id: string, page: number, size: number) => Promise<void>;
+	getInvitedProjects: (id: string, page: number, size: number) => Promise<void>;
 	deleteProject: (id: string) => Promise<void>;
 	projects: Projects;
 	userProfile: UserProfile;
@@ -84,7 +84,7 @@ class InvitedProView extends React.Component<InvitedProViewProps, InvitedProView
 
 	componentDidMount() {
 		const { userProfile } = this.props;
-		this.props.getInvitedProjectsByGenId(
+		this.props.getInvitedProjects(
 			userProfile.user_metadata.contractor_id,
 			0, 0
 		);
@@ -94,7 +94,7 @@ class InvitedProView extends React.Component<InvitedProViewProps, InvitedProView
 		const { userProfile } = this.props;
 		this.setState({ currentPage: page });
 
-		this.props.getInvitedProjectsByGenId(
+		this.props.getInvitedProjects(
 			userProfile.user_metadata.contractor_id,
 			page,
 			this.state.rowsPerPage
@@ -113,7 +113,7 @@ class InvitedProView extends React.Component<InvitedProViewProps, InvitedProView
 			currentPage: currentPage,
 		});
 
-		this.props.getInvitedProjectsByGenId(
+		this.props.getInvitedProjects(
 			userProfile.user_metadata.contractor_id,
 			currentPage,
 			rowsPerPage
@@ -136,7 +136,7 @@ class InvitedProView extends React.Component<InvitedProViewProps, InvitedProView
 				curPage--;
 			};
 
-			await this.props.getInvitedProjectsByGenId(
+			await this.props.getInvitedProjects(
 				userProfile.user_metadata.contractor_id,
 				curPage, this.state.rowsPerPage
 			);
@@ -283,7 +283,7 @@ class InvitedProView extends React.Component<InvitedProViewProps, InvitedProView
 }
 
 const mapDispatchToProps = {
-	getInvitedProjectsByGenId,
+	getInvitedProjects,
 	deleteProject
 };
 

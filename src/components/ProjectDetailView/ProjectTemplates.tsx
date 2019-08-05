@@ -9,8 +9,7 @@ import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { withStyles, createStyles } from '@material-ui/core/styles';
-import { ClassNameMap } from '@material-ui/styles/withStyles';
+import { withStyles, createStyles, StyledComponentProps } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
@@ -22,10 +21,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import removeMd from 'remove-markdown';
 
-import { addTemplate, deleteTemplate, getTemplates } from 'actions/gen-actions';
-import { getProjectData } from 'actions/global-actions';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
-import CustomTableCell from '../shared/CustomTableCell';
+import CustomTableCell from 'components/shared/CustomTableCell';
+
+import { addTemplate, deleteTemplate } from 'actions/gen-actions';
+import { getProjectData } from 'actions/global-actions';
+import { getTemplates } from 'actions/tem-actions';
+
 import { ISnackbarProps } from 'types/components';
 import { Templates } from 'types/global';
 import { ProjectInfo } from 'types/project';
@@ -70,7 +72,7 @@ const styles = createStyles(theme => ({
     },
 }));
 
-export interface IProjectTemplatesProps extends RouteComponentProps {
+export interface IProjectTemplatesProps extends RouteComponentProps, StyledComponentProps {
     templates: Templates;
     project: ProjectInfo;
     userProfile: UserProfile;
@@ -78,7 +80,6 @@ export interface IProjectTemplatesProps extends RouteComponentProps {
     addTemplate: (projid: string, templid: string) => Promise<void>;
     deleteTemplate: (projid: string, templid: string) => Promise<void>;
     getProjectData: (id: string) => Promise<void>;
-    classes: ClassNameMap<string>;
 }
 
 export interface IProjectTemplatesState extends ISnackbarProps {
@@ -137,7 +138,7 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
         const { project } = this.props;
         const { template } = this.state;
 
-        this.setState({isBusy: true});
+        this.setState({ isBusy: true });
         try {
             await this.props.addTemplate(project.id, template);
             await this.props.getProjectData(project.id);
@@ -169,7 +170,7 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
     handleDelete = async (templ_id: string) => {
         const { project } = this.props;
 
-        this.setState({isBusy: true});
+        this.setState({ isBusy: true });
         try {
             await this.props.deleteTemplate(project.id, templ_id);
             await this.props.getProjectData(project.id);
@@ -319,7 +320,7 @@ class ProjectTemplates extends React.Component<IProjectTemplatesProps, IProjectT
 }
 
 const mapStateToProps = state => ({
-    templates: state.gen_data.templates,
+    templates: state.tem_data.templates,
     project: state.global_data.project,
     userProfile: state.global_data.userProfile,
 });

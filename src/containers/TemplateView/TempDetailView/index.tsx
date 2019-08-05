@@ -34,7 +34,7 @@ import {
 	editTemplate,
 	selectCategory,
 	selectTemplate,
-	getTemplatesO
+	getTemplates
 } from 'actions/tem-actions';
 import { MaterialThemeHOC, UserProfile, TemplateDetailInfo, CategoryPostInfo, TemplatePostInfo } from 'types/global';
 
@@ -92,7 +92,7 @@ const styles = theme => createStyles({
 });
 
 interface ConnTempDetailViewProps extends MaterialThemeHOC, RouteComponentProps {
-	getTemplatesO: (currentPage: number, rowsPerPage: number) => Promise<void>;
+	getTemplates: (currentPage: number, rowsPerPage: number) => Promise<void>;
 	selectCategory: (id: string) => Promise<void>;
 	addCategory: (id: string, data: CategoryPostInfo) => Promise<void>;
 	selectTemplate: (id: string) => Promise<TemplateDetailInfo>;
@@ -196,7 +196,7 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 		this.setState({ isBusy: true });
 		try {
 			await this.props.deleteTemplate(template.id);
-			await this.props.getTemplatesO(0, 20);
+			await this.props.getTemplates(0, 20);
 			this.setState({
 				showMessage: true,
 				message: 'Template deleted',
@@ -463,7 +463,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-	getTemplatesO,
+	getTemplates,
 	selectTemplate,
 	selectCategory,
 	deleteCategory,
