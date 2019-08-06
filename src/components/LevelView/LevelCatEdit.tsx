@@ -78,6 +78,7 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
     const [width, setWidth] = React.useState(item.contents['width'] as number);
     const [height, setHeight] = React.useState(item.contents['height'] as number);
     const [length, setLength] = React.useState(item.contents['length'] as number);
+    const [desc, setDesc] = React.useState(item.description);
 
     const classes = useStyles({});
 
@@ -85,7 +86,7 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
         const data: ProjectLevelCategory = {
             id: item.id,
             title: item.title,
-            description: item.description,
+            description: desc,
             contents: {
                 width,
                 height,
@@ -108,7 +109,57 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                         {item.title}
                     </Typography>
                 </Box>
-                <Box>
+                <Box style={{ display: 'flex' }}>
+                    <Grid container direction='row-reverse'>
+                        <Grid item xs={12} md={8} style={{ padding: '8px 16px' }}>
+                            <TextField
+                                label="Description"
+                                margin="normal"
+                                value={desc}
+                                fullWidth={true}
+                                multiline={true}
+                                rowsMax={12}
+                                onChange={e => setDesc(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={4} style={{ padding: '8px 16px' }}>
+                            <TextField
+                                label="Width"
+                                margin="normal"
+                                value={width}
+                                type='number'
+                                fullWidth={true}
+                                onChange={e => setWidth(parseFloat(e.target.value))}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                label="Height"
+                                margin="normal"
+                                value={height}
+                                type='number'
+                                fullWidth={true}
+                                onChange={e => setHeight(parseFloat(e.target.value))}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                label="Length"
+                                margin="normal"
+                                value={length}
+                                type='number'
+                                fullWidth={true}
+                                onChange={e => setLength(parseFloat(e.target.value))}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">m</InputAdornment>,
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                </Box>
+                {/* <Box>
                     {
                         item.description && (
                             <Typography
@@ -162,7 +213,7 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                             />
                         </Grid>
                     </Grid>
-                </Box>
+                </Box> */}
 
                 <Box className={classes.doneContainer}>
                     <Button

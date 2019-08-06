@@ -97,14 +97,14 @@ const ProjectLevels: React.SFC<IProjectLevelsProps> = props => {
 
     return (
         <Box className={classes.root}>
-            {!levels && editable && (
+            {!levels.length && editable && (
                 <Box className={classes.buttonContainer}>
                     <Button onClick={showDialog} color="primary">
                         <AddIcon />&nbsp;&nbsp;Add Level
                     </Button>
                 </Box>
             )}
-            {levels && (
+            {!!levels.length && (
                 <React.Fragment>
                     <Box className={classes.tabs}>
                         <Tabs

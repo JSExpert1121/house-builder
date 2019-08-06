@@ -11,7 +11,7 @@ import { ClassNameMap } from '@material-ui/styles/withStyles';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import CustomTabs from "components/shared/CustomTabs";
 import AddProjectOverview, { ProjectBriefInfo } from './Overview';
-import AddProjectLevels from './Levels';
+import ProjectLevels from 'components/ProjectDetailView/ProjectLevels';
 import SecuredRoute from 'routers/SecuredRoute';
 import { addFilesToProject, addProject } from 'actions/gen-actions';
 
@@ -75,7 +75,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
             dueDate: new Date(),
             isBusy: false,
             files: [],
-            levels: undefined,
+            levels: [],
             showMessage: false,
             message: '',
             variant: 'error',
@@ -178,11 +178,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
             levels[i].id--;
         }
 
-        if (levels.length === 0) {
-            this.setState({ levels: undefined });
-        } else {
-            this.setState({ levels: [...levels] });
-        }
+        this.setState({ levels: [...levels] });
     }
 
     addCategory = (id: number, cat: ProjectLevelCategory) => {
@@ -264,7 +260,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
                         <SecuredRoute
                             path={tabs[1].href}
                             render={props => (
-                                <AddProjectLevels {...props}
+                                <ProjectLevels {...props}
                                     levels={levels}
                                     addLevel={this.addLevel}
                                     deleteLevel={this.deleteLevel}

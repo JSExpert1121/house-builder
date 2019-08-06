@@ -28,11 +28,22 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingRight: theme.spacing(1.5),
         color: '#222'
     },
+    value: {
+        fontWeight: 500,
+        fontSize: '1.0em',
+        padding: theme.spacing(0, 1),
+        color: '#222',
+        flexGrow: 1,
+        textAlign: 'right',
+    },
+    space: {
+        flexGrow: 3
+    },
     action: {
         display: 'flex',
         position: 'absolute',
         right: theme.spacing(2),
-        top: theme.spacing(2)
+        top: theme.spacing(2),
     },
     item: {
         padding: theme.spacing(1)
@@ -43,6 +54,7 @@ interface ILevelCatItemProps {
     handleDelete: (id: number) => void;
     handleEdit: (id: number) => void;
     item: ProjectLevelCategory;
+    edit: boolean;
 }
 
 const LevelCatItem: React.SFC<ILevelCatItemProps> = (props) => {
@@ -65,7 +77,44 @@ const LevelCatItem: React.SFC<ILevelCatItemProps> = (props) => {
                         {item.title}
                     </Typography>
                 </Box>
-                <Box>
+                <Box style={{ display: 'flex' }}>
+                    <Grid container direction='row-reverse'>
+                        <Grid item xs={12} md={8} style={{ padding: '8px 16px' }}>
+                            <Typography className={classes.subtitle}>Description:</Typography>
+                            {
+                                item.description && <Typography variant='body2'>{item.description}</Typography>
+                            }
+                        </Grid>
+                        <Grid item xs={12} md={4} style={{ padding: '8px 16px', display: 'flex' }}>
+                            <Box>
+                                <Typography style={{ display: 'flex' }}>
+                                    {'Width:'}<span className={classes.value}>{item.contents['width']}</span>
+                                </Typography>
+                                <Typography style={{ display: 'flex' }}>
+                                    {'Height:'}<span className={classes.value}>{item.contents['height']}</span>
+                                </Typography>
+                                <Typography style={{ display: 'flex' }}>
+                                    {'Length:'}<span className={classes.value}>{item.contents['length']}</span>
+                                </Typography>
+                            </Box>
+                            <Box style={{ flexGrow: 1 }}>
+                                <Typography style={{ flexGrow: 1 }}>m</Typography>
+                                <Typography style={{ flexGrow: 1 }}>m</Typography>
+                                <Typography style={{ flexGrow: 1 }}>m</Typography>
+                            </Box>
+                            {/* <Typography style={{ display: 'flex' }}>
+                                {'Width:'}<span className={classes.value}>{item.contents['width']}</span>m<span className={classes.space}></span>
+                            </Typography>
+                            <Typography style={{ display: 'flex' }}>
+                                {'Height:'}<span className={classes.value}>{item.contents['height']}</span>m<span className={classes.space}></span>
+                            </Typography>
+                            <Typography style={{ display: 'flex' }}>
+                                {'Length:'}<span className={classes.value}>{item.contents['length']}</span>m<span className={classes.space}></span>
+                            </Typography> */}
+                        </Grid>
+                    </Grid>
+                </Box>
+                {/* <Box>
                     {
                         item.description && (
                             <Typography
@@ -79,26 +128,25 @@ const LevelCatItem: React.SFC<ILevelCatItemProps> = (props) => {
                 </Box>
                 <Box>
                     <Grid container>
-                        <Grid item xs={12} md={4} style={{ padding: 8 }}>
+                        <Grid item xs={12} sm={4} style={{ padding: 8 }}>
                             <Typography>
                                 Width: {`${item.contents['width']}m`}
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} md={4} style={{ padding: 8 }}>
+                        <Grid item xs={12} sm={4} style={{ padding: 8 }}>
                             <Typography>
                                 Height: {`${item.contents['height']}m`}
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} md={4} style={{ padding: 8 }}>
+                        <Grid item xs={12} sm={4} style={{ padding: 8 }}>
                             <Typography>
                                 Length: {`${item.contents['length']}m`}
                             </Typography>
                         </Grid>
-                    </Grid>
-                </Box>
-
+                    </Grid> 
+                </Box> */}
             </Box>
-            {enter && (
+            {enter && props.edit && (
                 <Box className={classes.action}>
                     <IconButton className={classes.item} aria-label="Edit" onClick={(e) => {
                         e.stopPropagation();

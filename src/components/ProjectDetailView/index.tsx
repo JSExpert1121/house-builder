@@ -20,6 +20,7 @@ import ProjectOverView from './ProjectOverView';
 import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
+import ProjectLevelsWrapper from './ProjectLevelsWrapper';
 import { getProjectData } from 'actions/global-actions';
 import { ProjectInfo } from 'types/project';
 
@@ -83,6 +84,7 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
 
         const tabNo = [
             match.url + '/overview',
+            match.url + '/levels',
             match.url + '/files',
             match.url + '/templates',
             match.url + '/proposals',
@@ -123,6 +125,11 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
                                 to={`${match.url}/overview`}
                                 label="Overview"
                             />
+                            <Tab
+                                component={Link}
+                                to={`${match.url}/levels`}
+                                label="Levels"
+                            />
                             <Tab component={Link} to={`${match.url}/files`} label="Files" />
                             <Tab
                                 component={Link}
@@ -153,6 +160,10 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
                             <SecuredRoute
                                 path={`${match.url}/overview`}
                                 component={ProjectOverView}
+                            />
+                            <SecuredRoute
+                                path={`${match.url}/levels`}
+                                component={ProjectLevelsWrapper}
                             />
                             <SecuredRoute
                                 path={`${match.url}/files`}
