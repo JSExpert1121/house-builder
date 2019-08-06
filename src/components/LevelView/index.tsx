@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface ILevelViewProps {
-    edit: boolean;
+    editable: boolean;
     level: ProjectLevel;
     deleteLevel: (lvlId: number) => void;
     addCategory: (lvlId: number, cat: ProjectLevelCategory) => void;
@@ -132,9 +132,9 @@ const LevelView: React.SFC<ILevelViewProps> = (props) => {
         'Living Room',
         'Hallway'
     ];
-    for (let cat of level.categories) {
-        cats.splice(cats.indexOf(cat.title), 1);
-    }
+    // for (let cat of level.categories) {
+    //     cats.splice(cats.indexOf(cat.title), 1);
+    // }
 
     return (
         <Box className={classes.root}>
@@ -148,14 +148,16 @@ const LevelView: React.SFC<ILevelViewProps> = (props) => {
                             {level.description}
                         </Typography>
                     </Box>
-                    <Box className={classes.action}>
-                        <IconButton aria-label="Delete" onClick={(e) => {
-                            e.stopPropagation();
-                            deleteLevel(level.id);
-                        }} >
-                            <DeleteIcon fontSize='large' />
-                        </IconButton>
-                    </Box>
+                    {props.editable && (
+                        <Box className={classes.action}>
+                            <IconButton aria-label="Delete" onClick={(e) => {
+                                e.stopPropagation();
+                                deleteLevel(level.id);
+                            }} >
+                                <DeleteIcon fontSize='large' />
+                            </IconButton>
+                        </Box>
+                    )}
                 </ListItem>
                 <ListItem style={{ padding: '8px 0' }}>
                     <Select
@@ -187,27 +189,26 @@ const LevelView: React.SFC<ILevelViewProps> = (props) => {
                 {level.categories && level.categories.map(cat => {
                     if (cat.id !== edit) {
                         return (
-                            <>
+                            <React.Fragment key={cat.id}>
                                 <Divider />
                                 <LevelCat
-                                    key={cat.id}
+                                    edit={props.editable}
                                     item={cat}
                                     handleDelete={handleDelete}
                                     handleEdit={handleEdit}
                                 />
-                            </>
+                            </React.Fragment>
                         )
                     } else {
                         return (
-                            <>
+                            <React.Fragment key={cat.id}>
                                 <Divider />
                                 <LevelCatEdit
-                                    key={cat.id}
                                     item={cat}
                                     handleSave={saveCategory}
                                     handleCancel={cancelEdit}
                                 />
-                            </>
+                            </React.Fragment>
                         )
                     }
                 })}
