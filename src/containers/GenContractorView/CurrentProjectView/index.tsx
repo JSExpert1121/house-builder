@@ -109,7 +109,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
         this.setState({ isBusy: false });
     };
 
-    handleDeleteProject = async (id: string) => {
+    handleDeleteProject = async () => {
         const { userProfile, projects } = this.props;
 
         this.setState({ isBusy: true, showConfirm: false });

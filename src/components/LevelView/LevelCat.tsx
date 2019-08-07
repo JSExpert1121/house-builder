@@ -74,7 +74,8 @@ const LevelCatItem: React.SFC<ILevelCatItemProps> = (props) => {
             <Box className={classes.container}>
                 <Box>
                     <Typography className={classes.title}>
-                        {item.title}
+                        {item.title}&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
+                        <span className={classes.subtitle}>{item.category}</span>
                     </Typography>
                 </Box>
                 <Box style={{ display: 'flex' }}>

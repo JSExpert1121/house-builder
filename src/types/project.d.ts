@@ -46,6 +46,7 @@ export interface Projects extends Pageable {
 export interface ProjectLevelCategory {
     id: number;
     title: string;
+    category: string;
     description?: string;
     contents: CmnObject<number | string>;
 }

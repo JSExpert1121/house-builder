@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 import ListItem from '@material-ui/core/ListItem';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "components/CustomButtons/Button.jsx";
@@ -79,13 +78,15 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
     const [height, setHeight] = React.useState(item.contents['height'] as number);
     const [length, setLength] = React.useState(item.contents['length'] as number);
     const [desc, setDesc] = React.useState(item.description);
+    const [name, setName] = React.useState(item.title);
 
     const classes = useStyles({});
 
     const saveCategory = () => {
         const data: ProjectLevelCategory = {
             id: item.id,
-            title: item.title,
+            title: name,
+            category: item.category,
             description: desc,
             contents: {
                 width,
@@ -104,17 +105,22 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
             alignItems='flex-start'
         >
             <Box className={classes.container}>
-                <Box>
-                    <Typography className={classes.title}>
-                        {item.title}
-                    </Typography>
+                <Box style={{ padding: '0 16px' }}>
+                    <TextField
+                        label="Name"
+                        margin="dense"
+                        required
+                        value={name}
+                        fullWidth={true}
+                        onChange={e => setName(e.target.value)}
+                    />
                 </Box>
                 <Box style={{ display: 'flex' }}>
                     <Grid container direction='row-reverse'>
                         <Grid item xs={12} md={8} style={{ padding: '8px 16px' }}>
                             <TextField
                                 label="Description"
-                                margin="normal"
+                                margin="dense"
                                 value={desc}
                                 fullWidth={true}
                                 multiline={true}
@@ -125,7 +131,8 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                         <Grid item xs={12} md={4} style={{ padding: '8px 16px' }}>
                             <TextField
                                 label="Width"
-                                margin="normal"
+                                margin="dense"
+                                required
                                 value={width}
                                 type='number'
                                 fullWidth={true}
@@ -136,7 +143,8 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                             />
                             <TextField
                                 label="Height"
-                                margin="normal"
+                                margin="dense"
+                                required
                                 value={height}
                                 type='number'
                                 fullWidth={true}
@@ -147,7 +155,8 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                             />
                             <TextField
                                 label="Length"
-                                margin="normal"
+                                margin="dense"
+                                required
                                 value={length}
                                 type='number'
                                 fullWidth={true}
@@ -159,61 +168,6 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                         </Grid>
                     </Grid>
                 </Box>
-                {/* <Box>
-                    {
-                        item.description && (
-                            <Typography
-                                variant='body2'
-                                className={classes.subtitle}
-                            >
-                                {item.description}
-                            </Typography>
-                        )
-                    }
-                </Box>
-                <Box>
-                    <Grid container>
-                        <Grid item xs={12} md={4} style={{ padding: 8 }}>
-                            <TextField
-                                label="Width"
-                                margin="normal"
-                                value={width}
-                                type='number'
-                                fullWidth={true}
-                                onChange={e => setWidth(parseFloat(e.target.value))}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">m</InputAdornment>,
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={4} style={{ padding: 8 }}>
-                            <TextField
-                                label="Height"
-                                margin="normal"
-                                value={height}
-                                type='number'
-                                fullWidth={true}
-                                onChange={e => setHeight(parseFloat(e.target.value))}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">m</InputAdornment>,
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={4} style={{ padding: 8 }}>
-                            <TextField
-                                label="Length"
-                                margin="normal"
-                                value={length}
-                                type='number'
-                                fullWidth={true}
-                                onChange={e => setLength(parseFloat(e.target.value))}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">m</InputAdornment>,
-                                }}
-                            />
-                        </Grid>
-                    </Grid>
-                </Box> */}
 
                 <Box className={classes.doneContainer}>
                     <Button

@@ -75,7 +75,14 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
             dueDate: new Date(),
             isBusy: false,
             files: [],
-            levels: [],
+            levels: [
+                {
+                    id: 0,
+                    name: 'Level 1',
+                    description: 'This is the most expensive rooms',
+                    categories: []
+                }
+            ],
             showMessage: false,
             message: '',
             variant: 'error',

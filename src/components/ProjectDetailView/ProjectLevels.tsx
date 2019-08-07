@@ -18,6 +18,7 @@ import { Theme, Typography } from '@material-ui/core';
 
 import TabPanel from 'components/TabPanel';
 import LevelView from 'components/LevelView';
+import withConfirm, { withConfirmProps } from 'components/HOCs/withConfirm';
 
 import { ProjectLevel, ProjectLevelCategory } from 'types/project';
 
@@ -60,7 +61,7 @@ export interface IProjectLevelsProps extends RouteComponentProps {
     deleteCategory: (lvlId: number, catId: number) => void;
 }
 
-const ProjectLevels: React.SFC<IProjectLevelsProps> = props => {
+const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props => {
 
     const {
         levels,
@@ -69,6 +70,8 @@ const ProjectLevels: React.SFC<IProjectLevelsProps> = props => {
         updateCategory,
         addCategory,
         deleteCategory,
+        showConfirm,
+        hideConfirm
     } = props;
     const classes = useStyles({});
 
@@ -91,8 +94,11 @@ const ProjectLevels: React.SFC<IProjectLevelsProps> = props => {
     const showDialog = () => setModal(true);
 
     const deleteLvl = (id) => {
-        deleteLevel(id);
-        if (value > 0) setValue(value - 1);
+        showConfirm('Confirm', 'Do you really want to delete this level?', () => {
+            hideConfirm();
+            deleteLevel(id);
+            if (value > 0) setValue(value - 1);
+        }, true);
     }
 
     return (
@@ -193,4 +199,4 @@ const ProjectLevels: React.SFC<IProjectLevelsProps> = props => {
     );
 }
 
-export default ProjectLevels;
+export default withConfirm<IProjectLevelsProps>(ProjectLevels);

@@ -17,7 +17,8 @@ const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps> = (props) => {
 			categories: [
 				{
 					id: 0,
-					title: 'Bed Room',
+					title: 'My Room',
+					category: 'Bed Room',
 					description: 'the room with ambiguent light',
 					contents: {
 						width: 7.2, height: 3.4, length: 9.6
@@ -25,7 +26,8 @@ const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps> = (props) => {
 				},
 				{
 					id: 1,
-					title: 'Living Room',
+					title: 'Your Room',
+					category: 'Living Room',
 					description: 'the room with sunlight',
 					contents: {
 						width: 9.2, height: 3.2, length: 10.6
@@ -33,7 +35,8 @@ const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps> = (props) => {
 				},
 				{
 					id: 2,
-					title: 'Hallway',
+					title: 'Long Hall',
+					category: 'Hallway',
 					description: 'the room with ambiguent light',
 					contents: {
 						width: 2.2, height: 3.4, length: 8.8
@@ -48,7 +51,8 @@ const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps> = (props) => {
 			categories: [
 				{
 					id: 0,
-					title: 'Bath Room',
+					title: 'Inexpensive Room',
+					category: 'Bath Room',
 					description: 'Hot / Cool water',
 					contents: {
 						width: 8.4, height: 3.2, length: 6.3
@@ -56,7 +60,8 @@ const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps> = (props) => {
 				},
 				{
 					id: 1,
-					title: 'Living Room',
+					title: 'Expensive Room',
+					category: 'Living Room',
 					description: 'Inexpensive Room',
 					contents: {
 						width: 10.2, height: 3.8, length: 6.6
