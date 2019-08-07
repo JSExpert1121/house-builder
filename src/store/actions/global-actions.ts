@@ -14,8 +14,8 @@ import {
 	SET_HISTORY_ITEM
 } from '../constants/global-action-types';
 
-import PropApi from '../api/proposal';
-import ProjApi from '../api/project';
+import PropApi from 'services/proposal';
+import ProjApi from 'services/project';
 import { clearProposals } from './sub-actions';
 
 export const {

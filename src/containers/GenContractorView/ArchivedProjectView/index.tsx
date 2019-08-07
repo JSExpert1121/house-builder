@@ -19,9 +19,9 @@ import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar
 import ConfirmDialog from 'components/shared/ConfirmDialog';
 import Ellipsis from 'components/Typography/Ellipsis';
 
-import { getArchivedProjectsByGenId } from 'actions/gen-actions';
-import { setCurrentProject } from 'actions/global-actions';
-import { deleteProject } from 'actions/gen-actions';
+import { getArchivedProjectsByGenId } from 'store/actions/gen-actions';
+import { setCurrentProject } from 'store/actions/global-actions';
+import { deleteProject } from 'store/actions/gen-actions';
 import { UserProfile } from 'types/global';
 import { Projects } from 'types/project';
 

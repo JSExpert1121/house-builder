@@ -1,4 +1,4 @@
-import SpecApi from '../api/spec';
+import SpecApi from 'services/spec';
 import { createActions } from 'redux-actions';
 
 import {

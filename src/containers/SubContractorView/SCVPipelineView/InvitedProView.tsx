@@ -24,8 +24,8 @@ import removeMd from 'remove-markdown';
 
 import Button from "components/CustomButtons/Button.jsx";
 import CustomTableCell from "components/shared/CustomTableCell";
-import { deleteProject } from 'actions/gen-actions';
-import { getInvitedProjects } from 'actions/sub-actions';
+import { deleteProject } from 'store/actions/gen-actions';
+import { getInvitedProjects } from 'store/actions/sub-actions';
 import { Projects } from 'types/project';
 import { UserProfile } from 'types/global';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';

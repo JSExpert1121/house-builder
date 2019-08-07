@@ -11,8 +11,8 @@ import GenContractor from '../Contractor';
 
 import ProjectView from './ProjectView';
 import ProjectEditView from './ProjectEditView';
-import { updateProject } from 'actions/gen-actions';
-import { getProjectData } from 'actions/global-actions';
+import { updateProject } from 'store/actions/gen-actions';
+import { getProjectData } from 'store/actions/global-actions';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
 import { ProjectPostInfo, ProjectInfo } from 'types/project';
 import { ISnackbarProps } from 'types/components';

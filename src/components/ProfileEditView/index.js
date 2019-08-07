@@ -7,8 +7,8 @@ import axios                from 'axios';
 import React, { Component } from 'react';
 import { connect }          from 'react-redux';
 import { compose }          from 'redux';
-import { setUserProfile }   from '../../actions/global-actions';
-import auth0Client          from '../../auth0/auth';
+import { setUserProfile }   from 'store/actions/global-actions';
+import auth0Client          from 'services/auth0/auth';
 import Button               from '../CustomButtons/Button';
 import TSnackbarContent     from '../SnackBarContent';
 

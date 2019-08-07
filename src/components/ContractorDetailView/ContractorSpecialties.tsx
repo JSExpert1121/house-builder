@@ -24,7 +24,7 @@ import {
     addSpecialty,
     deleteSpecialty,
     getSpecialties,
-} from 'actions/cont-actions';
+} from 'store/actions/cont-actions';
 import { ContractorInfo } from 'types/contractor';
 import { ISnackbarProps } from 'types/components';
 import { Specialties } from 'types/global';

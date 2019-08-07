@@ -10,9 +10,8 @@ import {
 	SPECIALTIES_LOADED,
 } from '../constants/cont-action-types';
 
-import ContApi from '../api/contractor';
-import SpecApi from '../api/spec';
-import restAPI from '../services';
+import ContApi from 'services/contractor';
+import SpecApi from 'services/spec';
 
 export const {
 	allContractorsLoaded,
@@ -73,8 +72,8 @@ export const removeFile = (id, name) => dispatch => ContApi.deleteFile(id, name)
 export const approveContractor = (id, data) => dispatch => ContApi.approve(id, data);
 export const rejectContractor = (id, data) => dispatch => ContApi.approve(id, data);
 
-export const addSpecialty = (contid, specid) => dispatch => restAPI.post('contractors/' + contid + '/specialties/' + specid);
-export const deleteSpecialty = (contid, specid) => dispatch => restAPI.delete('contractors/' + contid + '/specialties/' + specid);
+export const addSpecialty = (contid, specid) => dispatch => ContApi.addSpecialty(contid, specid);
+export const deleteSpecialty = (contid, specid) => dispatch => ContApi.deleteSpecialty(contid, specid);
 export const getSpecialties = (page, size) => dispatch => SpecApi.loadPage(page, size).then(data => {
 	dispatch(specialtiesLoaded(data));
 });

@@ -35,7 +35,7 @@ import {
 	selectCategory,
 	selectTemplate,
 	getTemplates
-} from 'actions/tem-actions';
+} from 'store/actions/tem-actions';
 import { MaterialThemeHOC, UserProfile, TemplateDetailInfo, CategoryPostInfo, TemplatePostInfo } from 'types/global';
 
 const styles = theme => createStyles({

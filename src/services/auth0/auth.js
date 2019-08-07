@@ -1,6 +1,6 @@
 import auth0              from 'auth0-js';
 import axios              from 'axios';
-import { setUserProfile } from '../actions/global-actions';
+import { setUserProfile } from 'store/actions/global-actions';
 
 class Auth {
   constructor() {

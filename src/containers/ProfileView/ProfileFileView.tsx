@@ -20,7 +20,7 @@ import DeleteIcon          from '@material-ui/icons/Delete';
 import NoteAddIcon         from '@material-ui/icons/NoteAdd';
 import CustomTableCell     from 'components/shared/CustomTableCell';
 
-import { getContractorDetailById, removeFile, uploadFiles } from 'actions/cont-actions';
+import { getContractorDetailById, removeFile, uploadFiles } from 'store/actions/cont-actions';
 import { FileInfo, MaterialThemeHOC, UserProfile }              from 'types/global';
 import { compose }                                          from 'redux';
 import styles                                               from './ProfileFileView.style'

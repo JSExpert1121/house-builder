@@ -16,7 +16,7 @@ import { ClassNameMap } from '@material-ui/styles/withStyles';
 
 // customized components
 import CustomTableCell from 'components/shared/CustomTableCell';
-import { getProposalDetails } from 'actions/global-actions';
+import { getProposalDetails } from 'store/actions/global-actions';
 import { ProjectInfo } from 'types/project';
 import { ProposalDetailInfo } from 'types/proposal';
 

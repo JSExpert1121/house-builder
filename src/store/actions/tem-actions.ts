@@ -1,6 +1,4 @@
-// import restAPI from '../services';
-// import { AxiosResponse } from 'axios';
-import TempApi from 'api/template';
+import TempApi from 'services/template';
 import {
 	ALL_TEMPLATES_LOADED,
 	SET_SELECTED_CATEGORY,

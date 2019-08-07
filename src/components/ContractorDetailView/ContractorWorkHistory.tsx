@@ -19,7 +19,7 @@ import HistoryEditItem from './HistoryEditItem';
 
 import { ContractorInfo } from 'types/contractor';
 import { HistoryInfo } from 'types/global';
-import { setHistoryItem } from 'actions/global-actions';
+import { setHistoryItem } from 'store/actions/global-actions';
 import mockHistory from './history';
 
 

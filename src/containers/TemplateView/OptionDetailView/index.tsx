@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper'
 import Snackbar from '@material-ui/core/Snackbar'
 import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField'
-import { deleteOption, editOption, selectCategory, selectOption, selectTemplate } from 'actions/tem-actions';
+import { deleteOption, editOption, selectCategory, selectOption, selectTemplate } from 'store/actions/tem-actions';
 import 'easymde/dist/easymde.min.css';
 import { History } from 'history';
 import React, { Component } from 'react';
@@ -14,7 +14,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import SplitPane from 'react-split-pane';
 import { compose } from "redux";
 import { MaterialThemeHOC, UserProfile } from 'types/global';
-import Button from '../../../components/CustomButtons/Button';
+import Button from 'components/CustomButtons/Button';
 
 const styles = (theme: Theme) => createStyles({
   descTag: {

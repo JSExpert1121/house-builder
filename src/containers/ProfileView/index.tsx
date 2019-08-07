@@ -7,7 +7,7 @@ import { ClassNameMap } from '@material-ui/styles/withStyles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import BallotIcon from '@material-ui/icons/Ballot';
 import CustomTabs from "components/shared/CustomTabs";
-import SecuredRoute from '../../routers/SecuredRoute';
+import SecuredRoute from 'routers/SecuredRoute';
 
 import ProfileEditView from './ProfileEditView';
 import ProfileFileView from './ProfileFileView';

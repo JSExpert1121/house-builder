@@ -19,7 +19,7 @@ import removeMd from 'remove-markdown';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import CustomTableCell from "components/shared/CustomTableCell";
 import Ellipsis from 'components/Typography/Ellipsis';
-import { deleteProposal, getProposals } from 'actions/sub-actions';
+import { deleteProposal, getProposals } from 'store/actions/sub-actions';
 import { UserProfile } from 'types/global';
 import { Proposals } from 'types/proposal';
 

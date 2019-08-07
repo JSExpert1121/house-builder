@@ -16,8 +16,8 @@ import CustomTableCell from "components/shared/CustomTableCell";
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import SpecialtySearchBar from 'components/SearchBar/SpecialtySearchBar';
 
-import { getContractors, getSpecialties, selectContractor } from 'actions/cont-actions';
-import { searchContractors } from 'actions/cont-actions';
+import { getContractors, getSpecialties, selectContractor } from 'store/actions/cont-actions';
+import { searchContractors } from 'store/actions/cont-actions';
 import { UserProfile, Specialties } from 'types/global';
 import { Contractors } from 'types/contractor';
 import style from './SearchBidderList.style';

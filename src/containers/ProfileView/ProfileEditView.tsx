@@ -1,19 +1,19 @@
-import Avatar                              from '@material-ui/core/Avatar';
-import Box                                 from '@material-ui/core/Box';
-import Card                                from '@material-ui/core/Card';
-import CircularProgress                    from '@material-ui/core/CircularProgress';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
-import TextField                           from '@material-ui/core/TextField';
-import { setUserProfile }                  from 'actions/global-actions';
-import axios                             from 'axios';
-import { History }                       from 'history';
-import React, { Component }              from 'react';
-import { connect }                       from 'react-redux';
-import { compose }                       from 'redux';
+import TextField from '@material-ui/core/TextField';
+import { setUserProfile } from 'store/actions/global-actions';
+import axios from 'axios';
+import { History } from 'history';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { MaterialThemeHOC, UserProfile } from 'types/global';
-import auth0Client                       from '../../auth0/auth';
-import TSnackbarContent                  from '../../components/SnackBarContent';
-import Button                            from '../../components/CustomButtons/Button';
+import auth0Client from 'services/auth0/auth';
+import TSnackbarContent from 'components/SnackBarContent';
+import Button from 'components/CustomButtons/Button';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -143,7 +143,7 @@ interface ProfileEditViewState {
 class ProfileEditView extends Component<
   ProfileEditViewProps,
   ProfileEditViewState
-> {
+  > {
   constructor(props) {
     super(props);
 
@@ -175,8 +175,8 @@ class ProfileEditView extends Component<
     try {
       let res = await axios.get(
         process.env.REACT_APP_PROJECT_API +
-          'contractors/' +
-          userProfile.user_metadata.contractor_id
+        'contractors/' +
+        userProfile.user_metadata.contractor_id
       );
       let address = res.data.address || {
         name: '',
@@ -197,12 +197,12 @@ class ProfileEditView extends Component<
         picture: userProfile.picture,
         isGenChecked:
           userProfile.user_metadata.roles.includes('Gen') ||
-          userProfile.user_metadata.roles.includes('GenSub')
+            userProfile.user_metadata.roles.includes('GenSub')
             ? true
             : false,
         isSubChecked:
           userProfile.user_metadata.roles.includes('Sub') ||
-          userProfile.user_metadata.roles.includes('GenSub')
+            userProfile.user_metadata.roles.includes('GenSub')
             ? true
             : false,
         isDataLoaded: true,
@@ -287,8 +287,8 @@ class ProfileEditView extends Component<
             message="Your profile has been saved!"
           />
         ) : (
-          <div />
-        )}
+            <div />
+          )}
         <form noValidate autoComplete="off">
           <Card className={classes.container}>
             <Avatar

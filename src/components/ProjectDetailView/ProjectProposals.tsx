@@ -25,7 +25,7 @@ import {
     getProposalsByProjectId,
     setDetailProposal,
     setProposalsCompare
-} from 'actions/global-actions';
+} from 'store/actions/global-actions';
 import { ISnackbarProps } from 'types/components';
 import { ProjectInfo } from 'types/project';
 import { Proposals } from 'types/proposal';

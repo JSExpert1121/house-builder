@@ -20,8 +20,8 @@ import CustomSnackbar from 'components/shared/CustomSnackbar';
 import CustomTableCell from 'components/shared/CustomTableCell';
 import { ProjectInfo } from 'types/project';
 import { ISnackbarProps } from 'types/components';
-import { addFilesToProject, deleteFileFromProject } from 'actions/gen-actions';
-import { getProjectData } from 'actions/global-actions';
+import { addFilesToProject, deleteFileFromProject } from 'store/actions/gen-actions';
+import { getProjectData } from 'store/actions/global-actions';
 
 const styles = createStyles(theme => ({
     root: {

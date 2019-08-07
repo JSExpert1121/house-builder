@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import auth0Client from 'auth0/auth';
+import auth0Client from 'services/auth0/auth';
 import { History } from 'history';
 
 import { withStyles } from '@material-ui/core/styles';

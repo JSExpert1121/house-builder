@@ -1,4 +1,4 @@
-import { OptionInfo, CmnObject } from '../../types/global';
+import { OptionInfo, CmnObject } from 'types/global';
 
 export interface CateInfo {
     id?: string;

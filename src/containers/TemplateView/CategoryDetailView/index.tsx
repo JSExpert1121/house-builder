@@ -40,7 +40,7 @@ import {
 	addOption,
 	deleteOption,
 	selectOption,
-} from 'actions/tem-actions';
+} from 'store/actions/tem-actions';
 
 
 const styles = (theme: Theme) => createStyles({

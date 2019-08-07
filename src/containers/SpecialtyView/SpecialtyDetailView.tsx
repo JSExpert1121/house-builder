@@ -11,7 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles, createStyles, StyledComponentProps, Theme } from '@material-ui/core/styles';
 import Button from 'components/CustomButtons/Button';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
-import { updateSpec } from 'actions/spec-actions';
+import { updateSpec } from 'store/actions/spec-actions';
 import { Specialty, UserProfile } from 'types/global';
 
 const styles = createStyles((theme: Theme) => ({

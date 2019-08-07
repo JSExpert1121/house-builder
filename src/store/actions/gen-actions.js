@@ -7,9 +7,9 @@ import {
 	PROJECT_LOADED,
 	PROJECT_INVITED_LOADED,
 } from '../constants/gen-action-types';
-import ProjApi from '../api/project';
-import ContApi from '../api/contractor';
-import PropApi from '../api/proposal';
+import ProjApi from 'services/project';
+import ContApi from 'services/contractor';
+import PropApi from 'services/proposal';
 
 export const {
 	clearProjects,

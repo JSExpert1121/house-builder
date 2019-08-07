@@ -20,7 +20,7 @@ import {
     createContractor,
     deleteContractor,
     getContractors,
-} from 'actions/cont-actions';
+} from 'store/actions/cont-actions';
 import CustomTableCell from 'components/shared/CustomTableCell';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import { ContractorPostInfo, Contractors } from 'types/contractor';

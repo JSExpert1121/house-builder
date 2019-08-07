@@ -17,7 +17,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import { UserProfile } from 'types/global';
 
-import auth0Client from 'auth0/auth';
+import auth0Client from 'services/auth0/auth';
 import styles from './MenuList.style';
 
 interface ConnectedMenuListProps {

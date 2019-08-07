@@ -21,7 +21,7 @@ import {
     uploadFiles,
     removeFile,
     getContractorDetailById
-} from 'actions/cont-actions';
+} from 'store/actions/cont-actions';
 import { ContractorInfo } from 'types/contractor';
 
 const styles = createStyles(theme => ({

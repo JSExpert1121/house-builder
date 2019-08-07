@@ -21,7 +21,7 @@ import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
 import ProjectLevelsWrapper from './ProjectLevelsWrapper';
-import { getProjectData } from 'actions/global-actions';
+import { getProjectData } from 'store/actions/global-actions';
 import { ProjectInfo } from 'types/project';
 
 

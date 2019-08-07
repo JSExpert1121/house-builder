@@ -24,9 +24,9 @@ import removeMd from 'remove-markdown';
 import CustomSnackbar from 'components/shared/CustomSnackbar';
 import CustomTableCell from 'components/shared/CustomTableCell';
 
-import { addTemplate, deleteTemplate } from 'actions/gen-actions';
-import { getProjectData } from 'actions/global-actions';
-import { getTemplates } from 'actions/tem-actions';
+import { addTemplate, deleteTemplate } from 'store/actions/gen-actions';
+import { getProjectData } from 'store/actions/global-actions';
+import { getTemplates } from 'store/actions/tem-actions';
 
 import { ISnackbarProps } from 'types/components';
 import { Templates } from 'types/global';

@@ -16,7 +16,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from 'components/CustomButtons/Button';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import SpecTableView from './SpecTableView';
-import { createSpec, deleteSpec, loadSpecs, loadSpec } from 'actions/spec-actions';
+import { createSpec, deleteSpec, loadSpecs, loadSpec } from 'store/actions/spec-actions';
 import { SpecialtyPostInfo, UserProfile, Specialties } from 'types/global';
 
 const styles = createStyles((theme: Theme) => ({

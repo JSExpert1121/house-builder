@@ -13,7 +13,7 @@ import CustomTabs from "components/shared/CustomTabs";
 import AddProjectOverview, { ProjectBriefInfo } from './Overview';
 import ProjectLevels from 'components/ProjectDetailView/ProjectLevels';
 import SecuredRoute from 'routers/SecuredRoute';
-import { addFilesToProject, addProject } from 'actions/gen-actions';
+import { addFilesToProject, addProject } from 'store/actions/gen-actions';
 
 import { UserProfile } from 'types/global';
 import { ProjectLevel, ProjectPostInfo, ProjectLevelCategory } from 'types/project';

@@ -13,11 +13,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
-import { getAllProjects } from '../../../actions/gen-actions';
-import CustomTableCell from '../../../components/shared/CustomTableCell';
+import { getAllProjects } from 'store/actions/gen-actions';
+import CustomTableCell from 'components/shared/CustomTableCell';
 import removeMd from 'remove-markdown';
-import Ellipsis from '../../../components/Typography/Ellipsis';
-import { Projects } from '../../../types/project';
+import Ellipsis from 'components/Typography/Ellipsis';
+import { Projects } from 'types/project';
 
 const styles = theme => createStyles({
     root: {

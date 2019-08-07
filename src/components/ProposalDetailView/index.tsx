@@ -20,9 +20,9 @@ import ProposalDetailMessages from './ProposalMessages';
 import ProposalTemplEditView from './ProposalTemplEditView';
 import ConfirmDialog from 'components/shared/ConfirmDialog';
 
-import { addOption, deleteOption, getProposalDetails, updateOption } from 'actions/global-actions';
-import { deleteProposal, submitProposal, updateProposal } from 'actions/sub-actions';
-import { awardProject } from 'actions/gen-actions';
+import { addOption, deleteOption, getProposalDetails, updateOption } from 'store/actions/global-actions';
+import { deleteProposal, submitProposal, updateProposal } from 'store/actions/sub-actions';
+import { awardProject } from 'store/actions/gen-actions';
 
 import { ProposalPostInfo, ProposalDetailInfo, ProposalInfo } from 'types/proposal';
 import { ProjectInfo } from 'types/project';

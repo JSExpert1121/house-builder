@@ -18,7 +18,7 @@ import clsx from 'clsx';
 import Button from 'components/CustomButtons/Button.jsx';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import { ContractorStatus, ContractorInfo } from 'types/contractor';
-import { approveContractor, rejectContractor } from 'actions/cont-actions';
+import { approveContractor, rejectContractor } from 'store/actions/cont-actions';
 
 
 const styles = createStyles(theme => ({

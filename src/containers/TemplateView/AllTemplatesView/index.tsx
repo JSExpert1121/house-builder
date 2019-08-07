@@ -28,7 +28,7 @@ import removeMd from 'remove-markdown';
 
 import CustomTableCell from "components/shared/CustomTableCell";
 import Button from 'components/CustomButtons/Button';
-import { createTemplate, deleteTemplate, getTemplates, selectTemplate } from 'actions/tem-actions';
+import { createTemplate, deleteTemplate, getTemplates, selectTemplate } from 'store/actions/tem-actions';
 import { MaterialThemeHOC, UserProfile, TemplatePostInfo, Templates } from 'types/global';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 

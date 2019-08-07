@@ -1,3 +1,7 @@
+import React            from 'react';
+import { connect }        from 'react-redux';
+import { compose }        from 'redux';
+
 import Card             from '@material-ui/core/Card';
 import Checkbox         from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -11,11 +15,8 @@ import Table            from '@material-ui/core/Table';
 import TableBody        from '@material-ui/core/TableBody';
 import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
-import React            from 'react';
-import { connect }        from 'react-redux';
-import { compose }        from 'redux';
-import { setUserProfile } from '../../actions/global-actions';
-import auth0Client        from '../../auth0/auth';
+import { setUserProfile } from 'store/actions/global-actions';
+import auth0Client        from 'services/auth0/auth';
 import Button             from '../CustomButtons/Button';
 import CustomTableCell    from '../shared/CustomTableCell';
 import TSnackbarContent   from '../SnackBarContent';

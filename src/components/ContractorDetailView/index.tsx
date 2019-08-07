@@ -15,7 +15,7 @@ import ContractorSpecialties from './ContractorSpecialties';
 import ContractorWorkHistory from './ContractorWorkHistory';
 import HistoryDetail from './HistoryDetail';
 import { ContractorInfo } from 'types/contractor';
-import { selectContractor, updateContractor } from 'actions/cont-actions';
+import { selectContractor, updateContractor } from 'store/actions/cont-actions';
 
 
 const styles = createStyles(theme => ({

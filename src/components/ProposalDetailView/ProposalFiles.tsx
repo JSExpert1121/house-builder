@@ -16,7 +16,7 @@ import CustomTableCell from '../shared/CustomTableCell';
 import CustomizedSnackbars, { ISnackbarProps } from '../shared/CustomSnackbar';
 
 import { DropzoneDialog } from 'material-ui-dropzone';
-import { addFilesToProposal, deleteProposalFile, getProposalDetails } from 'actions/global-actions';
+import { addFilesToProposal, deleteProposalFile, getProposalDetails } from 'store/actions/global-actions';
 import { ProposalDetailInfo } from 'types/proposal';
 
 const styles = createStyles(theme => ({

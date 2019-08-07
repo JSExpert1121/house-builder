@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import React from 'react';
-import CustomTableCell from '../../components/shared/CustomTableCell';
+import CustomTableCell from 'components/shared/CustomTableCell';
 import { makeStyles } from '@material-ui/core/styles';
 import { Specialty } from 'types/global';
 

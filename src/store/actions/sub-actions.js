@@ -1,8 +1,8 @@
 import { createActions } from 'redux-actions';
 import { proposalsLoaded } from './global-actions';
 import { CLEAR_PROPOSALS, INVITED_PROJECT_LOADED, } from '../constants/sub-action-types';
-import ContApi from '../api/contractor';
-import PropApi from '../api/proposal';
+import ContApi from 'services/contractor';
+import PropApi from 'services/proposal';
 
 export const { clearProposals, invitedProjectLoaded } = createActions({
 	[CLEAR_PROPOSALS]: () => null,
