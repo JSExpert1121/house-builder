@@ -1,139 +1,208 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/core/styles';
+
 import ProjectLevels from './ProjectLevels';
-import { ProjectLevel, ProjectLevelCategory } from 'types/project';
+import withSnackbar, { withSnackbarProps } from 'components/HOCs/withSnackbar';
+import { ProjectLevel, ProjectLevelCategory, ProjectInfo } from 'types/project';
+import { UserProfile } from 'types/global';
+import {
+	createLevel,
+	createRoom,
+	updateLevel,
+	updateRoom,
+	deleteLevel,
+	deleteRoom,
+	getLevels
+} from 'store/actions/gen-actions';
+
+
+const useStyles = makeStyles(theme => ({
+	root: {
+		position: 'relative'
+	},
+	busy: {
+		position: 'absolute',
+		left: 'calc(50% - 20px)',
+		top: 'calc(50% - 20px)'
+	}
+}))
 
 interface IProjectLevelsWrapperProps extends RouteComponentProps {
+	createLevel: (id: string, level: { number: number, name: string, description: string }) => Promise<any>;
+	updateLevel: (id: string, desc: string) => Promise<any>;
+	deleteLvl: (id: string) => Promise<any>;
+	createRoom: (id: string, room: {
+		number: number,
+		name: string,
+		type: string,
+		description: string,
+		w: number,
+		h: number,
+		l: number
+	}) => Promise<any>;
+	updateRoom: (id: string, cat: ProjectLevelCategory) => Promise<any>;
+	deleteRoom: (id: string) => Promise<void>;
+	getLevels: (id: string) => Promise<void>;
+	levels: ProjectLevel[];
+	project: ProjectInfo;
+	userProfile: UserProfile;
 }
 
-const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps> = (props) => {
+const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps & withSnackbarProps> = (props) => {
 
-	const init: ProjectLevel[] = [
-		{
-			id: 0,
-			name: 'Level 1',
-			description: 'Largest and expensive rooms',
-			categories: [
-				{
-					id: 0,
-					title: 'My Room',
-					category: 'Bed Room',
-					description: 'the room with ambiguent light',
-					contents: {
-						width: 7.2, height: 3.4, length: 9.6
-					}
-				},
-				{
-					id: 1,
-					title: 'Your Room',
-					category: 'Living Room',
-					description: 'the room with sunlight',
-					contents: {
-						width: 9.2, height: 3.2, length: 10.6
-					}
-				},
-				{
-					id: 2,
-					title: 'Long Hall',
-					category: 'Hallway',
-					description: 'the room with ambiguent light',
-					contents: {
-						width: 2.2, height: 3.4, length: 8.8
-					}
-				},
-			]
-		},
-		{
-			id: 1,
-			name: 'Level 2',
-			description: 'Middle Rooms',
-			categories: [
-				{
-					id: 0,
-					title: 'Inexpensive Room',
-					category: 'Bath Room',
-					description: 'Hot / Cool water',
-					contents: {
-						width: 8.4, height: 3.2, length: 6.3
-					}
-				},
-				{
-					id: 1,
-					title: 'Expensive Room',
-					category: 'Living Room',
-					description: 'Inexpensive Room',
-					contents: {
-						width: 10.2, height: 3.8, length: 6.6
-					}
-				},
-			]
+	const { levels, project, showMessage } = props;
+	const classes = useStyles({});
+	const [busy, setBusy] = React.useState(false);
+
+	const addLevel = async (number, name, desc) => {
+		const { createLevel, getLevels } = props;
+		if (!project) return;
+
+		setBusy(true);
+		try {
+			await createLevel(project.id, { number, name, description: desc });
+			await getLevels(project.id);
+			setBusy(false);
+			showMessage(true, 'Add Level success');
+		} catch (error) {
+			console.log('ProjectLevelWrapper.AddLevel: ', error);
+			setBusy(false);
+			showMessage(false, 'Add Level failed');
 		}
-	];
-	const [levels, setLevels] = React.useState<ProjectLevel[]>(init);
-
-	const addLevel = (name, desc) => {
-		levels.push({
-			id: levels.length,
-			name: name,
-			description: desc,
-			categories: []
-		});
-
-		setLevels([...levels]);
 	}
 
-	const deleteLevel = (id: number) => {
-		levels.splice(id, 1);
-		const len = levels.length;
-		for (let i = id; i < len; i++) {
-			levels[i].id--;
+	// const updateLevel = async (id: string, desc: string) => {
+	// 	const { updateLevel, getLevels } = props;
+	// 	if (!project) return;
+
+	// 	setBusy(true);
+	// 	try {
+	// 		await updateLevel(id, desc);
+	// 		await getLevels(project.id);
+	// 		setBusy(false);
+	// 		showMessage(true, 'Update Level success');
+	// 	} catch (error) {
+	// 		console.log('ProjectLevelWrapper.UpdateLevel: ', error);
+	// 		setBusy(false);
+	// 		showMessage(false, 'Update Level failed');
+	// 	}
+	// }
+
+	const removeLevel = async (id: string) => {
+		const { deleteLvl, getLevels } = props;
+		if (!project) return;
+
+		setBusy(true);
+		try {
+			await deleteLvl(id);
+			await getLevels(project.id);
+
+			setBusy(false);
+			showMessage(true, 'Delete Level success');
+		} catch (error) {
+			console.log('ProjectLevelWrapper.RemoveLevel: ', error);
+			setBusy(false);
+			showMessage(false, 'Delete Level failed');
 		}
-
-		setLevels([...levels]);
 	}
 
-	const addCategory = (id: number, cat: ProjectLevelCategory) => {
-		const level = levels[id];
-		if (!level) return;
+	const addCategory = async (id: string, cat: ProjectLevelCategory) => {
+		const { createRoom, getLevels } = props;
+		if (!project) return;
 
-		cat.id = level.categories.length;
-		level.categories.push(cat);
-		setLevels([...levels]);
-	}
+		setBusy(true);
+		try {
+			await createRoom(id, {
+				number: cat.number,
+				name: cat.name,
+				type: cat.type,
+				description: cat.description,
+				w: cat.w,
+				l: cat.l,
+				h: cat.h
+			});
+			await getLevels(project.id);
 
-	const updateCategory = (lvlId: number, cat: ProjectLevelCategory) => {
-		const level = levels[lvlId];
-		if (!level) return;
-
-		level.categories[cat.id] = cat;
-		setLevels([...levels]);
-	}
-
-	const deleteCategory = (lvlId: number, catId: number) => {
-		const level = levels[lvlId];
-		if (!level) return;
-
-		const cats = level.categories;
-		cats.splice(catId, 1);
-		const len = cats.length;
-		for (let i = catId; i < len; i++) {
-			cats[i].id--;
+			setBusy(false);
+			showMessage(true, 'Create Room success');
+		} catch (error) {
+			console.log('ProjectLevelWrapper.AddRoom: ', error);
+			setBusy(false);
+			showMessage(false, 'Create Room failed');
 		}
-		setLevels([...levels]);
+	}
+
+	const updateCategory = async (id: string, cat: ProjectLevelCategory) => {
+		const { updateRoom, getLevels } = props;
+		if (!project) return;
+
+		setBusy(true);
+		try {
+			await updateRoom(cat.id, cat);
+			await getLevels(project.id);
+
+			setBusy(false);
+			showMessage(true, 'Update Room success');
+		} catch (error) {
+			console.log('ProjectLevelWrapper.UpdateRoom: ', error);
+			setBusy(false);
+			showMessage(true, 'Update Room failed');
+		}
+	}
+
+	const deleteCategory = async (id: string) => {
+		const { deleteRoom, getLevels } = props;
+		if (!project) return;
+
+		setBusy(true);
+		try {
+			await deleteRoom(id);
+			await getLevels(project.id);
+
+			setBusy(false);
+			showMessage(true, 'Delete Room success');
+		} catch (error) {
+			console.log('ProjectLevelWrapper.DeleteRoom: ', error);
+			setBusy(false);
+			showMessage(false, 'Delete Room failed');
+		}
 	}
 
 	return (
-		<ProjectLevels
-			levels={levels}
-			addLevel={addLevel}
-			deleteLevel={deleteLevel}
-			addCategory={addCategory}
-			updateCategory={updateCategory}
-			deleteCategory={deleteCategory}
-			{...props}
-		/>
+		<Box className={classes.root}>
+			<ProjectLevels
+				levels={levels}
+				addLevel={addLevel}
+				deleteLevel={removeLevel}
+				addCategory={addCategory}
+				updateCategory={updateCategory}
+				deleteCategory={deleteCategory}
+				{...props}
+			/>
+			{busy && <CircularProgress className={classes.busy} />}
+		</Box>
 	);
 };
 
-export default ProjectLevelsWrapper;
+const mapStateToProps = state => ({
+	userProfile: state.global_data.userProfile,
+	levels: state.gen_data.levels,
+	project: state.global_data.project,
+});
+
+const mapDispatchToProps = dispatch => ({
+	createLevel: (id, level) => dispatch(createLevel(id, level)),
+	createRoom: (id, room) => dispatch(createRoom(id, room)),
+	updateLevel: (id, desc) => dispatch(updateLevel(id, desc)),
+	updateRoom: (id, cat) => dispatch(updateRoom(id, cat)),
+	deleteLvl: id => dispatch(deleteLevel(id)),
+	deleteRoom: id => dispatch(deleteRoom(id)),
+	getLevels: id => dispatch(getLevels(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withSnackbar<IProjectLevelsWrapperProps>(ProjectLevelsWrapper));

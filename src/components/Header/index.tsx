@@ -73,6 +73,25 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		};
 	}
 
+	resizedWindow = () => {
+		const open: boolean = window.innerWidth > 960;
+		if (open !== this.state.open) {
+			this.setState({ open });
+		}
+	}
+
+	componentDidMount() {
+		const open: boolean = window.innerWidth > 960;
+		this.setState({ open });
+		window.addEventListener('resize', this.resizedWindow);
+	}
+
+	componentWillMount() {
+		window.removeEventListener('resize', this.resizedWindow);
+	}
+
+
+
 	handleProfileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
 		this.setState({ anchorEl: event.currentTarget });
 	};

@@ -1,6 +1,8 @@
 import Axios from 'axios';
 
 const PROJ_API_PATH = process.env.REACT_APP_PROJECT_API + 'projects/';
+const LEVEL_API_PATH = process.env.REACT_APP_PROJECT_API + 'levels/';
+const ROOM_API_PATH = process.env.REACT_APP_PROJECT_API + 'rooms/';
 
 export default {
 	addFiles: (id, files) => {
@@ -34,8 +36,37 @@ export default {
 	addTemplate: (projId, tempId) => Axios.post(PROJ_API_PATH + projId + '/templates/' + tempId).then(
 		res => res.data
 	),
-
 	deleteTemplate: (projId, tempId) => Axios.delete(PROJ_API_PATH + projId + '/templates/' + tempId).then(
 		res => res.data
 	),
+
+	createLevel: (id, level) => Axios.post(PROJ_API_PATH + id + '/levels', {
+		number: level.number,
+		name: level.name,
+		description: level.description
+	}).then(res => res.data),
+	updateLevel: (lvlId, description) => Axios.put(LEVEL_API_PATH + lvlId, {
+		description
+	}).then(res => res.data),
+	deleteLevel: id => Axios.delete(LEVEL_API_PATH + id).then(res => res.data),
+	getLevel: id => Axios.get(LEVEL_API_PATH + id).then(res => res.data),
+	createRoom: (lvlId, room) => Axios.post(LEVEL_API_PATH + lvlId + '/rooms', {
+		number: room.number,
+		type: room.type,
+		name: room.name,
+		description: room.description,
+		w: room.w,
+		h: room.h,
+		l: room.l
+	}).then(res => res.data),
+	updateRoom: (roomId, room) => Axios.put(ROOM_API_PATH + roomId, {
+		name: room.name,
+		description: room.description,
+		w: room.w,
+		h: room.h,
+		l: room.l
+	}).then(res => res.data),
+	deleteRoom: id => Axios.delete(ROOM_API_PATH + id).then(res => res.data),
+	getRoom: id => Axios.get(ROOM_API_PATH + id).then(res => res.data),
+	getLevels: projId => Axios.get(PROJ_API_PATH + projId + '/levels').then(res => res.data)
 };

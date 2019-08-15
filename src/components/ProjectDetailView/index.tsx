@@ -22,6 +22,7 @@ import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
 import ProjectLevelsWrapper from './ProjectLevelsWrapper';
 import { getProjectData } from 'store/actions/global-actions';
+import { getLevels } from 'store/actions/gen-actions';
 import { ProjectInfo } from 'types/project';
 
 
@@ -51,6 +52,7 @@ const styles = createStyles(theme => ({
 export interface IProjectDetailViewProps extends RouteComponentProps<{ id: string }> {
     project: ProjectInfo;
     getProjectData: (id: string) => Promise<void>;
+    getLevels: (id: string) => Promise<void>;
     classes: ClassNameMap<string>;
 }
 
@@ -65,16 +67,12 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
     async componentDidMount() {
         const { match } = this.props;
         await this.props.getProjectData(match.params.id);
+        await this.props.getLevels(match.params.id);
     }
 
     handleBack = () => {
         const { history } = this.props;
         history.goBack();
-        // if (match.url.includes('gen-contractor'))
-        //     this.props.history.push('/gen-contractor');
-        // if (match.url.includes('s_cont')) this.props.history.push('/s_cont');
-        // else if (match.url.includes('projects'))
-        //     this.props.history.push('/projects');
     };
 
     public render() {
@@ -130,7 +128,11 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
                                 to={`${match.url}/levels`}
                                 label="Levels"
                             />
-                            <Tab component={Link} to={`${match.url}/files`} label="Files" />
+                            <Tab
+                                component={Link}
+                                to={`${match.url}/files`}
+                                label="Files"
+                            />
                             <Tab
                                 component={Link}
                                 to={`${match.url}/templates`}
@@ -201,7 +203,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    getProjectData
+    getProjectData,
+    getLevels
 };
 
 export default compose(

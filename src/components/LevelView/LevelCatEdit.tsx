@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from "components/CustomButtons/Button.jsx";
 
 import { ProjectLevelCategory } from 'types/project';
+import { Validator } from 'types/global';
 
 
 const useStyles = makeStyles(theme => ({
@@ -74,25 +75,72 @@ export interface ILevelCatEditProps {
 const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
 
     const { item, handleSave, handleCancel } = props;
-    const [width, setWidth] = React.useState(item.contents['width'] as number);
-    const [height, setHeight] = React.useState(item.contents['height'] as number);
-    const [length, setLength] = React.useState(item.contents['length'] as number);
-    const [desc, setDesc] = React.useState(item.description);
-    const [name, setName] = React.useState(item.title);
+    const [name, setName] = React.useState({
+        value: item.name,
+        errMsg: undefined
+    } as Validator);
+    const [desc, setDesc] = React.useState({
+        value: item.description,
+        errMsg: undefined
+    } as Validator);
+    const [width, setWidth] = React.useState({
+        value: item.w.toString(),
+        errMsg: undefined
+    } as Validator);
+    const [height, setHeight] = React.useState({
+        value: item.h.toString(),
+        errMsg: undefined
+    } as Validator);
+    const [length, setLength] = React.useState({
+        value: item.l.toString(),
+        errMsg: undefined
+    } as Validator);
 
     const classes = useStyles({});
 
     const saveCategory = () => {
+        if (name.value.length === 0) {
+            setName({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+        if (width.value === '' || width.value === '0') {
+            setWidth({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+        if (height.value === '' || height.value === '0') {
+            setHeight({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+        if (length.value === '' || length.value === '0') {
+            setLength({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+
         const data: ProjectLevelCategory = {
             id: item.id,
-            title: name,
-            category: item.category,
-            description: desc,
-            contents: {
-                width,
-                height,
-                length
-            }
+            number: item.number,
+            name: name.value,
+            type: item.type,
+            description: desc.value,
+            w: parseFloat(width.value),
+            h: parseFloat(height.value),
+            l: parseFloat(length.value)
         };
 
         handleSave(data);
@@ -110,9 +158,11 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                         label="Name"
                         margin="dense"
                         required
-                        value={name}
                         fullWidth={true}
-                        onChange={e => setName(e.target.value)}
+                        error={!!name.errMsg}
+                        helperText={name.errMsg}
+                        value={name.value}
+                        onChange={event => setName({ value: event.target.value, errMsg: undefined })}
                     />
                 </Box>
                 <Box style={{ display: 'flex' }}>
@@ -121,11 +171,13 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                             <TextField
                                 label="Description"
                                 margin="dense"
-                                value={desc}
                                 fullWidth={true}
                                 multiline={true}
                                 rowsMax={12}
-                                onChange={e => setDesc(e.target.value)}
+                                error={!!desc.errMsg}
+                                helperText={desc.errMsg}
+                                value={desc.value}
+                                onChange={event => setDesc({ value: event.target.value, errMsg: undefined })}
                             />
                         </Grid>
                         <Grid item xs={12} md={4} style={{ padding: '8px 16px' }}>
@@ -133,10 +185,12 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                                 label="Width"
                                 margin="dense"
                                 required
-                                value={width}
                                 type='number'
                                 fullWidth={true}
-                                onChange={e => setWidth(parseFloat(e.target.value))}
+                                error={!!width.errMsg}
+                                helperText={width.errMsg}
+                                value={width.value}
+                                onChange={event => setWidth({ value: event.target.value, errMsg: undefined })}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                 }}
@@ -145,10 +199,12 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                                 label="Height"
                                 margin="dense"
                                 required
-                                value={height}
                                 type='number'
                                 fullWidth={true}
-                                onChange={e => setHeight(parseFloat(e.target.value))}
+                                error={!!height.errMsg}
+                                helperText={height.errMsg}
+                                value={height.value}
+                                onChange={event => setHeight({ value: event.target.value, errMsg: undefined })}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                 }}
@@ -157,10 +213,12 @@ const LevelCatEdit: React.SFC<ILevelCatEditProps> = props => {
                                 label="Length"
                                 margin="dense"
                                 required
-                                value={length}
                                 type='number'
                                 fullWidth={true}
-                                onChange={e => setLength(parseFloat(e.target.value))}
+                                error={!!length.errMsg}
+                                helperText={length.errMsg}
+                                value={length.value}
+                                onChange={event => setLength({ value: event.target.value, errMsg: undefined })}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                 }}

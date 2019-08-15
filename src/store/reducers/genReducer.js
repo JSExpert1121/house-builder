@@ -7,6 +7,7 @@ import {
 	PROJECT_LOADED,
 	TEMPLATES_LOADED,
 	PROJECT_INVITED_LOADED,
+	LEVELS_LOADED
 } from '../constants/gen-action-types';
 import { handleActions } from 'redux-actions';
 
@@ -15,7 +16,8 @@ const initialState = {
 	projects: null,
 	allprojects: null,
 	templates: null,
-	invited: null
+	invited: null,
+	levels: null
 };
 
 const genReducer = handleActions(
@@ -49,6 +51,10 @@ const genReducer = handleActions(
 			...state,
 			invited: action.payload,
 		}),
+		[LEVELS_LOADED]: (state, action) => ({
+			...state,
+			levels: action.payload
+		})
 	},
 	initialState
 );

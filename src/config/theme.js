@@ -105,6 +105,25 @@ const theme = createMuiTheme({
 			root: {
 				padding: 0
 			}
+		},
+		MuiTreeItem: {
+			root: {
+				paddingTop: 8
+			}
+		},
+		MuiExpansionPanel: {
+			root: {
+				'&.Mui-expanded': {
+					margin: 0
+				}
+			}
+		},
+		MuiExpansionPanelSummary: {
+			content: {
+				'&.Mui-expanded': {
+					margin: '8px 0'
+				}
+			}
 		}
 	}
 });

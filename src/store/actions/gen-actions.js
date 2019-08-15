@@ -6,6 +6,7 @@ import {
 	CLEAR_TEMPLATES,
 	PROJECT_LOADED,
 	PROJECT_INVITED_LOADED,
+	LEVELS_LOADED
 } from '../constants/gen-action-types';
 import ProjApi from 'services/project';
 import ContApi from 'services/contractor';
@@ -23,10 +24,12 @@ const {
 	allProjectLoaded,
 	clearAllProjects,
 	projectLoaded,
+	levelsLoaded,
 } = createActions({
 	[ALL_PROJECT_LOADED]: projects => projects,
 	[CLEAR_ALL_PROJECTS]: () => null,
 	[PROJECT_LOADED]: projects => projects,
+	[LEVELS_LOADED]: levels => levels
 })
 
 const invitedLoaded = invited => ({
@@ -66,3 +69,17 @@ export const addTemplate = (projectId, templateId) => dispatch => ProjApi.addTem
 export const deleteTemplate = (projectId, templateId) => dispatch => ProjApi.deleteTemplate(projectId, templateId);
 
 export const awardProject = id => dispatch => PropApi.award(id);
+
+export const createLevel = (id, level) => dispatch => ProjApi.createLevel(id, level);
+export const updateLevel = (id, desc) => dispatch => ProjApi.updateLevel(id, desc);
+export const deleteLevel = id => dispatch => ProjApi.deleteLevel(id);
+export const getLevel = lvlId => dispatch => ProjApi.getLevel(lvlId);
+export const createRoom = (lvlId, room) => dispatch => ProjApi.createRoom(lvlId, room);
+export const updateRoom = (id, cat) => dispatch => ProjApi.updateRoom(id, cat);
+export const deleteRoom = id => dispatch => ProjApi.deleteRoom(id);
+export const getRoom = roomId => dispatch => ProjApi.getRoom(roomId);
+export const getLevels = id => dispatch => {
+	return ProjApi.getLevels(id).then(data => {
+		dispatch(levelsLoaded(data));
+	})
+}

@@ -4,6 +4,11 @@ export interface CmnObject<T> {
 	[key in string]: T;
 }
 
+export interface Validator {
+	value: string;
+	errMsg?: string;
+}
+
 export interface UserMetaData {
 	roles: string;
 	contractor_id: string;

@@ -21,12 +21,12 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
-import withSnackbar, { withSnackbarProps } from 'components/HOCs/withSnackbar';
 
+import withSnackbar, { withSnackbarProps } from 'components/HOCs/withSnackbar';
 import LevelCat from 'components/LevelView/LevelCat';
 import LevelCatEdit from 'components/LevelView/LevelCatEdit';
 import { ProjectLevel, ProjectLevelCategory } from 'types/project';
-import { title } from 'assets/jss/material-dashboard-pro-react';
+import { Validator } from 'types/global';
 
 
 const useStyles = makeStyles(theme => ({
@@ -86,10 +86,10 @@ const useStyles = makeStyles(theme => ({
 interface ILevelViewProps {
     editable: boolean;
     level: ProjectLevel;
-    deleteLevel: (lvlId: number) => void;
-    addCategory: (lvlId: number, cat: ProjectLevelCategory) => void;
-    updateCategory: (lvlId: number, cat: ProjectLevelCategory) => void;
-    deleteCategory: (lvlId: number, catId: number) => void;
+    deleteLevel: (id: string) => void;
+    addCategory: (id: string, cat: ProjectLevelCategory) => void;
+    updateCategory: (cat: ProjectLevelCategory) => void;
+    deleteCategory: (id: string) => void;
 }
 
 const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
@@ -104,78 +104,143 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
     } = props;
     const classes = useStyles({});
 
-    const [edit, setEdit] = React.useState(-1);
-    const [category, setCategory] = React.useState('Bath Room');
+    const [edit, setEdit] = React.useState('');
+    const [type, setType] = React.useState('BATHROOM');
     const [modal, setModal] = React.useState(false);
-    const [name, setName] = React.useState('');
-    const [desc, setDesc] = React.useState('');
-    const [width, setWidth] = React.useState(0);
-    const [height, setHeight] = React.useState(0);
-    const [length, setLength] = React.useState(0);
+    const [number, setNumber] = React.useState({
+        value: '1',
+        errMsg: undefined
+    } as Validator);
+    const [name, setName] = React.useState({
+        value: '',
+        errMsg: undefined
+    } as Validator);
+    const [desc, setDesc] = React.useState({
+        value: '',
+        errMsg: undefined
+    } as Validator);
+    const [width, setWidth] = React.useState({
+        value: '0',
+        errMsg: undefined
+    } as Validator);
+    const [height, setHeight] = React.useState({
+        value: '0',
+        errMsg: undefined
+    } as Validator);
+    const [length, setLength] = React.useState({
+        value: '0',
+        errMsg: undefined
+    } as Validator);
 
-    const categoryChange = (event) => {
-        setCategory(event.target.value);
+    const typeChange = event => {
+        setType(event.target.value);
     }
 
     const handleAddCategory = () => {
         setModal(true);
     }
 
-    const handleEdit = (id) => {
+    const handleEdit = (id: string) => {
         setEdit(id);
     }
 
-    const handleDelete = id => {
-        deleteCategory(level.id, id);
-        setEdit(-1);
+    const handleDelete = (id: string) => {
+        deleteCategory(id);
+        setEdit('');
     }
 
     const saveCategory = (item: ProjectLevelCategory) => {
-        if (item.title.length === 0 ||
-            item.contents['width'] === 0 ||
-            item.contents['height'] === 0 ||
-            item.contents['length'] === 0) {
+        if (item.name.length === 0 ||
+            item.w === 0 ||
+            item.h === 0 ||
+            item.l === 0) {
             showMessage(false, 'Fill in all the required fields');
             return;
         }
-        updateCategory(level.id, item);
-        setEdit(-1);
+        updateCategory(item);
+        setEdit('');
     }
 
     const cancelEdit = () => {
-        setEdit(-1);
+        setEdit('');
     }
 
     const handleAdd = () => {
-        if (title.length === 0 || width === 0 || height === 0 || length === 0) {
-            showMessage(false, 'Fill in all the required fields');
+        const roomNo = parseInt(number.value);
+        if (level.rooms && level.rooms.some(item => item.number === roomNo)) {
+            setNumber({
+                value: number.value,
+                errMsg: 'This room number is already taken'
+            });
+
             return;
         }
+        if (name.value.length === 0) {
+            setName({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+        if (width.value === '' || width.value === '0') {
+            setWidth({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+        if (height.value === '' || height.value === '0') {
+            setHeight({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+        if (length.value === '' || length.value === '0') {
+            setLength({
+                value: name.value,
+                errMsg: 'Name is required'
+            });
+
+            return;
+        }
+
         const cat: ProjectLevelCategory = {
-            id: 0,
-            title: name,
-            description: desc,
-            category,
-            contents: {
-                width, height, length
-            }
+            id: '',
+            number: parseInt(number.value),
+            name: name.value,
+            type,
+            description: desc.value,
+            w: parseFloat(width.value),
+            h: parseFloat(height.value),
+            l: parseFloat(length.value)
         };
 
         addCategory(level.id, cat);
         setModal(false);
+        setName({ value: '', errMsg: undefined });
+        setDesc({ value: '', errMsg: undefined });
+        setWidth({ value: '0', errMsg: undefined });
+        setHeight({ value: '0', errMsg: undefined });
+        setLength({ value: '0', errMsg: undefined });
     }
 
     const cats = [
-        'Bath Room',
-        'Bed Room',
-        'Living Room',
-        'Hallway'
+        { name: 'Bath Room', value: 'BATHROOM' },
+        { name: 'Bed Room', value: 'BEDROOM' },
+        { name: 'Living Room', value: 'LIVINGROOM' },
+        { name: 'Hallway', value: 'HALLWAY' },
+        { name: 'Kitchen', value: 'KITCHEN' },
+        { name: 'Rooftop', value: 'ROOFTOP' }
     ];
 
     return (
         <Box className={classes.root}>
             <List aria-label='project-level' style={{ padding: '16px 0' }}>
-                <ListItem button className={classes.titlebar}>
+                <ListItem className={classes.titlebar}>
                     <Box>
                         <Typography className={classes.title}>
                             {level.name}
@@ -212,7 +277,7 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
                         </>
                     )}
                 </ListItem>
-                {level.categories && level.categories.map(cat => {
+                {level.rooms && level.rooms.map(cat => {
                     if (cat.id !== edit) {
                         return (
                             <React.Fragment key={cat.id}>
@@ -247,26 +312,47 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
             >
                 <DialogTitle id="form-dialog-title">Add a Level</DialogTitle>
                 <DialogContent>
-                    <Select
-                        style={{ minWidth: 180 }}
-                        value={category}
-                        onChange={categoryChange}
-                        name="level-categories"
-                    >
-                        {cats.map((cat, index) => (
-                            <MenuItem value={cat} key={index}>
-                                {cat}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <Grid container>
+                        <Grid item xs={12} md={6} style={{ padding: '8px 0px' }}>
+                            <TextField
+                                autoFocus
+                                fullWidth
+                                required
+                                margin='dense'
+                                label='Room Number'
+                                type='number'
+                                error={!!number.errMsg}
+                                helperText={number.errMsg}
+                                value={parseInt(number.value)}
+                                onChange={event => setNumber({ value: event.target.value, errMsg: undefined })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6} style={{ padding: '29px 0px 8px 24px' }}>
+                            <Select
+                                style={{ minWidth: 180 }}
+                                value={type}
+                                onChange={typeChange}
+                                name="level-categories"
+                                fullWidth
+                            >
+                                {cats.map((cat, index) => (
+                                    <MenuItem value={cat.value} key={index}>
+                                        {cat.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </Grid>
+                    </Grid>
                     <Box>
                         <TextField
                             required
                             label="Name"
                             margin="dense"
-                            value={name}
+                            error={!!name.errMsg}
+                            helperText={name.errMsg}
+                            value={name.value}
                             fullWidth={true}
-                            onChange={e => setName(e.target.value)}
+                            onChange={event => setName({ value: event.target.value, errMsg: undefined })}
                         />
                     </Box>
                     <Box>
@@ -275,11 +361,11 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
                                 <TextField
                                     label="Description"
                                     margin="dense"
-                                    value={desc}
+                                    value={desc.value}
                                     fullWidth={true}
                                     multiline={true}
                                     rowsMax={12}
-                                    onChange={e => setDesc(e.target.value)}
+                                    onChange={event => setDesc({ value: event.target.value, errMsg: undefined })}
                                 />
                             </Grid>
                             <Grid item xs={12} md={4} style={{ padding: '8px 0px' }}>
@@ -287,10 +373,12 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
                                     label="Width"
                                     margin="dense"
                                     required
-                                    value={width}
                                     type='number'
                                     fullWidth={true}
-                                    onChange={e => setWidth(parseFloat(e.target.value))}
+                                    error={!!width.errMsg}
+                                    helperText={width.errMsg}
+                                    value={width.value}
+                                    onChange={event => setWidth({ value: event.target.value, errMsg: undefined })}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                     }}
@@ -299,10 +387,12 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
                                     label="Height"
                                     margin="dense"
                                     required
-                                    value={height}
                                     type='number'
                                     fullWidth={true}
-                                    onChange={e => setHeight(parseFloat(e.target.value))}
+                                    error={!!height.errMsg}
+                                    helperText={height.errMsg}
+                                    value={height.value}
+                                    onChange={event => setHeight({ value: event.target.value, errMsg: undefined })}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                     }}
@@ -311,10 +401,12 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
                                     label="Length"
                                     margin="dense"
                                     required
-                                    value={length}
                                     type='number'
                                     fullWidth={true}
-                                    onChange={e => setLength(parseFloat(e.target.value))}
+                                    error={!!length.errMsg}
+                                    helperText={length.errMsg}
+                                    value={length.value}
+                                    onChange={event => setLength({ value: event.target.value, errMsg: undefined })}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">m</InputAdornment>,
                                     }}

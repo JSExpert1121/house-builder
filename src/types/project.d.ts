@@ -44,16 +44,45 @@ export interface Projects extends Pageable {
 }
 
 export interface ProjectLevelCategory {
-    id: number;
-    title: string;
-    category: string;
-    description?: string;
-    contents: CmnObject<number | string>;
+    id: string;
+    number: number;
+    name: string;
+    type: string;
+    description: string;
+    w: number;
+    h: number;
+    l: number;
 }
 
 export interface ProjectLevel {
-    id: number;
+    id: string;
+    number: number;
     name: string;
     description: string;
-    categories: ProjectLevelCategory[];
+    rooms: ProjectLevelCategory[];
+}
+
+export type MockTemplateInfo = {
+    id: string;
+    name: string;
+    description: string;
+};
+
+export type RoomOption = {
+    id: string;
+    type: string;
+    name: string;
+    description: string;
+    images: string[];
+}
+
+export type RoomOptions = {
+    level_id: string;
+    room_id: string;
+    options: RoomOption[];
+};
+
+export type TemplateOption = {
+    templ_id: string;
+    options: RoomOptions[];
 }
