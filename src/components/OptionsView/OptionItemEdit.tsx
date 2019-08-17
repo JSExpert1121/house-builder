@@ -114,6 +114,7 @@ const OptionItemEdit: React.SFC<IOptionItemEditProps> = props => {
                             error={!!type.errMsg}
                             helperText={type.errMsg}
                             value={type.value}
+                            disabled
                             onChange={event => setType({ value: event.target.value, errMsg: undefined })}
                         />
                     </Grid>

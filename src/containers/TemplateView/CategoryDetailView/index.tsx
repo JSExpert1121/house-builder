@@ -116,6 +116,7 @@ interface ConnCategoryDetailViewState extends ISnackbarProps {
 	value: string;
 	description: string;
 	oname: string;
+	otype: string;
 	ovalue: string;
 	oid: string;
 	odescription: string;
@@ -135,6 +136,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 			value: '',
 			description: '',
 			oname: '',
+			otype: '',
 			ovalue: '',
 			oid: '',
 			odescription: '',
@@ -166,7 +168,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 	handleCancel = async () => {
 		const { template } = this.props;
 		template && template.id && await this.props.selectTemplate(template.id);
-		this.props.history.goBack();
+		this.props.history.push('/m_temp/template_detail');
 	}
 
 	handleDelete = async () => {
@@ -225,6 +227,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 		const { userProfile, category } = this.props;
 		const data = {
 			name: this.state.oname,
+			type: this.state.otype,
 			value: this.state.ovalue,
 			description: this.state.odescription,
 			updatedBy: userProfile.email,
@@ -275,8 +278,8 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 	}
 
 	selectOption = async (id: string) => {
-		// await this.props.selectOption(id);
-		// this.props.history.push('/m_temp/option_detail');
+		await this.props.selectOption(id);
+		this.props.history.push('/m_temp/option_detail');
 	}
 
 	render() {
@@ -361,6 +364,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 							<TableHead>
 								<TableRow>
 									<CustomTableCell> Option Name </CustomTableCell>
+									<CustomTableCell align="center">Type</CustomTableCell>
 									<CustomTableCell align="center">Value</CustomTableCell>
 									<CustomTableCell align="center">
 										<IconButton
@@ -369,6 +373,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 												this.setState({
 													oname: '',
 													ovalue: '',
+													otype: '',
 													odescription: '',
 													oid: '',
 													openCategoryForm: true,
@@ -394,9 +399,14 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 											align="center"
 											onClick={() => this.selectOption(row.id)}
 										>
+											{row.type}
+										</CustomTableCell>
+										<CustomTableCell
+											align="center"
+											onClick={() => this.selectOption(row.id)}
+										>
 											{row.value}
 										</CustomTableCell>
-
 										<CustomTableCell align="center">
 											<IconButton
 												className={classes.button}
@@ -435,6 +445,15 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 						/>
 						<TextField
 							margin="dense"
+							label="type"
+							type="email"
+							fullWidth
+							value={this.state.otype}
+							onChange={val => this.setState({ otype: val.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
+						/>
+						<TextField
+							margin="dense"
 							label="value"
 							type="text"
 							fullWidth
@@ -444,9 +463,7 @@ class CategoryDetailView extends Component<ConnCategoryDetailViewProps, ConnCate
 						/>
 						<SimpleMDE
 							onChange={val => this.setState({ odescription: val })}
-							options={{
-								placeholder: 'Description here',
-							}}
+							options={{ placeholder: 'Description here' }}
 						/>
 					</DialogContent>
 					<DialogActions>

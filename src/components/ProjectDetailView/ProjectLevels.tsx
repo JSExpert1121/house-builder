@@ -87,7 +87,7 @@ const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props =
     const handleChange = (e, val) => setValue(val);
     const handleAdd = () => {
         const levelNo = parseInt(number.value);
-        if (levels.some(item => item.number === levelNo)) {
+        if (levels && levels.some(item => item.number === levelNo)) {
             setNumber({
                 value: number.value,
                 errMsg: 'This level number is already taken'

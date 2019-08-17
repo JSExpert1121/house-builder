@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
@@ -9,8 +10,15 @@ import { createStyles, Theme, withStyles, StyledComponentProps } from '@material
 
 import MuiTreeView from 'material-ui-treeview';
 
-import ProjectOptionView from './OptionsView';
+import ProjectOptionView from 'components/OptionsView';
 import { ProjectLevel, MockTemplateInfo, TemplateOption, RoomOption, RoomOptions } from 'types/project';
+
+import {
+    selectCategory,
+    selectTemplate
+} from 'store/actions/tem-actions';
+import { UserProfile, TemplateDetailInfo } from 'types/global';
+
 
 const styles = createStyles((theme: Theme) => ({
     root: {
@@ -45,6 +53,10 @@ export interface IProjectSelectProps extends RouteComponentProps, StyledComponen
     addOption: (id: string, levelId: string, roomId: string, option: RoomOption) => void;
     updateOption: (id: string, levelId: string, roomId: string, option: RoomOption) => void;
     deleteOption: (id: string, levelId: string, roomId: string, optId: string) => void;
+    selectCategory: (id: string) => Promise<void>;
+    selectTemplate: (id: string) => Promise<void>;
+    curTemplate: TemplateDetailInfo;
+    userProfile: UserProfile;
 }
 
 interface IProjectSelectState {
@@ -66,8 +78,16 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
         }
     }
 
+    componentDidMount() {
+        if (this.state.template && this.state.template.length > 0) {
+            this.props.selectTemplate(this.state.template);
+        }
+    }
+
+
     templateChange = (event) => {
         this.setState({ template: event.target.value });
+        this.props.selectTemplate(event.target.value);
     }
 
     roomSelected = (leaf) => {
@@ -79,18 +99,17 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
         });
     }
 
-    roomSelected_ = (event: React.MouseEvent<HTMLElement>, lid: string, rid: string) => {
-        event.stopPropagation();
-        event.preventDefault();
-        this.setState({
-            level: lid,
-            room: rid
-        })
-    }
-
-
     public render() {
-        const { classes, levels, templates, options, addOption, updateOption, deleteOption } = this.props;
+        const {
+            classes,
+            levels,
+            templates,
+            options,
+            addOption,
+            updateOption,
+            deleteOption,
+            curTemplate
+        } = this.props;
         if (!levels || !templates) {
             return <Box className={classes.root}>No levels or templates exist</Box>
         }
@@ -105,13 +124,13 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
         }));
 
         const { template, level, room } = this.state;
-        let curTemplate: MockTemplateInfo = undefined;
-        for (let templ of templates) {
-            if (templ.id === template) {
-                curTemplate = templ;
-                break;
-            }
-        }
+        // let curTemplate: MockTemplateInfo = undefined;
+        // for (let templ of templates) {
+        //     if (templ.id === template) {
+        //         curTemplate = templ;
+        //         break;
+        //     }
+        // }
 
         if (!curTemplate) {
             return <Box className={classes.root}>No template selected</Box>
@@ -149,23 +168,6 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
                         ))}
                     </Select>
                     <Typography component='h3' variant='h6' style={{ paddingTop: 16, paddingBottom: 8, fontSize: '1.2em' }}>Levels</Typography>
-                    {/* <TreeView
-                        defaultCollapseIcon={<ExpandMoreIcon />}
-                        defaultExpandIcon={<ChevronRightIcon />}
-                    >
-                        {levels.map((level, idx) => (
-                            <TreeItem key={level.id} nodeId={`node-${level.id}`} label={level.name}>
-                                {level.rooms && level.rooms.length > 0 && level.rooms.map(room => (
-                                    <TreeItem
-                                        key={room.id}
-                                        nodeId={`${level.id}-${room.id}`}
-                                        label={room.name}
-                                        onClick={e => this.roomSelected(e, level.id, room.id)}
-                                    />
-                                ))}
-                            </TreeItem>
-                        ))}
-                    </TreeView> */}
                     <MuiTreeView tree={tree} onLeafClick={this.roomSelected} />
                 </Box>
                 <Box className={classes.contents}>
@@ -184,4 +186,14 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
     }
 }
 
-export default withStyles(styles)(ProjectSelect);
+const mapStateToProps = state => ({
+    curTemplate: state.tem_data.selectedTemplate,
+    userProfile: state.global_data.userProfile,
+});
+
+const mapDispatchToProps = {
+    selectTemplate,
+    selectCategory,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ProjectSelect));

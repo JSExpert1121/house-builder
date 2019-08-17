@@ -47,6 +47,15 @@ export interface FileInfo extends CommonInfo {
 	name: string;
 }
 
+export interface ProjectOptionPostInfo {
+	name: string;
+	type: string;
+	value: string;
+	description: string;
+}
+
+export type ProjectOptionInfo = CommonInfo & ProjectOptionPostInfo;
+
 export interface OptionPostInfo {
 	name: string;
 	value: string;
@@ -70,7 +79,7 @@ export interface CategoryInfo extends CommonInfo {
 	type: string;
 	value: string;
 	description: string;
-	optionList?: Array<OptionInfo>;
+	optionList?: Array<ProjectOptionInfo>;
 	proposalOptions?: object;
 }
 

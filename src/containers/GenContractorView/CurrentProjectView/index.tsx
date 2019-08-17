@@ -59,7 +59,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
             variant: 'success',
             showConfirm: false,
             proId: '',
-            handleClose: () => this.setState({showMessage: false})
+            handleClose: () => this.setState({ showMessage: false })
         };
     }
 
@@ -235,7 +235,7 @@ class CurrentProject extends React.Component<CurrentProjectProps, CurrentProject
                     onCancel={() => this.setState({ showConfirm: false })}
                     message="Do you want to delete this project?"
                 />
-                {this.state.isBusy && <CircularProgress className="busy" />}
+                {this.state.isBusy && <CircularProgress className={classes.busy} />}
             </Box>
         );
     }
@@ -253,9 +253,6 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    ),
+    connect(mapStateToProps, mapDispatchToProps),
     withStyles(style)
 )(CurrentProject);

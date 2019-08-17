@@ -21,6 +21,7 @@ import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
 import ProjectLevelsWrapper from './ProjectLevelsWrapper';
+import ProjectSelectWrapper from './ProjectSelectWrapper';
 import { getProjectData } from 'store/actions/global-actions';
 import { getLevels } from 'store/actions/gen-actions';
 import { ProjectInfo } from 'types/project';
@@ -80,9 +81,10 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
         const { classes, match, project, location } = this.props;
         const owner = match.url.includes('/gen-contractor');
 
-        const tabNo = [
+        const tabPaths = [
             match.url + '/overview',
             match.url + '/levels',
+            match.url + '/select',
             match.url + '/files',
             match.url + '/templates',
             match.url + '/proposals',
@@ -92,8 +94,8 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
 
         let curTabPos = 0;
 
-        for (let i = 0; i < tabNo.length; i++) {
-            if (tabNo[i] === location.pathname) {
+        for (let i = 0; i < tabPaths.length; i++) {
+            if (tabPaths[i] === location.pathname) {
                 curTabPos = i;
                 break;
             }
@@ -120,38 +122,43 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
                         >
                             <Tab
                                 component={Link}
-                                to={`${match.url}/overview`}
+                                to={tabPaths[0]}
                                 label="Overview"
                             />
                             <Tab
                                 component={Link}
-                                to={`${match.url}/levels`}
+                                to={tabPaths[1]}
                                 label="Levels"
                             />
                             <Tab
                                 component={Link}
-                                to={`${match.url}/files`}
+                                to={tabPaths[2]}
+                                label="Select"
+                            />
+                            <Tab
+                                component={Link}
+                                to={tabPaths[3]}
                                 label="Files"
                             />
                             <Tab
                                 component={Link}
-                                to={`${match.url}/templates`}
+                                to={tabPaths[4]}
                                 label="Templates"
                             />
                             <Tab
                                 component={Link}
-                                to={`${match.url}/proposals`}
+                                to={tabPaths[5]}
                                 label="Proposals"
                             />
                             <Tab
                                 component={Link}
-                                to={`${match.url}/bidders`}
+                                to={tabPaths[6]}
                                 label="Bidders"
                             />
                             {owner && (
                                 <Tab
                                     component={Link}
-                                    to={`${match.url}/compare`}
+                                    to={tabPaths[7]}
                                     label="Compare"
                                 />
                             )}
@@ -166,6 +173,10 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
                             <SecuredRoute
                                 path={`${match.url}/levels`}
                                 component={ProjectLevelsWrapper}
+                            />
+                            <SecuredRoute
+                                path={`${match.url}/select`}
+                                component={ProjectSelectWrapper}
                             />
                             <SecuredRoute
                                 path={`${match.url}/files`}

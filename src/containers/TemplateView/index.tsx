@@ -13,7 +13,7 @@ import SecuredRoute from 'routers/SecuredRoute';
 import { UserProfile } from 'types/global';
 import AllTemplatesView from './AllTemplatesView';
 import CategoryDetailView from './CategoryDetailView';
-// import OptionDetailView from './OptionDetailView';
+import OptionDetailView from './OptionDetailView';
 import TempDetailView from './TempDetailView';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -68,11 +68,11 @@ const TemplatesView: React.SFC<TemplatesViewProps> = (props) => {
 						label: 'Category Detail',
 						icon: ViewHeadlineIcon,
 					},
-					// {
-					// 	href: `/m_temp/option_detail`,
-					// 	label: 'Option Detail',
-					// 	icon: ViewHeadlineIcon,
-					// },
+					{
+						href: `/m_temp/option_detail`,
+						label: 'Option Detail',
+						icon: ViewHeadlineIcon,
+					},
 				]}
 				value={tab}
 			/>
@@ -90,10 +90,10 @@ const TemplatesView: React.SFC<TemplatesViewProps> = (props) => {
 						path="/m_temp/category_detail"
 						component={CategoryDetailView}
 					/>
-					{/* <SecuredRoute
+					<SecuredRoute
 						path="/m_temp/option_detail"
 						component={OptionDetailView}
-					/> */}
+					/>
 					<Redirect path="/m_temp" to={`/m_temp/all_templates`} />
 				</Switch>
 			</main>

@@ -37,7 +37,7 @@ const invitedLoaded = invited => ({
 	payload: invited
 });
 
-export const addProject = (cont_id, project) => dispatch => ContApi.addProject(cont_id, project).then(data => data.id);
+export const addProject = (cont_id, project) => dispatch => ContApi.addProject(cont_id, project);
 export const updateProject = (id, project) => dispatch => ProjApi.update(id, project);
 export const addFilesToProject = (id, files) => dispatch => ProjApi.addFiles(id, files);
 export const deleteProject = id => dispatch => ProjApi.delete(id);
@@ -78,8 +78,7 @@ export const createRoom = (lvlId, room) => dispatch => ProjApi.createRoom(lvlId,
 export const updateRoom = (id, cat) => dispatch => ProjApi.updateRoom(id, cat);
 export const deleteRoom = id => dispatch => ProjApi.deleteRoom(id);
 export const getRoom = roomId => dispatch => ProjApi.getRoom(roomId);
-export const getLevels = id => dispatch => {
-	return ProjApi.getLevels(id).then(data => {
-		dispatch(levelsLoaded(data));
-	})
-}
+export const getLevels = id => dispatch => ProjApi.getLevels(id).then(data => {
+	dispatch(levelsLoaded(data));
+});
+export const clearLevels = () => dispatch => dispatch(levelsLoaded(undefined));

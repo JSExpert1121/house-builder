@@ -9,6 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import Button from "components/CustomButtons/Button.jsx";
 import ProjectEditView from 'components/ProjectDetailView/ProjectEditView';
+import ProjectView from 'components/ProjectDetailView/ProjectView';
 
 
 const useStyles = makeStyles(theme => ({
@@ -54,6 +55,7 @@ export interface ProjectBriefInfo {
 }
 
 interface IAddProjectOverviewProps extends RouteComponentProps, ProjectBriefInfo {
+	project: any;
 	isBusy: boolean;
 	handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleRemove: (file: File) => void;
@@ -74,61 +76,74 @@ const AddProjectOverview: React.SFC<IAddProjectOverviewProps> = (props) => {
 		handleTitleChange,
 		handlePriceChange,
 		handleAdd,
-		title, price, description, dueDate, files, isBusy
+		title, price, description, dueDate, files, isBusy,
+		project
 	} = props;
 	const classes = useStyles({});
 
 	return (
 		<Box className={classes.root}>
 			<Box className={classes.mainBoard}>
-				<ProjectEditView
-					title={title}
-					price={price}
-					dueDate={dueDate}
-					description={description}
-					handleTitleChange={handleTitleChange}
-					handlePriceChange={handlePriceChange}
-					handleDateChange={handleDateChange}
-					handleDescChange={handleDescChange}
-				/>
-				<Box className={classes.fileUpload}>
-					<input
-						accept="text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*"
-						id="upload-file"
-						multiple
-						type="file"
-						style={{ display: 'none' }}
-						onChange={handleFileChange}
+				{!!project && (
+					<ProjectView
+						project={project}
 					/>
-					<label htmlFor="upload-file" style={{ display: 'inline' }}>
-						<Button
-							variant="contained"
-							component="span"
-						>
-							<CloudUploadIcon />
-							&nbsp;&nbsp;Upload
-                        </Button>
-					</label>
-					{files.map(file => (
-						<span className={classes.fileItem} key={file.name + file.size}>
-							{file.name}
-							<IconButton
-								onClick={() => handleRemove(file)}
-								style={{ padding: '0px' }}
+				)}
+				{!!project || (
+					<ProjectEditView
+						title={title}
+						price={price}
+						dueDate={dueDate}
+						description={description}
+						handleTitleChange={handleTitleChange}
+						handlePriceChange={handlePriceChange}
+						handleDateChange={handleDateChange}
+						handleDescChange={handleDescChange}
+					/>
+				)}
+
+				{!!project || (
+					<Box className={classes.fileUpload}>
+						<input
+							accept="text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*"
+							id="upload-file"
+							multiple
+							type="file"
+							style={{ display: 'none' }}
+							onChange={handleFileChange}
+							disabled={!!project}
+						/>
+						<label htmlFor="upload-file" style={{ display: 'inline' }}>
+							<Button
+								variant="contained"
+								component="span"
 							>
-								<DeleteIcon />
-							</IconButton>
-						</span>
-					))}
-				</Box>
+								<CloudUploadIcon />
+								&nbsp;&nbsp;Upload
+                        </Button>
+						</label>
+						{files.map(file => (
+							<span className={classes.fileItem} key={file.name + file.size}>
+								{file.name}
+								<IconButton
+									onClick={() => handleRemove(file)}
+									style={{ padding: '0px' }}
+								>
+									<DeleteIcon />
+								</IconButton>
+							</span>
+						))}
+					</Box>
+				)}
+
 				<Box style={{ width: '100%', textAlign: 'center' }}>
 					<Button
 						color="primary"
 						disabled={isBusy}
 						onClick={handleAdd}
 					>
-						Add Project
-                    </Button>
+						{!!project ? 'Go to Levels' : 'Add Project'}
+					</Button>
 				</Box>
 			</Box>
 		</Box>

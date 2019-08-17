@@ -233,8 +233,8 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
         { name: 'Bed Room', value: 'BEDROOM' },
         { name: 'Living Room', value: 'LIVINGROOM' },
         { name: 'Hallway', value: 'HALLWAY' },
-        { name: 'Kitchen', value: 'KITCHEN' },
-        { name: 'Rooftop', value: 'ROOFTOP' }
+        { name: 'Stairs', value: 'STAIRS' },
+        { name: 'Other', value: 'OTHER' }
     ];
 
     return (
@@ -310,7 +310,7 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
                 onClose={() => setModal(false)}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">Add a Level</DialogTitle>
+                <DialogTitle id="form-dialog-title">Add a Room</DialogTitle>
                 <DialogContent>
                     <Grid container>
                         <Grid item xs={12} md={6} style={{ padding: '8px 0px' }}>

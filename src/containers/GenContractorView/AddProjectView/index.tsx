@@ -8,12 +8,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { createStyles, withStyles } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 
+import SecuredRoute from 'routers/SecuredRoute';
+import AddProjectOverview, { ProjectBriefInfo } from './Overview';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 import CustomTabs from "components/shared/CustomTabs";
 import ProjectLevels from 'components/ProjectDetailView/ProjectLevels';
-import SecuredRoute from 'routers/SecuredRoute';
-import AddProjectOverview, { ProjectBriefInfo } from './Overview';
-import ProjectSelect from './ProjectSelect';
+import ProjectSelect from 'components/ProjectDetailView/ProjectSelect';
 import {
     addFilesToProject,
     addProject,
@@ -23,7 +23,8 @@ import {
     updateRoom,
     deleteLevel,
     deleteRoom,
-    getLevels
+    getLevels,
+    clearLevels
 } from 'store/actions/gen-actions';
 import { getTemplates } from 'store/actions/tem-actions';
 
@@ -37,7 +38,7 @@ import {
 } from 'types/project';
 
 // mocking data/api
-import { initLevels } from './mock';
+// import { initLevels } from './mock';
 
 const styles = theme => createStyles({
     root: {
@@ -86,17 +87,18 @@ interface IAddProjectViewProps extends RouteComponentProps {
         h: number,
         l: number
     }) => Promise<any>;
-    updateRoom: (id: string, desc: string) => Promise<any>;
+    updateRoom: (id: string, cat: ProjectLevelCategory) => Promise<any>;
     deleteRoom: (id: string) => Promise<void>;
     getLevels: (id: string) => Promise<void>;
+    clearLevels: () => void;
     getTemplates: (currentPage: number, rowsPerPage: number) => Promise<void>;
+    levels: ProjectLevel[];
     templates: TemplateDetailInfo[];
 }
 
 interface IAddProjectViewState extends ISnackbarProps, ProjectBriefInfo {
     isBusy: boolean;
-    projectId: string;
-    levels: ProjectLevel[];
+    project: any;
     options: TemplateOption[];
 }
 
@@ -115,14 +117,15 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
             message: '',
             variant: 'error',
             handleClose: this.closeMessage,
-            projectId: '',
-            levels: initLevels,
+            project: undefined,
+            // levels: initLevels,
             options: [],
         }
     }
 
     componentDidMount() {
         this.props.getTemplates(0, 100);
+        this.props.clearLevels();
     }
 
 
@@ -131,8 +134,13 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
     }
 
     handleAddProject = async () => {
-        const { userProfile, createLevel, createRoom } = this.props;
-        const { files, title, description, price, dueDate, levels } = this.state;
+        const { userProfile, history } = this.props;
+        const { files, title, description, price, dueDate } = this.state;
+        if (this.state.project) {
+            history.push('/gen-contractor/add_project/add-levels');
+            return;
+        }
+
         if (title.length === 0 || description.length === 0 || price === 0) {
             this.setState({
                 showMessage: true,
@@ -151,33 +159,24 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
 
         this.setState({ isBusy: true });
 
-        let projectId: string = undefined;
+        let project = undefined;
         try {
-            projectId = await this.props.addProject(userProfile.user_metadata.contractor_id, projectData);
-            await this.props.addFilesToProject(projectId, files);
-
-            for (let level of levels) {
-                const data = await createLevel(projectId, {
-                    number: level.number,
-                    name: level.name,
-                    description: level.description
-                });
-                console.log(data);
-
-                for (let room of level.rooms) {
-                    const { id, ...rest } = room;
-                    await createRoom(data.id, rest);
-                }
-            }
-
-            this.setState({ isBusy: false, projectId });
-            // this.props.history.push('/gen-contractor');
+            project = await this.props.addProject(userProfile.user_metadata.contractor_id, projectData);
+            await this.props.addFilesToProject(project.id, files);
+            this.setState({
+                isBusy: false,
+                project,
+                showMessage: true,
+                variant: 'success',
+                message: 'Add project success'
+            });
         } catch (error) {
             this.setState({
                 isBusy: false,
                 showMessage: true,
+                variant: 'error',
                 message: 'Add project failed.',
-                projectId: ''
+                project: undefined
             });
         }
     };
@@ -215,120 +214,170 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
         this.setState({ price: value });
     }
 
-    addLevel = (number, name, desc) => {
-        const { levels } = this.state;
+    addLevel = async (number, name, desc) => {
+        const { project } = this.state;
+        if (!project) {
+            this.setState({
+                showMessage: true,
+                message: 'You should post a project first',
+                variant: 'warning'
+            });
 
-        this.setState({
-            levels: [...levels, {
-                id: number.toString(),
-                number,
-                name,
-                description: desc,
-                rooms: []
-            }]
-        });
-    }
-
-    updateLevel = (id: string, desc: string) => {
-        const { levels } = this.state;
-
-        let level: ProjectLevel = undefined;
-        for (let lvl of levels) {
-            if (lvl.id === id) {
-                level = lvl;
-                break;
-            }
+            return;
         }
 
-        if (!level) return;
-        level.description = desc;
-        this.setState({ levels: [...levels] });
+        const { createLevel, getLevels } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            await createLevel(project.id, { number, name, description: desc });
+            await getLevels(project.id);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Add Level success',
+                variant: 'success'
+            });
+        } catch (error) {
+            console.log('AddProjectView.AddLevel: ', error);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Add Level failed',
+                variant: 'error'
+            });
+        }
     }
 
-    deleteLevel = (id: string) => {
-        const { levels } = this.state;
+    updateLevel = async (id: string, desc: string) => {
+        const { project } = this.state;
 
-        let level: ProjectLevel = undefined;
-        for (let lvl of levels) {
-            if (lvl.id === id) {
-                level = lvl;
-                break;
-            }
+        this.setState({ isBusy: true });
+        try {
+            await updateLevel(id, desc);
+            await getLevels(project.id);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Update Level success',
+                variant: 'success'
+            });
+        } catch (error) {
+            console.log('AddProjectView.UpdateLevel: ', error);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Update Level failed',
+                variant: 'error'
+            });
         }
-
-        if (!level) return;
-        const idx = levels.indexOf(level);
-        levels.splice(idx, 1);
-
-        const options = this.deleteOptionsForLevel(id);
-        this.setState({
-            levels: [...levels],
-            options: [...options]
-        });
     }
 
-    addCategory = (id: string, cat: ProjectLevelCategory) => {
-        const { levels } = this.state;
+    deleteLvl = async (id: string) => {
+        const { project } = this.state;
+        const { deleteLevel, getLevels } = this.props;
+        if (!project) return;
 
-        let level: ProjectLevel = undefined;
-        for (let lvl of levels) {
-            if (lvl.id === id) {
-                level = lvl;
-                break;
-            }
+        this.setState({ isBusy: true });
+        try {
+            await deleteLevel(id);
+            await getLevels(project.id);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Delete Level success',
+                variant: 'success'
+            });
+        } catch (error) {
+            console.log('AddProjectView.RemoveLevel: ', error);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Delete Level failed',
+                variant: 'error'
+            });
         }
-
-        if (!level) return;
-        cat.id = cat.number.toString();
-        level.rooms.push(cat);
-        this.setState({ levels: [...levels] });
     }
 
-    updateCategory = (id: string, cat: ProjectLevelCategory) => {
-        const { levels } = this.state;
+    addCategory = async (id: string, cat: ProjectLevelCategory) => {
+        const { createRoom, getLevels } = this.props;
+        const { project } = this.state;
 
-        let level: ProjectLevel = undefined;
-        for (let lvl of levels) {
-            if (lvl.id === id) {
-                level = lvl;
-                break;
-            }
+        this.setState({ isBusy: true });
+        try {
+            await createRoom(id, {
+                number: cat.number,
+                name: cat.name,
+                type: cat.type,
+                description: cat.description,
+                w: cat.w,
+                l: cat.l,
+                h: cat.h
+            });
+            await getLevels(project.id);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Create Room success',
+                variant: 'success'
+            });
+        } catch (error) {
+            console.log('AddProjectView.AddRoom: ', error);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Create Room failed',
+                variant: 'error'
+            });
         }
+    }
 
-        if (!level) return;
-        const count = level.rooms.length;
-        for (let i = 0; i < count; i++) {
-            if (level.rooms[i].id === cat.id) {
-                level.rooms[i] = cat;
-                this.setState({ levels: [...levels] });
-                return;
-            }
+    updateCategory = async (id: string, cat: ProjectLevelCategory) => {
+        const { updateRoom, getLevels } = this.props;
+        const { project } = this.state;
+
+        this.setState({ isBusy: true });
+        try {
+            await updateRoom(cat.id, cat);
+            await getLevels(project.id);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Update Room success',
+                variant: 'success'
+            });
+        } catch (error) {
+            console.log('AddProjectView.UpdateRoom: ', error);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Update Room failed',
+                variant: 'error'
+            });
         }
     }
 
     deleteCategory = async (id: string, catId: string) => {
-        const { levels } = this.state;
+        const { deleteRoom, getLevels } = this.props;
+        const { project } = this.state;
 
-        let level: ProjectLevel = undefined;
-        for (let lvl of levels) {
-            if (lvl.id === id) {
-                level = lvl;
-                break;
-            }
-        }
-
-        if (!level) return;
-        const count = level.rooms.length;
-        for (let i = 0; i < count; i++) {
-            if (level.rooms[i].id === catId) {
-                level.rooms.splice(i, 1);
-                const options = this.deleteOptionsForCategory(catId);
-                this.setState({
-                    levels: [...levels],
-                    options: [...options]
-                });
-                return;
-            }
+        this.setState({ isBusy: true });
+        try {
+            await deleteRoom(catId);
+            await getLevels(project.id);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Delete Room success',
+                variant: 'success'
+            });
+        } catch (error) {
+            console.log('AddProjectView.DeleteRoom: ', error);
+            this.setState({
+                isBusy: false,
+                showMessage: true,
+                message: 'Delete Room failed',
+                variant: 'error'
+            });
         }
     }
 
@@ -472,8 +521,8 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
     }
 
     public render() {
-        const { classes, match, location, templates } = this.props;
-        const { title, price, description, dueDate, files, isBusy, levels, options } = this.state;
+        const { classes, match, location, templates, levels } = this.props;
+        const { title, price, description, dueDate, files, isBusy, options, project } = this.state;
         const tabs = [
             { href: `${match.url}/submitted`, label: 'Overview' },
             { href: `${match.url}/add-levels`, label: 'Levels' },
@@ -505,6 +554,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
                                     handleTitleChange={this.handleTitleChange}
                                     handlePriceChange={this.handlePriceChange}
                                     handleAdd={this.handleAddProject}
+                                    project={project}
                                 />
                             )}
                         />
@@ -514,7 +564,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
                                 <ProjectLevels {...props}
                                     levels={levels}
                                     addLevel={this.addLevel}
-                                    deleteLevel={this.deleteLevel}
+                                    deleteLevel={this.deleteLvl}
                                     addCategory={this.addCategory}
                                     updateCategory={this.updateCategory}
                                     deleteCategory={this.deleteCategory}
@@ -552,6 +602,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
 
 const mapStateToProps = state => ({
     userProfile: state.global_data.userProfile,
+    levels: state.gen_data.levels,
     templates: state.tem_data.templates ? state.tem_data.templates.content || [] : [],
 });
 
@@ -566,6 +617,7 @@ const mapDispatchToProps = {
     deleteRoom,
     getLevels,
     getTemplates,
+    clearLevels
 };
 
 export default compose(
