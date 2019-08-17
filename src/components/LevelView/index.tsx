@@ -232,6 +232,8 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
         { name: 'Bath Room', value: 'BATHROOM' },
         { name: 'Bed Room', value: 'BEDROOM' },
         { name: 'Living Room', value: 'LIVINGROOM' },
+        { name: 'Kitchen', value: 'KITCHEN' },
+        { name: 'Rooftop', value: 'ROOFTOP' },
         { name: 'Hallway', value: 'HALLWAY' },
         { name: 'Stairs', value: 'STAIRS' },
         { name: 'Other', value: 'OTHER' }
