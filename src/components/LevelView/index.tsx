@@ -21,6 +21,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 
 import withSnackbar, { withSnackbarProps } from 'components/HOCs/withSnackbar';
 import LevelCat from 'components/LevelView/LevelCat';
@@ -60,7 +61,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         position: 'absolute',
         right: theme.spacing(2),
-        top: theme.spacing(2)
+        top: theme.spacing(1)
     },
     left: {
         float: 'left'
@@ -86,6 +87,7 @@ const useStyles = makeStyles(theme => ({
 interface ILevelViewProps {
     editable: boolean;
     level: ProjectLevel;
+    editLevel: (id: string) => void;
     deleteLevel: (id: string) => void;
     addCategory: (id: string, cat: ProjectLevelCategory) => void;
     updateCategory: (cat: ProjectLevelCategory) => void;
@@ -96,6 +98,7 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
 
     const {
         level,
+        editLevel,
         deleteLevel,
         addCategory,
         updateCategory,
@@ -253,6 +256,12 @@ const LevelView: React.SFC<ILevelViewProps & withSnackbarProps> = (props) => {
                     </Box>
                     {props.editable && (
                         <Box className={classes.action}>
+                            <IconButton aria-label="Delete" onClick={(e) => {
+                                e.stopPropagation();
+                                editLevel(level.id);
+                            }} >
+                                <EditIcon fontSize='large' />
+                            </IconButton>
                             <IconButton aria-label="Delete" onClick={(e) => {
                                 e.stopPropagation();
                                 deleteLevel(level.id);

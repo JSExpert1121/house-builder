@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface IProjectLevelsProps extends RouteComponentProps {
     levels: ProjectLevel[];
     addLevel: (number: number, name: string, desc: string) => void;
+    updateLevel: (id: string, no: number, name: string, desc: string) => Promise<void>;
     deleteLevel: (id: string) => Promise<void>;
     addCategory: (id: string, cat: ProjectLevelCategory) => void;
     updateCategory: (id: string, cat: ProjectLevelCategory) => void;
@@ -58,6 +59,7 @@ const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props =
     const {
         levels,
         addLevel,
+        updateLevel,
         deleteLevel,
         updateCategory,
         addCategory,
@@ -83,51 +85,91 @@ const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props =
         errMsg: undefined
     } as Validator);
     const [showModal, setModal] = React.useState(false);
+    const [editId, setEditId] = React.useState('');
 
     const handleChange = (e, val) => setValue(val);
     const handleAdd = () => {
         const levelNo = parseInt(number.value);
-        if (levels && levels.some(item => item.number === levelNo)) {
-            setNumber({
-                value: number.value,
-                errMsg: 'This level number is already taken'
-            });
+        if (editId.length === 0) {
+            if (levels && levels.some(item => item.number === levelNo)) {
+                setNumber({
+                    value: number.value,
+                    errMsg: 'This level number is already taken'
+                });
 
-            return;
+                return;
+            }
+            if (name.value.length === 0) {
+                setName({
+                    value: name.value,
+                    errMsg: 'Name is required'
+                });
+
+                return;
+            }
+
+            setModal(false);
+            addLevel(parseInt(number.value), name.value, desc.value);
+            setName({ value: '', errMsg: undefined });
+            setDesc({ value: '', errMsg: undefined });
+        } else {
+            const editing = levels.filter(level => level.id === editId);
+            if (levelNo !== editing[0].number && levels.some(item => item.number === levelNo)) {
+                setNumber({
+                    value: number.value,
+                    errMsg: 'This level number is already taken'
+                });
+
+                return;
+            }
+            if (name.value.length === 0) {
+                setName({
+                    value: name.value,
+                    errMsg: 'Name is required'
+                });
+
+                return;
+            }
+
+            setModal(false);
+            updateLevel(editId, levelNo, name.value, desc.value);
+            setName({ value: '', errMsg: undefined });
+            setDesc({ value: '', errMsg: undefined });
         }
-        if (name.value.length === 0) {
-            setName({
-                value: name.value,
-                errMsg: 'Name is required'
-            });
-
-            return;
-        }
-
-        setModal(false);
-        addLevel(parseInt(number.value), name.value, desc.value);
-        setName({ value: '', errMsg: undefined });
-        setDesc({ value: '', errMsg: undefined });
     }
 
     const closeDialog = () => setModal(false);
-    const showDialog = () => setModal(true);
+    const showAddDialog = () => {
+        setModal(true);
+        setEditId('');
+    };
+
+    const showEditDialog = (id) => {
+        console.log(id);
+        const editing = levels.filter(level => level.id === id);
+        setNumber({ value: editing[0].number.toString(), errMsg: undefined });
+        setName({ value: editing[0].name, errMsg: undefined });
+        setDesc({ value: editing[0].description, errMsg: undefined });
+        setEditId(id);
+        setModal(true);
+    }
 
     const handleDelete = async (id: string) => {
         hideConfirm();
+        if (value === (levels.length - 1)) setValue(value - 1);
         await deleteLevel(id);
-        if (value > 0) setValue(value - 1);
     }
 
     const deleteLvl = (id) => {
         showConfirm('Confirm', 'Do you really want to delete this level?', () => handleDelete(id), true);
     }
 
+
     return (
         <Box className={classes.root}>
             {(!levels || !levels.length) && editable && (
                 <Box className={classes.buttonContainer}>
-                    <Button onClick={showDialog} color="primary">
+                    <Button onClick={showAddDialog} color="primary">
                         <AddIcon />&nbsp;&nbsp;Add Level
                     </Button>
                 </Box>
@@ -154,7 +196,7 @@ const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props =
                         </Tabs>
                         {editable && (
                             <Box className={classes.buttonContainer}>
-                                <Button onClick={showDialog} color="primary">
+                                <Button onClick={showAddDialog} color="primary">
                                     <AddIcon />{' '}Add Level
                                 </Button>
                             </Box>
@@ -166,6 +208,7 @@ const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props =
                                 <LevelView
                                     editable={editable}
                                     level={level}
+                                    editLevel={showEditDialog}
                                     deleteLevel={deleteLvl}
                                     addCategory={addCategory}
                                     updateCategory={cat => updateCategory(level.id, cat)}
@@ -192,7 +235,7 @@ const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props =
                         autoFocus
                         fullWidth
                         margin='dense'
-                        label='Name'
+                        label='Level Number'
                         type='number'
                         error={!!number.errMsg}
                         helperText={number.errMsg}
@@ -226,7 +269,7 @@ const ProjectLevels: React.SFC<IProjectLevelsProps & withConfirmProps> = props =
                         color='primary'
                         defaultChecked
                     >
-                        Add
+                        {editId.length === 0 ? 'Add' : 'Save'}
                     </Button>
                 </DialogActions>
             </Dialog>

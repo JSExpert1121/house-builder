@@ -10,15 +10,7 @@ import ProjectLevels from './ProjectLevels';
 import withSnackbar, { withSnackbarProps } from 'components/HOCs/withSnackbar';
 import { ProjectLevel, ProjectLevelCategory, ProjectInfo } from 'types/project';
 import { UserProfile } from 'types/global';
-import {
-	createLevel,
-	createRoom,
-	updateLevel,
-	updateRoom,
-	deleteLevel,
-	deleteRoom,
-	getLevels
-} from 'store/actions/gen-actions';
+import * as GenActions from 'store/actions/gen-actions';
 
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 interface IProjectLevelsWrapperProps extends RouteComponentProps {
 	createLevel: (id: string, level: { number: number, name: string, description: string }) => Promise<any>;
-	updateLevel: (id: string, desc: string) => Promise<any>;
+	changeLevel: (id: string, level: { number: number, name: string, description: string }) => Promise<any>;
 	deleteLvl: (id: string) => Promise<any>;
 	createRoom: (id: string, room: {
 		number: number,
@@ -55,12 +47,11 @@ interface IProjectLevelsWrapperProps extends RouteComponentProps {
 
 const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps & withSnackbarProps> = (props) => {
 
-	const { levels, project, showMessage } = props;
+	const { levels, project, showMessage, changeLevel, getLevels, createLevel } = props;
 	const classes = useStyles({});
 	const [busy, setBusy] = React.useState(false);
 
 	const addLevel = async (number, name, desc) => {
-		const { createLevel, getLevels } = props;
 		if (!project) return;
 
 		setBusy(true);
@@ -76,22 +67,23 @@ const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps & withSnackbarP
 		}
 	}
 
-	// const updateLevel = async (id: string, desc: string) => {
-	// 	const { updateLevel, getLevels } = props;
-	// 	if (!project) return;
+	const updateLvl = async (id: string, no: number, name: string, desc: string) => {
+		if (!project) return;
 
-	// 	setBusy(true);
-	// 	try {
-	// 		await updateLevel(id, desc);
-	// 		await getLevels(project.id);
-	// 		setBusy(false);
-	// 		showMessage(true, 'Update Level success');
-	// 	} catch (error) {
-	// 		console.log('ProjectLevelWrapper.UpdateLevel: ', error);
-	// 		setBusy(false);
-	// 		showMessage(false, 'Update Level failed');
-	// 	}
-	// }
+		setBusy(true);
+		try {
+			await changeLevel(id, {
+				number: no, name, description: desc
+			});
+			await getLevels(project.id);
+			setBusy(false);
+			showMessage(true, 'Update Level success');
+		} catch (error) {
+			console.log('ProjectLevelWrapper.UpdateLevel: ', error);
+			setBusy(false);
+			showMessage(false, 'Update Level failed');
+		}
+	}
 
 	const removeLevel = async (id: string) => {
 		const { deleteLvl, getLevels } = props;
@@ -178,6 +170,7 @@ const ProjectLevelsWrapper: React.SFC<IProjectLevelsWrapperProps & withSnackbarP
 			<ProjectLevels
 				levels={levels}
 				addLevel={addLevel}
+				updateLevel={updateLvl}
 				deleteLevel={removeLevel}
 				addCategory={addCategory}
 				updateCategory={updateCategory}
@@ -196,13 +189,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	createLevel: (id, level) => dispatch(createLevel(id, level)),
-	createRoom: (id, room) => dispatch(createRoom(id, room)),
-	updateLevel: (id, desc) => dispatch(updateLevel(id, desc)),
-	updateRoom: (id, cat) => dispatch(updateRoom(id, cat)),
-	deleteLvl: id => dispatch(deleteLevel(id)),
-	deleteRoom: id => dispatch(deleteRoom(id)),
-	getLevels: id => dispatch(getLevels(id)),
+	createLevel: (id, level) => dispatch(GenActions.createLevel(id, level)),
+	createRoom: (id, room) => dispatch(GenActions.createRoom(id, room)),
+	changeLevel: (id, data) => dispatch(GenActions.updateLevel(id, data)),
+	updateRoom: (id, cat) => dispatch(GenActions.updateRoom(id, cat)),
+	deleteLvl: id => dispatch(GenActions.deleteLevel(id)),
+	deleteRoom: id => dispatch(GenActions.deleteRoom(id)),
+	getLevels: id => dispatch(GenActions.getLevels(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withSnackbar<IProjectLevelsWrapperProps>(ProjectLevelsWrapper));

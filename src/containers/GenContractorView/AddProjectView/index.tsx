@@ -76,7 +76,7 @@ interface IAddProjectViewProps extends RouteComponentProps {
     addFilesToProject: (projId: string, files: Array<File>) => void;
     addProject: (contId: string, data: ProjectPostInfo) => Promise<string>;
     createLevel: (id: string, level: { number: number, name: string, description: string }) => Promise<any>;
-    updateLevel: (id: string, desc: string) => Promise<any>;
+    updateLevel: (id: string, level: { number: number, name: string, description: string }) => Promise<any>;
     deleteLevel: (id: string) => Promise<void>;
     createRoom: (id: string, room: {
         number: number,
@@ -248,12 +248,12 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
         }
     }
 
-    updateLevel = async (id: string, desc: string) => {
+    updateLevel = async (id: string, no: number, name: string, desc: string) => {
         const { project } = this.state;
 
         this.setState({ isBusy: true });
         try {
-            await updateLevel(id, desc);
+            await this.props.updateLevel(id, { number: no, name, description: desc });
             await getLevels(project.id);
             this.setState({
                 isBusy: false,
@@ -565,6 +565,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
                                     levels={levels}
                                     addLevel={this.addLevel}
                                     deleteLevel={this.deleteLvl}
+                                    updateLevel={this.updateLevel}
                                     addCategory={this.addCategory}
                                     updateCategory={this.updateCategory}
                                     deleteCategory={this.deleteCategory}

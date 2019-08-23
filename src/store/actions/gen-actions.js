@@ -71,7 +71,7 @@ export const deleteTemplate = (projectId, templateId) => dispatch => ProjApi.del
 export const awardProject = id => dispatch => PropApi.award(id);
 
 export const createLevel = (id, level) => dispatch => ProjApi.createLevel(id, level);
-export const updateLevel = (id, desc) => dispatch => ProjApi.updateLevel(id, desc);
+export const updateLevel = (id, data) => dispatch => ProjApi.updateLevel(id, data);
 export const deleteLevel = id => dispatch => ProjApi.deleteLevel(id);
 export const getLevel = lvlId => dispatch => ProjApi.getLevel(lvlId);
 export const createRoom = (lvlId, room) => dispatch => ProjApi.createRoom(lvlId, room);

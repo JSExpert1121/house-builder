@@ -45,9 +45,7 @@ export default {
 		name: level.name,
 		description: level.description
 	}).then(res => res.data),
-	updateLevel: (lvlId, description) => Axios.put(LEVEL_API_PATH + lvlId, {
-		description
-	}).then(res => res.data),
+	updateLevel: (lvlId, data) => Axios.put(LEVEL_API_PATH + lvlId, data).then(res => res.data),
 	deleteLevel: id => Axios.delete(LEVEL_API_PATH + id).then(res => res.data),
 	getLevel: id => Axios.get(LEVEL_API_PATH + id).then(res => res.data),
 	createRoom: (lvlId, room) => Axios.post(LEVEL_API_PATH + lvlId + '/rooms', {
