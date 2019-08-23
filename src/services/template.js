@@ -23,4 +23,18 @@ export default {
 	delete: (id) => Axios.delete(TEMPL_API_PATH + id).then(res => res.data),
 	deleteCategory: id => Axios.delete(CATEGORY_API_PATH + id).then(res => res.data),
 	deleteOption: id => Axios.delete(OPTION_API_PATH + id).then(res => res.data),
+
+	// new apis
+	createRoot: (name, type, value, desc) => Axios.post(TEMPL_API_PATH + 'nodes', {
+		name, type, value, description: desc
+	}).then(res => res.data),
+	createNode: (parent, name, type, value, desc) => Axios.post(TEMPL_API_PATH + 'nodes/' + parent, {
+		name, type, value, description: desc
+	}).then(res => res.data),
+	getNode: id => Axios.get(TEMPL_API_PATH + 'nodes/' + id).then(res => res.data),
+	updateNode: (id, name, type, value, desc) => Axios.put(TEMPL_API_PATH + 'nodes/' + id, {
+		name, type, value, description: desc
+	}),
+	deleteNode: id => Axios.delete(TEMPL_API_PATH + 'nodes/' + id),
+	getRoots: () => Axios.get(TEMPL_API_PATH + 'nodes').then(res => res.data)
 };

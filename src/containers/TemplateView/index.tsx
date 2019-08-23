@@ -6,14 +6,14 @@ import Box from '@material-ui/core/Box';
 import { Theme, makeStyles } from '@material-ui/core/styles';
 import AppsIcon from '@material-ui/icons/Apps';
 import BallotIcon from '@material-ui/icons/Ballot';
-import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
+// import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
 
 import CustomNavTabs from 'components/shared/CustomNavTabs';
 import SecuredRoute from 'routers/SecuredRoute';
 import { UserProfile } from 'types/global';
 import AllTemplatesView from './AllTemplatesView';
-import CategoryDetailView from './CategoryDetailView';
-import OptionDetailView from './OptionDetailView';
+// import CategoryDetailView from './CategoryDetailView';
+// import OptionDetailView from './OptionDetailView';
 import TempDetailView from './TempDetailView';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,12 +40,12 @@ const TemplatesView: React.SFC<TemplatesViewProps> = (props) => {
 
 	const tabPaths = [
 		match.url + '/all_templates',
-		match.url + '/template_detail',
-		match.url + '/category_detail',
-		match.url + '/option_detail'
+		match.url + '/template_detail/:id',
+		// match.url + '/category_detail',
+		// match.url + '/option_detail'
 	];
-	let tab = tabPaths.indexOf(location.pathname);
-	if (tab < 0) tab = 0;
+	let tab = 1;
+	if (location.pathname.includes('/all_templates')) tab = 0
 	// if (location.pathname.includes('template_detail')) tab = 1;
 	// if (location.pathname.includes('category_detail')) tab = 2;
 	// if (location.pathname.includes('option_detail')) tab = 3;
@@ -59,42 +59,42 @@ const TemplatesView: React.SFC<TemplatesViewProps> = (props) => {
 						icon: AppsIcon,
 					},
 					{
-						href: `${tabPaths[1]}`,
+						href: `${match.url}/template_detail/`,
 						label: 'Template Detail',
 						icon: BallotIcon,
 					},
-					{
-						href: `${tabPaths[2]}`,
-						label: 'Category Detail',
-						icon: ViewHeadlineIcon,
-					},
-					{
-						href: `/m_temp/option_detail`,
-						label: 'Option Detail',
-						icon: ViewHeadlineIcon,
-					},
+					// {
+					// 	href: `${tabPaths[2]}`,
+					// 	label: 'Category Detail',
+					// 	icon: ViewHeadlineIcon,
+					// },
+					// {
+					// 	href: `/m_temp/option_detail`,
+					// 	label: 'Option Detail',
+					// 	icon: ViewHeadlineIcon,
+					// },
 				]}
 				value={tab}
 			/>
 			<main className={classes.contentWrapper}>
 				<Switch>
 					<SecuredRoute
-						path="/m_temp/all_templates"
+						path={`${match.url}/all_templates`}
 						component={AllTemplatesView}
 					/>
 					<SecuredRoute
-						path="/m_temp/template_detail"
+						path={`${match.url}/template_detail/:id`}
 						component={TempDetailView}
 					/>
-					<SecuredRoute
+					{/* <SecuredRoute
 						path="/m_temp/category_detail"
 						component={CategoryDetailView}
 					/>
 					<SecuredRoute
 						path="/m_temp/option_detail"
 						component={OptionDetailView}
-					/>
-					<Redirect path="/m_temp" to={`/m_temp/all_templates`} />
+					/> */}
+					<Redirect path="/m_temp" to={`${match.url}/all_templates`} />
 				</Switch>
 			</main>
 		</Box>

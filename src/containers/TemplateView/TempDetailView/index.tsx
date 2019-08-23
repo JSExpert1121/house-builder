@@ -17,6 +17,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Link from '@material-ui/core/Link';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import { createStyles, withStyles } from '@material-ui/core/styles';
@@ -27,16 +29,17 @@ import SplitPane from 'react-split-pane';
 import Button from "components/CustomButtons/Button.jsx";
 import CustomTableCell from "components/shared/CustomTableCell";
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
-import {
-	addCategory,
-	deleteCategory,
-	deleteTemplate,
-	editTemplate,
-	selectCategory,
-	selectTemplate,
-	getTemplates
-} from 'store/actions/tem-actions';
-import { MaterialThemeHOC, UserProfile, TemplateDetailInfo, CategoryPostInfo, TemplatePostInfo } from 'types/global';
+import * as TemplActions from 'store/actions/tem-actions';
+// import {
+// 	addCategory,
+// 	deleteCategory,
+// 	deleteTemplate,
+// 	editTemplate,
+// 	selectCategory,
+// 	selectTemplate,
+// 	getTemplates
+// } from 'store/actions/tem-actions';
+import { MaterialThemeHOC, UserProfile, NodeInfo, BreadcrumbInfo } from 'types/global';
 
 const styles = theme => createStyles({
 	root: {
@@ -91,47 +94,46 @@ const styles = theme => createStyles({
 	}
 });
 
-interface ConnTempDetailViewProps extends MaterialThemeHOC, RouteComponentProps {
-	getTemplates: (currentPage: number, rowsPerPage: number) => Promise<void>;
-	selectCategory: (id: string) => Promise<void>;
-	addCategory: (id: string, data: CategoryPostInfo) => Promise<void>;
-	selectTemplate: (id: string) => Promise<TemplateDetailInfo>;
-	deleteCategory: (id: string) => Promise<void>;
-	editTemplate: (id: string, data: TemplatePostInfo) => Promise<void>;
-	deleteTemplate: (id: string) => Promise<void>;
-	template: TemplateDetailInfo;
+interface ITempDetailViewProps extends MaterialThemeHOC, RouteComponentProps<{ id: string }> {
 	userProfile: UserProfile;
+	nodeTree?: BreadcrumbInfo[];
+	currentNode?: NodeInfo;
+	selectNode: (id: string) => Promise<NodeInfo>;
+	addNode: (id: string, name: string, type: string, value: string, desc: string) => Promise<void>;
+	updateNode: (id: string, name: string, type: string, value: string, desc: string) => Promise<void>;
+	deleteNode: (id: string) => Promise<void>;
+	selectTree: (id: string) => void;
+	appendTree: (name: string, id: string) => void;
+	clearTree: () => void;
 }
 
-interface ConnTempDetailViewState extends ISnackbarProps {
+interface ITempDetailViewState extends ISnackbarProps {
 	name: string;
+	type: string;
+	value: string;
 	description: string;
 	cname: string;
 	ctype: string;
 	cvalue: string;
 	cdescription: string;
-	openCategoryForm: boolean;
-	isSaving: boolean;
-	isDeleting: boolean;
-	isAdding: boolean;
+	showDialog: boolean;
 	isBusy: boolean;
 }
 
-class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDetailViewState> {
+class TemplateDetailView extends Component<ITempDetailViewProps, ITempDetailViewState> {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			name: '',
+			type: '',
+			value: '',
 			description: '',
 			cname: '',
 			ctype: '',
 			cvalue: '',
 			cdescription: '',
-			openCategoryForm: false,
-			isSaving: false,
-			isDeleting: false,
-			isAdding: false,
+			showDialog: false,
 			isBusy: false,
 			showMessage: false,
 			message: '',
@@ -145,162 +147,236 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 	}
 
 	async componentDidMount() {
-		const { template } = this.props;
-		if (template) {
+		const { match, selectNode, appendTree } = this.props;
+		try {
+			const data = await selectNode(match.params.id);
+			appendTree(data.name, data.id);
 			this.setState({
-				name: template.name,
-				description: template.description,
+				name: data.name,
+				type: data.type ? data.type : '',
+				value: data.value ? data.value : '',
+				description: data.description ? data.description : ''
 			});
+		} catch (error) {
+			console.log('TemplateDetailView.CDM: ', error);
 		}
 	}
 
-	handleCancel = () => {
-		this.props.history.push('/m_temp');
+	handleCancel = async () => {
+		const { history, nodeTree, clearTree, selectTree, selectNode } = this.props;
+		if (!nodeTree || nodeTree.length < 2) {
+			clearTree();
+			history.replace('/m_temp/all_templates');
+		} else {
+			this.setState({ isBusy: true });
+			try {
+				const data = await selectNode(nodeTree[nodeTree.length - 2].id);
+				selectTree(nodeTree[nodeTree.length - 2].id);
+				this.setState({
+					name: data.name,
+					type: data.type ? data.type : '',
+					value: data.value ? data.value : '',
+					description: data.description ? data.description : '',
+					isBusy: false
+				});
+				history.replace(`/m_temp/template_detail/${nodeTree[nodeTree.length - 2].id}`);
+			} catch (error) {
+				console.log('TemplateDetailView.handleCancel: ', error);
+				this.setState({ isBusy: false });
+			}
+		}
 	}
 
 	handleSave = async () => {
-		const { userProfile, template } = this.props;
-		if (!template) return;
-
-		const data = {
-			name: this.state.name,
-			description: this.state.description,
-			updatedBy: userProfile.email,
-		};
+		const { currentNode, updateNode } = this.props;
+		const { name, type, value, description } = this.state;
+		if (!currentNode) return;
 
 		this.setState({ isBusy: true });
 		try {
-			await this.props.editTemplate(template.id, data);
-			await this.props.selectTemplate(template.id);
-
+			await updateNode(currentNode.id, name, type, value, description);
 			this.setState({
+				isBusy: false,
 				showMessage: true,
-				message: 'Edit Template success',
+				message: 'Save content success',
 				variant: 'success'
 			});
 		} catch (error) {
-			console.log(error);
+			console.log('TemplateDetailView.handleSave: ', error);
 			this.setState({
+				isBusy: false,
 				showMessage: true,
-				message: 'Edit Template failed',
+				message: 'Save content failed',
 				variant: 'error'
 			});
 		}
-
-		this.setState({ isBusy: false });
 	}
 
 	handleDelete = async () => {
-		const { template } = this.props;
+		const { currentNode, deleteNode, nodeTree, selectTree, history, clearTree, selectNode } = this.props;
 
 		this.setState({ isBusy: true });
 		try {
-			await this.props.deleteTemplate(template.id);
-			await this.props.getTemplates(0, 20);
-			this.setState({
-				showMessage: true,
-				message: 'Template deleted',
-				variant: 'success',
-				isBusy: false
-			});
+			await deleteNode(currentNode.id);
+			if (!nodeTree || nodeTree.length < 2) {
+				clearTree();
+				history.replace('/m_temp/all_templates');
+			} else {
+				const data = await selectNode(nodeTree[nodeTree.length - 2].id);
+				selectTree(nodeTree[nodeTree.length - 2].id);
+				history.replace(`/m_temp/template_detail/${nodeTree[nodeTree.length - 2].id}`);
+				this.setState({
+					name: data.name,
+					type: data.type ? data.type : '',
+					value: data.value ? data.value : '',
+					description: data.description ? data.description : '',
+					isBusy: false
+				});
+			}
 		} catch (error) {
 			this.setState({
 				showMessage: true,
-				message: 'Please delete categories and options first',
+				message: 'Please delete child categories first',
 				variant: 'error',
 				isBusy: false
 			});
 		}
 	}
 
-	gotoCategory = async (id) => {
+	gotoChild = async (id: string) => {
+		const { selectNode, appendTree } = this.props;
 		this.setState({ isBusy: true });
-		await this.props.selectCategory(id);
-		this.setState({ isBusy: false });
-		this.props.history.push(`/m_temp/category_detail`);
+		try {
+			const data = await selectNode(id);
+			appendTree(data.name, data.id);
+			this.props.history.push(`/m_temp/template_detail/${id}`);
+			this.setState({
+				name: data.name,
+				type: data.type ? data.type : '',
+				value: data.value ? data.value : '',
+				description: data.description ? data.description : '',
+				isBusy: false
+			});
+		} catch (error) {
+			console.log('TemplateDetailView.gotoChild: ', error);
+		}
 	}
 
-	deleteCategory = async (id) => {
-		const { template } = this.props;
+	deleteChild = async (id) => {
+		const { currentNode, selectNode, deleteNode } = this.props;
 
 		this.setState({ isBusy: true });
 		try {
-			await this.props.deleteCategory(id);
-			await this.props.selectTemplate(template.id);
+			await deleteNode(id);
+			await selectNode(currentNode.id);
 			this.setState({
 				showMessage: true,
-				message: 'Delete Category success',
+				message: 'Delete child success',
 				variant: 'success',
 				isBusy: false
 			});
 		} catch (error) {
 			this.setState({
 				showMessage: true,
-				message: 'Please delete options',
+				message: 'Please delete childs first',
 				variant: 'error',
 				isBusy: false
 			});
 		}
 	}
 
-	addCategory = async () => {
-		const { template, userProfile } = this.props;
+	addChild = async () => {
+		const { currentNode, addNode, selectNode } = this.props;
+		const { cname, ctype, cvalue, cdescription } = this.state;
 
 		this.setState({ isBusy: true });
-		const data = {
-			name: this.state.cname,
-			type: this.state.ctype,
-			value: this.state.cvalue,
-			description: this.state.cdescription,
-			updatedBy: userProfile.email,
-		};
-
 		try {
-			await this.props.addCategory(template.id, data);
-			await this.props.selectTemplate(template.id);
+			await addNode(currentNode.id, cname, ctype, cvalue, cdescription);
+			await selectNode(currentNode.id);
 			this.setState({
 				showMessage: true,
 				message: 'Add Category success',
 				variant: 'success',
-				openCategoryForm: false,
+				showDialog: false,
 				isBusy: false,
-				cname: '',
-				ctype: '',
-				cvalue: '',
-				cdescription: ''
 			});
 		} catch (error) {
-			console.error('TemplateDetailView.addCategory: ', error);
+			console.error('TemplateDetailView.addChild: ', error);
 			this.setState({
 				showMessage: true,
 				message: 'Add Category failed',
 				variant: 'error',
-				openCategoryForm: false,
+				showDialog: false,
 				isBusy: false
 			});
 		}
 	}
 
-	render() {
-		const { classes, template } = this.props;
+	clickCrumb = async (id: string) => {
+		const { selectTree, selectNode } = this.props;
+		this.setState({ isBusy: true });
+		try {
+			await selectTree(id);
+			const data = await selectNode(id);
+			this.setState({
+				name: data.name,
+				type: data.type ? data.type : '',
+				value: data.value ? data.value : '',
+				description: data.description ? data.description : '',
+				isBusy: false
+			});
+		} catch (error) {
+			console.error('TemplateDetailView.clickCrumb: ', error);
+			this.setState({ isBusy: false });
+		}
+	}
 
-		if (!template)
-			return <Box>Template not selected</Box>;
+	render() {
+		const { classes, currentNode, nodeTree } = this.props;
+		const { name, type, value, description } = this.state;
+
+		if (!currentNode)
+			return <Box>Node not selected</Box>;
 
 		return (
 			<Box className={classes.root}>
 				<SplitPane split="vertical" minSize={50} defaultSize={400} style={{ position: 'relative' }}>
 					<Paper className={classes.descTag}>
+						{nodeTree && (
+							<Breadcrumbs>
+								{nodeTree.map(node => (
+									<Link key={node.id} onClick={() => this.clickCrumb(node.id)} style={{ cursor: 'pointer' }}>
+										{node.name}
+									</Link>
+								))}
+							</Breadcrumbs>
+						)}
 						<TextField
-							label="template title"
+							label="Name"
 							margin="normal"
-							InputLabelProps={{ shrink: true }}
-							value={this.state.name}
+							value={name}
+							fullWidth
 							onChange={event => this.setState({ name: event.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
+						<TextField
+							label="Type"
+							margin="normal"
+							value={type}
+							fullWidth
+							onChange={event => this.setState({ type: event.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
+						/>
+						<TextField
+							label="Value"
+							margin="normal"
+							value={value}
+							fullWidth
+							onChange={event => this.setState({ value: event.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
+						/>
 						<SimpleMDE
-							value={this.state.description}
+							value={description}
 							onChange={val => this.setState({ description: val })}
 							options={{ placeholder: 'Description here' }}
 						/>
@@ -313,8 +389,8 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 								Cancel
               				</Button>
 							<Button
-								className={classes.marginRight}
 								disabled={this.state.isBusy}
+								className={classes.marginRight}
 								onClick={this.handleSave}
 								color="success"
 							>
@@ -339,7 +415,13 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 									<CustomTableCell align="center">
 										<IconButton
 											style={{ color: '#fff' }}
-											onClick={() => this.setState({ openCategoryForm: true })}
+											onClick={() => this.setState({
+												showDialog: true,
+												cname: '',
+												ctype: '',
+												cvalue: '',
+												cdescription: ''
+											})}
 										>
 											<NoteAddIcon />
 										</IconButton>
@@ -347,24 +429,24 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 								</TableRow>
 							</TableHead>
 							<TableBody>
-								{template.categoryList && template.categoryList.map(row => (
+								{currentNode && currentNode.children && currentNode.children.map(row => (
 									<TableRow className={classes.row} key={row.id} hover>
 										<CustomTableCell
 											component="th"
 											scope="row"
-											onClick={() => this.gotoCategory(row.id)}
+											onClick={() => this.gotoChild(row.id)}
 										>
 											{row.name}
 										</CustomTableCell>
 										<CustomTableCell
 											align="center"
-											onClick={() => this.gotoCategory(row.id)}
+											onClick={() => this.gotoChild(row.id)}
 										>
 											{row.type}
 										</CustomTableCell>
 										<CustomTableCell
 											align="center"
-											onClick={() => this.gotoCategory(row.id)}
+											onClick={() => this.gotoChild(row.id)}
 										>
 											{row.value}
 										</CustomTableCell>
@@ -374,7 +456,7 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 												className={classes.button}
 												aria-label="Delete"
 												color="primary"
-												onClick={() => this.deleteCategory(row.id)}
+												onClick={() => this.deleteChild(row.id)}
 											>
 												<DeleteIcon />
 											</IconButton>
@@ -386,8 +468,8 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 					</Paper>
 				</SplitPane>
 				<Dialog
-					open={this.state.openCategoryForm}
-					onClose={() => this.setState({ openCategoryForm: false })}
+					open={this.state.showDialog}
+					onClose={() => this.setState({ showDialog: false })}
 					aria-labelledby="form-dialog-title"
 				>
 					<DialogTitle id="form-dialog-title">Create category</DialogTitle>
@@ -431,14 +513,14 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 					</DialogContent>
 					<DialogActions>
 						<Button
-							disabled={this.state.isAdding}
-							onClick={() => this.setState({ openCategoryForm: false })}
+							disabled={this.state.isBusy}
+							onClick={() => this.setState({ showDialog: false })}
 						>
 							Cancel
             			</Button>
 						<Button
-							disabled={this.state.isAdding}
-							onClick={this.addCategory}
+							disabled={this.state.isBusy}
+							onClick={this.addChild}
 							color="primary"
 						>
 							Add
@@ -458,19 +540,20 @@ class TemplateDetailView extends Component<ConnTempDetailViewProps, ConnTempDeta
 }
 
 const mapStateToProps = state => ({
-	template: state.tem_data.selectedTemplate,
 	userProfile: state.global_data.userProfile,
+	nodeTree: state.tem_data.nodeTree,
+	currentNode: state.tem_data.currentNode
 });
 
-const mapDispatchToProps = {
-	getTemplates,
-	selectTemplate,
-	selectCategory,
-	deleteCategory,
-	addCategory,
-	editTemplate,
-	deleteTemplate,
-};
+const mapDispatchToProps = dispatch => ({
+	selectNode: id => dispatch(TemplActions.selectNode(id)),
+	addNode: (id, name, type, value, desc) => dispatch(TemplActions.addNode(id, name, type, value, desc)),
+	updateNode: (id, name, type, value, desc) => dispatch(TemplActions.updateNode(id, name, type, value, desc)),
+	deleteNode: id => dispatch(TemplActions.deleteNode(id)),
+	selectTree: id => dispatch(TemplActions.selectTree(id)),
+	appendTree: (name, id) => dispatch(TemplActions.appendTree(name, id)),
+	clearTree: () => dispatch(TemplActions.clearTree()),
+});
 
 export default compose(
 	withStyles(styles),

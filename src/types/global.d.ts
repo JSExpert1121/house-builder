@@ -169,6 +169,28 @@ export interface HistoryInfo extends CommonInfo {
 }
 
 export type PortfolioItem = string;
+
+export type NodePostInfo = {
+	name: string;
+	type: string;
+	value: string;
+	description: string;
+}
+
+export interface NodeInfo extends CommonInfo {
+	name: string;
+	type?: string;
+	value?: string;
+	description?: string;
+	children: NodeInfo[];
+}
+
+export type BreadcrumbInfo = {
+	id: string;
+	name: string;
+}
+
+
 // export interface PortfolioItem {
 // 	title?: string;
 // 	description?: string;

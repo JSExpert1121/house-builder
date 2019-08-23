@@ -19,7 +19,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import { createStyles, withStyles } from '@material-ui/core/styles';
+import { createStyles, withStyles, StyledComponentProps } from '@material-ui/core/styles';
 
 import { History } from 'history';
 import 'easymde/dist/easymde.min.css';
@@ -28,8 +28,9 @@ import removeMd from 'remove-markdown';
 
 import CustomTableCell from "components/shared/CustomTableCell";
 import Button from 'components/CustomButtons/Button';
-import { createTemplate, deleteTemplate, getTemplates, selectTemplate } from 'store/actions/tem-actions';
-import { MaterialThemeHOC, UserProfile, TemplatePostInfo, Templates } from 'types/global';
+import * as TemplActions from 'store/actions/tem-actions';
+// import { createTemplate, deleteTemplate, getTemplates, selectTemplate } from 'store/actions/tem-actions';
+import { UserProfile, TemplatePostInfo, Templates, NodeInfo } from 'types/global';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 
 
@@ -63,11 +64,15 @@ const styles = theme => createStyles({
 	}
 });
 
-interface ConnAllTemplateViewProps extends MaterialThemeHOC {
+interface ConnAllTemplateViewProps extends StyledComponentProps {
 	getTemplates: (currentPage: number, rowsPerPage: number) => Promise<void>;
 	selectTemplate: (id: string) => Promise<void>;
 	deleteTemplate: (id: string) => Promise<void>;
 	createTemplate: (data: TemplatePostInfo) => Promise<void>;
+	loadRoots: () => Promise<void>;
+	addRoot: (name: string, type: string, value: string, desc: string) => Promise<void>;
+	deleteNode: (id: string) => Promise<void>;
+	roots: NodeInfo[];
 	templates: Templates;
 	history: History;
 	userProfile: UserProfile;
@@ -77,9 +82,11 @@ interface ConnAllTemplateViewState extends ISnackbarProps {
 	rowsPerPage: number;
 	currentPage: number;
 	isBusy: boolean;
-	openCategoryForm: boolean;
+	showDialog: boolean;
 	name: string;
 	description: string;
+	value: string;
+	type: string;
 }
 
 class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplateViewState> {
@@ -90,9 +97,11 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 			rowsPerPage: 20,
 			currentPage: 0,
 			isBusy: false,
-			openCategoryForm: false,
+			showDialog: false,
 			name: '',
 			description: '',
+			value: '',
+			type: '',
 			showMessage: false,
 			message: '',
 			variant: 'success',
@@ -105,28 +114,82 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 	}
 
 	componentDidMount() {
-		this.props.getTemplates(0, 20);
+		// this.props.getTemplates(0, 20);
+		this.props.loadRoots();
 	}
 
 	handleChangePage = (event, page) => {
 		this.setState({ currentPage: page });
-
-		this.props.getTemplates(page, this.state.rowsPerPage);
+		// this.props.getTemplates(page, this.state.rowsPerPage);
 	};
 
 	handleChangeRowsPerPage = event => {
-		const { templates } = this.props;
 		const rowsPerPage = event.target.value;
-		const currentPage =
-			rowsPerPage >= templates.totalElements ? 0 : this.state.currentPage;
+		const curPos = this.state.currentPage * this.state.rowsPerPage;
+		const currentPage = curPos / rowsPerPage;
 
-		this.setState({
-			rowsPerPage: rowsPerPage,
-			currentPage: currentPage,
-		});
-
-		this.props.getTemplates(currentPage, rowsPerPage);
+		this.setState({ rowsPerPage, currentPage });
+		// this.props.getTemplates(currentPage, rowsPerPage);
 	};
+
+	createRoot = async () => {
+		const { name, value, type, description } = this.state;
+		const { addRoot, loadRoots } = this.props;
+		this.setState({ isBusy: true, showDialog: false });
+		try {
+			await addRoot(name, type, value, description);
+			await loadRoots();
+
+			this.setState({
+				showMessage: true,
+				message: 'Create Template success',
+				variant: 'success',
+				isBusy: false,
+				name: '',
+				description: ''
+			})
+		} catch (error) {
+			console.log('AllTemplatesView.createTemplate: ', error);
+			this.setState({
+				showMessage: true,
+				message: 'Create Template failed',
+				variant: 'error',
+				isBusy: false
+			});
+		}
+	}
+
+	deleteRoot = async (id: string) => {
+		const { loadRoots, deleteNode, roots } = this.props;
+		const { rowsPerPage, currentPage } = this.state;
+		const count = roots.length;
+		this.setState({ isBusy: true });
+		try {
+			await deleteNode(id);
+			await loadRoots();
+
+			let curPage = currentPage;
+			if (rowsPerPage * currentPage >= (count - 1)) {
+				curPage--;
+			}
+
+			this.setState({
+				isBusy: false,
+				showMessage: true,
+				variant: 'success',
+				message: 'Delete Template success',
+				currentPage: curPage
+			});
+		} catch (error) {
+			console.log('AllTemplatesView.deleteTemplate: ', error);
+			this.setState({
+				isBusy: false,
+				showMessage: true,
+				variant: 'error',
+				message: 'Please delete child nodes'
+			});
+		}
+	}
 
 	createTemplate = async () => {
 		const { userProfile } = this.props;
@@ -136,7 +199,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 			updatedBy: userProfile.email,
 		};
 
-		this.setState({ isBusy: true, openCategoryForm: false });
+		this.setState({ isBusy: true, showDialog: false });
 		try {
 			await this.props.createTemplate(data);
 			await this.props.getTemplates(0, this.state.rowsPerPage);
@@ -190,17 +253,19 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 		}
 	}
 
-	selectTemplate = async (id) => {
-		this.setState({ isBusy: true });
-		await this.props.selectTemplate(id);
-		this.setState({ isBusy: false });
-		this.props.history.push(`/m_temp/template_detail`);
+	selectTemplate = async (id: string) => {
+		// this.setState({ isBusy: true });
+		// await this.props.selectTemplate(id);
+		// this.setState({ isBusy: false });
+		// this.props.history.push(`/m_temp/template_detail`);
+		this.props.history.push(`/m_temp/template_detail/${id}`);
 	}
 
 	render() {
-		const { classes, templates } = this.props;
+		const { classes, roots } = this.props;
+		const { type, name, value, description } = this.state;
 
-		if (!templates) {
+		if (!roots) {
 			return <CircularProgress className={classes.waitingSpin} />;
 		}
 
@@ -209,14 +274,20 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 				<Table>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell> Template Name </CustomTableCell>
-							<CustomTableCell align="center">
-								Template Description
-              				</CustomTableCell>
+							<CustomTableCell>Name</CustomTableCell>
+							<CustomTableCell>Type</CustomTableCell>
+							<CustomTableCell>Value</CustomTableCell>
+							<CustomTableCell align="center">Description</CustomTableCell>
 							<CustomTableCell align="center">
 								<IconButton
 									style={{ color: '#FFFFFF' }}
-									onClick={() => this.setState({ openCategoryForm: true })}
+									onClick={() => this.setState({
+										showDialog: true,
+										name: '',
+										type: '',
+										value: '',
+										description: ''
+									})}
 								>
 									<NoteAddIcon />
 								</IconButton>
@@ -224,7 +295,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{templates.content.map(row => (
+						{roots.map(row => (
 							<TableRow className={classes.row} key={row.id} hover>
 								<CustomTableCell
 									component="th"
@@ -237,6 +308,18 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 									align="center"
 									onClick={() => this.selectTemplate(row.id)}
 								>
+									{row.type}
+								</CustomTableCell>
+								<CustomTableCell
+									align="center"
+									onClick={() => this.selectTemplate(row.id)}
+								>
+									{row.value}
+								</CustomTableCell>
+								<CustomTableCell
+									align="center"
+									onClick={() => this.selectTemplate(row.id)}
+								>
 									{removeMd(row.description)}
 								</CustomTableCell>
 								<CustomTableCell align="center">
@@ -244,7 +327,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 										className={classes.button}
 										aria-label="Delete"
 										color="primary"
-										onClick={() => this.deleteTemplate(row.id)}
+										onClick={() => this.deleteRoot(row.id)}
 									>
 										<DeleteIcon />
 									</IconButton>
@@ -257,7 +340,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 					style={{ overflow: 'auto' }}
 					rowsPerPageOptions={[5, 10, 20]}
 					component="div"
-					count={templates.totalElements}
+					count={roots ? roots.length : 0}
 					rowsPerPage={this.state.rowsPerPage}
 					page={this.state.currentPage}
 					backIconButtonProps={{ 'aria-label': 'Previous Page' }}
@@ -267,27 +350,43 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 				/>
 
 				<Dialog
-					open={this.state.openCategoryForm}
-					onClose={() => this.setState({ openCategoryForm: false })}
+					open={this.state.showDialog}
+					onClose={() => this.setState({ showDialog: false })}
 					aria-labelledby="create-template"
 				>
 					<DialogTitle id="create-template">Create template</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
-							Please input the correct template information
+							Please input the template information
             			</DialogContentText>
 						<TextField
 							autoFocus
 							margin="normal"
-							label="name"
-							type="email"
+							label="Name"
 							fullWidth
-							value={this.state.name}
-							onChange={val => this.setState({ name: val.target.value })}
+							required
+							value={name}
+							onChange={e => this.setState({ name: e.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
+						/>
+						<TextField
+							margin="normal"
+							label="Type"
+							fullWidth
+							value={type}
+							onChange={e => this.setState({ type: e.target.value })}
+							InputProps={{ classes: { input: classes.editField } }}
+						/>
+						<TextField
+							margin="normal"
+							label="Value"
+							fullWidth
+							value={value}
+							onChange={e => this.setState({ value: e.target.value })}
 							InputProps={{ classes: { input: classes.editField } }}
 						/>
 						<SimpleMDE
-							value={this.state.description}
+							value={description}
 							onChange={val => this.setState({ description: val })}
 							options={{
 								placeholder: 'Description here',
@@ -297,18 +396,17 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 					<DialogActions>
 						<Button
 							disabled={this.state.isBusy}
-							onClick={() => this.setState({ openCategoryForm: false })}
+							onClick={() => this.setState({ showDialog: false })}
 							className={classes.marginRight}
 						>
 							Cancel
             			</Button>
 						<Button
 							disabled={this.state.isBusy}
-							onClick={this.createTemplate}
+							onClick={this.createRoot}
 							color="primary"
 						>
 							Add
-
             			</Button>
 					</DialogActions>
 				</Dialog>
@@ -326,15 +424,19 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 
 const mapStateToProps = state => ({
 	templates: state.tem_data.templates,
+	roots: state.tem_data.roots,
 	userProfile: state.global_data.userProfile,
 });
 
-const mapDispatchToProps = {
-	getTemplates,
-	selectTemplate,
-	deleteTemplate,
-	createTemplate,
-};
+const mapDispatchToProps = dispatch => ({
+	getTemplates: (page, size) => dispatch(TemplActions.getTemplates(page, size)),
+	selectTemplate: id => dispatch(TemplActions.selectTemplate(id)),
+	deleteTemplate: id => dispatch(TemplActions.deleteTemplate(id)),
+	createTemplate: data => dispatch(TemplActions.createTemplate(data)),
+	loadRoots: () => dispatch(TemplActions.loadRoots()),
+	addRoot: (name, type, value, desc) => dispatch(TemplActions.addRoot(name, type, value, desc)),
+	deleteNode: id => dispatch(TemplActions.deleteNode(id))
+});
 
 export default compose(
 	withRouter,

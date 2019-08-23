@@ -4,7 +4,13 @@ import {
 	SET_SELECTED_CATEGORY,
 	SET_SELECTED_OPTION,
 	SET_SELECTED_TEMPLATE,
-	CLEAR_SELECTED_TEMPLATE
+	CLEAR_SELECTED_TEMPLATE,
+	TEMPL_ROOTS_LOADED,
+	TEMPL_SELECT_NODE,
+	TEMPL_CLEAR_ROOTS,
+	TEMPL_TREE_APPEND,
+	TEMPL_TREE_SELECT,
+	TEMPL_TREE_CLEAR
 } from '../constants/tem-action-types';
 import { clearSelectedOption } from './cont-actions';
 import { createActions } from "redux-actions";
@@ -61,3 +67,51 @@ export const addOption = (id, data) => dispatch => TempApi.addOpt(id, data);
 export const editTemplate = (id, data) => dispatch => TempApi.editTemplate(id, data);
 export const editCategory = (id, data) => dispatch => TempApi.editCategory(id, data);
 export const editOption = (id, data) => dispatch => TempApi.editOption(id, data);
+
+// New Actions
+export const rootsLoaded = data => ({
+	type: TEMPL_ROOTS_LOADED,
+	payload: data
+});
+
+export const nodeSelected = node => ({
+	type: TEMPL_SELECT_NODE,
+	payload: node
+});
+
+export const clearRoots = () => ({
+	type: TEMPL_CLEAR_ROOTS
+});
+
+export const appendTree = (name, id) => ({
+	type: TEMPL_TREE_APPEND,
+	payload: { name, id }
+});
+
+export const selectTree = id => ({
+	type: TEMPL_TREE_SELECT,
+	payload: id
+});
+
+export const clearTree = () => ({
+	type: TEMPL_TREE_CLEAR
+});
+
+export const loadRoots = () => dispatch => {
+	dispatch(clearRoots);
+	return TempApi.getRoots().then(data => {
+		dispatch(rootsLoaded(data));
+		dispatch(clearTree());
+	});
+}
+
+export const selectNode = id => dispatch => TempApi.getNode(id).then(data => {
+	dispatch(nodeSelected(data));
+	// dispatch(appendTree(data.name, id));
+	return data;
+});
+
+export const addRoot = (name, type, value, desc) => dispatch => TempApi.createRoot(name, type, value, desc);
+export const deleteNode = id => dispatch => TempApi.deleteNode(id);
+export const updateNode = (id, name, type, value, desc) => dispatch => TempApi.updateNode(id, name, type, value, desc);
+export const addNode = (id, name, type, value, desc) => dispatch => TempApi.createNode(id, name, type, value, desc);
