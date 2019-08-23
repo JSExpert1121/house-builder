@@ -10,6 +10,10 @@ import ContractorView        from '../containers/ContractorView';
 import ProjectsView          from '../containers/ProjectsView';
 import HomeView              from '../containers/HomeView';
 import ProfileView           from '../containers/ProfileView';
+import SearchContractorView  from '../containers/SearchContractorView';
+import SearchCityView        from '../containers/SearchCityView';
+import SearchServiceView     from '../containers/SearchServiceView';
+import SearchThankYouView     from '../containers/SearchThankYouView';
 import SettingsView          from '../components/SettingsView';
 import Header                from '../components/Header';
 import Callback              from '../services/auth0/callback';
@@ -97,6 +101,10 @@ class AppRouterConnect extends React.Component<AppRouterProps, AppRouterState> {
                 <SecuredRoute path="/m_cont" component={ContractorView}/>
                 <SecuredRoute path="/profile" component={ProfileView}/>
                 <SecuredRoute path="/settings" component={SettingsView}/>
+                <Route exact path="/search-city" component={SearchCityView}/>
+                <Route exact path="/search-service" component={SearchServiceView}/>
+                <Route exact path="/search-complete" component={SearchThankYouView}/>
+                <Route exact path="/search-contractor" component={SearchContractorView}/>
                 <Route exact path="/callback" component={Callback}/>
                 <Redirect to="/"/>
               </Switch>
