@@ -3,6 +3,7 @@ import Axios from 'axios';
 const PROJ_API_PATH = process.env.REACT_APP_PROJECT_API + 'projects/';
 const LEVEL_API_PATH = process.env.REACT_APP_PROJECT_API + 'levels/';
 const ROOM_API_PATH = process.env.REACT_APP_PROJECT_API + 'rooms/';
+const SELECTION_API_PATH = process.env.REACT_APP_PROJECT_API + 'selections/';
 
 export default {
 	addFiles: (id, files) => {
@@ -66,5 +67,13 @@ export default {
 	}).then(res => res.data),
 	deleteRoom: id => Axios.delete(ROOM_API_PATH + id).then(res => res.data),
 	getRoom: id => Axios.get(ROOM_API_PATH + id).then(res => res.data),
-	getLevels: projId => Axios.get(PROJ_API_PATH + projId + '/levels').then(res => res.data)
+	getLevels: projId => Axios.get(PROJ_API_PATH + projId + '/levels').then(res => res.data),
+
+	createSelection: (roomId, catId, selId, option, path) => Axios.post(
+		ROOM_API_PATH + roomId + `/categories/${catId}/selections/${selId}`,
+		{ option, breadcrumb: path }
+	).then(res => res.data),
+	deleteSelection: id => Axios.delete(SELECTION_API_PATH + id).then(res => res.data),
+	updateSelection: (id, option) => Axios.put(SELECTION_API_PATH + id, { option }).then(res => res.data),
+	getSelection: id => Axios.get(SELECTION_API_PATH + id).then(res => res.data),
 };

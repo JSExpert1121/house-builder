@@ -26,16 +26,10 @@ import {
     getLevels,
     clearLevels
 } from 'store/actions/gen-actions';
-import { getTemplates } from 'store/actions/tem-actions';
+import { loadRoots } from 'store/actions/tem-actions';
 
-import { UserProfile, TemplateDetailInfo } from 'types/global';
-import {
-    ProjectLevel,
-    ProjectPostInfo,
-    ProjectLevelCategory,
-    TemplateOption,
-    RoomOption,
-} from 'types/project';
+import { UserProfile } from 'types/global';
+import { ProjectLevel, ProjectPostInfo, ProjectLevelCategory } from 'types/project';
 
 // mocking data/api
 // import { initLevels } from './mock';
@@ -91,15 +85,13 @@ interface IAddProjectViewProps extends RouteComponentProps {
     deleteRoom: (id: string) => Promise<void>;
     getLevels: (id: string) => Promise<void>;
     clearLevels: () => void;
-    getTemplates: (currentPage: number, rowsPerPage: number) => Promise<void>;
+    loadRoots: () => Promise<void>;
     levels: ProjectLevel[];
-    templates: TemplateDetailInfo[];
 }
 
 interface IAddProjectViewState extends ISnackbarProps, ProjectBriefInfo {
     isBusy: boolean;
     project: any;
-    options: TemplateOption[];
 }
 
 class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectViewState> {
@@ -118,14 +110,12 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
             variant: 'error',
             handleClose: this.closeMessage,
             project: undefined,
-            // levels: initLevels,
-            options: [],
         }
     }
 
-    componentDidMount() {
-        this.props.getTemplates(0, 100);
-        this.props.clearLevels();
+    async componentDidMount() {
+        await this.props.clearLevels();
+        await this.props.loadRoots();
     }
 
 
@@ -381,148 +371,9 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
         }
     }
 
-    deleteOptionsForLevel = (lvlId: string) => {
-        const { options } = this.state;
-
-        const templCount = options ? options.length : 0;
-        for (let i = 0; i < templCount; i++) {
-            const templOption = options[i];
-            const templOptions = templOption.options;
-            let optCount = templOptions ? templOptions.length : 0;
-            for (let j = 0; j < optCount; j++) {
-                if (templOptions[j].level_id === lvlId) {
-                    templOptions.splice(j, 1);
-                    j--;
-                    optCount--;
-                    continue;
-                }
-            }
-        }
-
-        return options;
-    }
-
-    deleteOptionsForCategory = (catId: string) => {
-        const { options } = this.state;
-
-        const templCount = options ? options.length : 0;
-        for (let i = 0; i < templCount; i++) {
-            const templOption = options[i];
-            const templOptions = templOption.options;
-            let optCount = templOptions ? templOptions.length : 0;
-            for (let j = 0; j < optCount; j++) {
-                if (templOptions[j].room_id === catId) {
-                    templOptions.splice(j, 1);
-                    j--;
-                    optCount--;
-                    continue;
-                }
-            }
-        }
-
-        return options;
-    }
-
-    addOption = (id: string, levelId: string, roomId: string, option: RoomOption) => {
-        const { options } = this.state;
-        const count = options.length;
-        for (let i = 0; i < count; i++) {
-            if (options[i].templ_id === id) {
-                const opt = options[i];
-                const roomOptions = opt.options;
-                const count = roomOptions.length;
-                let done = false;
-                for (let j = 0; j < count; j++) {
-                    const roomOpt = roomOptions[j];
-                    if (roomOpt.level_id === levelId && roomOpt.room_id === roomId) {
-                        option.id = `${id}-${levelId}-${roomId}-${roomOpt.options.length}`;
-                        roomOpt.options.push(option);
-                        done = true;
-                        break;
-                    }
-                }
-
-                // if not exist, create a new
-                if (!done) {
-                    option.id = `${id}-${levelId}-${roomId}-0`;
-                    roomOptions.push({
-                        level_id: levelId,
-                        room_id: roomId,
-                        options: [option]
-                    });
-                }
-
-                this.setState({ options: [...options] });
-                return;
-            }
-        }
-
-        // if not exist
-        option.id = `${id}-${levelId}-${roomId}-0`;
-        options.push({
-            templ_id: id,
-            options: [{
-                level_id: levelId,
-                room_id: roomId,
-                options: [option]
-            }]
-        });
-        this.setState({ options: [...options] });
-    }
-
-    updateOption = (id: string, levelId: string, roomId: string, option: RoomOption) => {
-        const { options } = this.state;
-        const count = options.length;
-        for (let i = 0; i < count; i++) {
-            if (options[i].templ_id === id) {
-                const opt = options[i];
-                const roomOptions = opt.options;
-                const count = roomOptions.length;
-                for (let j = 0; j < count; j++) {
-                    const roomOpt = roomOptions[j];
-                    if (roomOpt.level_id === levelId && roomOpt.room_id === roomId) {
-                        const optCount = roomOpt.options.length;
-                        for (let k = 0; k < optCount; k++) {
-                            if (roomOpt.options[k].id === option.id) {
-                                roomOpt.options[k] = option;
-                                this.setState({ options: [...options] });
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    deleteOption = (id: string, levelId: string, roomId: string, optId: string) => {
-        const { options } = this.state;
-        const count = options.length;
-        for (let i = 0; i < count; i++) {
-            if (options[i].templ_id === id) {
-                const opt = options[i];
-                const roomOptions = opt.options;
-                const count = roomOptions.length;
-                for (let j = 0; j < count; j++) {
-                    const roomOpt = roomOptions[j];
-                    if (roomOpt.level_id === levelId && roomOpt.room_id === roomId) {
-                        const optCount = roomOpt.options.length;
-                        for (let k = 0; k < optCount; k++) {
-                            if (roomOpt.options[k].id === optId) {
-                                roomOpt.options.splice(k, 1);
-                                this.setState({ options: [...options] });
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public render() {
-        const { classes, match, location, templates, levels } = this.props;
-        const { title, price, description, dueDate, files, isBusy, options, project } = this.state;
+        const { classes, match, location, levels } = this.props;
+        const { title, price, description, dueDate, files, isBusy, project } = this.state;
         const tabs = [
             { href: `${match.url}/submitted`, label: 'Overview' },
             { href: `${match.url}/add-levels`, label: 'Levels' },
@@ -574,17 +425,7 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
                         />
                         <SecuredRoute
                             path={tabs[2].href}
-                            render={props => (
-                                <ProjectSelect
-                                    {...props}
-                                    levels={levels}
-                                    options={options}
-                                    templates={templates}
-                                    addOption={this.addOption}
-                                    updateOption={this.updateOption}
-                                    deleteOption={this.deleteOption}
-                                />
-                            )}
+                            component={ProjectSelect}
                         />
                         <Redirect path={`${match.url}`} to={tabs[0].href} />
                     </Switch>
@@ -604,7 +445,8 @@ class AddProjectView extends React.Component<IAddProjectViewProps, IAddProjectVi
 const mapStateToProps = state => ({
     userProfile: state.global_data.userProfile,
     levels: state.gen_data.levels,
-    templates: state.tem_data.templates ? state.tem_data.templates.content || [] : [],
+    roots: state.tem_data.roots,
+    // templates: state.tem_data.templates ? state.tem_data.templates.content || [] : [],
 });
 
 const mapDispatchToProps = {
@@ -617,8 +459,8 @@ const mapDispatchToProps = {
     deleteLevel,
     deleteRoom,
     getLevels,
-    getTemplates,
-    clearLevels
+    clearLevels,
+    loadRoots
 };
 
 export default compose(

@@ -11,13 +11,11 @@ import { createStyles, Theme, withStyles, StyledComponentProps } from '@material
 import MuiTreeView from 'material-ui-treeview';
 
 import ProjectOptionView from 'components/OptionsView';
-import { ProjectLevel, MockTemplateInfo, TemplateOption, RoomOption, RoomOptions } from 'types/project';
-
-import {
-    selectCategory,
-    selectTemplate
-} from 'store/actions/tem-actions';
-import { UserProfile, TemplateDetailInfo } from 'types/global';
+import * as TemplActions from 'store/actions/tem-actions';
+import TempApi from 'services/template';
+import ProjApi from 'services/project';
+import { ProjectLevel, ProjectInfo, ProjectLevelCategory } from 'types/project';
+import { UserProfile, NodeInfo } from 'types/global';
 
 
 const styles = createStyles((theme: Theme) => ({
@@ -48,22 +46,17 @@ const styles = createStyles((theme: Theme) => ({
 
 export interface IProjectSelectProps extends RouteComponentProps, StyledComponentProps {
     levels: ProjectLevel[];
-    options: TemplateOption[];
-    templates: MockTemplateInfo[];
-    addOption: (id: string, levelId: string, roomId: string, option: RoomOption) => void;
-    updateOption: (id: string, levelId: string, roomId: string, option: RoomOption) => void;
-    deleteOption: (id: string, levelId: string, roomId: string, optId: string) => void;
-    selectCategory: (id: string) => Promise<void>;
-    selectTemplate: (id: string) => Promise<void>;
-    curTemplate: TemplateDetailInfo;
+    roots: NodeInfo[];
     userProfile: UserProfile;
+    project: ProjectInfo;
 }
 
 interface IProjectSelectState {
-    template: string;
+    rootId: string;
     level: string;
-    room: string;
-    showDialog: boolean;
+    tree: Array<any>
+    currentRoot?: NodeInfo;
+    currentRoom?: ProjectLevelCategory;
 }
 
 class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectState> {
@@ -71,77 +64,74 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
         super(props);
 
         this.state = {
-            template: (props.templates && props.templates.length > 0) ? props.templates[0].id : '',
+            currentRoot: undefined,
+            currentRoom: undefined,
+            rootId: (props.roots && props.roots.length > 0) ? props.roots[0].id : '',
             level: '',
-            room: '',
-            showDialog: false,
+            tree: props.levels.map(level => ({
+                id: level.id,
+                value: level.name,
+                nodes: level.rooms.map(room => ({
+                    id: room.id,
+                    value: room.name
+                }))
+            }))
         }
     }
 
-    componentDidMount() {
-        if (this.state.template && this.state.template.length > 0) {
-            this.props.selectTemplate(this.state.template);
+    async componentDidMount() {
+        if (this.state.rootId && this.state.rootId.length > 0) {
+            try {
+                const data = await TempApi.getNode(this.state.rootId);
+                this.setState({ currentRoot: data });
+            } catch (error) {
+                console.log('ProjectSelect.CDM: ', error);
+            }
         }
     }
 
 
-    templateChange = (event) => {
-        this.setState({ template: event.target.value });
-        this.props.selectTemplate(event.target.value);
+    rootChange = async event => {
+        try {
+            const data = await TempApi.getNode(event.target.value);
+            this.setState({ currentRoot: data, rootId: event.target.value });
+        } catch (error) {
+            console.log('ProjectSelect.CDM: ', error);
+        }
     }
 
-    roomSelected = (leaf) => {
+    roomSelected = async leaf => {
         if (!leaf.parent) return;
 
-        this.setState({
-            level: leaf.parent.id,
-            room: leaf.id
-        });
+        try {
+            const data = await ProjApi.getRoom(leaf.id);
+            this.setState({
+                currentRoom: data,
+                level: leaf.parent.id,
+            });
+        } catch (error) {
+            console.log('ProjectSelect.RoomSelected: ', error);
+        }
+    }
+
+    roomUpdated = async () => {
+        try {
+            const data = await ProjApi.getRoom(this.state.currentRoom.id);
+            this.setState({ currentRoom: data });
+        } catch (error) {
+            console.log('ProjectSelect.RoomUpdated: ', error);
+        }
     }
 
     public render() {
-        const {
-            classes,
-            levels,
-            templates,
-            options,
-            addOption,
-            updateOption,
-            deleteOption,
-            curTemplate
-        } = this.props;
-        if (!levels || !templates) {
-            return <Box className={classes.root}>No levels or templates exist</Box>
+        const { classes, levels, roots } = this.props;
+        const { rootId, level, tree, currentRoot, currentRoom } = this.state;
+
+        if (!levels) {
+            return <Box className={classes.root}>No levels exist</Box>
         }
-
-        const tree = levels.map(level => ({
-            id: level.id,
-            value: level.name,
-            nodes: level.rooms.map(room => ({
-                id: room.id,
-                value: room.name,
-            }))
-        }));
-
-        const { template, level, room } = this.state;
-        // let curTemplate: MockTemplateInfo = undefined;
-        // for (let templ of templates) {
-        //     if (templ.id === template) {
-        //         curTemplate = templ;
-        //         break;
-        //     }
-        // }
-
-        if (!curTemplate) {
+        if (!rootId || rootId.length === 0 || !currentRoot) {
             return <Box className={classes.root}>No template selected</Box>
-        }
-
-        let curOptions: RoomOptions[] = [];
-        for (let opt of options) {
-            if (opt.templ_id === template) {
-                curOptions = opt.options;
-                break;
-            }
         }
 
         let curLevel: ProjectLevel = undefined;
@@ -157,29 +147,29 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
                 <Box className={classes.sidebar}>
                     <Typography component='h3' variant='h6' style={{ paddingTop: 8, fontSize: '1.2em' }}>Templates</Typography>
                     <Select
-                        value={template}
-                        onChange={this.templateChange}
-                        name='template'
+                        value={rootId}
+                        onChange={this.rootChange}
+                        name='root-template'
                         fullWidth
                         className={classes.select}
                     >
-                        {templates.map((templ, index) => (
-                            <MenuItem key={templ.id} value={templ.id}>{templ.name}</MenuItem>
+                        {roots.map(node => (
+                            <MenuItem key={node.id} value={node.id}>{node.name}</MenuItem>
                         ))}
                     </Select>
                     <Typography component='h3' variant='h6' style={{ paddingTop: 16, paddingBottom: 8, fontSize: '1.2em' }}>Levels</Typography>
                     <MuiTreeView tree={tree} onLeafClick={this.roomSelected} />
                 </Box>
                 <Box className={classes.contents}>
-                    <ProjectOptionView
-                        template={curTemplate}
-                        options={curOptions}
-                        level={curLevel}
-                        roomId={room}
-                        addOption={addOption}
-                        deleteOption={deleteOption}
-                        updateOption={updateOption}
-                    />
+                    {currentRoom && (
+                        <ProjectOptionView
+                            root={currentRoot}
+                            level={curLevel}
+                            room={currentRoom}
+                            roomUpdated={this.roomUpdated}
+                        />
+                    )}
+                    {!currentRoom && 'No room selected'}
                 </Box>
             </Box>
         );
@@ -187,13 +177,17 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
 }
 
 const mapStateToProps = state => ({
-    curTemplate: state.tem_data.selectedTemplate,
+    // currentNode: state.tem_data.currentNode,
+    nodeTree: state.tem_data.nodeTree,
     userProfile: state.global_data.userProfile,
+    roots: state.tem_data.roots,
+    levels: state.gen_data.levels
 });
 
-const mapDispatchToProps = {
-    selectTemplate,
-    selectCategory,
-};
+const mapDispatchToProps = dispatch => ({
+    selectTree: id => dispatch(TemplActions.selectTree(id)),
+    appendTree: (name, id) => dispatch(TemplActions.appendTree(name, id)),
+    clearTree: () => dispatch(TemplActions.clearTree()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ProjectSelect));

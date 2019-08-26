@@ -21,10 +21,12 @@ import ProjectProposals from './ProjectProposals';
 import ProjectTemplates from './ProjectTemplates';
 import ProposalsCompare from './ProposalsCompare';
 import ProjectLevelsWrapper from './ProjectLevelsWrapper';
-import ProjectSelectWrapper from './ProjectSelectWrapper';
+import ProjectSelect from './ProjectSelect';
 import { getProjectData } from 'store/actions/global-actions';
 import { getLevels } from 'store/actions/gen-actions';
+import { loadRoots } from 'store/actions/tem-actions';
 import { ProjectInfo } from 'types/project';
+import { NodeInfo } from 'types/global';
 
 
 const styles = createStyles(theme => ({
@@ -52,23 +54,20 @@ const styles = createStyles(theme => ({
 
 export interface IProjectDetailViewProps extends RouteComponentProps<{ id: string }> {
     project: ProjectInfo;
+    roots: NodeInfo[];
     getProjectData: (id: string) => Promise<void>;
     getLevels: (id: string) => Promise<void>;
+    loadRoots: () => Promise<void>;
     classes: ClassNameMap<string>;
 }
 
 class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {};
-    }
-
     async componentDidMount() {
         const { match } = this.props;
         await this.props.getProjectData(match.params.id);
         await this.props.getLevels(match.params.id);
+        await this.props.loadRoots();
     }
 
     handleBack = () => {
@@ -78,7 +77,9 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
 
     public render() {
 
-        const { classes, match, project, location } = this.props;
+        const { classes, match, project, location, roots } = this.props;
+        if (!project || !roots) return <CircularProgress className={classes.waitingSpin} />;
+
         const owner = match.url.includes('/gen-contractor');
 
         const tabPaths = [
@@ -93,7 +94,6 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
         ];
 
         let curTabPos = 0;
-
         for (let i = 0; i < tabPaths.length; i++) {
             if (tabPaths[i] === location.pathname) {
                 curTabPos = i;
@@ -102,8 +102,6 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
         }
 
         if (location.pathname === match.url) curTabPos = 0;
-
-        if (!project) return <CircularProgress className={classes.waitingSpin} />;
 
         return (
             <Box className={classes.root}>
@@ -176,7 +174,7 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
                             />
                             <SecuredRoute
                                 path={`${match.url}/select`}
-                                component={ProjectSelectWrapper}
+                                component={ProjectSelect}
                             />
                             <SecuredRoute
                                 path={`${match.url}/files`}
@@ -211,11 +209,13 @@ class ProjectDetailView extends React.Component<IProjectDetailViewProps> {
 
 const mapStateToProps = state => ({
     project: state.global_data.project,
+    roots: state.tem_data.roots,
 });
 
 const mapDispatchToProps = {
     getProjectData,
-    getLevels
+    getLevels,
+    loadRoots
 };
 
 export default compose(

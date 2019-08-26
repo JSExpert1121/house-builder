@@ -4,7 +4,8 @@ import {
     SpecialtyInfo,
     SortInfo,
     FileInfo,
-    CmnObject
+    CmnObject,
+    NodeInfo
 } from './global';
 import { ContractorInfo } from './contractor';
 
@@ -37,11 +38,13 @@ export interface ProjectInfo extends ProjectBaseInfo {
     relationships: Array<object>;
 }
 
-export interface Projects extends Pageable {
-    content: Array<ProjectInfo>;
-    allprojects: Array<object> | null;
-    templates: Array<object> | null;
-}
+export interface RoomOption {
+    id: string;
+    category: NodeInfo;
+    selection: NodeInfo;
+    breadcrumb?: string[];   // id list
+    option: CmnObject;
+};
 
 export interface ProjectLevelCategory {
     id: string;
@@ -52,6 +55,7 @@ export interface ProjectLevelCategory {
     w: number;
     h: number;
     l: number;
+    selectionList?: RoomOption[];
 }
 
 export interface ProjectLevel {
@@ -62,27 +66,8 @@ export interface ProjectLevel {
     rooms: ProjectLevelCategory[];
 }
 
-export type MockTemplateInfo = {
-    id: string;
-    name: string;
-    description: string;
-};
-
-export type RoomOption = {
-    id: string;
-    type: string;
-    name: string;
-    description: string;
-    images: string[];
-}
-
-export type RoomOptions = {
-    level_id: string;
-    room_id: string;
-    options: RoomOption[];
-};
-
-export type TemplateOption = {
-    templ_id: string;
-    options: RoomOptions[];
+export interface Projects extends Pageable {
+    content: Array<ProjectInfo>;
+    allprojects: Array<object> | null;
+    templates: Array<object> | null;
 }

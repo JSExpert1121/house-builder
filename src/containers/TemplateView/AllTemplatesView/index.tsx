@@ -29,8 +29,7 @@ import removeMd from 'remove-markdown';
 import CustomTableCell from "components/shared/CustomTableCell";
 import Button from 'components/CustomButtons/Button';
 import * as TemplActions from 'store/actions/tem-actions';
-// import { createTemplate, deleteTemplate, getTemplates, selectTemplate } from 'store/actions/tem-actions';
-import { UserProfile, TemplatePostInfo, Templates, NodeInfo } from 'types/global';
+import { UserProfile, NodeInfo } from 'types/global';
 import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
 
 
@@ -65,15 +64,11 @@ const styles = theme => createStyles({
 });
 
 interface ConnAllTemplateViewProps extends StyledComponentProps {
-	getTemplates: (currentPage: number, rowsPerPage: number) => Promise<void>;
 	selectTemplate: (id: string) => Promise<void>;
-	deleteTemplate: (id: string) => Promise<void>;
-	createTemplate: (data: TemplatePostInfo) => Promise<void>;
 	loadRoots: () => Promise<void>;
 	addRoot: (name: string, type: string, value: string, desc: string) => Promise<void>;
 	deleteNode: (id: string) => Promise<void>;
 	roots: NodeInfo[];
-	templates: Templates;
 	history: History;
 	userProfile: UserProfile;
 }
@@ -114,13 +109,11 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 	}
 
 	componentDidMount() {
-		// this.props.getTemplates(0, 20);
 		this.props.loadRoots();
 	}
 
 	handleChangePage = (event, page) => {
 		this.setState({ currentPage: page });
-		// this.props.getTemplates(page, this.state.rowsPerPage);
 	};
 
 	handleChangeRowsPerPage = event => {
@@ -129,7 +122,6 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 		const currentPage = curPos / rowsPerPage;
 
 		this.setState({ rowsPerPage, currentPage });
-		// this.props.getTemplates(currentPage, rowsPerPage);
 	};
 
 	createRoot = async () => {
@@ -149,7 +141,7 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 				description: ''
 			})
 		} catch (error) {
-			console.log('AllTemplatesView.createTemplate: ', error);
+			console.log('AllTemplatesView.createRoot: ', error);
 			this.setState({
 				showMessage: true,
 				message: 'Create Template failed',
@@ -181,74 +173,12 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 				currentPage: curPage
 			});
 		} catch (error) {
-			console.log('AllTemplatesView.deleteTemplate: ', error);
+			console.log('AllTemplatesView.deleteRoot: ', error);
 			this.setState({
 				isBusy: false,
 				showMessage: true,
 				variant: 'error',
 				message: 'Please delete child nodes'
-			});
-		}
-	}
-
-	createTemplate = async () => {
-		const { userProfile } = this.props;
-		const data = {
-			name: this.state.name,
-			description: this.state.description,
-			updatedBy: userProfile.email,
-		};
-
-		this.setState({ isBusy: true, showDialog: false });
-		try {
-			await this.props.createTemplate(data);
-			await this.props.getTemplates(0, this.state.rowsPerPage);
-			this.setState({
-				showMessage: true,
-				message: 'Create Template success',
-				variant: 'success',
-				isBusy: false,
-				name: '',
-				description: ''
-			});
-		} catch (error) {
-			console.log('AllTemplatesView.createTemplate: ', error);
-			this.setState({
-				showMessage: true,
-				message: 'Create Template failed',
-				variant: 'error',
-				isBusy: false
-			});
-		}
-	}
-
-	deleteTemplate = async (id) => {
-
-		const { templates } = this.props;
-		this.setState({ isBusy: true });
-		try {
-			await this.props.deleteTemplate(id);
-
-			let curPage = this.state.currentPage;
-			if (this.state.rowsPerPage * this.state.currentPage >= templates.totalElements - 1) {
-				curPage--;
-			}
-
-			await this.props.getTemplates(curPage, this.state.rowsPerPage);
-			this.setState({
-				isBusy: false,
-				showMessage: true,
-				variant: 'success',
-				message: 'Delete Template success',
-				currentPage: curPage
-			});
-		} catch (error) {
-			console.log('AllTemplatesView.deleteTemplate: ', error);
-			this.setState({
-				isBusy: false,
-				showMessage: true,
-				variant: 'error',
-				message: 'Please delete categories'
 			});
 		}
 	}
@@ -423,16 +353,12 @@ class AllTemplateView extends Component<ConnAllTemplateViewProps, ConnAllTemplat
 }
 
 const mapStateToProps = state => ({
-	templates: state.tem_data.templates,
 	roots: state.tem_data.roots,
 	userProfile: state.global_data.userProfile,
 });
 
 const mapDispatchToProps = dispatch => ({
-	getTemplates: (page, size) => dispatch(TemplActions.getTemplates(page, size)),
 	selectTemplate: id => dispatch(TemplActions.selectTemplate(id)),
-	deleteTemplate: id => dispatch(TemplActions.deleteTemplate(id)),
-	createTemplate: data => dispatch(TemplActions.createTemplate(data)),
 	loadRoots: () => dispatch(TemplActions.loadRoots()),
 	addRoot: (name, type, value, desc) => dispatch(TemplActions.addRoot(name, type, value, desc)),
 	deleteNode: id => dispatch(TemplActions.deleteNode(id))

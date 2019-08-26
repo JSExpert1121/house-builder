@@ -1,6 +1,6 @@
 import { ClassNameMap } from '@material-ui/styles/withStyles';
 
-export interface CmnObject<T> {
+export interface CmnObject<T = string> {
 	[key in string]: T;
 }
 
@@ -189,10 +189,3 @@ export type BreadcrumbInfo = {
 	id: string;
 	name: string;
 }
-
-
-// export interface PortfolioItem {
-// 	title?: string;
-// 	description?: string;
-// 	image: string;
-// }

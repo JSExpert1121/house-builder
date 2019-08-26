@@ -1,29 +1,4 @@
-import { MockTemplateInfo, ProjectLevel } from 'types/project';
-
-export const getTemplates: (type: string) => MockTemplateInfo[] = type => {
-    return [
-        {
-            id: '0000',
-            name: 'Painting',
-            description: 'Template for painting the house'
-        },
-        {
-            id: '0001',
-            name: 'Ceiling',
-            description: 'Template for ceiling the house'
-        },
-        {
-            id: '0002',
-            name: 'Flooring',
-            description: 'Template for flooring the house'
-        },
-        {
-            id: '0003',
-            name: 'Furnitures',
-            description: 'Template for furnitures'
-        }
-    ];
-}
+import { ProjectLevel } from 'types/project';
 
 export const initLevels: ProjectLevel[] = [
     {
