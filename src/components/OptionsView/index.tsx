@@ -202,7 +202,7 @@ const ProjectOptionEdit: React.SFC<IProjectOptionEditProps & withSnackbarProps> 
     }
 
     const buildPath = (option: RoomOption) => {
-        if (option.breadcrumb.length === 0) {
+        if (!option.breadcrumb || option.breadcrumb.length === 0) {
             return [];
         } else {
             return [...option.breadcrumb];
