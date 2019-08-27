@@ -6,6 +6,7 @@ import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { createStyles, Theme, withStyles, StyledComponentProps } from '@material-ui/core/styles';
 
 import MuiTreeView from 'material-ui-treeview';
@@ -20,6 +21,7 @@ import { UserProfile, NodeInfo } from 'types/global';
 
 const styles = createStyles((theme: Theme) => ({
     root: {
+        position: 'relative',
         flexGrow: 1,
         display: 'flex',
         minHeight: '100%',
@@ -41,6 +43,11 @@ const styles = createStyles((theme: Theme) => ({
         textAlign: 'center',
         width: '100%',
         padding: theme.spacing(1)
+    },
+    busy: {
+        position: 'absolute',
+        left: 'calc(50% - 20px)',
+        top: 'calc(50% - 20px)',
     }
 }));
 
@@ -57,6 +64,7 @@ interface IProjectSelectState {
     tree: Array<any>
     currentRoot?: NodeInfo;
     currentRoom?: ProjectLevelCategory;
+    isBusy: boolean;
 }
 
 class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectState> {
@@ -75,7 +83,8 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
                     id: room.id,
                     value: room.name
                 }))
-            }))
+            })),
+            isBusy: false
         }
     }
 
@@ -92,25 +101,30 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
 
 
     rootChange = async event => {
+        this.setState({ isBusy: true });
         try {
             const data = await TempApi.getNode(event.target.value);
-            this.setState({ currentRoot: data, rootId: event.target.value });
+            this.setState({ currentRoot: data, rootId: event.target.value, isBusy: false });
         } catch (error) {
             console.log('ProjectSelect.CDM: ', error);
+            this.setState({ isBusy: false });
         }
     }
 
     roomSelected = async leaf => {
         if (!leaf.parent) return;
 
+        this.setState({ isBusy: true });
         try {
             const data = await ProjApi.getRoom(leaf.id);
             this.setState({
                 currentRoom: data,
                 level: leaf.parent.id,
+                isBusy: false
             });
         } catch (error) {
             console.log('ProjectSelect.RoomSelected: ', error);
+            this.setState({ isBusy: false });
         }
     }
 
@@ -125,7 +139,7 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
 
     public render() {
         const { classes, levels, roots } = this.props;
-        const { rootId, level, tree, currentRoot, currentRoom } = this.state;
+        const { rootId, level, tree, currentRoot, currentRoom, isBusy } = this.state;
 
         if (!levels) {
             return <Box className={classes.root}>No levels exist</Box>
@@ -171,6 +185,7 @@ class ProjectSelect extends React.Component<IProjectSelectProps, IProjectSelectS
                     )}
                     {!currentRoom && 'No room selected'}
                 </Box>
+                {isBusy && <CircularProgress className={classes.busy} />}
             </Box>
         );
     }
