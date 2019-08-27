@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.primary.light,
         backgroundColor: '#FFF',
         padding: theme.spacing(1),
-        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2),
         width: '120px',
         // fontSize: '14px',
         bottom: 0,
@@ -96,7 +96,7 @@ interface ISectionProps {
 const Section: React.FunctionComponent<ISectionProps> = (props) => {
 
     const { component, room, roomUpdated, showMessage } = props;
-    const initSelection = (!component.children || component.children.length === 0) ? component : undefined;
+    // const initSelection = (!component.children || component.children.length === 0) ? component : undefined;
     const classes = useStyles({});
 
     const [key, setKey] = React.useState<Validator>({
@@ -111,9 +111,9 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
     const [category, setCategory] = React.useState(component.id);
     const [curRoom, setCurRoom] = React.useState(room.id);
 
-    const [node, setNode] = React.useState<NodeInfo | undefined>(component);
+    const [node, setNode] = React.useState<NodeInfo>(component);
     const [path, setPath] = React.useState<NodeInfo[]>([component]);
-    const [selection, setSelection] = React.useState<NodeInfo | undefined>(initSelection);
+    // const [selection, setSelection] = React.useState<NodeInfo>(component);
     const [modal, setModal] = React.useState(false);
     // const [edit, setEdit] = React.useState('');
 
@@ -121,7 +121,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
     const [busy, setBusy] = React.useState(false);
 
     const reload = () => {
-        setSelection(initSelection);
+        // setSelection(component);
         setNode(component);
         setPath([component]);
         setCategory(component.id);
@@ -138,22 +138,27 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
 
     const nodeChange = e => {
         const count = node.children.length;
+        // if (selection && selection.id === e.target.value) return;
+        if (node.id === e.target.value) return;
+
         for (let i = 0; i < count; i++) {
             if (node.children[i].id === e.target.value) {
                 let newPath = path;
-                if (selection) {
-                    setSelection(undefined);
+                if (!node.children || node.children.length === 0) {
                     newPath.pop();
                 }
                 setPath([...newPath, node.children[i]]);
-                if (!node.children[i].children || node.children[i].children.length === 0) {
-                    setSelection(node.children[i]);
-                    // console.log(room.selectionList, component, node.children[i]);
+                setNode(node.children[i]);
+                setOption({});
+                // setSelection(node.children[i]);
+                // if (!node.children[i].children || node.children[i].children.length === 0) {
+                //     setSelection(node.children[i]);
+                //     // console.log(room.selectionList, component, node.children[i]);
 
-                } else {
-                    setNode(node.children[i]);
-                    setOption({});
-                }
+                // } else {
+                //     setNode(node.children[i]);
+                //     setOption({});
+                // }
             }
         }
     }
@@ -200,7 +205,6 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
             }
         }
 
-        console.log(crumb);
         return crumb;
     }
 
@@ -210,18 +214,13 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
         if (idx === (path.length - 1)) return;
 
         const newPath = path.slice(0, idx + 1);
-        setSelection(undefined);
+        // setSelection(undefined);
         setPath(newPath);
         setNode(newPath[newPath.length - 1]);
     }
 
     const handleSelect = async () => {
         // call api
-        if (Object.keys(option).length === 0) {
-            props.showMessage(false, 'Option is empty');
-            return;
-        }
-
         setBusy(true);
         try {
             if (edit.length > 0) {
@@ -238,7 +237,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                 // create a new selection
                 let crumb = [];
                 if (path.length > 1) crumb = path.slice(1, path.length).map(item => item.id);
-                await ProjApi.createSelection(room.id, component.id, selection.id, option, crumb);
+                await ProjApi.createSelection(room.id, component.id, node.id, option, crumb);
             }
 
             // update room information
@@ -286,8 +285,8 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
 
     let edit = '';
     let opts = undefined;
-    if (room.selectionList && selection) {
-        const filtered = room.selectionList.filter(item => (item.category.id === component.id && item.selection.id === selection.id));
+    if (room.selectionList) {
+        const filtered = room.selectionList.filter(item => (item.category.id === component.id && item.selection.id === node.id));
         if (filtered.length === 1) {
             opts = filtered[0].option;
             edit = filtered[0].id;
@@ -301,12 +300,25 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
         setModal(true);
     }
 
+    const existingKeyChange = (oldKey: string, newKey: string) => {
+        if (Object.keys(option).includes(newKey)) return;
+        delete option[oldKey];
+        option[newKey] = option[oldKey];
+        delete option[oldKey];
+    }
+
+    const existingValueChange = (key: string, value: string) => {
+        let newOpt = option;
+        newOpt[key] = value;
+        setOption({ ...newOpt });
+    }
+
     return (
         <Box className={classes.root}>
             <List>
                 <ListItem>
                     <Typography className={classes.title}>
-                        {`Component: ${component.name} ( ${component.description} )`}
+                        {`${component.name} ( ${component.description} )`}
                     </Typography>
                 </ListItem>
                 <Divider />
@@ -325,64 +337,47 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                     </Typography>
                     <Select
                         style={{ minWidth: 180 }}
-                        value={selection ? selection.id : ''}
+                        placeholder={node && node.name}
+                        value={node.id}
                         onChange={nodeChange}
                         name="sub-nodes"
                         className={classes.catBox}
                     >
+                        <MenuItem value={node.id} key={node.id}>
+                            {node.name}
+                        </MenuItem>
                         {node && node.children && node.children.map(item => (
                             <MenuItem value={item.id} key={item.id}>
-                                {item.name}
+                                {` >> ${item.name}`}
                             </MenuItem>
                         ))}
-                        {initSelection && (
+                        {/* {initSelection && (
                             <MenuItem value={initSelection.id}>
                                 {initSelection.name}
                             </MenuItem>
-                        )}
+                        )} */}
                     </Select>
-                    {selection && (
-                        <Typography className={classes.subtitle}>
-                            &nbsp;&nbsp;&nbsp;&nbsp;{selection.description}
-                        </Typography>
-                    )}
+                    <Typography className={classes.subtitle}>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{node.description}
+                    </Typography>
                 </ListItem>
-                {selection && (
-                    <ListItem>
-                        <Typography className={classes.bold}>
-                            {(edit.length > 0) ? 'Edit Options' : 'Add Options'}
-                        </Typography>
-                        <Fab
-                            color="primary"
-                            aria-label="Add"
-                            className={classes.fab}
-                            onClick={showForm}
-                        >
-                            {(edit.length > 0) ? <EditIcon /> : <AddIcon />}
-                        </Fab>
-                        {modal && (
-                            <>
-                                <Button onClick={handleSelect} className={classes.doneBtn}>Select</Button>
-                                <Button onClick={handleCancel} className={classes.doneBtn}>Cancel</Button>
-                            </>
-                        )}
-                    </ListItem>
-                )}
-                {room.selectionList && room.selectionList.filter(selection => component.id === selection.category.id).map(opt => (
-                    <React.Fragment key={opt.id}>
-                        <Divider />
-                        <ListItem>
-                            <Box style={{ width: '100%' }}>
-                                <Typography className={classes.subtitle}>
-                                    {`Current Options ( ${buildCrumb(buildPath(opt)).join(' / ')} )`}
-                                </Typography>
-                                {Object.keys(opt.option).map(key => (
-                                    <Typography key={key} style={{ paddingLeft: 32 }}>{`${key} : ${opt.option[key]}`}</Typography>
-                                ))}
-                            </Box>
-                        </ListItem>
-                    </React.Fragment>
-                ))}
+                <ListItem>
+                    <Typography className={classes.bold}>
+                        {(edit.length > 0) ? 'Edit Options' : 'Add Options'}
+                    </Typography>
+                    <Fab
+                        color="primary"
+                        aria-label="Add"
+                        className={classes.fab}
+                        onClick={showForm}
+                    >
+                        {(edit.length > 0) ? <EditIcon /> : <AddIcon />}
+                    </Fab>
+                </ListItem>
+                <ListItem>
+                    <Button onClick={handleSelect} className={classes.doneBtn}>Select</Button>
+                    <Button onClick={handleCancel} className={classes.doneBtn}>Cancel</Button>
+                </ListItem>
                 {modal && (
                     <React.Fragment>
                         <Divider />
@@ -396,7 +391,8 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                                                 margin="dense"
                                                 fullWidth={true}
                                                 value={itemKey}
-                                                disabled={true}
+                                                onChange={e => existingKeyChange(itemKey, e.target.value)}
+                                                // disabled={true}
                                                 required
                                             />
                                         </Grid>
@@ -406,7 +402,8 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                                                 margin="dense"
                                                 fullWidth={true}
                                                 value={option[itemKey]}
-                                                disabled={true}
+                                                onChange={(e) => existingValueChange(itemKey, e.target.value)}
+                                                // disabled={true}
                                                 required
                                             />
                                         </Grid>
@@ -451,6 +448,21 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                         </ListItem>
                     </React.Fragment>
                 )}
+                {room.selectionList && room.selectionList.filter(selection => component.id === selection.category.id).map(opt => (
+                    <React.Fragment key={opt.id}>
+                        <Divider />
+                        <ListItem>
+                            <Box style={{ width: '100%' }}>
+                                <Typography className={classes.subtitle}>
+                                    {`Current Selection: < ${buildCrumb(buildPath(opt)).join(' / ')} >`}
+                                </Typography>
+                                {Object.keys(opt.option).map(key => (
+                                    <Typography key={key} style={{ paddingLeft: 32 }}>{`${key} : ${opt.option[key]}`}</Typography>
+                                ))}
+                            </Box>
+                        </ListItem>
+                    </React.Fragment>
+                ))}
             </List>
             {busy && <CircularProgress className={classes.busy} />}
         </Box>
