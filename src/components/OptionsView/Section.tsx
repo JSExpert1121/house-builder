@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
@@ -13,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -21,7 +20,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { ProjectLevelCategory, RoomOption } from 'types/project';
-import { Validator, CmnObject, NodeInfo } from 'types/global';
+import { Validator, NodeInfo } from 'types/global';
 
 import ProjApi from 'services/project';
 
@@ -42,13 +41,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         fontWeight: 500,
         fontSize: '1rem',
         paddingRight: theme.spacing(1.5),
-        color: '#222'
+        color: '#222',
+        paddingTop: theme.spacing(0.5)
     },
     fab: {
-        width: theme.spacing(5),
-        height: theme.spacing(5),
-        marginLeft: theme.spacing(5),
-        marginRight: theme.spacing(5),
+        width: theme.spacing(4),
+        height: theme.spacing(4),
+        margin: theme.spacing(0, 5),
     },
     catBox: {
         margin: theme.spacing(0, 3)
@@ -113,15 +112,12 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
 
     const [node, setNode] = React.useState<NodeInfo>(component);
     const [path, setPath] = React.useState<NodeInfo[]>([component]);
-    // const [selection, setSelection] = React.useState<NodeInfo>(component);
     const [modal, setModal] = React.useState(false);
-    // const [edit, setEdit] = React.useState('');
 
-    const [option, setOption] = React.useState<CmnObject>({});
+    const [option, setOption] = React.useState<{ key: Validator, value: Validator }[]>([]);
     const [busy, setBusy] = React.useState(false);
 
     const reload = () => {
-        // setSelection(component);
         setNode(component);
         setPath([component]);
         setCategory(component.id);
@@ -149,22 +145,14 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                 }
                 setPath([...newPath, node.children[i]]);
                 setNode(node.children[i]);
-                setOption({});
-                // setSelection(node.children[i]);
-                // if (!node.children[i].children || node.children[i].children.length === 0) {
-                //     setSelection(node.children[i]);
-                //     // console.log(room.selectionList, component, node.children[i]);
-
-                // } else {
-                //     setNode(node.children[i]);
-                //     setOption({});
-                // }
+                setKey({ value: '', errMsg: undefined });
+                setValue({ value: '', errMsg: undefined });
             }
         }
     }
 
     const keyChange = e => {
-        if (Object.keys(option).includes(e.target.value)) {
+        if (option.some(opt => opt.key.value === e.target.value)) {
             setKey({
                 value: e.target.value,
                 errMsg: 'Same key exists'
@@ -183,11 +171,11 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
         }
     }
 
-    const buildPath = (option: RoomOption) => {
-        if (!option.breadcrumb || option.breadcrumb.length === 0) {
+    const buildPath = (opt: RoomOption) => {
+        if (!opt.breadcrumb || opt.breadcrumb.length === 0) {
             return [];
         } else {
-            return [...option.breadcrumb];
+            return [...opt.breadcrumb];
         }
     }
 
@@ -205,6 +193,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
             }
         }
 
+        crumb.unshift(component.name);
         return crumb;
     }
 
@@ -214,17 +203,46 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
         if (idx === (path.length - 1)) return;
 
         const newPath = path.slice(0, idx + 1);
-        // setSelection(undefined);
         setPath(newPath);
         setNode(newPath[newPath.length - 1]);
+        setKey({ value: '', errMsg: undefined });
+        setValue({ value: '', errMsg: undefined });
     }
 
     const handleSelect = async () => {
+
+        let newOpts = option;
+        const postOption = {};
+        let err = false;
+        for (let i = 0; i < newOpts.length; i++) {
+            if (Object.keys(postOption).includes(newOpts[i].key.value)) {
+                newOpts[i].key.errMsg = 'Same key exists';
+                err = true;
+            }
+
+            if (newOpts[i].key.value.length === 0) {
+                newOpts[i].key.errMsg = 'Key is required'
+                err = true;
+            }
+
+            if (newOpts[i].value.value.length === 0) {
+                newOpts[i].value.errMsg = 'Value is required'
+                err = true;
+            }
+
+            postOption[newOpts[i].key.value] = newOpts[i].value.value;
+        }
+
+        if (err) {
+            setOption([...newOpts]);
+            return;
+        }
+
         // call api
         setBusy(true);
         try {
             if (edit.length > 0) {
-                await ProjApi.updateSelection(edit, option)
+                await ProjApi.updateSelection(edit, postOption)
             } else {
                 // delete existing selections
                 const existing = room.selectionList.filter(sel => sel.category.id === component.id);
@@ -237,15 +255,16 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                 // create a new selection
                 let crumb = [];
                 if (path.length > 1) crumb = path.slice(1, path.length).map(item => item.id);
-                await ProjApi.createSelection(room.id, component.id, node.id, option, crumb);
+                await ProjApi.createSelection(room.id, component.id, node.id, postOption, crumb);
             }
 
             // update room information
             await roomUpdated();
             setBusy(false);
             setModal(false);
-            setOption({});
-            showMessage(true, 'Save option success');
+            setKey({ value: '', errMsg: undefined });
+            setValue({ value: '', errMsg: undefined });
+            showMessage(true, 'Saved');
         } catch (error) {
             console.log('ProjectOptionView.handleSelect: ', error);
             setBusy(false);
@@ -254,14 +273,15 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
     }
 
     const handleCancel = () => {
-        setOption({});
         setModal(false);
+        setKey({ value: '', errMsg: undefined });
+        setValue({ value: '', errMsg: undefined });
     }
 
-    const deleteItem = (key: string) => {
+    const deleteItem = (index: number) => {
         let newOpt = option;
-        delete newOpt[key];
-        setOption({ ...newOpt });
+        newOpt.splice(index, 1);
+        setOption([...newOpt]);
     }
 
     const addItem = () => {
@@ -277,8 +297,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
         }
 
         // save options
-        const newOpt = { ...option, [key.value]: value.value };
-        setOption(newOpt);
+        setOption([...option, { key: { value: key.value, errMsg: undefined }, value: { value: value.value, errMsg: undefined } }]);
         setKey({ value: '', errMsg: undefined });
         setValue({ value: '', errMsg: undefined });
     }
@@ -288,7 +307,10 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
     if (room.selectionList) {
         const filtered = room.selectionList.filter(item => (item.category.id === component.id && item.selection.id === node.id));
         if (filtered.length === 1) {
-            opts = filtered[0].option;
+            opts = Object.keys(filtered[0].option).map(itemKey => ({
+                key: { value: itemKey, errMsg: undefined },
+                value: { value: filtered[0].option[itemKey], errMsg: undefined }
+            }));
             edit = filtered[0].id;
         } else if (filtered.length > 1) {
             console.log('OptionView: some error');
@@ -296,21 +318,20 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
     }
 
     const showForm = () => {
-        if (opts) setOption(opts);
+        setOption(opts || []);
         setModal(true);
     }
 
-    const existingKeyChange = (oldKey: string, newKey: string) => {
-        if (Object.keys(option).includes(newKey)) return;
-        delete option[oldKey];
-        option[newKey] = option[oldKey];
-        delete option[oldKey];
+    const existingKeyChange = (index: number, newKey: string) => {
+        let newOpt = option;
+        newOpt[index].key = { value: newKey, errMsg: undefined };
+        setOption([...newOpt]);
     }
 
-    const existingValueChange = (key: string, value: string) => {
+    const existingValueChange = (index: number, value: string) => {
         let newOpt = option;
-        newOpt[key] = value;
-        setOption({ ...newOpt });
+        newOpt[index].value = { value: value, errMsg: undefined };;
+        setOption([...newOpt]);
     }
 
     return (
@@ -361,37 +382,38 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                         &nbsp;&nbsp;&nbsp;&nbsp;{node.description}
                     </Typography>
                 </ListItem>
-                <ListItem>
-                    <Typography className={classes.bold}>
-                        {(edit.length > 0) ? 'Edit Options' : 'Add Options'}
-                    </Typography>
-                    <Fab
-                        color="primary"
-                        aria-label="Add"
-                        className={classes.fab}
-                        onClick={showForm}
-                    >
-                        {(edit.length > 0) ? <EditIcon /> : <AddIcon />}
-                    </Fab>
-                </ListItem>
-                <ListItem>
-                    <Button onClick={handleSelect} className={classes.doneBtn}>Select</Button>
-                    <Button onClick={handleCancel} className={classes.doneBtn}>Cancel</Button>
-                </ListItem>
-                {modal && (
+                {edit.length === 0 && (
+                    <ListItem>
+                        <Typography className={classes.bold}>
+                            {'Add Options'}
+                        </Typography>
+                        <IconButton
+                            color='primary'
+                            // size='small'
+                            aria-label='Add'
+                            className={classes.fab}
+                            onClick={showForm}
+                        >
+                            {(edit.length > 0) ? <EditIcon fontSize='small' /> : <AddIcon fontSize='small' />}
+                        </IconButton>
+                    </ListItem>
+                )}
+                {edit.length === 0 && modal && (
                     <React.Fragment>
                         <Divider />
                         <ListItem>
                             <Grid container style={{ maxWidth: 640 }}>
-                                {Object.keys(option).map(itemKey => (
-                                    <React.Fragment key={itemKey}>
+                                {option.map((opt, index) => (
+                                    <React.Fragment key={index}>
                                         <Grid item xs={5} style={{ padding: '4px 8px' }}>
                                             <TextField
                                                 label="Key"
                                                 margin="dense"
                                                 fullWidth={true}
-                                                value={itemKey}
-                                                onChange={e => existingKeyChange(itemKey, e.target.value)}
+                                                value={opt.key.value}
+                                                error={!!opt.key.errMsg}
+                                                helperText={opt.key.errMsg}
+                                                onChange={e => existingKeyChange(index, e.target.value)}
                                                 // disabled={true}
                                                 required
                                             />
@@ -401,14 +423,16 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                                                 label="Value"
                                                 margin="dense"
                                                 fullWidth={true}
-                                                value={option[itemKey]}
-                                                onChange={(e) => existingValueChange(itemKey, e.target.value)}
+                                                value={opt.value.value}
+                                                error={!!opt.value.errMsg}
+                                                helperText={opt.value.errMsg}
+                                                onChange={(e) => existingValueChange(index, e.target.value)}
                                                 // disabled={true}
                                                 required
                                             />
                                         </Grid>
                                         <Grid item xs={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <IconButton onClick={() => deleteItem(itemKey)} style={{ height: 36 }}>
+                                            <IconButton onClick={() => deleteItem(index)} style={{ height: 36 }}>
                                                 <DeleteIcon fontSize='small' color='error' />
                                             </IconButton>
                                         </Grid>
@@ -435,7 +459,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                                         value={value.value}
                                         onChange={event => setValue({
                                             value: event.target.value,
-                                            errMsg: event.target.value.length > 0 ? undefined : 'Key is required'
+                                            errMsg: event.target.value.length > 0 ? undefined : 'Value is required'
                                         })}
                                     />
                                 </Grid>
@@ -448,6 +472,12 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                         </ListItem>
                     </React.Fragment>
                 )}
+                {edit.length === 0 && (
+                    <ListItem>
+                        <Button onClick={handleSelect} className={classes.doneBtn}>Select</Button>
+                        <Button onClick={handleCancel} className={classes.doneBtn}>Cancel</Button>
+                    </ListItem>
+                )}
                 {room.selectionList && room.selectionList.filter(selection => component.id === selection.category.id).map(opt => (
                     <React.Fragment key={opt.id}>
                         <Divider />
@@ -456,13 +486,110 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                                 <Typography className={classes.subtitle}>
                                     {`Current Selection: < ${buildCrumb(buildPath(opt)).join(' / ')} >`}
                                 </Typography>
-                                {Object.keys(opt.option).map(key => (
-                                    <Typography key={key} style={{ paddingLeft: 32 }}>{`${key} : ${opt.option[key]}`}</Typography>
-                                ))}
+                                <Box style={{ display: 'flex' }}>
+                                    <Typography className={classes.subtitle}>
+                                        Options:
+                                    </Typography>
+                                    <IconButton
+                                        color='primary'
+                                        aria-label='Add'
+                                        className={classes.fab}
+                                        onClick={showForm}
+                                    >
+                                        {(Object.keys(opt.option).length > 0) ? <EditIcon fontSize='small' /> : <AddIcon fontSize='small' />}
+                                    </IconButton>
+                                </Box>
+                                {opt.option && Object.keys(opt.option).length > 0 && (
+                                    <ul>
+                                        {Object.keys(opt.option).map(key => (
+                                            <li key={key} style={{ padding: 4, listStyleType: 'disc' }}>{`${key} : ${opt.option[key]}`}</li>
+                                        ))}
+                                    </ul>
+                                )}
                             </Box>
                         </ListItem>
                     </React.Fragment>
                 ))}
+                {edit.length > 0 && modal && (
+                    <React.Fragment>
+                        <Divider />
+                        <ListItem>
+                            <Grid container style={{ maxWidth: 640 }}>
+                                {option.map((opt, index) => (
+                                    <React.Fragment key={index}>
+                                        <Grid item xs={5} style={{ padding: '4px 8px' }}>
+                                            <TextField
+                                                label="Key"
+                                                margin="dense"
+                                                fullWidth={true}
+                                                value={opt.key.value}
+                                                error={!!opt.key.errMsg}
+                                                helperText={opt.key.errMsg}
+                                                onChange={e => existingKeyChange(index, e.target.value)}
+                                                // disabled={true}
+                                                required
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6} style={{ padding: '4px 8px' }}>
+                                            <TextField
+                                                label="Value"
+                                                margin="dense"
+                                                fullWidth={true}
+                                                value={opt.value.value}
+                                                error={!!opt.value.errMsg}
+                                                helperText={opt.value.errMsg}
+                                                onChange={(e) => existingValueChange(index, e.target.value)}
+                                                // disabled={true}
+                                                required
+                                            />
+                                        </Grid>
+                                        <Grid item xs={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <IconButton onClick={() => deleteItem(index)} style={{ height: 36 }}>
+                                                <DeleteIcon fontSize='small' color='error' />
+                                            </IconButton>
+                                        </Grid>
+                                    </React.Fragment>
+                                ))}
+                                <Grid item xs={5} style={{ padding: '4px 8px' }}>
+                                    <TextField
+                                        label="Key"
+                                        margin="dense"
+                                        fullWidth={true}
+                                        error={!!key.errMsg}
+                                        helperText={key.errMsg}
+                                        value={key.value}
+                                        onChange={keyChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={6} style={{ padding: '4px 8px' }}>
+                                    <TextField
+                                        label="Value"
+                                        margin="dense"
+                                        fullWidth={true}
+                                        error={!!value.errMsg}
+                                        helperText={value.errMsg}
+                                        value={value.value}
+                                        onChange={event => setValue({
+                                            value: event.target.value,
+                                            errMsg: event.target.value.length > 0 ? undefined : 'Value is required'
+                                        })}
+                                    />
+                                </Grid>
+                                <Grid item xs={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <IconButton onClick={addItem} style={{ height: 36 }}>
+                                        <AddIcon fontSize='small' color='action' />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        </ListItem>
+                    </React.Fragment>
+                )}
+                {edit.length > 0 && (
+                    <ListItem>
+                        <Button onClick={handleSelect} className={classes.doneBtn}>Select</Button>
+                        <Button onClick={handleCancel} className={classes.doneBtn}>Cancel</Button>
+                    </ListItem>
+                )}
             </List>
             {busy && <CircularProgress className={classes.busy} />}
         </Box>
