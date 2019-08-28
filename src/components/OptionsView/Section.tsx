@@ -393,7 +393,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                         className={classes.catBox}
                     >
                         <MenuItem value={node.id} key={node.id}>
-                            {`Select option for ${node.name}`}
+                            {(!node.children || node.children.length === 0) ? node.name : `Select option for ${node.name}`}
                         </MenuItem>
                         {node && node.children && node.children.map(item => (
                             <MenuItem value={item.id} key={item.id}>
