@@ -95,7 +95,6 @@ interface ISectionProps {
 const Section: React.FunctionComponent<ISectionProps> = (props) => {
 
     const { component, room, roomUpdated, showMessage } = props;
-    // const initSelection = (!component.children || component.children.length === 0) ? component : undefined;
     const classes = useStyles({});
 
     const [key, setKey] = React.useState<Validator>({
@@ -107,23 +106,52 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
         errMsg: undefined
     });
 
+
+
     const [category, setCategory] = React.useState(component.id);
     const [curRoom, setCurRoom] = React.useState(room.id);
 
-    const [node, setNode] = React.useState<NodeInfo>(component);
-    const [path, setPath] = React.useState<NodeInfo[]>([component]);
+
     const [modal, setModal] = React.useState(false);
 
     const [option, setOption] = React.useState<{ key: Validator, value: Validator }[]>([]);
     const [busy, setBusy] = React.useState(false);
 
+    const pathFromOption = () => {
+        const crumb = [component];
+
+        if (!room.selectionList) return crumb;
+        const current = room.selectionList.filter(selection => component.id === selection.category.id);
+        if (current.length === 0) return crumb;
+        const ids = current[0].breadcrumb;
+        if (!ids || ids.length === 0) return crumb;
+
+        let curNode = component;
+        for (let i = 0; i < ids.length; i++) {
+            const matches = curNode.children.filter(item => item.id === ids[i]);
+            if (matches.length === 1) {
+                crumb.push(matches[0]);
+                curNode = matches[0];
+            } else {
+                break;
+            }
+        }
+
+        return crumb;
+    }
+
+    const curPath = pathFromOption();
+    const [node, setNode] = React.useState<NodeInfo>(curPath[curPath.length - 1]);
+    const [path, setPath] = React.useState<NodeInfo[]>(curPath);
+
     const reload = () => {
-        setNode(component);
-        setPath([component]);
         setCategory(component.id);
         setCurRoom(room.id);
         setModal(false);
         setBusy(false);
+
+        setPath(curPath);
+        setNode(curPath[curPath.length - 1]);
     }
 
     if (category !== component.id) {
@@ -172,7 +200,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
     }
 
     const buildPath = (opt: RoomOption) => {
-        if (!opt.breadcrumb || opt.breadcrumb.length === 0) {
+        if (!opt.breadcrumb) {
             return [];
         } else {
             return [...opt.breadcrumb];
@@ -354,7 +382,7 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                 </ListItem>
                 <ListItem>
                     <Typography className={classes.bold}>
-                        Select Category
+                        Category
                     </Typography>
                     <Select
                         style={{ minWidth: 180 }}
@@ -365,11 +393,11 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                         className={classes.catBox}
                     >
                         <MenuItem value={node.id} key={node.id}>
-                            {node.name}
+                            {`Select option for ${node.name}`}
                         </MenuItem>
                         {node && node.children && node.children.map(item => (
                             <MenuItem value={item.id} key={item.id}>
-                                {` >> ${item.name}`}
+                                {`  > ${item.name}`}
                             </MenuItem>
                         ))}
                         {/* {initSelection && (
@@ -384,8 +412,8 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                 </ListItem>
                 {edit.length === 0 && (
                     <ListItem>
-                        <Typography className={classes.bold}>
-                            {'Add Options'}
+                        <Typography className={classes.subtitle}>
+                            Options
                         </Typography>
                         <IconButton
                             color='primary'
@@ -488,16 +516,18 @@ const Section: React.FunctionComponent<ISectionProps> = (props) => {
                                 </Typography>
                                 <Box style={{ display: 'flex' }}>
                                     <Typography className={classes.subtitle}>
-                                        Options:
+                                        Options
                                     </Typography>
-                                    <IconButton
-                                        color='primary'
-                                        aria-label='Add'
-                                        className={classes.fab}
-                                        onClick={showForm}
-                                    >
-                                        {(Object.keys(opt.option).length > 0) ? <EditIcon fontSize='small' /> : <AddIcon fontSize='small' />}
-                                    </IconButton>
+                                    {edit.length > 0 && (
+                                        <IconButton
+                                            color='primary'
+                                            aria-label='Add'
+                                            className={classes.fab}
+                                            onClick={showForm}
+                                        >
+                                            {(Object.keys(opt.option).length > 0) ? <EditIcon fontSize='small' /> : <AddIcon fontSize='small' />}
+                                        </IconButton>
+                                    )}
                                 </Box>
                                 {opt.option && Object.keys(opt.option).length > 0 && (
                                     <ul>
