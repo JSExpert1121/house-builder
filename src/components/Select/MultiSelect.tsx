@@ -50,17 +50,6 @@ const MultiSelect: React.SFC<MultiSelectProps> = (props) => {
         className,
     } = props;
 
-    // const CustomFormControl = withStyles({
-    //     root: (values.length > 0) ? {} : {
-    //         '& .MuiInputBase-input': {
-    //             paddingTop: '1.1875em'
-    //         },
-    //         '& .MuiInputLabel-formControl': {
-    //             paddingTop: '0.75em'
-    //         }
-    //     },
-    // })(FormControl);
-
     const [open, setOpen] = React.useState(false);
     const handleChange = (event: React.ChangeEvent<{ name?: string; value: Array<string> }>) => {
         selectChange(event.target.value);
@@ -70,7 +59,7 @@ const MultiSelect: React.SFC<MultiSelectProps> = (props) => {
     return (
         <FormControl
             className={className || classes.control}
-            margin='normal'
+            margin='dense'
         >
             <InputLabel htmlFor="select-multiple-checkbox">{placeholder}</InputLabel>
             <Select

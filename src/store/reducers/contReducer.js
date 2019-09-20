@@ -51,10 +51,10 @@ const templateReducer = handleActions(
       ...state,
       specialties: action.payload,
     }),
-    [CONTRACTOR_DETAIL_LOADED]: (state, action) => console.log('#xxx',action.payload) || ({
+    [CONTRACTOR_DETAIL_LOADED]: (state, action) => console.log('#xxx', action.payload) || ({
       ...state,
       selectedProject: action.payload.selectedProject,
-      files: action.payload.contractorFiles.slice(),
+      files: [...action.payload.contractorFiles],
     }),
     [SET_SELECTED_CATEGORY]: (state, action) => ({
       ...state,

@@ -90,8 +90,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 		window.removeEventListener('resize', this.resizedWindow);
 	}
 
-
-
 	handleProfileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
 		this.setState({ anchorEl: event.currentTarget });
 	};

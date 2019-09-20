@@ -36,6 +36,7 @@
     "react-scripts": "3.0.1",
     "react-select": "^3.0.4",
     "react-simplemde-editor": "^4.0.0",
+    "react-social-icons": "^4.1.0",
     "react-split-pane": "^0.1.87",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",

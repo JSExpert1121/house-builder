@@ -1,397 +1,313 @@
+import React from 'react';
+
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { createStyles, Theme, withStyles } from '@material-ui/core/styles';
+import { createStyles, Theme, withStyles, StyledComponentProps } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import { setUserProfile } from 'store/actions/global-actions';
-import axios from 'axios';
-import { History } from 'history';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { MaterialThemeHOC, UserProfile } from 'types/global';
-import auth0Client from 'services/auth0/auth';
-import TSnackbarContent from 'components/SnackBarContent';
-import Button from 'components/CustomButtons/Button';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+
+import UploadButton from 'components/CustomUpload/UploadButton';
+import { Profile } from './types';
 
 const styles = (theme: Theme) => createStyles({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 'calc(100vh - 136px)',
-    marginTop: 'auto',
-    marginBottom: 'auto',
-    overflow: 'auto',
-    flexDirection: 'column',
-    width: '100%'
-  },
-  container: {
-    position: 'relative',
-    left: '0px',
-    right: '0px',
-    width: '300px',
-    height: 'auto',
-    margin: theme.spacing(1),
-    padding: theme.spacing(1),
-    borderRadius: '0',
-    [theme.breakpoints.up('sm')]: {
-      width: '400px',
-    },
-  },
-  marginRight: {
-    marginRight: theme.spacing(1)
-  },
-  textFieldHalf: {
-    margin: theme.spacing(1),
-    width: '120px',
-    [theme.breakpoints.up('sm')]: {
-      width: '170px',
-    },
-  },
-  textFieldFull: {
-    margin: theme.spacing(1),
-    width: '260px',
-
-    [theme.breakpoints.up('sm')]: {
-      width: '360px',
-    },
-  },
-  avatar: {
-    marginLeft: 90,
-    marginTop: 20,
-    marginBottom: 30,
-    width: 100,
-    height: 100,
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: 140,
-    },
-  },
-  status: {
-    position: 'absolute',
-    left: '20px',
-    top: '10px',
-    color: 'blue',
-    fontSize: '12px',
-  },
-  btnBox: {
-    margin: theme.spacing(1),
-  },
-  submitButton: {
-    width: 120,
-    [theme.breakpoints.up('sm')]: {
-      width: 170,
-    },
-    border: '1px solid #4a148c',
-    color: 'white',
-    marginLeft: '20px',
-    backgroundColor: theme.palette.primary.light,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    '&:disabled': {
-      backgroundColor: '#FFFFFF',
-    },
-  },
-  cancelButton: {
-    border: '1px solid #c7a4ff',
-    width: 120,
-    [theme.breakpoints.up('sm')]: {
-      width: 170,
-    },
-  },
-  waitingSpin: {
-    position: 'relative',
-    left: 'calc(50% - 10px)',
-    top: 'calc(40vh)',
-  },
-
-  successAlert: {
-    width: '400px',
-    marginBottom: '10px',
-  },
+	root: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'column',
+		width: '100%'
+	},
+	container: {
+		width: '400px',
+		height: 'auto',
+		overflow: 'auto',
+		padding: theme.spacing(2),
+		borderRadius: '0',
+		[theme.breakpoints.up('xs')]: {
+			width: '600px',
+		},
+	},
+	marginRight: {
+		marginRight: theme.spacing(1)
+	},
+	row: {
+		display: 'flex'
+	},
+	avatar: {
+		margin: 'auto',
+		width: 60,
+		height: 60,
+		[theme.breakpoints.up('sm')]: {
+			width: 80,
+			height: 80,
+		}
+	},
+	company: {
+		marginLeft: theme.spacing(2),
+		flex: 1,
+		justifyContent: 'center',
+		display: 'flex',
+		flexDirection: 'column'
+	},
+	companyName: {
+		fontSize: '1.2rem',
+		fontWeight: 600
+	},
+	rating: {
+		marginTop: theme.spacing(2),
+	},
+	link: {
+		fontSize: '0.875rem',
+		fontWeight: 600,
+		color: 'blue',
+		cursor: 'pointer'
+	},
+	status: {
+		position: 'absolute',
+		left: '20px',
+		top: '10px',
+		color: 'blue',
+		fontSize: '12px',
+	},
+	btnBox: {
+		margin: theme.spacing(1),
+	},
+	submitButton: {
+		width: 120,
+		[theme.breakpoints.up('xs')]: {
+			width: 160,
+		},
+		border: '1px solid #4a148c',
+		color: 'white',
+		margin: 'auto',
+		backgroundColor: theme.palette.primary.light,
+		'&:hover': {
+			backgroundColor: theme.palette.primary.dark,
+		},
+		'&:disabled': {
+			backgroundColor: '#FFFFFF',
+		},
+	},
+	cancelButton: {
+		border: '1px solid #c7a4ff',
+		width: 120,
+		[theme.breakpoints.up('xs')]: {
+			width: 170,
+		},
+	},
+	waitingSpin: {
+		position: 'relative',
+		left: 'calc(50% - 10px)',
+		top: 'calc(40vh)',
+	},
+	successAlert: {
+		width: '400px',
+		marginBottom: '10px',
+	},
 });
 
-interface ProfileEditViewProps extends MaterialThemeHOC {
-  userProfile: UserProfile;
-  setUserProfileAction: (profile: UserProfile) => any;
-  history: History;
+interface ProfileEditViewProps extends StyledComponentProps {
+	profile: Profile;
+	gotoOverview: () => void;
+	handleSave: () => Promise<void>;
+	handleChange: (field: string) => (value: any) => void;
+	uploadPicture: (file: File) => Promise<string>;
 }
 
-interface ProfileEditViewState {
-  firstname: any;
-  lastname: any;
-  email: any;
-  picture: any;
-  password: any;
-  passwordc: any;
-  profile: any;
-  isSuccess: boolean;
-  company: any;
-  street: any;
-  city: any;
-  phone: any;
-  isGenChecked: boolean;
-  isSubChecked: boolean;
-  isSaving: boolean;
-  isDataLoaded: boolean;
-  hasFiles: any;
-  status: any;
+const ProfileEditView: React.FC<ProfileEditViewProps> = props => {
+
+	const { classes, profile, handleChange } = props;
+	const address = profile.address;
+
+	const handleSave = () => {
+		props.handleSave();
+	}
+
+	const handleCancel = () => {
+		props.gotoOverview();
+	}
+
+	const updatePicture = async (file: File) => {
+		props.uploadPicture(file);
+	}
+
+	const nameChange = e => {
+		handleChange('address')({
+			...address,
+			company: e.target.value
+		});
+	};
+
+	const phoneChange = e => {
+		handleChange('address')({
+			...address,
+			phone: e.target.value
+		});
+	};
+
+	const cityChange = e => {
+		handleChange('address')({
+			...address,
+			city: e.target.value
+		});
+	};
+
+	const streetChange = e => {
+		handleChange('address')({
+			...address,
+			street: e.target.value
+		});
+	};
+
+	const websiteChange = e => {
+		handleChange('address')({
+			...address,
+			website: e.target.value
+		});
+	}
+
+	const foundedChange = e => {
+		handleChange('address')({
+			...address,
+			founded: e.target.value
+		});
+	}
+
+	const employeesChange = e => {
+		handleChange('address')({
+			...address,
+			employees: e.target.value
+		});
+	}
+
+
+	return (
+		<Box className={classes.root}>
+			<form noValidate autoComplete="off" style={{ overflow: 'auto' }}>
+				<Card className={classes.container}>
+					<Box className={classes.row} style={{ justifyContent: 'flex-end' }}>
+						<Link onClick={handleSave} className={classes.link}>
+							Save
+						</Link>
+						<Link
+							onClick={handleCancel}
+							className={classes.link}
+							style={{ paddingLeft: 12, color: 'red' }}
+						>
+							Cancel
+						</Link>
+					</Box>
+					<Box className={classes.row} style={{ flexDirection: 'column', justifyContent: 'center' }}>
+						<Avatar
+							alt="Avatar"
+							src={profile.picture}
+							className={classes.avatar}
+						/>
+						<Box style={{ textAlign: 'center' }}>
+							<UploadButton
+								className={classes.submitButton}
+								style={{ marginTop: 12 }}
+								multiple={false}
+								filter={'image/*'}
+								handleChange={updatePicture}
+							>
+								Update Picture
+							</UploadButton>
+						</Box>
+					</Box>
+					<Grid container className={classes.row} style={{ marginBottom: 8 }}>
+						<Grid item xs={12}>
+							<TextField
+								label="company"
+								fullWidth
+								className={classes.textFieldFull}
+								value={address.company || ''}
+								onChange={nameChange}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={6} style={{ paddingRight: 8 }}>
+							<TextField
+								label="first name"
+								fullWidth
+								value={profile.firstname}
+								onChange={e => handleChange('firstname')(e.target.value)}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={6} style={{ paddingLeft: 8 }}>
+							<TextField
+								label="last name"
+								fullWidth
+								value={profile.lastname}
+								onChange={e => handleChange('lastname')(e.target.value)}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								label="Phone number"
+								type='phone'
+								fullWidth
+								value={address.phone || ''}
+								onChange={phoneChange}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								label="Website"
+								fullWidth
+								value={address.website || ''}
+								onChange={websiteChange}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={6} style={{ paddingRight: 8 }}>
+							<TextField
+								label="Year founded"
+								type='number'
+								fullWidth
+								value={address.founded || ''}
+								onChange={foundedChange}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={6} style={{ paddingLeft: 8 }}>
+							<TextField
+								label="Number of employees"
+								type='number'
+								fullWidth
+								value={address.employees || ''}
+								onChange={employeesChange}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={6} style={{ paddingRight: 8 }}>
+							<TextField
+								label="Street"
+								fullWidth
+								value={address.street || ''}
+								onChange={streetChange}
+								margin="normal"
+							/>
+						</Grid>
+						<Grid item xs={6} style={{ paddingLeft: 8 }}>
+							<TextField
+								label="City"
+								fullWidth
+								value={address.city || ''}
+								onChange={cityChange}
+								margin="normal"
+							/>
+						</Grid>
+					</Grid>
+				</Card>
+			</form>
+		</Box>
+	);
 }
 
-class ProfileEditView extends Component<
-  ProfileEditViewProps,
-  ProfileEditViewState
-  > {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      firstname: '',
-      lastname: '',
-      email: '',
-      picture: '',
-      password: '',
-      passwordc: '',
-      profile: null,
-      isSuccess: false,
-      company: '',
-      street: '',
-      city: '',
-      phone: '',
-      isGenChecked: false,
-      isSubChecked: false,
-      isSaving: false,
-      isDataLoaded: false,
-      hasFiles: false,
-      status: '',
-    };
-  }
-
-  async componentDidMount() {
-    const { userProfile } = this.props;
-
-    try {
-      let res = await axios.get(
-        process.env.REACT_APP_PROJECT_API +
-        'contractors/' +
-        userProfile.user_metadata.contractor_id
-      );
-      let address = res.data.address || {
-        name: '',
-        city: '',
-        street: '',
-        phone: '',
-      };
-      let status = res.data.status;
-      this.setState({
-        status: status,
-        company: address.name,
-        street: address.street,
-        city: address.city,
-        phone: address.phone,
-        firstname: userProfile.user_metadata.firstname,
-        lastname: userProfile.user_metadata.lastname,
-        email: userProfile.email,
-        picture: userProfile.picture,
-        isGenChecked:
-          userProfile.user_metadata.roles.includes('Gen') ||
-            userProfile.user_metadata.roles.includes('GenSub')
-            ? true
-            : false,
-        isSubChecked:
-          userProfile.user_metadata.roles.includes('Sub') ||
-            userProfile.user_metadata.roles.includes('GenSub')
-            ? true
-            : false,
-        isDataLoaded: true,
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    this.setState({ isSuccess: false });
-  };
-
-  handleConfirm = async () => {
-    const { userProfile } = this.props;
-
-    this.setState({
-      isSuccess: false,
-      isSaving: true,
-    });
-
-    let cont_id = userProfile.user_metadata.contractor_id;
-    // let addr;
-    await axios
-      .get(process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id)
-      .then(response => {
-        // addr = response.data.address;
-      })
-      .catch(error => {
-        console.log(error.message);
-      });
-
-    let addressData = {
-      name: this.state.company,
-      street: this.state.street,
-      city: this.state.city,
-      phone: this.state.phone,
-    };
-
-    await axios.post(
-      process.env.REACT_APP_PROJECT_API + 'contractors/' + cont_id,
-      {
-        email: userProfile.user_metadata.email,
-        updatedBy: userProfile.user_metadata.email,
-        address: addressData,
-      }
-    );
-
-    const new_prof = {
-      user_metadata: {
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-      },
-    };
-
-    await auth0Client.updateProfile(new_prof, profile => {
-      this.props.setUserProfileAction(profile);
-      this.setState({
-        isSuccess: true,
-        isSaving: false,
-      });
-    });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const status = 'Status: ' + this.state.status.toUpperCase();
-    if (this.state.isDataLoaded === false)
-      return <CircularProgress className={classes.waitingSpin} />;
-
-    return (
-      <div className={classes.root}>
-        {this.state.isSuccess ? (
-          <TSnackbarContent
-            className={classes.successAlert}
-            onClose={this.handleClose}
-            variant="success"
-            message="Your profile has been saved!"
-          />
-        ) : (
-            <div />
-          )}
-        <form noValidate autoComplete="off">
-          <Card className={classes.container}>
-            <Avatar
-              alt="Ivan"
-              src={this.state.picture}
-              className={classes.avatar}
-            />
-            <TextField
-              label="first name"
-              className={classes.textFieldHalf}
-              value={this.state.firstname}
-              onChange={val => this.setState({ firstname: val.target.value })}
-              margin="normal"
-            />
-
-            <TextField
-              label="last name"
-              className={classes.textFieldHalf}
-              value={this.state.lastname}
-              onChange={val => this.setState({ lastname: val.target.value })}
-              margin="normal"
-            />
-
-            <TextField
-              disabled
-              label="email"
-              className={classes.textFieldFull}
-              value={this.state.email}
-              onChange={val => this.setState({ email: val.target.value })}
-              margin="normal"
-            />
-            <TextField
-              label="company"
-              className={classes.textFieldFull}
-              value={this.state.company}
-              onChange={val => this.setState({ company: val.target.value })}
-              margin="normal"
-            />
-
-            <TextField
-              label="street"
-              className={classes.textFieldHalf}
-              value={this.state.street}
-              onChange={val => this.setState({ street: val.target.value })}
-              margin="normal"
-            />
-
-            <TextField
-              label="city"
-              className={classes.textFieldHalf}
-              value={this.state.city}
-              onChange={val => this.setState({ city: val.target.value })}
-              margin="normal"
-            />
-
-            <TextField
-              label="phone"
-              className={classes.textFieldFull}
-              value={this.state.phone}
-              onChange={val => this.setState({ phone: val.target.value })}
-              margin="normal"
-            />
-            <Box component="div" className={classes.status}>
-              {status}
-            </Box>
-
-            <Box className={classes.btnBox}>
-              <Button
-                className={classes.marginRight}
-                onClick={() => this.props.history.replace('/')}
-              >
-                Cancel
-              </Button>
-              <Button
-                color="primary"
-                disabled={this.state.isSaving}
-                onClick={this.handleConfirm}
-              >
-                Confirm
-              </Button>
-            </Box>
-            {this.state.isSaving && (
-              <CircularProgress />
-            )}
-          </Card>
-        </form>
-      </div>
-    );
-  }
-}
-
-const mapDispatchToProps = {
-  setUserProfileAction: setUserProfile
-};
-
-const mapStateToProps = state => ({
-  userProfile: state.global_data.userProfile,
-});
-
-export default compose(
-  withStyles(styles),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ProfileEditView)
+export default withStyles(styles)(ProfileEditView);

@@ -21,9 +21,14 @@ export default createStyles((theme: Theme) =>
 		},
 		content: {
 			flex: 1,
+			flexDirection: 'column',
+			display: 'flex'
 		},
 		container: {
 			padding: theme.spacing(0, 0),
+			flexDirection: 'column',
+			display: 'flex',
+			flex: 1
 		},
 		fixedHeight: {
 			height: 240,

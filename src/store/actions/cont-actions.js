@@ -37,12 +37,13 @@ export const {
 export const createContractor = contractor => dispatch => ContApi.createContractor(contractor);
 export const deleteContractor = id => dispatch => ContApi.deleteContractor(id);
 export const selectContractor = id => dispatch => {
-	dispatch(clearSelectedContractor());
+	// dispatch(clearSelectedContractor());
 	return ContApi.selectContractor(id).then(data => {
 		dispatch({
 			type: SET_SELECTED_CONTRACTOR,
 			payload: data,
 		});
+		return data;
 	});
 };
 export const updateContractor = id => dispatch => {

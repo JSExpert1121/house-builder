@@ -7,7 +7,7 @@ export interface withSnackbarProps {
     hideMessage: () => void;
 }
 
-const withSnackbar = <P extends object>(Component: React.ComponentType<P>) => {
+const withSnackbar = <P extends object = withSnackbarProps>(Component: React.ComponentType<P>) => {
 
     return class extends React.Component<P, ISnackbarProps> {
         constructor(props) {

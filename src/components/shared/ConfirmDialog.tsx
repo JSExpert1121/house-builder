@@ -53,7 +53,7 @@ const ConfirmDialog: React.SFC<IConfirmDialogProps> = props => {
 				{onCancel && (
 					<Button onClick={onCancel} autoFocus>
 						Cancel
-          </Button>
+          			</Button>
 				)}
 				<Button onClick={onYes} color="primary">
 					{onCancel ? 'Yes' : 'OK'}

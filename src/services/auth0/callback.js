@@ -9,7 +9,8 @@ import { CircularProgress } from '@material-ui/core/es';
 class connectedCallback extends Component {
 	async componentDidMount() {
 		await auth0Client.handleAuthentication();
-		await auth0Client.getUserInfo(profile => this.props.setUserProfileAction(profile));
+		const data = await auth0Client.getUserInfo();
+		this.props.setUserProfileAction(data);
 		this.props.history.replace('/');
 	}
 
@@ -18,18 +19,12 @@ class connectedCallback extends Component {
 	}
 }
 
-const mapDispatchToProps = dispatch => {
-	return {
-		setUserProfileAction: profile => dispatch(setUserProfile(profile)),
-	};
-};
-
-const mapStateToProps = state => {
-	return {};
-};
+const mapDispatchToProps = dispatch => ({
+	setUserProfileAction: profile => dispatch(setUserProfile(profile)),
+});
 
 const Callback = connect(
-	mapStateToProps,
+	undefined,
 	mapDispatchToProps
 )(connectedCallback);
 

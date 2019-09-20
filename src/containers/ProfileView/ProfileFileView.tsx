@@ -1,272 +1,317 @@
-import React       from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
-import Table             from '@material-ui/core/Table';
-import TableBody         from '@material-ui/core/TableBody';
-import TableHead         from '@material-ui/core/TableHead';
-import TableRow          from '@material-ui/core/TableRow';
-import CircularProgress  from '@material-ui/core/CircularProgress';
-import IconButton        from '@material-ui/core/IconButton';
-import Dialog            from '@material-ui/core/Dialog';
-import DialogActions     from '@material-ui/core/DialogActions';
+import { withStyles, StyledComponentProps } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle       from '@material-ui/core/DialogTitle';
-import DialogContent     from '@material-ui/core/DialogContent';
-import Paper             from '@material-ui/core/Paper';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 import { DropzoneDialog } from 'material-ui-dropzone';
 
-import CustomSnackbar, { ISnackbarProps } from 'components/shared/CustomSnackbar';
-import DeleteIcon          from '@material-ui/icons/Delete';
-import NoteAddIcon         from '@material-ui/icons/NoteAdd';
-import CustomTableCell     from 'components/shared/CustomTableCell';
+import withSnackbar, { withSnackbarProps } from 'components/HOCs/withSnackbar';
+import DeleteIcon from '@material-ui/icons/Delete';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import CustomTableCell from 'components/shared/CustomTableCell';
 
-import { getContractorDetailById, removeFile, uploadFiles } from 'store/actions/cont-actions';
-import { FileInfo, MaterialThemeHOC, UserProfile }              from 'types/global';
-import { compose }                                          from 'redux';
-import styles                                               from './ProfileFileView.style'
-import Button                                               from 'components/CustomButtons/Button';
-interface ProfileFileViewProps extends MaterialThemeHOC {
-  user: UserProfile;
-  getContractorDetailById: (id: string) => any;
-  uploadFiles: (id: string, file: string) => any;
-  removeFile: (id: string, name: string) => any;
-  files: FileInfo[];
+import * as ContActions from 'store/actions/cont-actions';
+import ContApi from 'services/contractor';
+import { UserProfile } from 'types/global';
+import { compose } from 'redux';
+import styles from './ProfileFileView.style'
+import Button from 'components/CustomButtons/Button';
+
+import ProfileLicensesView from './ProfileLicenses';
+import ProfileProjectsView from './ProfileProjects';
+import ProfilePhotosView from './ProfilePhotos';
+import ProfileSocialView from './ProfileSocial';
+
+
+interface ProfileFileViewProps extends StyledComponentProps, withSnackbarProps {
+	user: UserProfile;
+	contractor: any;
+	selectContractor: (id: string) => any;
+	uploadFiles: (id: string, file: string) => any;
+	removeFile: (id: string, name: string) => any;
 }
 
-interface ProfileFileViewState extends ISnackbarProps {
-  openUploadForm: boolean;
-  loading: boolean;
-  busy: boolean;
-  showConfirmDlg: boolean;
-  nameToDel: string;
-  saving: boolean;
+interface ProfileFileViewState {
+	isBusy: boolean;
+	openUploadForm: boolean;
+	showConfirmDlg: boolean;
+	nameToDel: string;
 }
 
 class ProfileFileView extends React.Component<ProfileFileViewProps, ProfileFileViewState> {
-  constructor(props: Readonly<ProfileFileViewProps>) {
-    super(props);
+	constructor(props: Readonly<ProfileFileViewProps>) {
+		super(props);
 
-    this.state = {
-      openUploadForm: false,
-      showMessage: false,
-      loading: true,
-      busy: false,
-      message: '',
-      variant: 'success',
-      showConfirmDlg: false,
-      nameToDel: '',
-      saving: false,
-      handleClose: this.closeMessage
-    };
-  }
+		this.state = {
+			openUploadForm: false,
+			showConfirmDlg: false,
+			isBusy: false,
+			nameToDel: '',
+		};
+	}
 
-  closeMessage = () => {
-    this.setState({ showMessage: false });
-  }
+	handleUploadFiles = async files => {
+		const { user, uploadFiles, selectContractor, showMessage } = this.props;
+		this.setState({ isBusy: true });
+		let id = user.user_metadata.contractor_id;
 
-  async componentDidMount() {
-    this.setState({ loading: true });
-    // let message = 'Loaded successfully.';
-    let id = this.props.user.user_metadata.contractor_id;
+		try {
+			await uploadFiles(id, files);
+			await selectContractor(id);
+			this.setState({
+				openUploadForm: false,
+				isBusy: false,
+			});
+			showMessage(true, 'Files uploaded');
+		} catch (error) {
+			console.log('ProfileFileView.handleUploadFiles: ', error);
+			this.setState({
+				openUploadForm: false,
+				isBusy: false,
+			});
+			showMessage(true, 'Files upload failed');
+		}
+	};
 
-    try {
-      await this.props.getContractorDetailById(id);
-    } catch (error) {
-      // message = 'Some error occured.';
-    }
+	closeConfirmDialog = () => {
+		this.setState({ showConfirmDlg: false });
+	};
 
-    this.setState({
-      openUploadForm: false,
-      loading: false,
-    });
-  }
+	handleDelete = name => {
+		this.setState({ showConfirmDlg: true, nameToDel: name });
+	};
 
-  handleUploadFiles = async files => {
-    const { user } = this.props;
-    this.setState({ busy: true });
-    let id = user.user_metadata.contractor_id;
+	handleremoveFile = async () => {
+		this.setState({ isBusy: true });
+		const { user, removeFile, selectContractor, showMessage } = this.props;
+		let id = user.user_metadata.contractor_id;
 
-    try {
-      await this.props.uploadFiles(id, files);
-      await this.props.getContractorDetailById(id);
-      this.setState({
-        openUploadForm: false,
-        busy: false,
-        showMessage: true,
-        message: 'Files were uploaded successfully.',
-        variant: 'success'
-      });
-    } catch {
-      this.setState({
-        openUploadForm: false,
-        busy: false,
-        showMessage: true,
-        message: 'Some error occured.',
-        variant: 'error',
-      });
-    }
-  };
+		try {
+			await removeFile(id, this.state.nameToDel);
+			await selectContractor(id);
+			this.setState({
+				openUploadForm: false,
+				isBusy: false,
+			});
+			showMessage(true, 'Files deleted');
+		} catch (error) {
+			this.setState({
+				openUploadForm: false,
+				isBusy: false,
+			});
+			showMessage(true, 'Files delete failed');
+		}
+	};
 
-  closeConfirmDialog = () => {
-    this.setState({ showConfirmDlg: false });
-  };
+	uploadLicense = async (city: string, type: string, number: string, file: File) => {
+		const { user, selectContractor, showMessage } = this.props;
+		this.setState({ isBusy: true });
+		try {
+			const id = user.user_metadata.contractor_id;
+			await ContApi.uploadLicense(id, file, city, type, number);
+			await selectContractor(id);
+			showMessage(true, 'License uploaded');
+			this.setState({ isBusy: false });
+		} catch (error) {
+			console.log('ProfileLicensesView.handleSubmit: ', error);
+			showMessage(false, 'License upload failed');
+			this.setState({ isBusy: false });
+		}
+	}
 
-  handleDelete = name => {
-    this.setState({ showConfirmDlg: true, nameToDel: name });
-  };
+	uploadProject = async (title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string, files: File[]) => {
+		let period = 0;
+		if (unit.startsWith('day')) period = duration;
+		else if (unit.startsWith('week')) period = duration * 7;
+		else period = duration * 30;
 
-  handleremoveFile = async () => {
-    this.setState({ busy: true });
-    let id = this.props.user.user_metadata.contractor_id;
+		const { user, selectContractor, showMessage } = this.props;
+		this.setState({ isBusy: true });
+		try {
+			const id = user.user_metadata.contractor_id;
+			await ContApi.uploadPastProject(id, title, desc, price, year, period, service)
+			await selectContractor(id);
+			this.setState({ isBusy: false });
+			showMessage(true, 'Project uploaded');
+		} catch (error) {
+			console.log('ProfileFileView.uploadProject: ', error);
+			this.setState({ isBusy: false });
+			showMessage(false, 'Project upload failed');
+		}
+	}
 
-    try {
-      await this.props.removeFile(id, this.state.nameToDel);
-      await this.props.getContractorDetailById(id);
-      this.setState({
-        openUploadForm: false,
-        busy: false,
-        showMessage: true,
-        message: 'Files deleted successfully.',
-        variant: 'success'
-      });
-    } catch (error) {
-      this.setState({
-        openUploadForm: false,
-        busy: false,
-        showMessage: true,
-        message: 'Some error occured.',
-        variant: 'error'
-      });
-    }
-  };
+	uploadPhoto = async (file: File) => {
+		const { user, selectContractor, showMessage } = this.props;
+		this.setState({ isBusy: true });
+		try {
+			const id = user.user_metadata.contractor_id;
+			await ContApi.uploadFiles(id, [file]);
+			await selectContractor(id);
+			showMessage(true, 'Photo uploaded');
+			this.setState({ isBusy: false });
+		} catch (error) {
+			console.log('ProfileFileView.uploadPhoto: ', error);
+			showMessage(false, 'Photo upload failed');
+			this.setState({ isBusy: false });
+		}
+	}
 
-  render() {
-    const { classes, files, user } = this.props;
-    // const projectFiles = selectedProject.projectFiles;
+	uploadVideo = async (file: string) => {
+		console.log('ProfileFileView.uploadVideo: ');
+	}
 
-    if (this.state.loading)
-      return (
-        <div className={classes.root}>
-          <CircularProgress className={classes.waitingSpin} />
-        </div>
-      );
+	updateTitle = async (id: string, title: string) => {
+		console.log('ProfileFileView.updateTitle: ');
+	}
 
-    return (
-      <Paper className={classes.root}>
-        {this.state.busy && (
-          <CircularProgress size={32} thickness={4} />
-        )}
-        <Table className={classes.relative} size="small">
-          <TableHead>
-            <TableRow>
-              <CustomTableCell align="center">Name</CustomTableCell>
-              <CustomTableCell align="center">
-                <IconButton
-                  className={classes.button}
-                  aria-label="Add"
-                  style={{ color: '#FFFFFF' }}
-                  onClick={() => this.setState({ openUploadForm: true })}
-                >
-                  <NoteAddIcon />
-                </IconButton>
-              </CustomTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {files.map(row => (
-              <TableRow className={classes.row} key={row.id} hover>
-                <CustomTableCell component="th" scope="row" align="center">
-                  <a
-                    download={row.name}
-                    href={
-                      process.env.REACT_APP_PROJECT_API +
-                      '/contractors/' +
-                      user.user_metadata.contractor_id +
-                      '/files/' +
-                      row.name
-                    }
-                  >
-                    {row.name}
-                  </a>
-                </CustomTableCell>
-                <CustomTableCell align="center">
-                  <IconButton
-                    className={classes.button}
-                    aria-label="Delete"
-                    color="primary"
-                    onClick={() => this.handleDelete(row.name)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </CustomTableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <DropzoneDialog
-          open={this.state.openUploadForm}
-          onSave={this.handleUploadFiles}
-          maxFileSize={52428800}
-          // showFileNamesInPreview={true}
-          acceptedFiles={[
-            'text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*',
-          ]}
-          filesLimit={100}
-          // dropzoneText="select files to upload(< 50mb)"
-          // dropZoneClass={classes.dropzone}
-          onClose={() => this.setState({ openUploadForm: false })}
-        />
-        <CustomSnackbar
-          variant={this.state.variant}
-          message={this.state.message}
-          open={this.state.showMessage}
-          handleClose={() => this.setState({ showMessage: false })}
-        />
-        <Dialog
-          open={this.state.showConfirmDlg}
-          onClose={this.closeConfirmDialog}
-          aria-labelledby="alert-dialog-title"
-        >
-          <DialogTitle id="alert-dialog-title">Confirm</DialogTitle>
-          <DialogContent className={classes.relative}>
-            {this.state.saving && (
-              <CircularProgress
-                size={32}
-                thickness={4}
-              />
-            )}
-            <DialogContentText id="alert-dialog-description">
-              Do you really want to delete this specialty?
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.closeConfirmDialog} autoFocus>
-              Cancel
-            </Button>
-            <Button onClick={this.handleremoveFile} color="primary">
-              Yes
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Paper>
-    );
-  }
+	deletePV = async (name: string) => {
+		const { user, selectContractor, showMessage } = this.props;
+		this.setState({ isBusy: true });
+		try {
+			const id = user.user_metadata.contractor_id;
+			await ContApi.deleteFile(id, name);
+			await selectContractor(id);
+			showMessage(true, 'Photo deleted');
+			this.setState({ isBusy: false });
+		} catch (error) {
+			console.log('ProfileFileView.deletePV: ', error);
+			showMessage(false, 'Photo delete failed');
+			this.setState({ isBusy: false });
+		}
+	}
+
+	saveSocial = async (facebook: string, instagram: string, twitter: string) => {
+		console.log('ProfileFileView.saveSocial: ');
+	}
+
+	render() {
+		const { classes, contractor, user } = this.props;
+		const { isBusy } = this.state;
+		const files = contractor.contractorFiles;
+
+		return (
+			<Box className={classes.root}>
+				{isBusy && <CircularProgress size={32} thickness={4} />}
+				<Paper className={classes.contents}>
+					<Table className={classes.relative} size="small">
+						<TableHead>
+							<TableRow>
+								<CustomTableCell align="center">Name</CustomTableCell>
+								<CustomTableCell align="center">
+									<IconButton
+										className={classes.button}
+										aria-label="Add"
+										style={{ color: '#FFFFFF' }}
+										onClick={() => this.setState({ openUploadForm: true })}
+									>
+										<NoteAddIcon />
+									</IconButton>
+								</CustomTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{files.map(row => (
+								<TableRow className={classes.row} key={row.id} hover>
+									<CustomTableCell component="th" scope="row" align="center">
+										<a
+											download={row.name}
+											href={
+												process.env.REACT_APP_PROJECT_API +
+												'/contractors/' +
+												user.user_metadata.contractor_id +
+												'/files/' +
+												row.name
+											}
+										>
+											{row.name}
+										</a>
+									</CustomTableCell>
+									<CustomTableCell align="center">
+										<IconButton
+											className={classes.button}
+											aria-label="Delete"
+											color="primary"
+											onClick={() => this.handleDelete(row.name)}
+										>
+											<DeleteIcon />
+										</IconButton>
+									</CustomTableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+					<ProfileLicensesView userProfile={user} handleSubmit={this.uploadLicense} />
+					<ProfileProjectsView handleSubmit={this.uploadProject} />
+					<ProfilePhotosView
+						photos={[]}
+						videos={[]}
+						uploadPhoto={this.uploadPhoto}
+						uploadVideo={this.uploadVideo}
+						updateTitle={this.updateTitle}
+						delete={this.deletePV}
+					/>
+					<ProfileSocialView handleSubmit={this.saveSocial} />
+				</Paper>
+				<DropzoneDialog
+					open={this.state.openUploadForm}
+					onSave={this.handleUploadFiles}
+					maxFileSize={52428800}
+					acceptedFiles={[
+						'text/*,image/*,video/*,audio/*,application/*,font/*,message/*,model/*,multipart/*',
+					]}
+					filesLimit={100}
+					onClose={() => this.setState({ openUploadForm: false })}
+				/>
+				<Dialog
+					open={this.state.showConfirmDlg}
+					onClose={this.closeConfirmDialog}
+					aria-labelledby="alert-dialog-title"
+				>
+					<DialogTitle id="alert-dialog-title">Confirm</DialogTitle>
+					<DialogContent className={classes.relative}>
+						<DialogContentText id="alert-dialog-description">
+							Do you really want to delete this file?
+            			</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={this.closeConfirmDialog} autoFocus>
+							Cancel
+            			</Button>
+						<Button onClick={this.handleremoveFile} color="primary">
+							Yes
+            			</Button>
+					</DialogActions>
+				</Dialog>
+			</Box>
+		);
+	}
 }
 
 const mapStateToProps = state => ({
-  files: state.cont_data.files,
-  user: state.global_data.userProfile,
+	contractor: state.cont_data.selectedContractor,
+	user: state.global_data.userProfile,
 });
 const mapDispatchToProps = {
-  uploadFiles,
-  getContractorDetailById,
-  removeFile,
+	selectContractor: ContActions.selectContractor,
+	uploadFiles: ContActions.uploadFiles,
+	removeFile: ContActions.removeFile,
 };
 
 export default compose(
-  withStyles(styles),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(ProfileFileView)
+	withStyles(styles),
+	connect(
+		mapStateToProps,
+		mapDispatchToProps
+	)
+)(withSnackbar(ProfileFileView));

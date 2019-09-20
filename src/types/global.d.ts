@@ -30,10 +30,14 @@ export interface MaterialThemeHOC {
 }
 
 export type AddrInfo = {
-	name: string;
+	name?: string;
+	company?: string;
 	street?: string;
 	city?: string;
 	phone?: string;
+	website?: string;
+	founded?: string;
+	employees?: string;
 }
 
 export type CommonInfo = {
@@ -45,6 +49,7 @@ export type CommonInfo = {
 
 export interface FileInfo extends CommonInfo {
 	name: string;
+	caption?: string;
 }
 
 export interface ProjectOptionPostInfo {

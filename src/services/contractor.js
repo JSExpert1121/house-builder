@@ -19,8 +19,59 @@ export default {
 	search: (name, city, specialties) => Axios.post(CONT_API_PATH + 'search', {
 		name, city, specialties
 	}).then(res => res.data),
-	getContractorById: id => dispatch => Axios.get(CONT_API_PATH + id).then(res => res.data),
+	getContractorById: id => Axios.get(CONT_API_PATH + id).then(res => res.data),
 
+	// update user
+	update: (id, email, editor, address) => Axios.post(CONT_API_PATH + id, {
+		email, updatedBy: editor, address
+	}).then(res => res.data),
+	uploadLicense: (id, file, city, type, number) => {
+		const formData = new FormData();
+		formData.append('file', file);
+		formData.append('city', city);
+		formData.append('lictype', type);
+		formData.append('number', number);
+		formData.append('type', 'LICENSE');
+		return Axios.post(CONT_API_PATH + id + '/files/upload/document', formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		}).then(res => res.data);
+	},
+	uploadPastProject: (id, title, desc, price, year, duration, specId) => Axios.post(
+		CONT_API_PATH + id + '/projects/past',
+		{
+			project: {
+				title,
+				description: desc,
+				budget: price,
+				year,
+				duration
+			},
+			specialtyId: specId
+		}, {
+		headers: { 'Content-Type': 'application/json' }
+	}).then(res => res.data),
+	getPastProjects: id => Axios.get(CONT_API_PATH + id + '/projects/past').then(res => res.data),
+	uploadAvatar: (id, file) => {
+		const formData = new FormData();
+		formData.append('file', file);
+		return Axios.post(CONT_API_PATH + id + '/files/upload/avatar', formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		}).then(res => res.data);
+	},
+	getAvatar: (id) => CONT_API_PATH + id + '/avatar',
+	uploadPhoto: (id, file) => {
+		const formData = new FormData();
+		formData.append('file', file);
+		return Axios.post(CONT_API_PATH + id + '/files/upload/photo', formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		}).then(res => res.data);
+	},
 	// upload/delete file
 	uploadFiles: (id, files) => {
 		const formData = new FormData();
@@ -31,7 +82,7 @@ export default {
 			headers: {
 				'Content-Type': 'multipart/form-data'
 			}
-		});
+		}).then(res => res.data);
 	},
 	deleteFile: (id, name) => Axios.delete(CONT_API_PATH + id + '/files/' + name),
 
