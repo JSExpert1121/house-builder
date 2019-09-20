@@ -8,6 +8,7 @@ import {
 	CONTRACTOR_DETAIL_LOADED,
 	SET_SELECTED_CONTRACTOR,
 	SPECIALTIES_LOADED,
+	PAST_PROJECTS_LOADED
 } from '../constants/cont-action-types';
 
 import ContApi from 'services/contractor';
@@ -22,6 +23,7 @@ export const {
 	contractorDetailLoaded,
 	setSelectedContractor,
 	specialtiesLoaded,
+	pastProjectsLoaded,
 } = createActions({
 	[ALL_CONTRACTORS_LOADED]: contractors => contractors,
 	[CLEAR_ALL_CONTRACTORS]: () => null,
@@ -31,29 +33,31 @@ export const {
 	[CONTRACTOR_DETAIL_LOADED]: (response) => response,
 	[SET_SELECTED_CONTRACTOR]: contractor => contractor,
 	[SPECIALTIES_LOADED]: specialties => specialties,
+	[PAST_PROJECTS_LOADED]: data => data
 });
 
 
 export const createContractor = contractor => dispatch => ContApi.createContractor(contractor);
 export const deleteContractor = id => dispatch => ContApi.deleteContractor(id);
-export const selectContractor = id => dispatch => {
-	// dispatch(clearSelectedContractor());
-	return ContApi.selectContractor(id).then(data => {
-		dispatch({
-			type: SET_SELECTED_CONTRACTOR,
-			payload: data,
-		});
-		return data;
+export const selectContractor = id => dispatch => ContApi.selectContractor(id).then(data => {
+	dispatch({
+		type: SET_SELECTED_CONTRACTOR,
+		payload: data,
 	});
-};
-export const updateContractor = id => dispatch => {
-	return ContApi.selectContractor(id).then(data => {
-		dispatch({
-			type: SET_SELECTED_CONTRACTOR,
-			payload: data,
-		});
+	return data;
+});
+export const updateContractor = id => dispatch => ContApi.selectContractor(id).then(data => {
+	dispatch({
+		type: SET_SELECTED_CONTRACTOR,
+		payload: data,
 	});
-}
+});
+export const getPastProjects = id => dispatch => ContApi.getPastProjects(id).then(data => {
+	dispatch({
+		type: PAST_PROJECTS_LOADED,
+		payload: data
+	});
+});
 
 export const getContractors = (page, size) => dispatch => {
 	dispatch(clearAllContractors());

@@ -17,10 +17,10 @@ import { SocialIcon } from 'react-social-icons';
 
 
 const styles = (theme: Theme) => createStyles({
-    contents: {
+    container: {
         width: '100%',
-        overflow: 'auto',
-        margin: theme.spacing(1, 0)
+        borderRadius: '0',
+        padding: theme.spacing(2)
     },
     title: {
         fontSize: '1.2rem',
@@ -85,7 +85,7 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
         const { dialog, facebook, instagram, twitter } = this.state;
         return (
             <>
-                <Card className={classes.contents}>
+                <Card className={classes.container}>
                     <List>
                         <ListItem>
                             <Typography className={classes.title} style={{ flex: 1 }}>

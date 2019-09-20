@@ -22,16 +22,10 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import CustomTableCell from 'components/shared/CustomTableCell';
 
 import * as ContActions from 'store/actions/cont-actions';
-import ContApi from 'services/contractor';
 import { UserProfile } from 'types/global';
 import { compose } from 'redux';
 import styles from './ProfileFileView.style'
 import Button from 'components/CustomButtons/Button';
-
-import ProfileLicensesView from './ProfileLicenses';
-import ProfileProjectsView from './ProfileProjects';
-import ProfilePhotosView from './ProfilePhotos';
-import ProfileSocialView from './ProfileSocial';
 
 
 interface ProfileFileViewProps extends StyledComponentProps, withSnackbarProps {
@@ -114,87 +108,6 @@ class ProfileFileView extends React.Component<ProfileFileViewProps, ProfileFileV
 		}
 	};
 
-	uploadLicense = async (city: string, type: string, number: string, file: File) => {
-		const { user, selectContractor, showMessage } = this.props;
-		this.setState({ isBusy: true });
-		try {
-			const id = user.user_metadata.contractor_id;
-			await ContApi.uploadLicense(id, file, city, type, number);
-			await selectContractor(id);
-			showMessage(true, 'License uploaded');
-			this.setState({ isBusy: false });
-		} catch (error) {
-			console.log('ProfileLicensesView.handleSubmit: ', error);
-			showMessage(false, 'License upload failed');
-			this.setState({ isBusy: false });
-		}
-	}
-
-	uploadProject = async (title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string, files: File[]) => {
-		let period = 0;
-		if (unit.startsWith('day')) period = duration;
-		else if (unit.startsWith('week')) period = duration * 7;
-		else period = duration * 30;
-
-		const { user, selectContractor, showMessage } = this.props;
-		this.setState({ isBusy: true });
-		try {
-			const id = user.user_metadata.contractor_id;
-			await ContApi.uploadPastProject(id, title, desc, price, year, period, service)
-			await selectContractor(id);
-			this.setState({ isBusy: false });
-			showMessage(true, 'Project uploaded');
-		} catch (error) {
-			console.log('ProfileFileView.uploadProject: ', error);
-			this.setState({ isBusy: false });
-			showMessage(false, 'Project upload failed');
-		}
-	}
-
-	uploadPhoto = async (file: File) => {
-		const { user, selectContractor, showMessage } = this.props;
-		this.setState({ isBusy: true });
-		try {
-			const id = user.user_metadata.contractor_id;
-			await ContApi.uploadFiles(id, [file]);
-			await selectContractor(id);
-			showMessage(true, 'Photo uploaded');
-			this.setState({ isBusy: false });
-		} catch (error) {
-			console.log('ProfileFileView.uploadPhoto: ', error);
-			showMessage(false, 'Photo upload failed');
-			this.setState({ isBusy: false });
-		}
-	}
-
-	uploadVideo = async (file: string) => {
-		console.log('ProfileFileView.uploadVideo: ');
-	}
-
-	updateTitle = async (id: string, title: string) => {
-		console.log('ProfileFileView.updateTitle: ');
-	}
-
-	deletePV = async (name: string) => {
-		const { user, selectContractor, showMessage } = this.props;
-		this.setState({ isBusy: true });
-		try {
-			const id = user.user_metadata.contractor_id;
-			await ContApi.deleteFile(id, name);
-			await selectContractor(id);
-			showMessage(true, 'Photo deleted');
-			this.setState({ isBusy: false });
-		} catch (error) {
-			console.log('ProfileFileView.deletePV: ', error);
-			showMessage(false, 'Photo delete failed');
-			this.setState({ isBusy: false });
-		}
-	}
-
-	saveSocial = async (facebook: string, instagram: string, twitter: string) => {
-		console.log('ProfileFileView.saveSocial: ');
-	}
-
 	render() {
 		const { classes, contractor, user } = this.props;
 		const { isBusy } = this.state;
@@ -251,17 +164,6 @@ class ProfileFileView extends React.Component<ProfileFileViewProps, ProfileFileV
 							))}
 						</TableBody>
 					</Table>
-					<ProfileLicensesView userProfile={user} handleSubmit={this.uploadLicense} />
-					<ProfileProjectsView handleSubmit={this.uploadProject} />
-					<ProfilePhotosView
-						photos={[]}
-						videos={[]}
-						uploadPhoto={this.uploadPhoto}
-						uploadVideo={this.uploadVideo}
-						updateTitle={this.updateTitle}
-						delete={this.deletePV}
-					/>
-					<ProfileSocialView handleSubmit={this.saveSocial} />
 				</Paper>
 				<DropzoneDialog
 					open={this.state.openUploadForm}

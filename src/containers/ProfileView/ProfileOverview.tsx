@@ -20,22 +20,10 @@ import InfoView from 'components/InfoView';
 import { Profile } from './types';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
-    root: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        width: '100%'
-    },
     container: {
-        width: '400px',
-        height: 'auto',
-        overflow: 'auto',
+        width: '100%',
         padding: theme.spacing(2),
         borderRadius: '0',
-        [theme.breakpoints.up('xs')]: {
-            width: '480px',
-        },
     },
     marginRight: {
         marginRight: theme.spacing(1)
@@ -104,7 +92,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
     const { profile } = props;
 
     return (
-        <Box className={classes.root}>
+        <>
             <Card className={classes.container}>
                 <Box className={classes.row}>
                     <Avatar
@@ -179,7 +167,7 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
                     />
                 </Box>
             </Card>
-        </Box>
+        </>
     );
 }
 

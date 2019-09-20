@@ -12,22 +12,10 @@ import UploadButton from 'components/CustomUpload/UploadButton';
 import { Profile } from './types';
 
 const styles = (theme: Theme) => createStyles({
-	root: {
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		flexDirection: 'column',
-		width: '100%'
-	},
 	container: {
-		width: '400px',
-		height: 'auto',
-		overflow: 'auto',
+		width: '100%',
 		padding: theme.spacing(2),
 		borderRadius: '0',
-		[theme.breakpoints.up('xs')]: {
-			width: '600px',
-		},
 	},
 	marginRight: {
 		marginRight: theme.spacing(1)
@@ -184,7 +172,7 @@ const ProfileEditView: React.FC<ProfileEditViewProps> = props => {
 
 
 	return (
-		<Box className={classes.root}>
+		<>
 			<form noValidate autoComplete="off" style={{ overflow: 'auto' }}>
 				<Card className={classes.container}>
 					<Box className={classes.row} style={{ justifyContent: 'flex-end' }}>
@@ -306,7 +294,7 @@ const ProfileEditView: React.FC<ProfileEditViewProps> = props => {
 					</Grid>
 				</Card>
 			</form>
-		</Box>
+		</>
 	);
 }
 

@@ -19,8 +19,8 @@ import { FileInfo } from 'types/global';
 const styles = (theme: Theme) => createStyles({
     contents: {
         width: '100%',
-        overflow: 'auto',
-        margin: theme.spacing(1, 0)
+        borderRadius: '0',
+        padding: theme.spacing(2)
     },
     title: {
         fontSize: '1.2rem',

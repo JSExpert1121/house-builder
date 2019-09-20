@@ -26,13 +26,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import UploadButton from 'components/CustomUpload/UploadButton';
 import { Grid } from '@material-ui/core';
+import { Specialties } from 'types/global';
+import { Projects } from 'types/project';
 
 
 const styles = (theme: Theme) => createStyles({
     contents: {
         width: '100%',
-        overflow: 'auto',
-        margin: theme.spacing(1, 0)
+        padding: theme.spacing(2),
+        borderRadius: '0',
     },
     title: {
         fontSize: '1.2rem',
@@ -103,6 +105,9 @@ type ProjectItemProps = {
 }
 
 export interface IProfileProjectsProps extends StyledComponentProps {
+    specialties: Specialties;
+    pastProjects: Projects;
+    contId: string;
     handleSubmit: (title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string, files: File[]) => Promise<void>;
 }
 
@@ -112,7 +117,6 @@ interface IProfileProjectsState {
     price: number;
     files: File[];
     urls: string[];
-    items: ProjectItemProps[];
     location: string;
     service: string;
     duration: number;
@@ -122,7 +126,6 @@ interface IProfileProjectsState {
     hover: number;
 }
 
-const services = ['Handyman', 'Postman'];
 const units = ['day(s)', 'week(s)', 'month(s)'];
 const range = (start: number, end: number) => {
     const length = end - start;
@@ -134,15 +137,15 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
     constructor(props: Readonly<IProfileProjectsProps>) {
         super(props);
 
+        const serv = props.specialties && props.specialties.content && props.specialties.content[0] && props.specialties.content[0].name;
         this.state = {
             dialog: false,
             title: '',
             price: 0,
             files: [],
             urls: [],
-            items: [],
             location: '',
-            service: services[0],
+            service: serv || '',
             duration: 5,
             unit: 'day(s)',
             year: new Date().getFullYear(),
@@ -189,8 +192,8 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
     }
 
     public render() {
-        const { classes } = this.props;
-        const { dialog, title, price, files, items, service, location, duration, year, unit, desc, urls, hover } = this.state;
+        const { classes, specialties, pastProjects, contId } = this.props;
+        const { dialog, title, price, files, service, location, duration, year, unit, desc, urls, hover } = this.state;
         const thisYear = new Date().getFullYear();
         let imageCount = parseInt(((files.length + 3) / 4).toFixed(1)) * 4;
         if (imageCount < 4) imageCount = 4;
@@ -206,27 +209,31 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
                             </Typography>
                         </ListItem>
                         <ListItem>
-                            <Box style={{ display: 'flex', alignContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
-                                {items.map((item, index) => (
+                            <Box style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
+                                {pastProjects.content.map((item, index) => (
                                     <Card
                                         key={index}
-                                        style={{ width: 284, height: 284, boxShadow: 'none', display: 'flex' }}
+                                        style={{ width: 256, height: 256, boxShadow: 'none', display: 'flex' }}
                                     >
-                                        <CardContent style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column' }}>
-                                            <Box style={{ flex: 1 }}>
-                                                <img alt={item.title} style={{ width: '100%', height: '100%' }} src={item.images[0]} />
+                                        <CardContent style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column', marginBottom: 16 }}>
+                                            <Box className={classes.addBox} style={{ border: 'none' }}>
+                                                <img
+
+                                                    alt={item.title}
+                                                    style={{ width: 256, height: 188 }}
+                                                    src={process.env.REACT_APP_PROJECT_API + '/contractors/' + contId + '/files/' + item.projectFiles[0].name} />
                                             </Box>
                                             <Typography style={{ fontWeight: 500, fontSize: '1em', marginTop: 8 }}>
                                                 {item.title}
                                             </Typography>
                                             <Typography style={{ fontSize: '1em' }}>
-                                                {`Approx. $${item.price}`}
+                                                {`Approx. $${item.budget}`}
                                             </Typography>
                                         </CardContent>
                                     </Card>
                                 ))}
-                                <Card style={{ width: 284, height: 284, boxShadow: 'none', display: 'flex' }}>
-                                    <CardContent style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column' }}>
+                                <Card style={{ width: 256, height: 256, boxShadow: 'none', display: 'flex' }}>
+                                    <CardContent style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column', marginBottom: 16 }}>
                                         <Box className={classes.addBox} onClick={this.handleAdd}>
                                             <AddIcon className={classes.addBtn} />
                                         </Box>
@@ -260,9 +267,9 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
                                         onChange={e => this.setState({ service: e.target.value as string })}
                                         name="services"
                                     >
-                                        {services.map(serv => (
-                                            <MenuItem value={serv} key={serv}>
-                                                {serv}
+                                        {specialties && specialties.content && specialties.content.map(serv => (
+                                            <MenuItem value={serv.id} key={serv.id}>
+                                                {serv.name}
                                             </MenuItem>
                                         ))}
                                     </Select>

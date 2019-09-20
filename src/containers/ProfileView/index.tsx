@@ -14,7 +14,7 @@ import SecuredRoute from 'routers/SecuredRoute';
 import { setUserProfile } from 'store/actions/global-actions';
 import * as ContActions from 'store/actions/cont-actions';
 import { UserProfile, Specialties } from 'types/global';
-import ContApi from 'services/contractor';
+import { Projects } from 'types/project';
 
 import ProfileView from './ProfileView';
 import ProfileFileView from './ProfileFileView';
@@ -51,20 +51,22 @@ interface ProfilePageProps extends RouteComponentProps, StyledComponentProps {
 	classes: ClassNameMap<string>;
 	contractor: any;
 	specialties: Specialties;
-	setSelectedContractor: (data: any) => void;
+	pastProjects: Projects;
+	selectContractor: (id: string) => Promise<any>;
 	getSpecialties: (page: number, size: number) => Promise<void>;
+	getPastProjects: (id: string) => Promise<void>;
 }
 
 class ProfilePage extends React.Component<ProfilePageProps> {
 
 	async componentDidMount() {
-		const { userProfile, setSelectedContractor, contractor, getSpecialties } = this.props;
+		const { userProfile, selectContractor, contractor, getSpecialties, getPastProjects } = this.props;
 		const contId = userProfile.user_metadata.contractor_id;
 		if (!!contractor) return;
 		try {
 			await getSpecialties(0, 20);
-			const data = await ContApi.getContractorById(contId);
-			setSelectedContractor(data);
+			await selectContractor(contId);
+			await getPastProjects(contId);
 		} catch (error) {
 			console.log('ProfileOverview.CDM: ', error);
 		}
@@ -72,8 +74,8 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 
 
 	render() {
-		const { classes, location, contractor, specialties } = this.props;
-		if (!contractor || !specialties) {
+		const { classes, location, contractor, specialties, pastProjects } = this.props;
+		if (!contractor || !specialties || !pastProjects) {
 			return (
 				<Box className={classes.root}>
 					<CircularProgress className={classes.center} />
@@ -119,14 +121,16 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 
 const mapDispatchToProps = {
 	setUserProfile,
-	setSelectedContractor: ContActions.setSelectedContractor,
-	getSpecialties: ContActions.getSpecialties
+	selectContractor: ContActions.selectContractor,
+	getSpecialties: ContActions.getSpecialties,
+	getPastProjects: ContActions.getPastProjects
 };
 
 const mapStateToProps = state => ({
 	userProfile: state.global_data.userProfile,
 	contractor: state.cont_data.selectedContractor,
-	specialties: state.cont_data.specialties
+	specialties: state.cont_data.specialties,
+	pastProjects: state.cont_data.pastProjects,
 });
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(ProfilePage));
