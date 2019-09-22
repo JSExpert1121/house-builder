@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     container: {
         width: '100%',
         padding: theme.spacing(2),
+        marginBottom: theme.spacing(2),
         borderRadius: '0',
     },
     marginRight: {

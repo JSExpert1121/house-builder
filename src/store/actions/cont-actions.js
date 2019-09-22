@@ -1,4 +1,6 @@
-import { createActions } from 'redux-actions';
+import {
+	createActions
+} from 'redux-actions';
 import {
 	ALL_CONTRACTORS_LOADED,
 	CLEAR_ALL_CONTRACTORS,
@@ -8,7 +10,9 @@ import {
 	CONTRACTOR_DETAIL_LOADED,
 	SET_SELECTED_CONTRACTOR,
 	SPECIALTIES_LOADED,
-	PAST_PROJECTS_LOADED
+	PAST_PROJECTS_LOADED,
+	PROFILE_LINKS_LOADED,
+	PROFILE_PHOTOS_LOADED
 } from '../constants/cont-action-types';
 
 import ContApi from 'services/contractor';
@@ -33,9 +37,17 @@ export const {
 	[CONTRACTOR_DETAIL_LOADED]: (response) => response,
 	[SET_SELECTED_CONTRACTOR]: contractor => contractor,
 	[SPECIALTIES_LOADED]: specialties => specialties,
-	[PAST_PROJECTS_LOADED]: data => data
+	[PAST_PROJECTS_LOADED]: data => data,
 });
 
+export const photosLoaded = data => ({
+	type: PROFILE_PHOTOS_LOADED,
+	payload: data
+});
+export const linksLoaded = data => ({
+	type: PROFILE_LINKS_LOADED,
+	payload: data
+});
 
 export const createContractor = contractor => dispatch => ContApi.createContractor(contractor);
 export const deleteContractor = id => dispatch => ContApi.deleteContractor(id);
@@ -71,6 +83,13 @@ export const getContractorDetailById = id => dispatch => {
 	});
 };
 
+export const getProfilePhotos = id => dispatch => ContApi.getPhotos(id).then(data => {
+	dispatch(photosLoaded(data));
+});
+export const getProfileLinks = id => dispatch => ContApi.getLinks(id).then(data => {
+	dispatch(linksLoaded(data));
+});
+
 export const uploadFiles = (id, files) => dispatch => ContApi.uploadFiles(id, files);
 export const removeFile = (id, name) => dispatch => ContApi.deleteFile(id, name);
 
@@ -88,4 +107,3 @@ export const searchContractors = (name, city, specialties) => dispatch => {
 		dispatch(allContractorsLoaded(data));
 	});
 }
-

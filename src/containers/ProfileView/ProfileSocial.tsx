@@ -20,6 +20,7 @@ const styles = (theme: Theme) => createStyles({
     container: {
         width: '100%',
         borderRadius: '0',
+        marginBottom: theme.spacing(2),
         padding: theme.spacing(2)
     },
     title: {
@@ -43,6 +44,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface IProfileSocialProps extends StyledComponentProps {
+    links: any[];
     handleSubmit: (facebook: string, instagram: string, twitter: string) => Promise<void>;
 }
 
@@ -67,7 +69,15 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
     }
 
     showDialog = () => {
-        this.setState({ dialog: true });
+        const { links } = this.props;
+        const facebooks = links.filter(link => link.name.startsWith('https') && link.name.includes('facebook'));
+        const instagrams = links.filter(link => link.name.startsWith('https') && link.name.includes('instagram'));
+        const twitters = links.filter(link => link.name.startsWith('https') && link.name.includes('twitter'));
+        const fb = facebooks.length > 0 ? decodeURIComponent(facebooks[0].name) : '';
+        const ins = instagrams.length > 0 ? decodeURIComponent(instagrams[0].name) : '';
+        const tw = twitters.length > 0 ? decodeURIComponent(twitters[0].name) : '';
+
+        this.setState({ dialog: true, facebook: fb, instagram: ins, twitter: tw });
     }
 
     closeDialog = () => {
@@ -83,6 +93,7 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
     public render() {
         const { classes } = this.props;
         const { dialog, facebook, instagram, twitter } = this.state;
+
         return (
             <>
                 <Card className={classes.container}>

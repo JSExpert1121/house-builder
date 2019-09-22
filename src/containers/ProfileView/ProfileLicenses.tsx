@@ -24,6 +24,7 @@ const styles = (theme: Theme) => createStyles({
     container: {
         width: '100%',
         borderRadius: '0',
+        marginBottom: theme.spacing(2),
         padding: theme.spacing(2)
     },
     title: {

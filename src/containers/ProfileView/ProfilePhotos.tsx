@@ -12,6 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import { createStyles, Theme, withStyles, StyledComponentProps } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import queryString from 'query-string';
+import Youtube from 'react-youtube';
 import UploadButton from 'components/CustomUpload/UploadButton';
 import { FileInfo } from 'types/global';
 
@@ -20,6 +22,7 @@ const styles = (theme: Theme) => createStyles({
     contents: {
         width: '100%',
         borderRadius: '0',
+        marginBottom: theme.spacing(2),
         padding: theme.spacing(2)
     },
     title: {
@@ -84,6 +87,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface IProfilePhotosProps extends StyledComponentProps {
+    contId: string;
     photos: FileInfo[];
     videos: FileInfo[];
     uploadPhoto: (files: File) => Promise<void>;
@@ -112,14 +116,6 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
         }
     }
 
-    handleUploadPicture = (file: File) => {
-        this.props.uploadPhoto(file);
-    }
-
-    handleUploadVideo = (video: string) => {
-        this.props.uploadVideo(video);
-    }
-
     handleBlur = async (id: string) => {
         await this.props.updateTitle(id, this.state.title);
         this.setState({ editing: '' });
@@ -130,8 +126,10 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
     }
 
     public render() {
-        const { classes, uploadVideo, photos } = this.props;
+        const { classes, uploadVideo, photos, videos, uploadPhoto, contId } = this.props;
         const { title, editing, hover, videoURL } = this.state;
+
+        const vids = videos.filter(link => link.name.startsWith('https') && link.name.includes('youtube'));
 
         return (
             <>
@@ -158,7 +156,7 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                         btnId={'photos-upload-image'}
                                         multiple={false}
                                         className={classes.submit}
-                                        handleChange={this.handleUploadPicture}
+                                        handleChange={uploadPhoto}
                                     >
                                         Upload
                                     </UploadButton>
@@ -189,19 +187,23 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                             </Box>
                         </ListItem>
                         <ListItem>
-                            <Box style={{ display: 'flex', alignContent: 'space-between', flexWrap: 'wrap' }}>
+                            <Box style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
                                 {photos.map((photo, index) => (
                                     <Card
                                         key={index}
                                         onMouseEnter={() => this.setState({ hover: photo.id })}
                                         onMouseLeave={() => this.setState({ hover: '' })}
-                                        style={{ width: 288, height: 288, boxShadow: 'none', display: 'flex' }}
+                                        style={{ width: 256, height: 256, boxShadow: 'none', display: 'flex' }}
                                     >
                                         <CardContent
-                                            style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column' }}
+                                            style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column', marginBottom: 16 }}
                                         >
                                             <Box style={{ flex: 1, position: 'relative' }}>
-                                                <img alt={photo.name} style={{ width: '100%', height: '100%' }} src={photo.name} />
+                                                <img
+                                                    alt={photo.name}
+                                                    style={{ width: 256, height: 208 }}
+                                                    src={`${process.env.REACT_APP_PROJECT_API}/contractors/${contId}/files/${photo.name}`}
+                                                />
                                                 {(hover === photo.id) && (
                                                     <IconButton
                                                         style={{ position: 'absolute', right: 0, top: 0 }}
@@ -213,6 +215,7 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                                 )}
                                             </Box>
                                             <Input
+                                                placeholder='Title here'
                                                 style={{ marginTop: 8 }}
                                                 value={(editing === photo.id) ? title : photo.caption}
                                                 onBlur={() => this.handleBlur(photo.id)}
@@ -222,7 +225,48 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                         </CardContent>
                                     </Card>
                                 ))}
-
+                                {vids.map((video, index) => (
+                                    <Card
+                                        key={index}
+                                        onMouseEnter={() => this.setState({ hover: video.id })}
+                                        onMouseLeave={() => this.setState({ hover: '' })}
+                                        style={{ width: 256, height: 256, boxShadow: 'none', display: 'flex' }}
+                                    >
+                                        <CardContent
+                                            style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column', marginBottom: 16 }}
+                                        >
+                                            <Box style={{ flex: 1, position: 'relative' }}>
+                                                <Youtube
+                                                    videoId={(queryString.parse((new URL(decodeURIComponent(video.name))).search))['v']}
+                                                    opts={{
+                                                        width: 256,
+                                                        height: 208,
+                                                        playerVars: { // https://developers.google.com/youtube/player_parameters
+                                                            autoplay: 1
+                                                        }
+                                                    }}
+                                                />
+                                                {(hover === video.id) && (
+                                                    <IconButton
+                                                        style={{ position: 'absolute', right: 0, top: 0 }}
+                                                        color="primary"
+                                                        onClick={() => this.handleDelete(video.id)}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                )}
+                                            </Box>
+                                            <Input
+                                                placeholder='Title here'
+                                                style={{ marginTop: 8 }}
+                                                value={(editing === video.id) ? title : video.caption}
+                                                onBlur={() => this.handleBlur(video.id)}
+                                                onFocus={() => this.setState({ title: video.caption, editing: video.id })}
+                                                onChange={e => this.setState({ title: e.target.value })}
+                                            />
+                                        </CardContent>
+                                    </Card>
+                                ))}
                             </Box>
                         </ListItem>
                     </List>

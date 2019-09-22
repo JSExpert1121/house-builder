@@ -55,18 +55,30 @@ interface ProfilePageProps extends RouteComponentProps, StyledComponentProps {
 	selectContractor: (id: string) => Promise<any>;
 	getSpecialties: (page: number, size: number) => Promise<void>;
 	getPastProjects: (id: string) => Promise<void>;
+	getPhotos: (id: string) => Promise<void>;
+	getLinks: (id: string) => Promise<void>;
 }
 
 class ProfilePage extends React.Component<ProfilePageProps> {
 
 	async componentDidMount() {
-		const { userProfile, selectContractor, contractor, getSpecialties, getPastProjects } = this.props;
+		const {
+			userProfile,
+			selectContractor,
+			contractor,
+			getSpecialties,
+			getPastProjects,
+			getLinks,
+			getPhotos
+		} = this.props;
 		const contId = userProfile.user_metadata.contractor_id;
 		if (!!contractor) return;
 		try {
 			await getSpecialties(0, 20);
 			await selectContractor(contId);
 			await getPastProjects(contId);
+			await getPhotos(contId);
+			await getLinks(contId);
 		} catch (error) {
 			console.log('ProfileOverview.CDM: ', error);
 		}
@@ -74,7 +86,13 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 
 
 	render() {
-		const { classes, location, contractor, specialties, pastProjects } = this.props;
+		const {
+			classes,
+			location,
+			contractor,
+			specialties,
+			pastProjects,
+		} = this.props;
 		if (!contractor || !specialties || !pastProjects) {
 			return (
 				<Box className={classes.root}>
@@ -123,7 +141,9 @@ const mapDispatchToProps = {
 	setUserProfile,
 	selectContractor: ContActions.selectContractor,
 	getSpecialties: ContActions.getSpecialties,
-	getPastProjects: ContActions.getPastProjects
+	getPastProjects: ContActions.getPastProjects,
+	getPhotos: ContActions.getProfilePhotos,
+	getLinks: ContActions.getProfileLinks
 };
 
 const mapStateToProps = state => ({

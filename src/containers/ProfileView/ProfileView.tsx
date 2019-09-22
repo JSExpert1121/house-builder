@@ -38,7 +38,7 @@ const styles = (theme: Theme) => createStyles({
         display: 'flex',
         flexDirection: 'column',
         padding: theme.spacing(2),
-        borderRadius: '0',
+        borderRadius: 0,
         [theme.breakpoints.up('xs')]: {
             width: '640px',
         },
@@ -55,10 +55,14 @@ interface IProfileViewProps extends RouteComponentProps, withSnackbarProps, Styl
     contractor: any;
     specialties: Specialties;
     pastProjects: Projects;
+    photos: any[];
+    links: any[];
     selectContractor: (id: string) => any;
     getPastProjects: (id: string) => Promise<void>;
     setUserProfile: (profile: UserProfile) => void;
     setSelectedContractor: (data: any) => void;
+    getPhotos: (id: string) => Promise<void>;
+    getLinks: (id: string) => Promise<void>;
 }
 
 interface IProfileViewState {
@@ -139,21 +143,14 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             const id = userProfile.user_metadata.contractor_id;
             await ContApi.uploadAvatar(id, file);
             const path = ContApi.getAvatar(id);
-            console.log(path);
-            this.setState({
-                profile: {
-                    ...this.state.profile,
-                    picture: path
-                },
-                isBusy: false
-            });
+            this.setState({ isBusy: false });
+            return path;
         } catch (error) {
             console.log('ProfileView.uploadPicture: ', error);
             this.setState({ isBusy: false });
             showMessage(false, 'Upload avatar failed');
+            return '';
         }
-
-        return '';
     }
 
     askReview = () => {
@@ -193,34 +190,47 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             this.setState({ isBusy: false });
             showMessage(true, 'Project uploaded');
         } catch (error) {
-            console.log('ProfileFileView.uploadProject: ', error);
+            console.log('ProfileView.uploadProject: ', error);
             this.setState({ isBusy: false });
             showMessage(false, 'Project upload failed');
         }
     }
 
     uploadPhoto = async (file: File) => {
-        const { userProfile, selectContractor, showMessage } = this.props;
+        const { userProfile, showMessage, getPhotos } = this.props;
         this.setState({ isBusy: true });
         try {
             const id = userProfile.user_metadata.contractor_id;
-            await ContApi.uploadFiles(id, [file]);
-            await selectContractor(id);
+            await ContApi.uploadPhoto(id, file);
+            await getPhotos(id);
             showMessage(true, 'Photo uploaded');
             this.setState({ isBusy: false });
         } catch (error) {
-            console.log('ProfileFileView.uploadPhoto: ', error);
+            console.log('ProfileView.uploadPhoto: ', error);
             showMessage(false, 'Photo upload failed');
             this.setState({ isBusy: false });
         }
     }
 
-    uploadVideo = async (file: string) => {
-        console.log('ProfileFileView.uploadVideo: ');
+    uploadVideo = async (link: string) => {
+        console.log('ProfileView.uploadVideo: ');
+        const { userProfile, showMessage, getLinks } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            const id = userProfile.user_metadata.contractor_id;
+            await ContApi.addLink(id, link);
+            await getLinks(id);
+            showMessage(true, 'Link added');
+            this.setState({ isBusy: false });
+        } catch (error) {
+            console.log('ProfileView.uploadVideo: ', error);
+            showMessage(false, 'Add Link failed');
+            this.setState({ isBusy: false });
+        }
     }
 
     updateTitle = async (id: string, title: string) => {
-        console.log('ProfileFileView.updateTitle: ');
+        console.log('ProfileView.updateTitle: ', title);
     }
 
     deletePV = async (name: string) => {
@@ -233,19 +243,33 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             showMessage(true, 'Photo deleted');
             this.setState({ isBusy: false });
         } catch (error) {
-            console.log('ProfileFileView.deletePV: ', error);
+            console.log('ProfileView.deletePV: ', error);
             showMessage(false, 'Photo delete failed');
             this.setState({ isBusy: false });
         }
     }
 
     saveSocial = async (facebook: string, instagram: string, twitter: string) => {
-        console.log('ProfileFileView.saveSocial: ');
+        const { userProfile, showMessage, getLinks } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            const id = userProfile.user_metadata.contractor_id;
+            !!facebook && facebook.startsWith('https://www.facebook.com') && await ContApi.addLink(id, facebook);
+            !!instagram && instagram.startsWith('https://www.instagram.com') && await ContApi.addLink(id, instagram);
+            !!twitter && twitter.startsWith('https://twitter.com') && await ContApi.addLink(id, twitter);
+            await getLinks(id);
+            showMessage(true, 'Link added');
+            this.setState({ isBusy: false });
+        } catch (error) {
+            console.log('ProfileView.saveSocial: ', error);
+            showMessage(false, 'Add Link failed');
+            this.setState({ isBusy: false });
+        }
     }
 
     render() {
         const { profile, editing, isBusy } = this.state;
-        const { classes, userProfile, specialties, pastProjects } = this.props;
+        const { classes, userProfile, specialties, pastProjects, photos, links } = this.props;
         if (!profile) {
             return (
                 <Box className={classes.root}>
@@ -281,14 +305,18 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                         contId={userProfile.user_metadata.contractor_id}
                     />
                     <ProfilePhotosView
-                        photos={[]}
-                        videos={[]}
+                        contId={userProfile.user_metadata.contractor_id}
+                        photos={photos}
+                        videos={links}
                         uploadPhoto={this.uploadPhoto}
                         uploadVideo={this.uploadVideo}
                         updateTitle={this.updateTitle}
                         delete={this.deletePV}
                     />
-                    <ProfileSocialView handleSubmit={this.saveSocial} />
+                    <ProfileSocialView
+                        handleSubmit={this.saveSocial}
+                        links={links}
+                    />
                 </Box>
                 {isBusy && <CircularProgress className={classes.center} />}
             </Box >
@@ -300,14 +328,18 @@ const mapDispatchToProps = {
     setUserProfile,
     selectContractor: ContActions.selectContractor,
     getPastProjects: ContActions.getPastProjects,
-    setSelectedContractor: ContActions.setSelectedContractor
+    getPhotos: ContActions.getProfilePhotos,
+    getLinks: ContActions.getProfileLinks,
+    setSelectedContractor: ContActions.setSelectedContractor,
 };
 
 const mapStateToProps = state => ({
     userProfile: state.global_data.userProfile,
     specialties: state.cont_data.specialties,
     pastProjects: state.cont_data.pastProjects,
-    contractor: state.cont_data.selectedContractor
+    contractor: state.cont_data.selectedContractor,
+    photos: state.cont_data.photos,
+    links: state.cont_data.links
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withSnackbar(ProfileView)));

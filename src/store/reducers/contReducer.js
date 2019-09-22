@@ -10,9 +10,13 @@ import {
 	SET_SELECTED_CONTRACTOR,
 	SET_SELECTED_OPTION,
 	SPECIALTIES_LOADED,
-	PAST_PROJECTS_LOADED
+	PAST_PROJECTS_LOADED,
+	PROFILE_LINKS_LOADED,
+	PROFILE_PHOTOS_LOADED
 } from '../constants/cont-action-types';
-import { handleActions } from 'redux-actions';
+import {
+	handleActions
+} from 'redux-actions';
 
 const initialState = {
 	contractors: null,
@@ -22,11 +26,12 @@ const initialState = {
 	selectedOption: null,
 	specialties: null,
 	files: [],
-	pastProjects: null
+	pastProjects: null,
+	photos: [],
+	links: []
 };
 
-const templateReducer = handleActions(
-	{
+const templateReducer = handleActions({
 		[ALL_CONTRACTORS_LOADED]: (state, action) => ({
 			...state,
 			contractors: action.payload,
@@ -75,8 +80,22 @@ const templateReducer = handleActions(
 				cat_name: state.selectedCategory,
 			}),
 		}),
-		[SPECIALTIES_LOADED]: (state, action) => ({ ...state, specialties: action.payload }),
-		[PAST_PROJECTS_LOADED]: (state, action) => ({ ...state, pastProjects: action.payload })
+		[SPECIALTIES_LOADED]: (state, action) => ({
+			...state,
+			specialties: action.payload
+		}),
+		[PAST_PROJECTS_LOADED]: (state, action) => ({
+			...state,
+			pastProjects: action.payload
+		}),
+		[PROFILE_LINKS_LOADED]: (state, action) => ({
+			...state,
+			links: action.payload
+		}),
+		[PROFILE_PHOTOS_LOADED]: (state, action) => ({
+			...state,
+			photos: action.payload
+		})
 	},
 	initialState
 );

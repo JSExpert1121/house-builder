@@ -95,13 +95,13 @@ class ProfileFileView extends React.Component<ProfileFileViewProps, ProfileFileV
 			await removeFile(id, this.state.nameToDel);
 			await selectContractor(id);
 			this.setState({
-				openUploadForm: false,
+				showConfirmDlg: false,
 				isBusy: false,
 			});
 			showMessage(true, 'Files deleted');
 		} catch (error) {
 			this.setState({
-				openUploadForm: false,
+				showConfirmDlg: false,
 				isBusy: false,
 			});
 			showMessage(true, 'Files delete failed');

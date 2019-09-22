@@ -15,6 +15,7 @@ const styles = (theme: Theme) => createStyles({
 	container: {
 		width: '100%',
 		padding: theme.spacing(2),
+		marginBottom: theme.spacing(2),
 		borderRadius: '0',
 	},
 	marginRight: {
@@ -108,6 +109,7 @@ const ProfileEditView: React.FC<ProfileEditViewProps> = props => {
 
 	const { classes, profile, handleChange } = props;
 	const address = profile.address;
+	const [rand, setRand] = React.useState(0);
 
 	const handleSave = () => {
 		props.handleSave();
@@ -118,7 +120,10 @@ const ProfileEditView: React.FC<ProfileEditViewProps> = props => {
 	}
 
 	const updatePicture = async (file: File) => {
-		props.uploadPicture(file);
+		const path = await props.uploadPicture(file);
+		if (!!path) {
+			setRand(Date.now());
+		}
 	}
 
 	const nameChange = e => {
@@ -190,7 +195,7 @@ const ProfileEditView: React.FC<ProfileEditViewProps> = props => {
 					<Box className={classes.row} style={{ flexDirection: 'column', justifyContent: 'center' }}>
 						<Avatar
 							alt="Avatar"
-							src={profile.picture}
+							src={`${profile.picture}?${rand}`}
 							className={classes.avatar}
 						/>
 						<Box style={{ textAlign: 'center' }}>

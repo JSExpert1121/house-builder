@@ -34,7 +34,8 @@ const styles = (theme: Theme) => createStyles({
     contents: {
         width: '100%',
         padding: theme.spacing(2),
-        borderRadius: '0',
+        marginBottom: theme.spacing(2),
+        borderRadius: '0'
     },
     title: {
         fontSize: '1.2rem',
@@ -56,6 +57,14 @@ const styles = (theme: Theme) => createStyles({
     },
     addBtn: {
         color: theme.palette.primary.dark
+    },
+    card: {
+        padding: 0,
+        fontSize: '0.875rem',
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        marginBottom: 16
     },
     imageBox: {
         display: 'flex',
@@ -97,12 +106,6 @@ const styles = (theme: Theme) => createStyles({
         position: 'absolute'
     }
 });
-
-type ProjectItemProps = {
-    title: string;
-    images: string[];
-    price: number;
-}
 
 export interface IProfileProjectsProps extends StyledComponentProps {
     specialties: Specialties;
@@ -215,10 +218,9 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
                                         key={index}
                                         style={{ width: 256, height: 256, boxShadow: 'none', display: 'flex' }}
                                     >
-                                        <CardContent style={{ padding: 0, fontSize: '0.875rem', display: 'flex', flex: 1, flexDirection: 'column', marginBottom: 16 }}>
+                                        <CardContent className={classes.card}>
                                             <Box className={classes.addBox} style={{ border: 'none' }}>
                                                 <img
-
                                                     alt={item.title}
                                                     style={{ width: 256, height: 188 }}
                                                     src={process.env.REACT_APP_PROJECT_API + '/contractors/' + contId + '/files/' + item.projectFiles[0].name} />
