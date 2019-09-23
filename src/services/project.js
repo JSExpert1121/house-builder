@@ -13,25 +13,37 @@ export default {
 		});
 
 		return Axios.post(PROJ_API_PATH + id + '/files/upload/multiple', formData, {
-			headers: { 'Content-Type': 'multipart/form-data' },
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			},
 		}).then(response => response.data);
 	},
 	deleteFile: (id, name) => Axios.delete(PROJ_API_PATH + id + '/files/' + name).then(res => res.data),
+	getFiles: (id) => Axios.get(PROJ_API_PATH + id + '/files/').then(res => res.data),
 
 	delete: id => Axios.delete(PROJ_API_PATH + id).then(res => res.data),
 	getInfo: id => Axios.get(PROJ_API_PATH + id).then(res => res.data),
 	archive: id => Axios.put(PROJ_API_PATH + id + '/archive').then(res => res.data),
 	update: (id, proj) => Axios.put(PROJ_API_PATH + id, proj).then(res => res.data),
 	getAll: (page, size) => Axios.get(PROJ_API_PATH, {
-		params: { page: page, size: size },
+		params: {
+			page: page,
+			size: size
+		},
 	}).then(res => res.data),
 
 	invite: (id, contid) => Axios.post(PROJ_API_PATH + id + '/invite/' + contid).then(res => res.data),
 	getInvites: (id, page, size) => Axios.get(PROJ_API_PATH + id + '/invites', {
-		params: { page: page, size: size },
+		params: {
+			page: page,
+			size: size
+		},
 	}).then(res => res.data),
 	getProposals: (id, page, size) => Axios.get(PROJ_API_PATH + id + '/proposals', {
-		params: { page: page, size: size },
+		params: {
+			page: page,
+			size: size
+		},
 	}).then(res => res.data),
 
 	addTemplate: (projId, tempId) => Axios.post(PROJ_API_PATH + projId + '/templates/' + tempId).then(
@@ -70,10 +82,14 @@ export default {
 	getLevels: projId => Axios.get(PROJ_API_PATH + projId + '/levels').then(res => res.data),
 
 	createSelection: (roomId, catId, selId, option, path) => Axios.post(
-		ROOM_API_PATH + roomId + `/categories/${catId}/selections/${selId}`,
-		{ option, breadcrumb: path }
+		ROOM_API_PATH + roomId + `/categories/${catId}/selections/${selId}`, {
+			option,
+			breadcrumb: path
+		}
 	).then(res => res.data),
 	deleteSelection: id => Axios.delete(SELECTION_API_PATH + id).then(res => res.data),
-	updateSelection: (id, option) => Axios.put(SELECTION_API_PATH + id, { option }).then(res => res.data),
+	updateSelection: (id, option) => Axios.put(SELECTION_API_PATH + id, {
+		option
+	}).then(res => res.data),
 	getSelection: id => Axios.get(SELECTION_API_PATH + id).then(res => res.data),
 };

@@ -93,82 +93,80 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
     const { profile } = props;
 
     return (
-        <>
-            <Card className={classes.container}>
-                <Box className={classes.row}>
-                    <Avatar
-                        alt="Avatar"
-                        src={profile.picture}
-                        className={classes.avatar}
-                    />
-                    <Box className={classes.company}>
-                        <Typography className={classes.companyName}>
-                            {profile.address.company}
-                        </Typography>
-                        <Box className={classes.rating}>
-                            <Rating precision={0.1} value={3.6} readOnly size='small' style={{ marginRight: 16 }} />
-                            <Link onClick={props.askReview} className={classes.link}>
-                                Ask Review
+        <Card className={classes.container}>
+            <Box className={classes.row}>
+                <Avatar
+                    alt="Avatar"
+                    src={profile.picture}
+                    className={classes.avatar}
+                />
+                <Box className={classes.company}>
+                    <Typography className={classes.companyName}>
+                        {profile.address.company}
+                    </Typography>
+                    <Box className={classes.rating}>
+                        <Rating precision={0.1} value={3.6} readOnly size='small' style={{ marginRight: 16 }} />
+                        <Link onClick={props.askReview} className={classes.link}>
+                            Ask Review
     						</Link>
-                        </Box>
                     </Box>
-                    <Box>
-                        <Link onClick={handleEdit} className={classes.link}>
-                            Edit
+                </Box>
+                <Box>
+                    <Link onClick={handleEdit} className={classes.link}>
+                        Edit
 						</Link>
-                    </Box>
                 </Box>
-                <Box className={classes.row}>
-                    <InfoView
-                        label={'Name'}
-                        content={`${profile.firstname} ${profile.lastname}`}
-                        icon={<NameIcon />}
-                    />
-                </Box>
-                <Box className={classes.row}>
-                    <InfoView
-                        label={'Email'}
-                        content={`${profile.email}`}
-                        icon={<EmailIcon />}
-                    />
-                </Box>
-                <Box className={classes.row}>
-                    <InfoView
-                        label={'Phone'}
-                        content={`${profile.address.phone}`}
-                        icon={<PhoneIcon />}
-                    />
-                </Box>
-                <Box className={classes.row}>
-                    <InfoView
-                        label={'Website'}
-                        content={profile.address.website}
-                        icon={<WebIcon />}
-                    />
-                </Box>
-                <Box className={classes.row}>
-                    <InfoView
-                        label={'Address'}
-                        content={`${profile.address.street} ${profile.address.city}`}
-                        icon={<AddressIcon />}
-                    />
-                </Box>
-                <Box className={classes.row}>
-                    <InfoView
-                        label={'Year founded'}
-                        content={profile.address.founded && profile.address.founded}
-                        icon={<EventIcon />}
-                    />
-                </Box>
-                <Box className={classes.row}>
-                    <InfoView
-                        label={'Number of employees'}
-                        content={profile.address.employees && profile.address.employees}
-                        icon={<GroupIcon />}
-                    />
-                </Box>
-            </Card>
-        </>
+            </Box>
+            <Box className={classes.row}>
+                <InfoView
+                    label={'Name'}
+                    content={`${profile.firstname} ${profile.lastname}`}
+                    icon={<NameIcon />}
+                />
+            </Box>
+            <Box className={classes.row}>
+                <InfoView
+                    label={'Email'}
+                    content={`${profile.email}`}
+                    icon={<EmailIcon />}
+                />
+            </Box>
+            <Box className={classes.row}>
+                <InfoView
+                    label={'Phone'}
+                    content={`${profile.address.phone}`}
+                    icon={<PhoneIcon />}
+                />
+            </Box>
+            <Box className={classes.row}>
+                <InfoView
+                    label={'Website'}
+                    content={profile.address.website}
+                    icon={<WebIcon />}
+                />
+            </Box>
+            <Box className={classes.row}>
+                <InfoView
+                    label={'Address'}
+                    content={`${profile.address.street} ${profile.address.city}`}
+                    icon={<AddressIcon />}
+                />
+            </Box>
+            <Box className={classes.row}>
+                <InfoView
+                    label={'Year founded'}
+                    content={profile.address.founded && profile.address.founded}
+                    icon={<EventIcon />}
+                />
+            </Box>
+            <Box className={classes.row}>
+                <InfoView
+                    label={'Number of employees'}
+                    content={profile.address.employees && profile.address.employees}
+                    icon={<GroupIcon />}
+                />
+            </Box>
+        </Card>
     );
 }
 

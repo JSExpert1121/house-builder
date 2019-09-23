@@ -6,9 +6,9 @@ import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { createStyles, Theme, withStyles, StyledComponentProps } from '@material-ui/core/styles';
 import { ClassNameMap } from '@material-ui/styles/withStyles';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import BallotIcon from '@material-ui/icons/Ballot';
-import CustomTabs from "components/shared/CustomTabs";
+// import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+// import BallotIcon from '@material-ui/icons/Ballot';
+// import CustomTabs from "components/shared/CustomTabs";
 import SecuredRoute from 'routers/SecuredRoute';
 
 import { setUserProfile } from 'store/actions/global-actions';
@@ -101,12 +101,12 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 			)
 		}
 
-		let tab = 0;
-		if (location.pathname.includes(PROFILE_CONTRACT)) tab = 1;
-		else if (location.pathname.includes(PROFILE_SPECIALTY)) tab = 2;
+		// let tab = 0;
+		// if (location.pathname.includes(PROFILE_CONTRACT)) tab = 1;
+		// else if (location.pathname.includes(PROFILE_SPECIALTY)) tab = 2;
 		return (
 			<Box className={classes.root}>
-				<CustomTabs
+				{/* <CustomTabs
 					init={tab}
 					tabs={[
 						{
@@ -114,18 +114,18 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 							label: 'Profile Detail',
 							icon: AccountCircleIcon,
 						},
-						{
-							href: PROFILE_CONTRACT,
-							label: 'Files',
-							icon: BallotIcon,
-						},
+						// {
+						// 	href: PROFILE_CONTRACT,
+						// 	label: 'Files',
+						// 	icon: BallotIcon,
+						// },
 						{
 							href: PROFILE_SPECIALTY,
 							label: 'Specialty',
 							icon: BallotIcon,
 						},
 					]}
-				/>
+				/> */}
 				<Switch>
 					<SecuredRoute path={PROFILE_CONTRACT} component={ProfileFileView} />
 					<SecuredRoute path={PROFILE_ASKREVIEW} component={ProfileReview} />

@@ -111,7 +111,12 @@ export interface IProfileProjectsProps extends StyledComponentProps {
     specialties: Specialties;
     pastProjects: Projects;
     contId: string;
-    handleSubmit: (title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string, files: File[]) => Promise<void>;
+    addProject: (title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string, files: File[]) => Promise<void>;
+    deleteProject: (id: string) => Promise<void>;
+    updateProject: (projId: string, title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string) => Promise<void>;
+    addFile: (id: string, file: File) => Promise<any>;
+    deleteFile: (id: string, name: string) => Promise<any>;
+    refresh: () => Promise<void>;
 }
 
 interface IProfileProjectsState {
@@ -120,6 +125,7 @@ interface IProfileProjectsState {
     price: number;
     files: File[];
     urls: string[];
+    projFiles: Array<{ id: string, name: string }>;
     location: string;
     service: string;
     duration: number;
@@ -127,6 +133,8 @@ interface IProfileProjectsState {
     year: number;
     desc: string;
     hover: number;
+    projectInFocus: string;
+    editing: string;
 }
 
 const units = ['day(s)', 'week(s)', 'month(s)'];
@@ -147,40 +155,86 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
             price: 0,
             files: [],
             urls: [],
+            projFiles: [],
             location: '',
             service: serv || '',
             duration: 5,
             unit: 'day(s)',
             year: new Date().getFullYear(),
             desc: '',
-            hover: -1
+            hover: -1,
+            projectInFocus: '',
+            editing: ''
         }
     }
 
     handleAdd = () => {
-        this.setState({ dialog: true });
+        const { specialties } = this.props;
+        const thisYear = new Date().getFullYear();
+        this.setState({
+            dialog: true,
+            editing: '',
+            title: '',
+            price: 0,
+            projFiles: [],
+            location: '',
+            duration: 5,
+            unit: units[0],
+            service: specialties.content.length > 0 ? specialties.content[0].id : '',
+            year: thisYear,
+            desc: '',
+        });
+    }
+
+    handleEdit = (project: any) => {
+        this.setState({
+            dialog: true,
+            editing: project.id,
+            title: project.title,
+            price: project.budget,
+            projFiles: [...project.projectFiles],
+            location: '',
+            duration: project.duration,
+            unit: units[0],
+            service: project.projectSpecialties[0].specialty.id,
+            year: project.year,
+            desc: project.description,
+        });
     }
 
     handleCancel = () => {
         this.setState({ dialog: false });
+        this.props.refresh();
     }
 
     handleSubmit = () => {
-        const { title, price, location, service, duration, unit, year, desc, files } = this.state;
-        this.props.handleSubmit(title, price, location, service, duration, unit, year, desc, files);
-        this.setState({ dialog: false });
+        const { title, price, location, service, duration, unit, year, desc, files, editing } = this.state;
+        if (!editing) {
+            this.props.addProject(title, price, location, service, duration, unit, year, desc, files);
+            this.setState({ dialog: false });
+        } else {
+            this.props.updateProject(editing, title, price, location, service, duration, unit, year, desc);
+            this.setState({ dialog: false });
+        }
     }
 
     handleUpload = (file: File): Promise<void> => new Promise(resolve => {
-        console.log(file);
         if (!file) return;
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-            this.setState({ files: [...this.state.files, file] });
-            this.setState({ urls: [...this.state.urls, reader.result as string] });
-            resolve();
-        });
-        reader.readAsDataURL(file);
+        const { editing } = this.state;
+        if (!this.state.editing) {
+            const reader = new FileReader();
+            reader.addEventListener("load", () => {
+                this.setState({ files: [...this.state.files, file] });
+                this.setState({ urls: [...this.state.urls, reader.result as string] });
+                resolve();
+            });
+            reader.readAsDataURL(file);
+        } else {
+            this.props.addFile(editing, file).then(files => {
+                this.setState({ projFiles: files });
+                resolve();
+            });
+        }
     })
 
     handleDelete = (index: number) => {
@@ -194,13 +248,34 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
         });
     }
 
+    handleDelFile = (name: string) => {
+        this.props.deleteFile(this.state.editing, name).then(files => {
+            this.setState({ projFiles: files });
+        });
+    }
+
+    handleDelProject = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        this.props.deleteProject(id);
+    }
+
     public render() {
-        const { classes, specialties, pastProjects, contId } = this.props;
-        const { dialog, title, price, files, service, location, duration, year, unit, desc, urls, hover } = this.state;
+        const { classes, specialties, pastProjects } = this.props;
+        const {
+            dialog, title, price,
+            files, service, location,
+            duration, year, unit,
+            desc, urls, hover, projFiles,
+            projectInFocus, editing
+        } = this.state;
         const thisYear = new Date().getFullYear();
         let imageCount = parseInt(((files.length + 3) / 4).toFixed(1)) * 4;
+        if (!!editing) imageCount = parseInt(((projFiles.length + 3) / 4).toFixed(1)) * 4;
         if (imageCount < 4) imageCount = 4;
-        else imageCount = imageCount - files.length;
+        else {
+            !!editing && (imageCount = imageCount - projFiles.length);
+            !editing && (imageCount = imageCount - files.length);
+        }
 
         return (
             <>
@@ -217,13 +292,28 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
                                     <Card
                                         key={index}
                                         style={{ width: 256, height: 256, boxShadow: 'none', display: 'flex' }}
+                                        onMouseEnter={() => this.setState({ projectInFocus: item.id })}
+                                        onMouseLeave={() => this.setState({ projectInFocus: '' })}
+                                        onClick={() => this.handleEdit(item)}
                                     >
                                         <CardContent className={classes.card}>
-                                            <Box className={classes.addBox} style={{ border: 'none' }}>
+                                            <Box className={classes.addBox} style={{ border: 'none', position: 'relative' }}>
                                                 <img
                                                     alt={item.title}
                                                     style={{ width: 256, height: 188 }}
-                                                    src={process.env.REACT_APP_PROJECT_API + '/contractors/' + contId + '/files/' + item.projectFiles[0].name} />
+                                                    src={item.projectFiles.length > 0 ?
+                                                        process.env.REACT_APP_PROJECT_API + '/projects/' + item.id + '/files/' + item.projectFiles[0].name :
+                                                        ''}
+                                                />
+                                                {projectInFocus === item.id && (
+                                                    <IconButton
+                                                        style={{ position: 'absolute', right: 0, top: 0 }}
+                                                        color="primary"
+                                                        onClick={(e) => this.handleDelProject(e, item.id)}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                )}
                                             </Box>
                                             <Typography style={{ fontWeight: 500, fontSize: '1em', marginTop: 8 }}>
                                                 {item.title}
@@ -295,32 +385,67 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography style={{ fontSize: '0.75rem' }}>Photos</Typography>
-                                <Box className={classes.imageBox}>
-                                    {urls.map((url, index) => (
-                                        <Box
-                                            key={index} className={classes.imageItem}
-                                            style={{ position: 'relative' }}
-                                            onMouseEnter={() => this.setState({ hover: index })}
-                                            onMouseLeave={() => this.setState({ hover: -1 })}
-                                        >
-                                            <img src={url} alt='project-snapshot' style={{ width: 128, height: 128 }} />
-                                            {hover === index && (
-                                                <IconButton
-                                                    style={{ position: 'absolute', right: 0, top: 0 }}
-                                                    color="primary"
-                                                    onClick={() => this.handleDelete(hover)}
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            )}
-                                        </Box>
-                                    ))}
-                                    {range(0, imageCount).map(idx => (
-                                        <Box className={classes.imageItem} key={idx + files.length}>
-                                            <ImageIcon />
-                                        </Box>
-                                    ))}
-                                </Box>
+                                {!editing && (
+                                    <Box className={classes.imageBox}>
+                                        {urls.map((url, index) => (
+                                            <Box
+                                                key={index} className={classes.imageItem}
+                                                style={{ position: 'relative' }}
+                                                onMouseEnter={() => this.setState({ hover: index })}
+                                                onMouseLeave={() => this.setState({ hover: -1 })}
+                                            >
+                                                <img src={url} alt='project-snapshot' style={{ width: 128, height: 128 }} />
+                                                {hover === index && (
+                                                    <IconButton
+                                                        style={{ position: 'absolute', right: 0, top: 0 }}
+                                                        color="primary"
+                                                        onClick={() => this.handleDelete(hover)}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                )}
+                                            </Box>
+                                        ))}
+                                        {range(0, imageCount).map(idx => (
+                                            <Box className={classes.imageItem} key={idx + files.length}>
+                                                <ImageIcon />
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                )}
+                                {!!editing && (
+                                    <Box className={classes.imageBox}>
+                                        {projFiles.map((file, index) => (
+                                            <Box
+                                                key={index}
+                                                className={classes.imageItem}
+                                                style={{ position: 'relative' }}
+                                                onMouseEnter={() => this.setState({ hover: index })}
+                                                onMouseLeave={() => this.setState({ hover: -1 })}
+                                            >
+                                                <img
+                                                    src={process.env.REACT_APP_PROJECT_API + '/projects/' + editing + '/files/' + file.name}
+                                                    alt='project-snapshot'
+                                                    style={{ width: 128, height: 128 }}
+                                                />
+                                                {hover === index && (
+                                                    <IconButton
+                                                        style={{ position: 'absolute', right: 0, top: 0 }}
+                                                        color="primary"
+                                                        onClick={() => this.handleDelFile(file.name)}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                )}
+                                            </Box>
+                                        ))}
+                                        {range(0, imageCount).map(idx => (
+                                            <Box className={classes.imageItem} key={idx + files.length}>
+                                                <ImageIcon />
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                )}
                             </Grid>
                             <Grid item xs={12}>
                                 <Typography style={{ fontSize: '0.875rem', marginBottom: 4 }}>
@@ -422,8 +547,13 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
                         </Grid>
                     </DialogContent>
                     <DialogActions style={{ display: 'flex', padding: 24 }}>
-                        <Button onClick={this.handleSubmit} autoFocus className={classes.submit} variant={'outlined'}>
-                            Save
+                        <Button
+                            onClick={this.handleSubmit}
+                            autoFocus
+                            className={classes.submit}
+                            variant={'outlined'}
+                        >
+                            {editing ? 'Update' : 'Save'}
                         </Button>
                         <Button onClick={this.handleCancel} variant={'outlined'}>
                             Cancel

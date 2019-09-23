@@ -23,12 +23,13 @@ import ProfileLicensesView from './ProfileLicenses';
 import ProfileProjectsView from './ProfileProjects';
 import ProfilePhotosView from './ProfilePhotos';
 import ProfileSocialView from './ProfileSocial';
+import ProfileSpecView from './ProfileSpecialty';
 
 
 const styles = (theme: Theme) => createStyles({
     root: {
         position: 'relative',
-        height: 'calc(100vh - 119px)',
+        height: 'calc(100vh - 64px)',
         overflowY: 'auto',
         padding: theme.spacing(1, 0),
     },
@@ -46,7 +47,7 @@ const styles = (theme: Theme) => createStyles({
     center: {
         left: 'calc(50% - 20px)',
         top: 'calc(50% - 20px)',
-        position: 'absolute'
+        position: 'fixed'
     }
 })
 
@@ -118,7 +119,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             const newProfile = await auth0Client.updateProfile(new_prof);
             this.props.setUserProfile(newProfile);
             showMessage(true, 'Profile saved');
-            this.setState({ isBusy: false });
+            this.setState({ isBusy: false, editing: false });
         } catch (error) {
             console.log('ProfileView.handleSave: ', error);
             showMessage(false, 'Profile save failed');
@@ -196,6 +197,96 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         }
     }
 
+    refreshProject = async () => {
+        const { userProfile, getPastProjects } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            const id = userProfile.user_metadata.contractor_id;
+            await getPastProjects(id);
+            this.setState({ isBusy: false });
+        } catch (error) {
+            console.log('ProfileView.uploadProject: ', error);
+            this.setState({ isBusy: false });
+        }
+    }
+
+    updateProject = async (projId: string, title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string) => {
+        let period = 0;
+        if (unit.startsWith('day')) period = duration;
+        else if (unit.startsWith('week')) period = duration * 7;
+        else period = duration * 30;
+
+        const { userProfile, showMessage, getPastProjects } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            const id = userProfile.user_metadata.contractor_id;
+            await ProjApi.update(projId, {
+                title,
+                description: desc,
+                budget: price,
+                year,
+                duration: period
+            });
+            await getPastProjects(id);
+            this.setState({ isBusy: false });
+            showMessage(true, 'Project updated');
+        } catch (error) {
+            console.log('ProfileView.updateProject: ', error);
+            this.setState({ isBusy: false });
+            showMessage(false, 'Project update failed');
+        }
+    }
+
+    deleteProject = async (projId: string) => {
+        const { userProfile, showMessage, getPastProjects } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            const id = userProfile.user_metadata.contractor_id;
+            await ProjApi.delete(projId);
+            await getPastProjects(id);
+            this.setState({ isBusy: false });
+            showMessage(true, 'Project deleted');
+        } catch (error) {
+            console.log('ProfileView.deleteProject: ', error);
+            this.setState({ isBusy: false });
+            showMessage(false, 'Project delete failed');
+        }
+    }
+
+    addFileToProject = async (projId: string, file: File) => {
+        const { showMessage } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            await ProjApi.addFiles(projId, [file]);
+            this.setState({ isBusy: false });
+            showMessage(true, 'File added');
+        } catch (error) {
+            console.log('ProfileView.addFileToProject: ', error);
+            this.setState({ isBusy: false });
+            showMessage(false, 'File add failed');
+        }
+
+        const files = ProjApi.getFiles(projId);
+        return files;
+    }
+
+    deleteFileFromProject = async (projId: string, name: string) => {
+        const { showMessage } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            await ProjApi.deleteFile(projId, name);
+            this.setState({ isBusy: false });
+            showMessage(true, 'File deleted');
+        } catch (error) {
+            console.log('ProfileView.deleteFileFromProject: ', error);
+            this.setState({ isBusy: false });
+            showMessage(false, 'File delete failed');
+        }
+
+        const files = ProjApi.getFiles(projId);
+        return files;
+    }
+
     uploadPhoto = async (file: File) => {
         const { userProfile, showMessage, getPhotos } = this.props;
         this.setState({ isBusy: true });
@@ -234,12 +325,13 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
     }
 
     deletePV = async (name: string) => {
-        const { userProfile, selectContractor, showMessage } = this.props;
+        const { userProfile, showMessage, getPhotos, getLinks } = this.props;
         this.setState({ isBusy: true });
         try {
             const id = userProfile.user_metadata.contractor_id;
             await ContApi.deleteFile(id, name);
-            await selectContractor(id);
+            await getPhotos(id);
+            await getLinks(id);
             showMessage(true, 'Photo deleted');
             this.setState({ isBusy: false });
         } catch (error) {
@@ -267,9 +359,57 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         }
     }
 
+    deleteSpecialty = async (specId: string) => {
+        const { userProfile, showMessage, selectContractor } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            const id = userProfile.user_metadata.contractor_id;
+            await ContApi.deleteSpecialty(id, specId);
+            const data = await selectContractor(id);
+            this.setState({ isBusy: false });
+            showMessage(true, 'Specialty deleted');
+            return data;
+        } catch (error) {
+            console.log('ProfileView.deleteSpecialty: ', error);
+            this.setState({ isBusy: false });
+            showMessage(false, 'Specialty delete failed');
+        }
+    }
+
+    saveSpecialty = async (specs: string[]) => {
+        const { userProfile, showMessage, contractor, specialties, selectContractor } = this.props;
+        const exists = contractor.contractorSpecialties;
+        const id = userProfile.user_metadata.contractor_id;
+
+        this.setState({ isBusy: true });
+        try {
+            const toDel = exists.filter(item => specs.indexOf(item.specialty.name) < 0);
+            const toAdd = specialties.content.filter(item => specs.indexOf(item.name) >= 0 && exists.every(exist => item.id !== exist.specialty.id));
+            const task = [];
+            for (let i = 0; i < toDel.length; i++) {
+                task.push(ContApi.deleteSpecialty(id, toDel[i].specialty.id));
+            }
+            for (let i = 0; i < toAdd.length; i++) {
+                task.push(ContApi.addSpecialty(id, toAdd[i].id));
+            }
+
+            for (let i = 0; i < task.length; i++) {
+                await task[i];
+            }
+
+            await selectContractor(id);
+            this.setState({ isBusy: false });
+            showMessage(true, 'Specialties saved');
+        } catch (error) {
+            console.log('ProfileView.saveSpecialty: ', error);
+            this.setState({ isBusy: false });
+            showMessage(false, 'Specialties save failed');
+        }
+    }
+
     render() {
         const { profile, editing, isBusy } = this.state;
-        const { classes, userProfile, specialties, pastProjects, photos, links } = this.props;
+        const { classes, userProfile, specialties, pastProjects, photos, links, contractor } = this.props;
         if (!profile) {
             return (
                 <Box className={classes.root}>
@@ -299,7 +439,12 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                     )}
                     <ProfileLicensesView userProfile={userProfile} handleSubmit={this.uploadLicense} />
                     <ProfileProjectsView
-                        handleSubmit={this.uploadProject}
+                        addProject={this.uploadProject}
+                        deleteProject={this.deleteProject}
+                        updateProject={this.updateProject}
+                        addFile={this.addFileToProject}
+                        deleteFile={this.deleteFileFromProject}
+                        refresh={this.refreshProject}
                         specialties={specialties}
                         pastProjects={pastProjects}
                         contId={userProfile.user_metadata.contractor_id}
@@ -316,6 +461,12 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                     <ProfileSocialView
                         handleSubmit={this.saveSocial}
                         links={links}
+                    />
+                    <ProfileSpecView
+                        handleDelete={this.deleteSpecialty}
+                        handleSave={this.saveSpecialty}
+                        contractor={contractor}
+                        specialties={specialties}
                     />
                 </Box>
                 {isBusy && <CircularProgress className={classes.center} />}

@@ -52,23 +52,14 @@ export const linksLoaded = data => ({
 export const createContractor = contractor => dispatch => ContApi.createContractor(contractor);
 export const deleteContractor = id => dispatch => ContApi.deleteContractor(id);
 export const selectContractor = id => dispatch => ContApi.selectContractor(id).then(data => {
-	dispatch({
-		type: SET_SELECTED_CONTRACTOR,
-		payload: data,
-	});
+	dispatch(setSelectedContractor(data));
 	return data;
 });
 export const updateContractor = id => dispatch => ContApi.selectContractor(id).then(data => {
-	dispatch({
-		type: SET_SELECTED_CONTRACTOR,
-		payload: data,
-	});
+	dispatch(setSelectedContractor(data));
 });
 export const getPastProjects = id => dispatch => ContApi.getPastProjects(id).then(data => {
-	dispatch({
-		type: PAST_PROJECTS_LOADED,
-		payload: data
-	});
+	dispatch(pastProjectsLoaded(data));
 });
 
 export const getContractors = (page, size) => dispatch => {

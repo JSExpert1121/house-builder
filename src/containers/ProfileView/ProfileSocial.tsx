@@ -9,9 +9,6 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { createStyles, Theme, withStyles, StyledComponentProps } from '@material-ui/core/styles';
 import { SocialIcon } from 'react-social-icons';
 
@@ -49,7 +46,7 @@ export interface IProfileSocialProps extends StyledComponentProps {
 }
 
 interface IProfileSocialState {
-    dialog: boolean;
+    edit: boolean;
     facebook: string;
     instagram: string;
     twitter: string;
@@ -61,14 +58,14 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
         super(props);
 
         this.state = {
-            dialog: false,
+            edit: false,
             facebook: '',
             instagram: '',
             twitter: '',
         }
     }
 
-    showDialog = () => {
+    startEdit = () => {
         const { links } = this.props;
         const facebooks = links.filter(link => link.name.startsWith('https') && link.name.includes('facebook'));
         const instagrams = links.filter(link => link.name.startsWith('https') && link.name.includes('instagram'));
@@ -77,75 +74,77 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
         const ins = instagrams.length > 0 ? decodeURIComponent(instagrams[0].name) : '';
         const tw = twitters.length > 0 ? decodeURIComponent(twitters[0].name) : '';
 
-        this.setState({ dialog: true, facebook: fb, instagram: ins, twitter: tw });
+        this.setState({ edit: true, facebook: fb, instagram: ins, twitter: tw });
     }
 
-    closeDialog = () => {
-        this.setState({ dialog: false });
+    endEdit = () => {
+        this.setState({ edit: false });
     }
 
     handleSubmit = () => {
         const { facebook, instagram, twitter } = this.state;
         this.props.handleSubmit(facebook, instagram, twitter);
-        this.setState({ dialog: false });
+        this.setState({ edit: false });
     }
 
     public render() {
         const { classes } = this.props;
-        const { dialog, facebook, instagram, twitter } = this.state;
+        const { facebook, instagram, twitter, edit } = this.state;
 
         return (
-            <>
-                <Card className={classes.container}>
+            <Card className={classes.container}>
+                {!edit && (
                     <List>
                         <ListItem>
-                            <Typography className={classes.title} style={{ flex: 1 }}>
-                                Social Media
+                            <Box style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+                                <Typography className={classes.title} style={{ flex: 1 }}>
+                                    Social Media
                                 </Typography>
+                                <Link onClick={this.startEdit} className={classes.link}>
+                                    Edit
+                                </Link>
+                            </Box>
                         </ListItem>
                         <ListItem>
-                            <Box
-                                style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}
-                                onClick={this.showDialog}
-                            >
+                            <Box style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
                                 <Button variant='outlined' color='primary'>
                                     <SocialIcon style={{ width: 20, height: 20 }} network='facebook' />
-                                    &nbsp;&nbsp;&nbsp;Add Facebook
+                                    &nbsp;&nbsp;&nbsp;Facebook
                                 </Button>
                                 <Button variant='outlined' color='primary'>
                                     <SocialIcon style={{ width: 20, height: 20 }} network='instagram' />
-                                    &nbsp;&nbsp;&nbsp;Add Instagram
+                                    &nbsp;&nbsp;&nbsp;Instagram
                                 </Button>
                                 <Button variant='outlined' color='primary'>
                                     <SocialIcon style={{ width: 20, height: 20 }} network='twitter' />
-                                    &nbsp;&nbsp;&nbsp;Add Twitter
+                                    &nbsp;&nbsp;&nbsp;Twitter
                                 </Button>
                             </Box>
                         </ListItem>
                     </List>
-                </Card>
-                <Dialog open={dialog} onClose={this.closeDialog}>
-                    <DialogTitle id="review-dialog-title">
-                        <Box style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography className={classes.title} style={{ flex: 1 }}>
-                                {'Social Media'}
-                            </Typography>
-                            <Link onClick={this.handleSubmit} className={classes.link}>
-                                Save
-						    </Link>
-                            <Link
-                                onClick={this.closeDialog}
-                                className={classes.link}
-                                style={{ paddingLeft: 12, color: 'red' }}
-                            >
-                                Cancel
-						    </Link>
-                        </Box>
-                    </DialogTitle>
-                    <DialogContent>
-                        <List style={{ minWidth: 512 }}>
-                            <ListItem style={{ display: 'block', padding: '8px 0' }}>
-                                <InputLabel>
+                )}
+                {edit && (
+                    <List>
+                        <ListItem>
+                            <Box style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                                <Typography className={classes.title} style={{ flex: 1 }}>
+                                    {'Social Media'}
+                                </Typography>
+                                <Link onClick={this.handleSubmit} className={classes.link}>
+                                    Save
+						        </Link>
+                                <Link
+                                    onClick={this.endEdit}
+                                    className={classes.link}
+                                    style={{ paddingLeft: 12, color: 'red' }}
+                                >
+                                    Cancel
+						        </Link>
+                            </Box>
+                        </ListItem>
+                        <ListItem>
+                            <Box style={{ width: '100%' }}>
+                                <InputLabel style={{ display: 'block' }}>
                                     <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='facebook' />
                                     &nbsp;&nbsp;&nbsp;Facebook
                                 </InputLabel>
@@ -157,9 +156,11 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                                     style={{ marginBottom: 16 }}
                                     onChange={e => this.setState({ facebook: e.target.value })}
                                 />
-                            </ListItem>
-                            <ListItem style={{ display: 'block', padding: '8px 0' }}>
-                                <InputLabel>
+                            </Box>
+                        </ListItem>
+                        <ListItem>
+                            <Box style={{ width: '100%' }}>
+                                <InputLabel style={{ display: 'block' }}>
                                     <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='instagram' />
                                     &nbsp;&nbsp;&nbsp;Instagram
                                 </InputLabel>
@@ -171,9 +172,11 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                                     style={{ marginBottom: 16 }}
                                     onChange={e => this.setState({ instagram: e.target.value })}
                                 />
-                            </ListItem>
-                            <ListItem style={{ display: 'block', padding: '8px 0' }}>
-                                <InputLabel>
+                            </Box>
+                        </ListItem>
+                        <ListItem>
+                            <Box style={{ width: '100%' }}>
+                                <InputLabel style={{ display: 'block' }}>
                                     <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='twitter' />
                                     &nbsp;&nbsp;&nbsp;Twitter
                                 </InputLabel>
@@ -185,11 +188,11 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                                     style={{ marginBottom: 16 }}
                                     onChange={e => this.setState({ twitter: e.target.value })}
                                 />
-                            </ListItem>
-                        </List>
-                    </DialogContent>
-                </Dialog>
-            </>
+                            </Box>
+                        </ListItem>
+                    </List>
+                )}
+            </Card>
         );
     }
 }

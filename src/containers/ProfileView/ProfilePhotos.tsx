@@ -125,8 +125,14 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
         this.props.delete(id);
     }
 
+    addVideo = (link: string) => {
+        if (link.length > 0) {
+            this.props.uploadVideo(link);
+        }
+    }
+
     public render() {
-        const { classes, uploadVideo, photos, videos, uploadPhoto, contId } = this.props;
+        const { classes, photos, videos, uploadPhoto, contId } = this.props;
         const { title, editing, hover, videoURL } = this.state;
 
         const vids = videos.filter(link => link.name.startsWith('https') && link.name.includes('youtube'));
@@ -179,7 +185,7 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                         onChange={e => this.setState({ videoURL: e.target.value })}
                                     />
                                     <Box style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Button className={classes.submit} onClick={() => uploadVideo(videoURL)}>
+                                        <Button className={classes.submit} onClick={() => this.addVideo(videoURL)}>
                                             Add
                                         </Button>
                                     </Box>
@@ -241,9 +247,9 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                                     opts={{
                                                         width: 256,
                                                         height: 208,
-                                                        playerVars: { // https://developers.google.com/youtube/player_parameters
-                                                            autoplay: 1
-                                                        }
+                                                        // playerVars: { // https://developers.google.com/youtube/player_parameters
+                                                        //     autoplay: 1
+                                                        // }
                                                     }}
                                                 />
                                                 {(hover === video.id) && (
