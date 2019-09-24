@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
@@ -16,6 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
 
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
@@ -24,24 +23,15 @@ import RateIcon from '@material-ui/icons/RateReview';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 
-import { setUserProfile } from 'store/actions/global-actions';
 import ContApi from 'services/contractor';
-import { UserProfile } from 'types/global';
 
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
-    root: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        overflow: 'auto',
-        flex: 1
-    },
     container: {
-        width: 640,
-        height: 'auto',
-        padding: theme.spacing(2)
+        width: '100%',
+        padding: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        borderRadius: 0
     },
     title: {
         fontSize: '1.2rem',
@@ -64,6 +54,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             backgroundColor: '#FFFFFF',
         },
     },
+    link: {
+        fontSize: '0.875rem',
+        fontWeight: 600,
+        color: 'blue',
+        cursor: 'pointer'
+    },
     add: {
         color: theme.palette.primary.dark
     },
@@ -77,10 +73,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
 }));
 
-interface IProfileReviewProps extends RouteComponentProps {
-    userProfile: UserProfile;
-    contractor: any;
-    setUserProfile: (profile: UserProfile) => void;
+interface IProfileReviewProps {
+    contId: string;
+    company: string;
+    gotoOverview: () => void;
 }
 
 const ProfileReview: React.FunctionComponent<IProfileReviewProps> = (props) => {
@@ -90,12 +86,12 @@ const ProfileReview: React.FunctionComponent<IProfileReviewProps> = (props) => {
     const rateCount = 12;
     const labels = [5, 4, 3, 2, 1];
     const rates = [4.8, 3.2, 4.6, 5, 4.3];
-    const { contractor } = props;
+    const { company } = props;
 
     const [dialog, setDialog] = React.useState(false);
     const [mails, setMails] = React.useState<string[]>(['']);
     const [mailRate, setMailRate] = React.useState(5.0);
-    const [msg, setMsg] = React.useState(`Thanks for being a valued customer. I just signed up on find more excellent customers like you, and reviews are a big part of my profile. Can you take a moment to write a couple of sentences about working with me? I'd love if my future customers could hear about your experience firsthand. \r\nThanks, ${contractor.address.company}`)
+    const [msg, setMsg] = React.useState(`Thanks for being a valued customer. I just signed up on find more excellent customers like you, and reviews are a big part of my profile. Can you take a moment to write a couple of sentences about working with me? I'd love if my future customers could hear about your experience firsthand. \r\nThanks, ${company}`)
 
     const onSendRequest = () => {
 
@@ -125,15 +121,20 @@ const ProfileReview: React.FunctionComponent<IProfileReviewProps> = (props) => {
         ])
     }
 
-    const avatar = ContApi.getAvatar(props.userProfile.user_metadata.contractor_id);
+    const avatar = ContApi.getAvatar(props.contId);
     return (
-        <Box className={classes.root}>
+        <>
             <Paper className={classes.container}>
                 <List>
                     <ListItem>
-                        <Typography className={classes.title}>
-                            Reviews
-                        </Typography>
+                        <Box style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+                            <Typography className={classes.title} style={{ flex: 1 }}>
+                                Reviews
+                            </Typography>
+                            <Link onClick={props.gotoOverview} className={classes.link}>
+                                Cancel
+                            </Link>
+                        </Box>
                     </ListItem>
                     <ListItem>
                         <Box className={classes.flex}>
@@ -246,7 +247,7 @@ const ProfileReview: React.FunctionComponent<IProfileReviewProps> = (props) => {
                                 style={{ margin: '8px 0' }}
                             />
                             <Typography className={classes.bold} style={{ fontSize: '0.875rem' }}>
-                                {contractor.address.company}
+                                {company}
                             </Typography>
                             <Rating
                                 precision={0.1}
@@ -276,17 +277,8 @@ const ProfileReview: React.FunctionComponent<IProfileReviewProps> = (props) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Box>
+        </>
     );
 };
 
-const mapDispatchToProps = {
-    setUserProfile,
-};
-
-const mapStateToProps = state => ({
-    userProfile: state.global_data.userProfile,
-    contractor: state.cont_data.selectedContractor
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileReview);
+export default ProfileReview;

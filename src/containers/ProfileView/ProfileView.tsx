@@ -24,6 +24,7 @@ import ProfileProjectsView from './ProfileProjects';
 import ProfilePhotosView from './ProfilePhotos';
 import ProfileSocialView from './ProfileSocial';
 import ProfileSpecView from './ProfileSpecialty';
+import ProfileReview from './ProfileReview';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -68,7 +69,7 @@ interface IProfileViewProps extends RouteComponentProps, withSnackbarProps, Styl
 
 interface IProfileViewState {
     profile?: Profile;
-    editing: boolean;
+    editing: number;
     isBusy: boolean;
 }
 
@@ -96,7 +97,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                     employees: ''
                 }
             },
-            editing: false,
+            editing: 0,
             isBusy: false
         }
     }
@@ -119,7 +120,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             const newProfile = await auth0Client.updateProfile(new_prof);
             this.props.setUserProfile(newProfile);
             showMessage(true, 'Profile saved');
-            this.setState({ isBusy: false, editing: false });
+            this.setState({ isBusy: false, editing: 0 });
         } catch (error) {
             console.log('ProfileView.handleSave: ', error);
             showMessage(false, 'Profile save failed');
@@ -152,10 +153,6 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             showMessage(false, 'Upload avatar failed');
             return '';
         }
-    }
-
-    askReview = () => {
-        this.props.history.push('/profile/review');
     }
 
     uploadLicense = async (city: string, type: string, number: string, file: File) => {
@@ -321,7 +318,16 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
     }
 
     updateTitle = async (id: string, title: string) => {
-        console.log('ProfileView.updateTitle: ', title);
+        if (title.length === 0) return;
+        this.setState({ isBusy: true });
+        try {
+            await ContApi.updateTitle(id, title);
+            await this.props.getPhotos(this.props.userProfile.user_metadata.contractor_id);
+            this.setState({ isBusy: false });
+        } catch (error) {
+            console.log('ProfileView.updateTitle: ', error);
+            this.setState({ isBusy: false });
+        }
     }
 
     deletePV = async (name: string) => {
@@ -410,6 +416,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
     render() {
         const { profile, editing, isBusy } = this.state;
         const { classes, userProfile, specialties, pastProjects, photos, links, contractor } = this.props;
+        const contId = userProfile.user_metadata.contractor_id;
         if (!profile) {
             return (
                 <Box className={classes.root}>
@@ -421,23 +428,34 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         return (
             <Box className={classes.root}>
                 <Box className={classes.contents}>
-                    {editing && (
+                    {editing === 0 && (
+                        <ProfileOverview
+                            profile={profile}
+                            gotoEditView={() => this.setState({ editing: 1 })}
+                            gotoReview={() => this.setState({ editing: 2 })}
+                        />
+                    )}
+                    {editing === 1 && (
                         <ProfileEditView
-                            gotoOverview={() => this.setState({ editing: false })}
+                            gotoOverview={() => this.setState({ editing: 0 })}
                             profile={profile}
                             handleSave={this.handleSave}
                             handleChange={this.handleChange}
                             uploadPicture={this.uploadPicture}
                         />
                     )}
-                    {!editing && (
-                        <ProfileOverview
-                            profile={profile}
-                            askReview={this.askReview}
-                            gotoEditView={() => this.setState({ editing: true })}
+                    {editing === 2 && (
+                        <ProfileReview
+                            gotoOverview={() => this.setState({ editing: 0 })}
+                            contId={contId}
+                            company={contractor.address.company}
                         />
                     )}
-                    <ProfileLicensesView userProfile={userProfile} handleSubmit={this.uploadLicense} />
+
+                    <ProfileLicensesView
+                        userProfile={userProfile}
+                        handleSubmit={this.uploadLicense}
+                    />
                     <ProfileProjectsView
                         addProject={this.uploadProject}
                         deleteProject={this.deleteProject}
@@ -447,10 +465,10 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                         refresh={this.refreshProject}
                         specialties={specialties}
                         pastProjects={pastProjects}
-                        contId={userProfile.user_metadata.contractor_id}
+                        contId={contId}
                     />
                     <ProfilePhotosView
-                        contId={userProfile.user_metadata.contractor_id}
+                        contId={contId}
                         photos={photos}
                         videos={links}
                         uploadPhoto={this.uploadPhoto}

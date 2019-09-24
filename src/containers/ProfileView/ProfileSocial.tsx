@@ -87,9 +87,21 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
         this.setState({ edit: false });
     }
 
+    goLink = (url: string) => {
+        if (url.length > 0) {
+            window.open(url, '_blank');
+        }
+    }
+
     public render() {
-        const { classes } = this.props;
+        const { classes, links } = this.props;
         const { facebook, instagram, twitter, edit } = this.state;
+        const facebooks = links.filter(link => link.name.startsWith('https') && link.name.includes('facebook'));
+        const instagrams = links.filter(link => link.name.startsWith('https') && link.name.includes('instagram'));
+        const twitters = links.filter(link => link.name.startsWith('https') && link.name.includes('twitter'));
+        const fb = facebooks.length > 0 ? decodeURIComponent(facebooks[0].name) : '';
+        const ins = instagrams.length > 0 ? decodeURIComponent(instagrams[0].name) : '';
+        const tw = twitters.length > 0 ? decodeURIComponent(twitters[0].name) : '';
 
         return (
             <Card className={classes.container}>
@@ -107,92 +119,95 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                         </ListItem>
                         <ListItem>
                             <Box style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-                                <Button variant='outlined' color='primary'>
+                                <Button color='primary' onClick={() => this.goLink(fb)} disabled={fb.length === 0}>
                                     <SocialIcon style={{ width: 20, height: 20 }} network='facebook' />
                                     &nbsp;&nbsp;&nbsp;Facebook
                                 </Button>
-                                <Button variant='outlined' color='primary'>
+                                <Button color='primary' onClick={() => this.goLink(ins)} disabled={ins.length === 0}>
                                     <SocialIcon style={{ width: 20, height: 20 }} network='instagram' />
                                     &nbsp;&nbsp;&nbsp;Instagram
                                 </Button>
-                                <Button variant='outlined' color='primary'>
+                                <Button color='primary' onClick={() => this.goLink(tw)} disabled={tw.length === 0} >
                                     <SocialIcon style={{ width: 20, height: 20 }} network='twitter' />
                                     &nbsp;&nbsp;&nbsp;Twitter
                                 </Button>
                             </Box>
                         </ListItem>
-                    </List>
-                )}
-                {edit && (
-                    <List>
-                        <ListItem>
-                            <Box style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                                <Typography className={classes.title} style={{ flex: 1 }}>
-                                    {'Social Media'}
-                                </Typography>
-                                <Link onClick={this.handleSubmit} className={classes.link}>
-                                    Save
+                    </List >
+                )
+                }
+                {
+                    edit && (
+                        <List>
+                            <ListItem>
+                                <Box style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                                    <Typography className={classes.title} style={{ flex: 1 }}>
+                                        {'Social Media'}
+                                    </Typography>
+                                    <Link onClick={this.handleSubmit} className={classes.link}>
+                                        Save
 						        </Link>
-                                <Link
-                                    onClick={this.endEdit}
-                                    className={classes.link}
-                                    style={{ paddingLeft: 12, color: 'red' }}
-                                >
-                                    Cancel
+                                    <Link
+                                        onClick={this.endEdit}
+                                        className={classes.link}
+                                        style={{ paddingLeft: 12, color: 'red' }}
+                                    >
+                                        Cancel
 						        </Link>
-                            </Box>
-                        </ListItem>
-                        <ListItem>
-                            <Box style={{ width: '100%' }}>
-                                <InputLabel style={{ display: 'block' }}>
-                                    <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='facebook' />
-                                    &nbsp;&nbsp;&nbsp;Facebook
+                                </Box>
+                            </ListItem>
+                            <ListItem>
+                                <Box style={{ width: '100%' }}>
+                                    <InputLabel style={{ display: 'block' }}>
+                                        <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='facebook' />
+                                        &nbsp;&nbsp;&nbsp;Facebook
                                 </InputLabel>
-                                <Input
-                                    placeholder={`Enter Facebook URL`}
-                                    margin="dense"
-                                    fullWidth
-                                    value={facebook}
-                                    style={{ marginBottom: 16 }}
-                                    onChange={e => this.setState({ facebook: e.target.value })}
-                                />
-                            </Box>
-                        </ListItem>
-                        <ListItem>
-                            <Box style={{ width: '100%' }}>
-                                <InputLabel style={{ display: 'block' }}>
-                                    <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='instagram' />
-                                    &nbsp;&nbsp;&nbsp;Instagram
+                                    <Input
+                                        placeholder={`Enter Facebook URL`}
+                                        margin="dense"
+                                        fullWidth
+                                        value={facebook}
+                                        style={{ marginBottom: 16 }}
+                                        onChange={e => this.setState({ facebook: e.target.value })}
+                                    />
+                                </Box>
+                            </ListItem>
+                            <ListItem>
+                                <Box style={{ width: '100%' }}>
+                                    <InputLabel style={{ display: 'block' }}>
+                                        <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='instagram' />
+                                        &nbsp;&nbsp;&nbsp;Instagram
                                 </InputLabel>
-                                <Input
-                                    placeholder={`Enter Instagram URL`}
-                                    margin="dense"
-                                    fullWidth
-                                    value={instagram}
-                                    style={{ marginBottom: 16 }}
-                                    onChange={e => this.setState({ instagram: e.target.value })}
-                                />
-                            </Box>
-                        </ListItem>
-                        <ListItem>
-                            <Box style={{ width: '100%' }}>
-                                <InputLabel style={{ display: 'block' }}>
-                                    <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='twitter' />
-                                    &nbsp;&nbsp;&nbsp;Twitter
+                                    <Input
+                                        placeholder={`Enter Instagram URL`}
+                                        margin="dense"
+                                        fullWidth
+                                        value={instagram}
+                                        style={{ marginBottom: 16 }}
+                                        onChange={e => this.setState({ instagram: e.target.value })}
+                                    />
+                                </Box>
+                            </ListItem>
+                            <ListItem>
+                                <Box style={{ width: '100%' }}>
+                                    <InputLabel style={{ display: 'block' }}>
+                                        <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='twitter' />
+                                        &nbsp;&nbsp;&nbsp;Twitter
                                 </InputLabel>
-                                <Input
-                                    placeholder={`Enter Twitter URL`}
-                                    margin="dense"
-                                    fullWidth
-                                    value={twitter}
-                                    style={{ marginBottom: 16 }}
-                                    onChange={e => this.setState({ twitter: e.target.value })}
-                                />
-                            </Box>
-                        </ListItem>
-                    </List>
-                )}
-            </Card>
+                                    <Input
+                                        placeholder={`Enter Twitter URL`}
+                                        margin="dense"
+                                        fullWidth
+                                        value={twitter}
+                                        style={{ marginBottom: 16 }}
+                                        onChange={e => this.setState({ twitter: e.target.value })}
+                                    />
+                                </Box>
+                            </ListItem>
+                        </List>
+                    )
+                }
+            </Card >
         );
     }
 }

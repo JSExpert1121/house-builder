@@ -80,6 +80,9 @@ export default {
 			}
 		}).then(res => res.data);
 	},
+	updateTitle: (fileId, title) => Axios.post(CONT_API_PATH + 'files/' + fileId + '/note', {
+		note: title
+	}).then(res => res.data),
 	getPhotos: id => Axios.get(CONT_API_PATH + id + '/photos').then(res => res.data),
 	addLink: (id, link) => Axios.post(CONT_API_PATH + id + '/link', {}, {
 		params: {

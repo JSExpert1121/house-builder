@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 interface ProfileOverviewProps {
     profile: Profile;
     gotoEditView: () => void;
-    askReview: () => void;
+    gotoReview: () => void;
 }
 
 const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
@@ -106,15 +106,15 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
                     </Typography>
                     <Box className={classes.rating}>
                         <Rating precision={0.1} value={3.6} readOnly size='small' style={{ marginRight: 16 }} />
-                        <Link onClick={props.askReview} className={classes.link}>
+                        <Link onClick={props.gotoReview} className={classes.link}>
                             Ask Review
-    						</Link>
+    					</Link>
                     </Box>
                 </Box>
                 <Box>
                     <Link onClick={handleEdit} className={classes.link}>
                         Edit
-						</Link>
+					</Link>
                 </Box>
             </Box>
             <Box className={classes.row}>

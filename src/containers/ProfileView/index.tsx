@@ -17,9 +17,7 @@ import { UserProfile, Specialties } from 'types/global';
 import { Projects } from 'types/project';
 
 import ProfileView from './ProfileView';
-import ProfileFileView from './ProfileFileView';
 import ProfileReview from './ProfileReview';
-import ProfileSpecialty from './ProfileSpecialty';
 
 const styles = createStyles((theme: Theme) => ({
 	root: {
@@ -42,8 +40,6 @@ const styles = createStyles((theme: Theme) => ({
 }));
 
 const PROFILE_OVERVIEW = '/profile';
-const PROFILE_CONTRACT = '/profile/files';
-const PROFILE_SPECIALTY = '/profile/specialty';
 const PROFILE_ASKREVIEW = '/profile/review';
 
 interface ProfilePageProps extends RouteComponentProps, StyledComponentProps {
@@ -88,7 +84,6 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 	render() {
 		const {
 			classes,
-			location,
 			contractor,
 			specialties,
 			pastProjects,
@@ -127,9 +122,9 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 					]}
 				/> */}
 				<Switch>
-					<SecuredRoute path={PROFILE_CONTRACT} component={ProfileFileView} />
+					{/* <SecuredRoute path={PROFILE_CONTRACT} component={ProfileFileView} /> */}
 					<SecuredRoute path={PROFILE_ASKREVIEW} component={ProfileReview} />
-					<SecuredRoute path={PROFILE_SPECIALTY} component={ProfileSpecialty} />
+					{/* <SecuredRoute path={PROFILE_SPECIALTY} component={ProfileSpecialty} /> */}
 					<SecuredRoute exact path={PROFILE_OVERVIEW} component={ProfileView} />
 				</Switch>
 			</Box>

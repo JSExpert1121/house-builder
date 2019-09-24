@@ -35,7 +35,7 @@ const styles = (theme: Theme) => createStyles({
         width: '100%',
         padding: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        borderRadius: '0'
+        borderRadius: 0
     },
     title: {
         fontSize: '1.2rem',
