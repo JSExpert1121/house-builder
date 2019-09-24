@@ -53,6 +53,7 @@ interface ProfilePageProps extends RouteComponentProps, StyledComponentProps {
 	getPastProjects: (id: string) => Promise<void>;
 	getPhotos: (id: string) => Promise<void>;
 	getLinks: (id: string) => Promise<void>;
+	getReviews: (id: string) => Promise<void>;
 }
 
 class ProfilePage extends React.Component<ProfilePageProps> {
@@ -65,7 +66,8 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 			getSpecialties,
 			getPastProjects,
 			getLinks,
-			getPhotos
+			getPhotos,
+			getReviews
 		} = this.props;
 		const contId = userProfile.user_metadata.contractor_id;
 		if (!!contractor) return;
@@ -75,6 +77,7 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 			await getPastProjects(contId);
 			await getPhotos(contId);
 			await getLinks(contId);
+			await getReviews(contId);
 		} catch (error) {
 			console.log('ProfileOverview.CDM: ', error);
 		}
@@ -138,7 +141,8 @@ const mapDispatchToProps = {
 	getSpecialties: ContActions.getSpecialties,
 	getPastProjects: ContActions.getPastProjects,
 	getPhotos: ContActions.getProfilePhotos,
-	getLinks: ContActions.getProfileLinks
+	getLinks: ContActions.getProfileLinks,
+	getReviews: ContActions.getProfileReview
 };
 
 const mapStateToProps = state => ({

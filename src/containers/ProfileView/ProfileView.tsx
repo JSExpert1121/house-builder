@@ -9,7 +9,7 @@ import { createStyles, Theme, withStyles, StyledComponentProps } from '@material
 import ProfileOverview from './ProfileOverview';
 import ProfileEditView from './ProfileEditView';
 
-import { UserProfile, Specialties } from 'types/global';
+import { UserProfile, Specialties, ProfileReview } from 'types/global';
 import { setUserProfile } from 'store/actions/global-actions';
 import * as ContActions from 'store/actions/cont-actions';
 import withSnackbar, { withSnackbarProps } from 'components/HOCs/withSnackbar';
@@ -24,7 +24,8 @@ import ProfileProjectsView from './ProfileProjects';
 import ProfilePhotosView from './ProfilePhotos';
 import ProfileSocialView from './ProfileSocial';
 import ProfileSpecView from './ProfileSpecialty';
-import ProfileReview from './ProfileReview';
+import ProfileReviewReview from './ProfileReview';
+import AskReview from './AskReview';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -59,6 +60,7 @@ interface IProfileViewProps extends RouteComponentProps, withSnackbarProps, Styl
     pastProjects: Projects;
     photos: any[];
     links: any[];
+    review: ProfileReview;
     selectContractor: (id: string) => any;
     getPastProjects: (id: string) => Promise<void>;
     setUserProfile: (profile: UserProfile) => void;
@@ -70,6 +72,7 @@ interface IProfileViewProps extends RouteComponentProps, withSnackbarProps, Styl
 interface IProfileViewState {
     profile?: Profile;
     editing: number;
+    showReview: boolean;
     isBusy: boolean;
 }
 
@@ -98,7 +101,8 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                 }
             },
             editing: 0,
-            isBusy: false
+            isBusy: false,
+            showReview: false
         }
     }
 
@@ -413,9 +417,22 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         }
     }
 
+    openReview = () => {
+        this.setState({ showReview: true });
+    }
+
+    hideReview = () => {
+        this.setState({ showReview: false });
+    }
+
     render() {
-        const { profile, editing, isBusy } = this.state;
-        const { classes, userProfile, specialties, pastProjects, photos, links, contractor } = this.props;
+        const { profile, editing, isBusy, showReview } = this.state;
+        const {
+            classes, userProfile,
+            specialties, pastProjects,
+            photos, links,
+            contractor, review
+        } = this.props;
         const contId = userProfile.user_metadata.contractor_id;
         if (!profile) {
             return (
@@ -431,8 +448,9 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                     {editing === 0 && (
                         <ProfileOverview
                             profile={profile}
+                            review={review}
                             gotoEditView={() => this.setState({ editing: 1 })}
-                            gotoReview={() => this.setState({ editing: 2 })}
+                            gotoReview={this.openReview}
                         />
                     )}
                     {editing === 1 && (
@@ -444,14 +462,11 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                             uploadPicture={this.uploadPicture}
                         />
                     )}
-                    {editing === 2 && (
-                        <ProfileReview
-                            gotoOverview={() => this.setState({ editing: 0 })}
-                            contId={contId}
-                            company={contractor.address.company}
-                        />
-                    )}
 
+                    <ProfileReviewReview
+                        review={review}
+                        askReview={this.openReview}
+                    />
                     <ProfileLicensesView
                         userProfile={userProfile}
                         handleSubmit={this.uploadLicense}
@@ -487,6 +502,12 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                         specialties={specialties}
                     />
                 </Box>
+                <AskReview
+                    contId={contId}
+                    company={contractor.address.company}
+                    show={showReview}
+                    hide={this.hideReview}
+                />
                 {isBusy && <CircularProgress className={classes.center} />}
             </Box >
         );
@@ -508,7 +529,8 @@ const mapStateToProps = state => ({
     pastProjects: state.cont_data.pastProjects,
     contractor: state.cont_data.selectedContractor,
     photos: state.cont_data.photos,
-    links: state.cont_data.links
+    links: state.cont_data.links,
+    review: state.cont_data.review,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withSnackbar(ProfileView)));

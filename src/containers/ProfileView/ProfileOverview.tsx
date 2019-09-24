@@ -18,6 +18,7 @@ import GroupIcon from '@material-ui/icons/Group';
 
 import InfoView from 'components/InfoView';
 import { Profile } from './types';
+import { ProfileReview } from 'types/global';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     container: {
@@ -79,19 +80,32 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 interface ProfileOverviewProps {
     profile: Profile;
+    review: ProfileReview;
     gotoEditView: () => void;
     gotoReview: () => void;
 }
 
 const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
 
-    const handleEdit = () => {
-        props.gotoEditView();
-    }
 
     const classes = useStyles({});
-    const { profile } = props;
+    const { profile, review, gotoEditView, gotoReview } = props;
 
+    const handleEdit = () => {
+        gotoEditView();
+    }
+
+    const rates = [
+        review.fiveStarRating,
+        review.fourStarRating,
+        review.threeStarRating,
+        review.twoStarRating,
+        review.oneStarRating
+    ];
+    let rating = 0;
+    if (review.reviews > 0) {
+        rating = (rates.reduce((pre, cur, idx) => pre + cur * (5 - idx), 0)) / review.reviews;
+    }
     return (
         <Card className={classes.container}>
             <Box className={classes.row}>
@@ -105,8 +119,8 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
                         {profile.address.company}
                     </Typography>
                     <Box className={classes.rating}>
-                        <Rating precision={0.1} value={3.6} readOnly size='small' style={{ marginRight: 16 }} />
-                        <Link onClick={props.gotoReview} className={classes.link}>
+                        <Rating precision={0.1} value={rating} readOnly size='small' style={{ marginRight: 16 }} />
+                        <Link onClick={gotoReview} className={classes.link}>
                             Ask Review
     					</Link>
                     </Box>

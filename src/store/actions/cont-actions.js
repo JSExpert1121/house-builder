@@ -12,7 +12,8 @@ import {
 	SPECIALTIES_LOADED,
 	PAST_PROJECTS_LOADED,
 	PROFILE_LINKS_LOADED,
-	PROFILE_PHOTOS_LOADED
+	PROFILE_PHOTOS_LOADED,
+	PROFILE_REVIEW_LOADED
 } from '../constants/cont-action-types';
 
 import ContApi from 'services/contractor';
@@ -48,6 +49,10 @@ export const linksLoaded = data => ({
 	type: PROFILE_LINKS_LOADED,
 	payload: data
 });
+export const reviewLoaded = data => ({
+	type: PROFILE_REVIEW_LOADED,
+	payload: data
+});
 
 export const createContractor = contractor => dispatch => ContApi.createContractor(contractor);
 export const deleteContractor = id => dispatch => ContApi.deleteContractor(id);
@@ -74,6 +79,9 @@ export const getContractorDetailById = id => dispatch => {
 	});
 };
 
+export const getProfileReview = id => dispatch => ContApi.getReviews(id).then(data => {
+	dispatch(reviewLoaded(data));
+});
 export const getProfilePhotos = id => dispatch => ContApi.getPhotos(id).then(data => {
 	dispatch(photosLoaded(data));
 });

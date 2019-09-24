@@ -194,3 +194,12 @@ export type BreadcrumbInfo = {
 	id: string;
 	name: string;
 }
+
+export type ProfileReview = {
+	oneStarRating: number;
+	twoStarRating: number;
+	threeStarRating: number;
+	fourStarRating: number;
+	fiveStarRating: number;
+	reviews: number;
+}
