@@ -86,6 +86,7 @@ export interface IProfileLicenseProps extends StyledComponentProps {
     contId: string;
     licenses: any[];
     handleSubmit: (city: string, type: string, number: string, file: File) => Promise<void>;
+    delete: (name: string) => Promise<void>;
 }
 
 interface IProfileLicenseState {
@@ -122,6 +123,12 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
             city: '',
             type: '',
             number: '',
+            file: undefined,
+            url: undefined,
+            cityError: undefined,
+            typeError: undefined,
+            numError: undefined,
+            fileError: undefined,
             licInFocus: ''
         });
     }
@@ -157,9 +164,9 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
         reader.readAsDataURL(file);
     });
 
-    handleDelLicense = (e: React.MouseEvent, id: string) => {
+    handleDelLicense = (e: React.MouseEvent, name: string) => {
         e.stopPropagation();
-        console.log('Delete License');
+        this.props.delete(name);
     }
 
     public render() {
@@ -168,7 +175,7 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
         const rootDir = process.env.REACT_APP_PROJECT_API + `/contractors/${contId}/files/`;
         const lics = licenses.map(lic => {
             const items = lic.note.split('__');
-            return { id: lic.id, url: rootDir + lic.name, city: items[0], type: items[1], number: items[2] };
+            return { id: lic.id, name: lic.name, url: rootDir + lic.name, city: items[0], type: items[1], number: items[2] };
         });
 
         return (

@@ -63,7 +63,7 @@ interface IAskReviewProps {
     hide: () => void;
     contId: string;
     company: string;
-    askReview: (emails: string[]) => Promise<void>;
+    askReview: (emails: string[]) => Promise<boolean>;
 }
 
 const AskReview: React.FunctionComponent<IAskReviewProps> = (props) => {
@@ -75,9 +75,11 @@ const AskReview: React.FunctionComponent<IAskReviewProps> = (props) => {
     const [mailRate, setMailRate] = React.useState(5.0);
     const [msg, setMsg] = React.useState(`Thanks for being a valued customer. I just signed up on find more excellent customers like you, and reviews are a big part of my profile. Can you take a moment to write a couple of sentences about working with me? I'd love if my future customers could hear about your experience firsthand. \r\nThanks, ${company}`);
 
-    const onSendRequest = () => {
+    const onSendRequest = async () => {
         const reals = mails.filter(mail => mail.length > 0);
-        askReview(reals);
+        if (reals.length === 0) return;
+        const res = await askReview(reals);
+        if (res) setMails(['']);
     }
 
     const getLink = () => {
@@ -103,9 +105,14 @@ const AskReview: React.FunctionComponent<IAskReviewProps> = (props) => {
         ])
     }
 
+    const close = () => {
+        setMails(['']);
+        hide();
+    }
+
     const classes = useStyles({});
     return (
-        <Dialog open={show} onClose={hide}>
+        <Dialog open={show} onClose={close}>
             <DialogTitle id="review-dialog-title">
                 <Typography className={classes.title}>
                     {'Get reviews from past customers'}

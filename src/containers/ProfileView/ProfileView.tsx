@@ -177,6 +177,22 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         }
     }
 
+    deleteLicense = async (name: string) => {
+        const { userProfile, getLicenses, showMessage } = this.props;
+        this.setState({ isBusy: true });
+        try {
+            const id = userProfile.user_metadata.contractor_id;
+            await ContApi.deleteFile(id, name);
+            await getLicenses(id);
+            showMessage(true, 'License deleted');
+            this.setState({ isBusy: false });
+        } catch (error) {
+            console.log('ProfileLicensesView.handleSubmit: ', error);
+            showMessage(false, 'License delete failed');
+            this.setState({ isBusy: false });
+        }
+    }
+
     uploadProject = async (title: string, price: number, location: string, service: string, duration: number, unit: string, year: number, desc: string, files: File[]) => {
         let period = 0;
         if (unit.startsWith('day')) period = duration;
@@ -435,10 +451,12 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             await ContApi.requestReview(contId, mails);
             this.setState({ isBusy: false, showReview: false });
             showMessage(true, 'Request sent');
+            return true;
         } catch (error) {
             console.log('ProfileView.reqReview: ', error);
             this.setState({ isBusy: false });
             showMessage(false, 'Request failed');
+            return false;
         }
     }
 
@@ -488,6 +506,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                         contId={contId}
                         licenses={license}
                         handleSubmit={this.uploadLicense}
+                        delete={this.deleteLicense}
                     />
                     <ProfileProjectsView
                         addProject={this.uploadProject}
