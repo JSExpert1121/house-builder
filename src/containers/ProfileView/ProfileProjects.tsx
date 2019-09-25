@@ -224,8 +224,10 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
         if (!this.state.editing) {
             const reader = new FileReader();
             reader.addEventListener("load", () => {
-                this.setState({ files: [...this.state.files, file] });
-                this.setState({ urls: [...this.state.urls, reader.result as string] });
+                this.setState({
+                    files: [...this.state.files, file],
+                    urls: [...this.state.urls, reader.result as string]
+                });
                 resolve();
             });
             reader.readAsDataURL(file);

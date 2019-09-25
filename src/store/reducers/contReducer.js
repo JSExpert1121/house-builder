@@ -13,7 +13,8 @@ import {
 	PAST_PROJECTS_LOADED,
 	PROFILE_LINKS_LOADED,
 	PROFILE_PHOTOS_LOADED,
-	PROFILE_REVIEW_LOADED
+	PROFILE_REVIEW_LOADED,
+	PROFILE_LICENSE_LOADED
 } from '../constants/cont-action-types';
 import {
 	handleActions
@@ -30,7 +31,8 @@ const initialState = {
 	pastProjects: null,
 	photos: [],
 	links: [],
-	review: {}
+	review: {},
+	license: []
 };
 
 const templateReducer = handleActions({
@@ -101,6 +103,10 @@ const templateReducer = handleActions({
 		[PROFILE_REVIEW_LOADED]: (state, action) => ({
 			...state,
 			review: action.payload
+		}),
+		[PROFILE_LICENSE_LOADED]: (state, action) => ({
+			...state,
+			license: action.payload
 		})
 	},
 	initialState

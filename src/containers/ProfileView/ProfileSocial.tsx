@@ -33,6 +33,11 @@ const styles = (theme: Theme) => createStyles({
         color: 'blue',
         cursor: 'pointer'
     },
+    error: {
+        color: 'red',
+        fontSize: '0.75rem',
+        margin: theme.spacing(-1.5, 1, 0)
+    },
     center: {
         left: 'calc(50% - 20px)',
         top: 'calc(50% - 20px)',
@@ -48,8 +53,11 @@ export interface IProfileSocialProps extends StyledComponentProps {
 interface IProfileSocialState {
     edit: boolean;
     facebook: string;
+    fbError?: string;
     instagram: string;
+    insError?: string;
     twitter: string;
+    twError?: string;
 }
 
 class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialState> {
@@ -60,21 +68,32 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
         this.state = {
             edit: false,
             facebook: '',
+            fbError: undefined,
             instagram: '',
+            insError: undefined,
             twitter: '',
+            twError: undefined
         }
     }
 
     startEdit = () => {
         const { links } = this.props;
-        const facebooks = links.filter(link => link.name.startsWith('https') && link.name.includes('facebook'));
-        const instagrams = links.filter(link => link.name.startsWith('https') && link.name.includes('instagram'));
-        const twitters = links.filter(link => link.name.startsWith('https') && link.name.includes('twitter'));
+        const facebooks = links.filter(link => link.type === 'FACEBOOK');
+        const instagrams = links.filter(link => link.type === 'INSTAGRAM');
+        const twitters = links.filter(link => link.type === 'TWITTER');
         const fb = facebooks.length > 0 ? decodeURIComponent(facebooks[0].name) : '';
         const ins = instagrams.length > 0 ? decodeURIComponent(instagrams[0].name) : '';
         const tw = twitters.length > 0 ? decodeURIComponent(twitters[0].name) : '';
 
-        this.setState({ edit: true, facebook: fb, instagram: ins, twitter: tw });
+        this.setState({
+            edit: true,
+            facebook: fb,
+            instagram: ins,
+            twitter: tw,
+            fbError: undefined,
+            insError: undefined,
+            twError: undefined
+        });
     }
 
     endEdit = () => {
@@ -83,6 +102,17 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
 
     handleSubmit = () => {
         const { facebook, instagram, twitter } = this.state;
+        let fbError = undefined;
+        let insError = undefined;
+        let twError = undefined;
+        if (!!facebook && !facebook.includes('facebook.com/')) fbError = 'Invalid URL';
+        if (!!instagram && !instagram.includes('instagram.com/')) insError = 'Invalid URL';
+        if (!!twitter && !twitter.includes('twitter.com/')) twError = 'Invalid URL';
+        if (fbError || insError || twError) {
+            this.setState({ fbError, insError, twError });
+            return;
+        }
+
         this.props.handleSubmit(facebook, instagram, twitter);
         this.setState({ edit: false });
     }
@@ -95,10 +125,10 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
 
     public render() {
         const { classes, links } = this.props;
-        const { facebook, instagram, twitter, edit } = this.state;
-        const facebooks = links.filter(link => link.name.startsWith('https') && link.name.includes('facebook'));
-        const instagrams = links.filter(link => link.name.startsWith('https') && link.name.includes('instagram'));
-        const twitters = links.filter(link => link.name.startsWith('https') && link.name.includes('twitter'));
+        const { facebook, instagram, twitter, edit, twError, insError, fbError } = this.state;
+        const facebooks = links.filter(link => link.type === 'FACEBOOK');
+        const instagrams = links.filter(link => link.type === 'INSTAGRAM');
+        const twitters = links.filter(link => link.type === 'TWITTER');
         const fb = facebooks.length > 0 ? decodeURIComponent(facebooks[0].name) : '';
         const ins = instagrams.length > 0 ? decodeURIComponent(instagrams[0].name) : '';
         const tw = twitters.length > 0 ? decodeURIComponent(twitters[0].name) : '';
@@ -146,14 +176,14 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                                     </Typography>
                                     <Link onClick={this.handleSubmit} className={classes.link}>
                                         Save
-						        </Link>
+						            </Link>
                                     <Link
                                         onClick={this.endEdit}
                                         className={classes.link}
                                         style={{ paddingLeft: 12, color: 'red' }}
                                     >
                                         Cancel
-						        </Link>
+						            </Link>
                                 </Box>
                             </ListItem>
                             <ListItem>
@@ -161,15 +191,20 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                                     <InputLabel style={{ display: 'block' }}>
                                         <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='facebook' />
                                         &nbsp;&nbsp;&nbsp;Facebook
-                                </InputLabel>
+                                    </InputLabel>
                                     <Input
                                         placeholder={`Enter Facebook URL`}
                                         margin="dense"
                                         fullWidth
                                         value={facebook}
                                         style={{ marginBottom: 16 }}
-                                        onChange={e => this.setState({ facebook: e.target.value })}
+                                        onChange={e => this.setState({ facebook: e.target.value, fbError: undefined })}
                                     />
+                                    {!!fbError && (
+                                        <InputLabel className={classes.error}>
+                                            {fbError}
+                                        </InputLabel>
+                                    )}
                                 </Box>
                             </ListItem>
                             <ListItem>
@@ -177,15 +212,20 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                                     <InputLabel style={{ display: 'block' }}>
                                         <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='instagram' />
                                         &nbsp;&nbsp;&nbsp;Instagram
-                                </InputLabel>
+                                    </InputLabel>
                                     <Input
                                         placeholder={`Enter Instagram URL`}
                                         margin="dense"
                                         fullWidth
                                         value={instagram}
                                         style={{ marginBottom: 16 }}
-                                        onChange={e => this.setState({ instagram: e.target.value })}
+                                        onChange={e => this.setState({ instagram: e.target.value, insError: undefined })}
                                     />
+                                    {!!insError && (
+                                        <InputLabel className={classes.error}>
+                                            {insError}
+                                        </InputLabel>
+                                    )}
                                 </Box>
                             </ListItem>
                             <ListItem>
@@ -193,15 +233,20 @@ class ProfileSocial extends React.Component<IProfileSocialProps, IProfileSocialS
                                     <InputLabel style={{ display: 'block' }}>
                                         <SocialIcon style={{ width: 20, height: 20, marginBottom: 4, fontSize: '0.875rem' }} network='twitter' />
                                         &nbsp;&nbsp;&nbsp;Twitter
-                                </InputLabel>
+                                    </InputLabel>
                                     <Input
                                         placeholder={`Enter Twitter URL`}
                                         margin="dense"
                                         fullWidth
                                         value={twitter}
                                         style={{ marginBottom: 16 }}
-                                        onChange={e => this.setState({ twitter: e.target.value })}
+                                        onChange={e => this.setState({ twitter: e.target.value, twError: undefined })}
                                     />
+                                    {!!twError && (
+                                        <InputLabel className={classes.error}>
+                                            {twError}
+                                        </InputLabel>
+                                    )}
                                 </Box>
                             </ListItem>
                         </List>

@@ -36,9 +36,7 @@ export default {
 	uploadLicense: (id, file, city, type, number) => {
 		const formData = new FormData();
 		formData.append('file', file);
-		formData.append('city', city);
-		formData.append('lictype', type);
-		formData.append('number', number);
+		formData.append('note', `${city}__${type}__${number}`);
 		formData.append('type', 'LICENSE');
 		return Axios.post(CONT_API_PATH + id + '/files/upload/document', formData, {
 			headers: {
@@ -46,6 +44,7 @@ export default {
 			}
 		}).then(res => res.data);
 	},
+	getLicenses: id => Axios.get(CONT_API_PATH + id + '/files/document').then(res => res.data),
 	uploadPastProject: (id, title, desc, price, year, duration, specId) => Axios.post(
 		CONT_API_PATH + id + '/projects/past', {
 			project: {
@@ -85,9 +84,10 @@ export default {
 		note: title
 	}).then(res => res.data),
 	getPhotos: id => Axios.get(CONT_API_PATH + id + '/photos').then(res => res.data),
-	addLink: (id, link) => Axios.post(CONT_API_PATH + id + '/link', {}, {
+	addLink: (id, link, type) => Axios.post(CONT_API_PATH + id + '/link', {}, {
 		params: {
-			url: link
+			url: link,
+			type
 		}
 	}).then(res => res.data),
 	getLinks: id => Axios.get(CONT_API_PATH + id + '/link').then(res => res.data),

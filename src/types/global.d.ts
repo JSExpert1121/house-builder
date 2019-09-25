@@ -49,7 +49,7 @@ export type CommonInfo = {
 
 export interface FileInfo extends CommonInfo {
 	name: string;
-	caption?: string;
+	note?: string;
 }
 
 export interface ProjectOptionPostInfo {

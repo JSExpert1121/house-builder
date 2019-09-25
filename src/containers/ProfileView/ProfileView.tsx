@@ -60,6 +60,7 @@ interface IProfileViewProps extends RouteComponentProps, withSnackbarProps, Styl
     pastProjects: Projects;
     photos: any[];
     links: any[];
+    license: any[];
     review: ProfileReview;
     selectContractor: (id: string) => any;
     getPastProjects: (id: string) => Promise<void>;
@@ -67,6 +68,7 @@ interface IProfileViewProps extends RouteComponentProps, withSnackbarProps, Styl
     setSelectedContractor: (data: any) => void;
     getPhotos: (id: string) => Promise<void>;
     getLinks: (id: string) => Promise<void>;
+    getLicenses: (id: string) => Promise<void>;
 }
 
 interface IProfileViewState {
@@ -160,12 +162,12 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
     }
 
     uploadLicense = async (city: string, type: string, number: string, file: File) => {
-        const { userProfile, selectContractor, showMessage } = this.props;
+        const { userProfile, getLicenses, showMessage } = this.props;
         this.setState({ isBusy: true });
         try {
             const id = userProfile.user_metadata.contractor_id;
             await ContApi.uploadLicense(id, file, city, type, number);
-            await selectContractor(id);
+            await getLicenses(id);
             showMessage(true, 'License uploaded');
             this.setState({ isBusy: false });
         } catch (error) {
@@ -187,7 +189,6 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
             const id = userProfile.user_metadata.contractor_id;
             const proj = await ContApi.uploadPastProject(id, title, desc, price, year, period, service)
             await ProjApi.addFiles(proj.id, files);
-            // await selectContractor(id);
             await getPastProjects(id);
             this.setState({ isBusy: false });
             showMessage(true, 'Project uploaded');
@@ -322,7 +323,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
     }
 
     updateTitle = async (id: string, title: string) => {
-        if (title.length === 0) return;
+        if (!title || title.length === 0) return;
         this.setState({ isBusy: true });
         try {
             await ContApi.updateTitle(id, title);
@@ -356,9 +357,9 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         this.setState({ isBusy: true });
         try {
             const id = userProfile.user_metadata.contractor_id;
-            !!facebook && facebook.startsWith('https://www.facebook.com') && await ContApi.addLink(id, facebook);
-            !!instagram && instagram.startsWith('https://www.instagram.com') && await ContApi.addLink(id, instagram);
-            !!twitter && twitter.startsWith('https://twitter.com') && await ContApi.addLink(id, twitter);
+            !!facebook && await ContApi.addLink(id, facebook, 'FACEBOOK');
+            !!instagram && await ContApi.addLink(id, instagram, 'INSTAGRAM');
+            !!twitter && await ContApi.addLink(id, twitter, 'TWITTER');
             await getLinks(id);
             showMessage(true, 'Link added');
             this.setState({ isBusy: false });
@@ -430,7 +431,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         const {
             classes, userProfile,
             specialties, pastProjects,
-            photos, links,
+            photos, links, license,
             contractor, review
         } = this.props;
         const contId = userProfile.user_metadata.contractor_id;
@@ -468,7 +469,8 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                         askReview={this.openReview}
                     />
                     <ProfileLicensesView
-                        userProfile={userProfile}
+                        contId={contId}
+                        licenses={license}
                         handleSubmit={this.uploadLicense}
                     />
                     <ProfileProjectsView
@@ -504,7 +506,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                 </Box>
                 <AskReview
                     contId={contId}
-                    company={contractor.address.company}
+                    company={!!contractor.address && contractor.address.company}
                     show={showReview}
                     hide={this.hideReview}
                 />
@@ -520,6 +522,7 @@ const mapDispatchToProps = {
     getPastProjects: ContActions.getPastProjects,
     getPhotos: ContActions.getProfilePhotos,
     getLinks: ContActions.getProfileLinks,
+    getLicenses: ContActions.getProfileLicenses,
     setSelectedContractor: ContActions.setSelectedContractor,
 };
 
@@ -531,6 +534,7 @@ const mapStateToProps = state => ({
     photos: state.cont_data.photos,
     links: state.cont_data.links,
     review: state.cont_data.review,
+    license: state.cont_data.license
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(withSnackbar(ProfileView)));

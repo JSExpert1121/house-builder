@@ -9,15 +9,15 @@ import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Chip from '@material-ui/core/Chip';
+import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
 import { createStyles, Theme, withStyles, StyledComponentProps } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/CheckCircleOutline';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import UploadButton from 'components/CustomUpload/UploadButton';
-import { UserProfile } from 'types/global';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -43,6 +43,7 @@ const styles = (theme: Theme) => createStyles({
         width: 120,
         border: '1px solid #4a148c',
         color: 'white',
+        marginRight: 16,
         backgroundColor: theme.palette.primary.light,
         '&:hover': {
             backgroundColor: theme.palette.primary.dark,
@@ -54,6 +55,26 @@ const styles = (theme: Theme) => createStyles({
     bold: {
         fontWeight: 600
     },
+    error: {
+        color: 'red',
+        fontSize: '0.75rem',
+        margin: theme.spacing(0.5, 0)
+    },
+    addBox: {
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+    },
+    card: {
+        padding: 0,
+        fontSize: '0.875rem',
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        marginBottom: 16
+    },
     center: {
         left: 'calc(50% - 20px)',
         top: 'calc(50% - 20px)',
@@ -62,7 +83,8 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface IProfileLicenseProps extends StyledComponentProps {
-    userProfile: UserProfile;
+    contId: string;
+    licenses: any[];
     handleSubmit: (city: string, type: string, number: string, file: File) => Promise<void>;
 }
 
@@ -71,7 +93,13 @@ interface IProfileLicenseState {
     city: string;
     type: string;
     number: string;
+    cityError?: string;
+    typeError?: string;
+    numError?: string;
+    fileError?: string;
     file?: File;
+    url?: string;
+    licInFocus: string;
 }
 
 class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicenseState> {
@@ -84,7 +112,7 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
             city: '',
             type: '',
             number: '',
-            file: undefined
+            licInFocus: ''
         }
     }
 
@@ -98,17 +126,43 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
 
     handleSubmit = () => {
         const { city, type, number, file } = this.state;
+        let cityError, typeError, numError, fileError;
+        if (city.length === 0) cityError = 'Invalid city';
+        if (type.length === 0) typeError = 'Invalid type';
+        if (number.length === 0) numError = 'Invalid number';
+        if (!file) fileError = 'File not attached';
+        if (cityError || typeError || numError || fileError) {
+            this.setState({ cityError, typeError, numError, fileError });
+            return;
+        }
+
         this.props.handleSubmit(city, type, number, file);
         this.setState({ dialog: false });
     }
 
-    handleUpload = (file: File) => {
-        this.setState({ file });
+    handleUpload = (file: File): Promise<void> => new Promise(resolve => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            this.setState({ file, url: reader.result as string, fileError: undefined });
+            resolve();
+        });
+        reader.readAsDataURL(file);
+    });
+
+    handleDelLicense = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        console.log('Delete License');
     }
 
     public render() {
-        const { classes } = this.props;
-        const { dialog, city, type, number, file } = this.state;
+        const { classes, licenses, contId } = this.props;
+        const { dialog, city, type, number, url, cityError, typeError, numError, fileError, licInFocus } = this.state;
+        const rootDir = process.env.REACT_APP_PROJECT_API + `/contractors/${contId}/files/`;
+        const lics = licenses.map(lic => {
+            const items = lic.note.split('__');
+            return { id: lic.id, url: rootDir + lic.name, city: items[0], type: items[1], number: items[2] };
+        });
+
         return (
             <>
                 <Card className={classes.container}>
@@ -118,7 +172,7 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                 Credentials
                             </Typography>
                         </ListItem>
-                        <ListItem>
+                        <ListItem id='license-description'>
                             <Box style={{ width: '100%' }}>
                                 <Box style={{ display: 'flex' }}>
                                     <CheckIcon style={{ marginRight: 16, fontSize: 24, padding: 4 }} />
@@ -138,6 +192,43 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                         Add
                                     </Button>
                                 </Box>
+                            </Box>
+                        </ListItem>
+                        <ListItem id='exiting-licenses'>
+                            <Box style={{ display: 'flex', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
+                                {lics.map((item, index) => (
+                                    <Card
+                                        key={index}
+                                        style={{ width: 256, height: 256, boxShadow: 'none', display: 'flex' }}
+                                        onMouseEnter={() => this.setState({ licInFocus: item.id })}
+                                        onMouseLeave={() => this.setState({ licInFocus: '' })}
+                                    >
+                                        <CardContent className={classes.card}>
+                                            <Box className={classes.addBox} style={{ position: 'relative' }}>
+                                                <img
+                                                    alt={item.number}
+                                                    style={{ width: 256, height: 188 }}
+                                                    src={item.url}
+                                                />
+                                                {licInFocus === item.id && (
+                                                    <IconButton
+                                                        style={{ position: 'absolute', right: 0, top: 0 }}
+                                                        color="primary"
+                                                        onClick={(e) => this.handleDelLicense(e, item.id)}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                )}
+                                            </Box>
+                                            <Typography style={{ fontWeight: 500, fontSize: '1rem', marginTop: 8 }}>
+                                                {`City: ${item.city}`}
+                                            </Typography>
+                                            <Typography style={{ fontSize: '1rem' }}>
+                                                {`Type. $${item.type}`}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                ))}
                             </Box>
                         </ListItem>
                     </List>
@@ -160,7 +251,9 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                 margin="dense"
                                 fullWidth
                                 value={city}
-                                onChange={e => this.setState({ city: e.target.value })}
+                                error={!!cityError}
+                                helperText={cityError}
+                                onChange={e => this.setState({ city: e.target.value, cityError: undefined })}
                                 required
                             />
                             <TextField
@@ -168,7 +261,9 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                 margin="dense"
                                 fullWidth
                                 value={type}
-                                onChange={e => this.setState({ type: e.target.value })}
+                                error={!!typeError}
+                                helperText={typeError}
+                                onChange={e => this.setState({ type: e.target.value, typeError: undefined })}
                                 required
                             />
                             <TextField
@@ -176,31 +271,52 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                 margin="dense"
                                 fullWidth
                                 value={number}
-                                onChange={e => this.setState({ number: e.target.value })}
+                                error={!!numError}
+                                helperText={numError}
+                                onChange={e => this.setState({ number: e.target.value, numError: undefined })}
                                 required
                             />
-                            <Box style={{ flex: 1, marginTop: 8 }}>
-                                <UploadButton
-                                    multiple={false}
-                                    filter={'image/*'}
-                                    handleChange={this.handleUpload}
-                                    variant={'outlined'}
-                                    style={{ marginRight: 16 }}
-                                >
-                                    Upload Picture
-							    </UploadButton>
-                                {!!file && <Chip label={file.name} variant='outlined' />}
+                            <Box style={{ display: 'flex', margin: '8px 0 12px' }}>
+                                <Box style={{ flex: 1, height: 120, display: 'flex' }}>
+                                    <Box style={{ display: 'inline-block' }}>
+                                        <UploadButton
+                                            multiple={false}
+                                            filter={'image/*'}
+                                            handleChange={this.handleUpload}
+                                            variant={'outlined'}
+                                            style={{ marginRight: 16 }}
+                                        >
+                                            Upload Picture
+    							        </UploadButton>
+                                        {fileError && (
+                                            <Typography className={classes.error}>
+                                                {fileError}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                    {url && (
+                                        <img src={url} alt='license' style={{ width: 120, height: 120 }} />
+                                    )}
+                                </Box>
+                                <Box style={{ display: 'flex', alignItems: 'flex-end' }}>
+                                    <Button onClick={this.handleSubmit} autoFocus className={classes.submit} variant={'outlined'}>
+                                        Submit
+                                    </Button>
+                                    <Button onClick={this.handleCancel} variant={'outlined'}>
+                                        Cancel
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
                     </DialogContent>
-                    <DialogActions style={{ display: 'flex', padding: 24 }}>
+                    {/* <DialogActions style={{ display: 'flex', padding: 24 }}>
                         <Button onClick={this.handleSubmit} autoFocus className={classes.submit} variant={'outlined'}>
                             Submit
                         </Button>
                         <Button onClick={this.handleCancel} variant={'outlined'}>
                             Cancel
                         </Button>
-                    </DialogActions>
+                    </DialogActions> */}
                     <DialogContent style={{ padding: '8px 24px 24px' }}>
                         <Typography style={{ fontSize: '0.875rem', fontWeight: 600, paddingTop: 8 }}>
                             Why show your license?
