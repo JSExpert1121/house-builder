@@ -16,11 +16,11 @@ import Card from '@material-ui/core/Card';
 import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import TableCell from '@material-ui/core/TableCell';
 import { withStyles, Theme, createStyles, StyledComponentProps } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import MultiSelect, { SelectObject } from 'components/Select/MultiSelect';
-import CustomTableCell from 'components/shared/CustomTableCell';
 
 import { Specialties } from 'types/global';
 import Button from 'components/CustomButtons/Button';
@@ -71,6 +71,19 @@ interface ProfileSpecViewState {
     specs: string[];
     suggestions: SelectObject[];
 }
+
+const WhiteTableHead = withStyles({
+    root: {
+        backgroundColor: 'white'
+    }
+})(TableHead);
+const TableHeadCell = withStyles({
+    root: {
+        fontSize: '0.875rem',
+        color: 'rgba(0,0,0,0.87)',
+        fontWeight: 500
+    }
+})(TableCell);
 
 class ProfileSpecView extends React.Component<ProfileSpecViewProps, ProfileSpecViewState> {
     constructor(props: Readonly<ProfileSpecViewProps>) {
@@ -139,25 +152,27 @@ class ProfileSpecView extends React.Component<ProfileSpecViewProps, ProfileSpecV
             <>
                 <Card className={classes.container}>
                     <Table className={classes.relative}>
-                        <TableHead>
+                        <WhiteTableHead>
                             <TableRow>
-                                <CustomTableCell align="center">Name</CustomTableCell>
-                                <CustomTableCell align="center">Value</CustomTableCell>
-                                <CustomTableCell align="center">Description</CustomTableCell>
-                                <CustomTableCell align="center">
-                                    Action
-                                </CustomTableCell>
+                                <TableHeadCell align="center">Name</TableHeadCell>
+                                <TableHeadCell align="center">Value</TableHeadCell>
+                                <TableHeadCell align="center">Description</TableHeadCell>
+                                <TableHeadCell align="center">Action</TableHeadCell>
                             </TableRow>
-                        </TableHead>
+                        </WhiteTableHead>
                         <TableBody>
                             {contractor.contractorSpecialties.map(row => (
                                 <TableRow className={classes.row} key={row.id} hover>
-                                    <CustomTableCell component="th" scope="row" align="center">
+                                    <TableCell component="th" scope="row" align="center">
                                         {row.specialty.name}
-                                    </CustomTableCell>
-                                    <CustomTableCell>{row.specialty.value}</CustomTableCell>
-                                    <CustomTableCell>{row.specialty.description}</CustomTableCell>
-                                    <CustomTableCell align="center">
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {row.specialty.value}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {row.specialty.description}
+                                    </TableCell>
+                                    <TableCell align="center">
                                         <IconButton
                                             className={classes.button}
                                             aria-label="Delete"
@@ -166,7 +181,7 @@ class ProfileSpecView extends React.Component<ProfileSpecViewProps, ProfileSpecV
                                         >
                                             <DeleteIcon fontSize='small' />
                                         </IconButton>
-                                    </CustomTableCell>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -193,10 +208,10 @@ class ProfileSpecView extends React.Component<ProfileSpecViewProps, ProfileSpecV
                                         variant="contained"
                                         color="primary"
                                         className={classes.button}
-                                        onClick={this.trySave}
+                                        onClick={this.saveSpecialty}
                                     >
                                         Save
-                                        </Button>
+                                    </Button>
                                 </Box>
                             </Box>
                         </ListItem>

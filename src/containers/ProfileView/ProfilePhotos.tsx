@@ -90,7 +90,7 @@ export interface IProfilePhotosProps extends StyledComponentProps {
     contId: string;
     photos: FileInfo[];
     videos: FileInfo[];
-    uploadPhoto: (files: File) => Promise<void>;
+    uploadPhoto: (file: File) => Promise<void>;
     uploadVideo: (file: string) => Promise<void>;
     updateTitle: (id: string, title: string) => Promise<void>;
     delete: (id: string) => Promise<void>;
@@ -125,6 +125,11 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
         this.props.delete(id);
     }
 
+    handleUpdate = (files: File[]) => {
+        if (files.length !== 1) return;
+        this.props.uploadPhoto(files[0]);
+    }
+
     addVideo = (link: string) => {
         if (link.length > 0) {
             this.props.uploadVideo(link);
@@ -132,7 +137,7 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
     }
 
     public render() {
-        const { classes, photos, videos, uploadPhoto, contId } = this.props;
+        const { classes, photos, videos, contId } = this.props;
         const { title, editing, hover, videoURL } = this.state;
 
         const vids = videos.filter(link => link.name.startsWith('https') && link.name.includes('youtube'));
@@ -162,7 +167,7 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                         btnId={'photos-upload-image'}
                                         multiple={false}
                                         className={classes.submit}
-                                        handleChange={uploadPhoto}
+                                        handleChange={this.handleUpdate}
                                     >
                                         Upload
                                     </UploadButton>

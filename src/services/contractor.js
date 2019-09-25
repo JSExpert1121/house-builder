@@ -33,6 +33,7 @@ export default {
 		address
 	}).then(res => res.data),
 	getReviews: id => Axios.get(CONT_API_PATH + id + '/get_reviews').then(res => res.data),
+	requestReview: (id, emails) => Axios.post(CONT_API_PATH + id + '/request_reviews', emails).then(res => res.data),
 	uploadLicense: (id, file, city, type, number) => {
 		const formData = new FormData();
 		formData.append('file', file);

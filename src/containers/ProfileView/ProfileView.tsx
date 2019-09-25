@@ -426,6 +426,22 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
         this.setState({ showReview: false });
     }
 
+    reqReview = async (mails: string[]) => {
+        const { userProfile, showMessage } = this.props;
+        const contId = userProfile.user_metadata.contractor_id;
+
+        this.setState({ isBusy: true });
+        try {
+            await ContApi.requestReview(contId, mails);
+            this.setState({ isBusy: false, showReview: false });
+            showMessage(true, 'Request sent');
+        } catch (error) {
+            console.log('ProfileView.reqReview: ', error);
+            this.setState({ isBusy: false });
+            showMessage(false, 'Request failed');
+        }
+    }
+
     render() {
         const { profile, editing, isBusy, showReview } = this.state;
         const {
@@ -506,9 +522,10 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
                 </Box>
                 <AskReview
                     contId={contId}
-                    company={!!contractor.address && contractor.address.company}
+                    company={!!contractor.address ? contractor.address.company : ''}
                     show={showReview}
                     hide={this.hideReview}
+                    askReview={this.reqReview}
                 />
                 {isBusy && <CircularProgress className={classes.center} />}
             </Box >

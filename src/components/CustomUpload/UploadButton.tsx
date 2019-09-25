@@ -7,7 +7,7 @@ interface IUploadButtonProps extends ButtonProps {
     btnId?: string;
     filter: string;
     multiple: boolean;
-    handleChange: (files: File) => void | Promise<void>;
+    handleChange: (files: File[]) => void | Promise<void>;
 }
 
 const UploadButton: React.FC<IUploadButtonProps> = (props) => {
@@ -17,11 +17,11 @@ const UploadButton: React.FC<IUploadButtonProps> = (props) => {
     const onChange = e => {
         const fileList = e.target.files;
         const files = [];
-        for (let file in fileList) {
+        for (let file of fileList) {
             files.push(file);
         }
 
-        handleChange(fileList[0]);
+        handleChange(files);
     }
 
     return (

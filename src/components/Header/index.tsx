@@ -31,6 +31,9 @@ import { Menu, MenuItem } from '@material-ui/core';
 import { MenuProps } from '@material-ui/core/Menu';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import CustomAvatar from 'components/CustomAvatar';
+
+import ContApi from 'services/contractor';
 
 const StyledMenu = withStyles({
 	paper: {
@@ -180,7 +183,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 						onClick={this.handleProfileMenuOpen}
 						color="inherit"
 					>
-						<AccountCircle />
+						<CustomAvatar
+							src={ContApi.getAvatar(this.props.profile.user_metadata.contractor_id)}
+							size={24}
+						>
+							<AccountCircle />
+						</CustomAvatar>
 					</IconButton>
 				</div>
 				<div className={classes.sectionMobile}>

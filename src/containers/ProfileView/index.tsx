@@ -104,35 +104,10 @@ class ProfilePage extends React.Component<ProfilePageProps> {
 			)
 		}
 
-		// let tab = 0;
-		// if (location.pathname.includes(PROFILE_CONTRACT)) tab = 1;
-		// else if (location.pathname.includes(PROFILE_SPECIALTY)) tab = 2;
 		return (
 			<Box className={classes.root}>
-				{/* <CustomTabs
-					init={tab}
-					tabs={[
-						{
-							href: PROFILE_OVERVIEW,
-							label: 'Profile Detail',
-							icon: AccountCircleIcon,
-						},
-						// {
-						// 	href: PROFILE_CONTRACT,
-						// 	label: 'Files',
-						// 	icon: BallotIcon,
-						// },
-						{
-							href: PROFILE_SPECIALTY,
-							label: 'Specialty',
-							icon: BallotIcon,
-						},
-					]}
-				/> */}
 				<Switch>
-					{/* <SecuredRoute path={PROFILE_CONTRACT} component={ProfileFileView} /> */}
 					<SecuredRoute path={PROFILE_ASKREVIEW} component={ProfileReview} />
-					{/* <SecuredRoute path={PROFILE_SPECIALTY} component={ProfileSpecialty} /> */}
 					<SecuredRoute exact path={PROFILE_OVERVIEW} component={ProfileView} />
 				</Switch>
 			</Box>

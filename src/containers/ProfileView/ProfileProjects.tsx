@@ -177,6 +177,8 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
             title: '',
             price: 0,
             projFiles: [],
+            files: [],
+            urls: [],
             location: '',
             duration: 5,
             unit: units[0],
@@ -218,26 +220,27 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
         }
     }
 
-    handleUpload = (file: File): Promise<void> => new Promise(resolve => {
-        if (!file) return;
+    handleUpload = (files: File[]) => {
+        if (files.length === 0) return;
         const { editing } = this.state;
-        if (!this.state.editing) {
-            const reader = new FileReader();
-            reader.addEventListener("load", () => {
-                this.setState({
-                    files: [...this.state.files, file],
-                    urls: [...this.state.urls, reader.result as string]
+
+        files.forEach(file => {
+            if (!this.state.editing) {
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    this.setState({
+                        files: [...this.state.files, file],
+                        urls: [...this.state.urls, reader.result as string]
+                    });
                 });
-                resolve();
-            });
-            reader.readAsDataURL(file);
-        } else {
-            this.props.addFile(editing, file).then(files => {
-                this.setState({ projFiles: files });
-                resolve();
-            });
-        }
-    })
+                reader.readAsDataURL(file);
+            } else {
+                this.props.addFile(editing, file).then(files => {
+                    this.setState({ projFiles: files });
+                });
+            }
+        });
+    }
 
     handleDelete = (index: number) => {
         const { files, urls } = this.state;
@@ -454,7 +457,7 @@ class ProfileProjects extends React.Component<IProfileProjectsProps, IProfilePro
                                     Consider showing before and after photos, the work in progress, and you or your team at work(20 photos max).
                                 </Typography>
                                 <UploadButton
-                                    multiple={false}
+                                    multiple={true}
                                     btnId={'project-upload-image'}
                                     filter={'image/*'}
                                     handleChange={this.handleUpload}

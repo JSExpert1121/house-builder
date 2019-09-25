@@ -63,11 +63,12 @@ interface IAskReviewProps {
     hide: () => void;
     contId: string;
     company: string;
+    askReview: (emails: string[]) => Promise<void>;
 }
 
 const AskReview: React.FunctionComponent<IAskReviewProps> = (props) => {
 
-    const { contId, company, show, hide } = props;
+    const { contId, company, show, hide, askReview } = props;
     const avatar = ContApi.getAvatar(contId);
 
     const [mails, setMails] = React.useState<string[]>(['']);
@@ -75,7 +76,8 @@ const AskReview: React.FunctionComponent<IAskReviewProps> = (props) => {
     const [msg, setMsg] = React.useState(`Thanks for being a valued customer. I just signed up on find more excellent customers like you, and reviews are a big part of my profile. Can you take a moment to write a couple of sentences about working with me? I'd love if my future customers could hear about your experience firsthand. \r\nThanks, ${company}`);
 
     const onSendRequest = () => {
-        console.log('SendRequest: ');
+        const reals = mails.filter(mail => mail.length > 0);
+        askReview(reals);
     }
 
     const getLink = () => {

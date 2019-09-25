@@ -119,8 +119,9 @@ const ProfileEditView: React.FC<ProfileEditViewProps> = props => {
 		props.gotoOverview();
 	}
 
-	const updatePicture = async (file: File) => {
-		const path = await props.uploadPicture(file);
+	const updatePicture = async (files: File[]) => {
+		if (files.length !== 1) return;
+		const path = await props.uploadPicture(files[0]);
 		if (!!path) {
 			setRand(Date.now());
 		}

@@ -117,7 +117,13 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
     }
 
     handleAdd = () => {
-        this.setState({ dialog: true });
+        this.setState({
+            dialog: true,
+            city: '',
+            type: '',
+            number: '',
+            licInFocus: ''
+        });
     }
 
     handleCancel = () => {
@@ -140,7 +146,9 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
         this.setState({ dialog: false });
     }
 
-    handleUpload = (file: File): Promise<void> => new Promise(resolve => {
+    handleUpload = (files: File[]): Promise<void> => new Promise(resolve => {
+        if (files.length !== 1) return;
+        const file = files[0];
         const reader = new FileReader();
         reader.addEventListener("load", () => {
             this.setState({ file, url: reader.result as string, fileError: undefined });
