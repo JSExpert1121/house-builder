@@ -7,6 +7,9 @@ import Card from '@material-ui/core/Card';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
 
 import NameIcon from '@material-ui/icons/Person';
 import EmailIcon from '@material-ui/icons/Email';
@@ -32,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     row: {
         display: 'flex',
-        padding: theme.spacing(1.5, 0),
-        fontSize: '0.875rem'
+        fontSize: '0.875rem',
+        width: '100%'
     },
     avatar: {
         width: 60,
@@ -63,6 +66,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         fontWeight: 600,
         color: 'blue',
         cursor: 'pointer'
+    },
+    divider: {
+        marginLeft: 16,
+        width: 'calc(100% - 32px)'
     },
     status: {
         position: 'absolute',
@@ -108,78 +115,105 @@ const ProfileOverview: React.FC<ProfileOverviewProps> = props => {
     }
     return (
         <Card className={classes.container}>
-            <Box className={classes.row}>
-                <Avatar
-                    alt="Avatar"
-                    src={profile.picture}
-                    className={classes.avatar}
-                />
-                <Box className={classes.company}>
-                    <Typography className={classes.companyName}>
-                        {profile.address.company}
-                    </Typography>
-                    <Box className={classes.rating}>
-                        <Rating precision={0.1} value={rating} readOnly size='small' style={{ marginRight: 16 }} />
-                        <Link onClick={gotoReview} className={classes.link}>
-                            Ask Review
-    					</Link>
+            <List>
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <Avatar
+                            alt="Avatar"
+                            src={profile.picture}
+                            className={classes.avatar}
+                        />
+                        <Box className={classes.company}>
+                            <Typography className={classes.companyName}>
+                                {profile.address.company}
+                            </Typography>
+                            <Box className={classes.rating}>
+                                <Rating precision={0.1} value={rating} readOnly size='small' style={{ marginRight: 16 }} />
+                                <Link onClick={gotoReview} className={classes.link}>
+                                    Ask Review
+    					        </Link>
+                            </Box>
+                        </Box>
+                        <Box>
+                            <Link onClick={handleEdit} className={classes.link}>
+                                Edit
+					        </Link>
+                        </Box>
                     </Box>
-                </Box>
-                <Box>
-                    <Link onClick={handleEdit} className={classes.link}>
-                        Edit
-					</Link>
-                </Box>
-            </Box>
-            <Box className={classes.row}>
-                <InfoView
-                    label={'Name'}
-                    content={`${profile.firstname} ${profile.lastname}`}
-                    icon={<NameIcon />}
-                />
-            </Box>
-            <Box className={classes.row}>
-                <InfoView
-                    label={'Email'}
-                    content={`${profile.email}`}
-                    icon={<EmailIcon />}
-                />
-            </Box>
-            <Box className={classes.row}>
-                <InfoView
-                    label={'Phone'}
-                    content={`${profile.address.phone}`}
-                    icon={<PhoneIcon />}
-                />
-            </Box>
-            <Box className={classes.row}>
-                <InfoView
-                    label={'Website'}
-                    content={profile.address.website}
-                    icon={<WebIcon />}
-                />
-            </Box>
-            <Box className={classes.row}>
-                <InfoView
-                    label={'Address'}
-                    content={`${profile.address.street} ${profile.address.city}`}
-                    icon={<AddressIcon />}
-                />
-            </Box>
-            <Box className={classes.row}>
-                <InfoView
-                    label={'Year founded'}
-                    content={profile.address.founded && profile.address.founded}
-                    icon={<EventIcon />}
-                />
-            </Box>
-            <Box className={classes.row}>
-                <InfoView
-                    label={'Number of employees'}
-                    content={profile.address.employees && profile.address.employees}
-                    icon={<GroupIcon />}
-                />
-            </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <InfoView
+                            label={'Name'}
+                            content={`${profile.firstname} ${profile.lastname}`}
+                            icon={<NameIcon />}
+                        />
+                    </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <InfoView
+                            label={'Email'}
+                            content={`${profile.email}`}
+                            icon={<EmailIcon />}
+                        />
+                    </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <InfoView
+                            label={'Phone'}
+                            content={`${profile.address.phone}`}
+                            icon={<PhoneIcon />}
+                        />
+                    </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <InfoView
+                            label={'Website'}
+                            content={profile.address.website}
+                            icon={<WebIcon />}
+                        />
+                    </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <InfoView
+                            label={'Address'}
+                            content={`${profile.address.street} ${profile.address.city}`}
+                            icon={<AddressIcon />}
+                        />
+                    </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <InfoView
+                            label={'Year founded'}
+                            content={profile.address.founded && profile.address.founded}
+                            icon={<EventIcon />}
+                        />
+                    </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+                <ListItem style={{ width: '100%' }}>
+                    <Box className={classes.row}>
+                        <InfoView
+                            label={'Number of employees'}
+                            content={profile.address.employees && profile.address.employees}
+                            icon={<GroupIcon />}
+                        />
+                    </Box>
+                </ListItem>
+                <Divider className={classes.divider} />
+            </List>
+
         </Card>
     );
 }

@@ -94,9 +94,6 @@ interface IProfileLicenseState {
     city: string;
     type: string;
     number: string;
-    cityError?: string;
-    typeError?: string;
-    numError?: string;
     fileError?: string;
     file?: File;
     url?: string;
@@ -125,9 +122,6 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
             number: '',
             file: undefined,
             url: undefined,
-            cityError: undefined,
-            typeError: undefined,
-            numError: undefined,
             fileError: undefined,
             licInFocus: ''
         });
@@ -139,13 +133,10 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
 
     handleSubmit = () => {
         const { city, type, number, file } = this.state;
-        let cityError, typeError, numError, fileError;
-        if (city.length === 0) cityError = 'Invalid city';
-        if (type.length === 0) typeError = 'Invalid type';
-        if (number.length === 0) numError = 'Invalid number';
+        let fileError;
         if (!file) fileError = 'File not attached';
-        if (cityError || typeError || numError || fileError) {
-            this.setState({ cityError, typeError, numError, fileError });
+        if (fileError) {
+            this.setState({ fileError });
             return;
         }
 
@@ -171,9 +162,13 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
 
     public render() {
         const { classes, licenses, contId } = this.props;
-        const { dialog, city, type, number, url, cityError, typeError, numError, fileError, licInFocus } = this.state;
+        const { dialog, city, type, number, url, fileError, licInFocus } = this.state;
         const rootDir = process.env.REACT_APP_PROJECT_API + `/contractors/${contId}/files/`;
         const lics = licenses.map(lic => {
+            if (!lic.note || lic.note.length <= 6) {
+                return { id: lic.id, name: lic.name, url: rootDir + lic.name, city: '', type: '', number: '' };
+            }
+
             const items = lic.note.split('__');
             return { id: lic.id, name: lic.name, url: rootDir + lic.name, city: items[0], type: items[1], number: items[2] };
         });
@@ -239,7 +234,7 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                                 {`City: ${item.city}`}
                                             </Typography>
                                             <Typography style={{ fontSize: '1rem' }}>
-                                                {`Type. $${item.type}`}
+                                                {`Type. ${item.type}`}
                                             </Typography>
                                         </CardContent>
                                     </Card>
@@ -266,9 +261,7 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                 margin="dense"
                                 fullWidth
                                 value={city}
-                                error={!!cityError}
-                                helperText={cityError}
-                                onChange={e => this.setState({ city: e.target.value, cityError: undefined })}
+                                onChange={e => this.setState({ city: e.target.value })}
                                 required
                             />
                             <TextField
@@ -276,9 +269,7 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                 margin="dense"
                                 fullWidth
                                 value={type}
-                                error={!!typeError}
-                                helperText={typeError}
-                                onChange={e => this.setState({ type: e.target.value, typeError: undefined })}
+                                onChange={e => this.setState({ type: e.target.value })}
                                 required
                             />
                             <TextField
@@ -286,9 +277,7 @@ class ProfileLicense extends React.Component<IProfileLicenseProps, IProfileLicen
                                 margin="dense"
                                 fullWidth
                                 value={number}
-                                error={!!numError}
-                                helperText={numError}
-                                onChange={e => this.setState({ number: e.target.value, numError: undefined })}
+                                onChange={e => this.setState({ number: e.target.value })}
                                 required
                             />
                             <Box style={{ display: 'flex', margin: '8px 0 12px' }}>
