@@ -228,9 +228,9 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                             <Input
                                                 placeholder='Title here'
                                                 style={{ marginTop: 8 }}
-                                                value={(editing === photo.id) ? title : decodeURIComponent(photo.note).replace(/\+/g, ' ')}
+                                                value={(editing === photo.id) ? title : !!photo.note ? decodeURIComponent(photo.note).replace(/\+/g, ' ') : ''}
                                                 onBlur={() => this.handleBlur(photo.id)}
-                                                onFocus={() => this.setState({ title: decodeURIComponent(photo.note).replace(/\+/g, ' '), editing: photo.id })}
+                                                onFocus={() => this.setState({ title: !!photo.note ? decodeURIComponent(photo.note).replace(/\+/g, ' ') : '', editing: photo.id })}
                                                 onChange={e => this.setState({ title: e.target.value })}
                                             />
                                         </CardContent>
@@ -270,9 +270,9 @@ class ProfilePhotos extends React.Component<IProfilePhotosProps, IProfilePhotosS
                                             <Input
                                                 placeholder='Title here'
                                                 style={{ marginTop: 8 }}
-                                                value={(editing === video.id) ? title : decodeURIComponent(video.note).replace(/\+/g, ' ')}
+                                                value={(editing === video.id) ? title : !!video.note ? decodeURIComponent(video.note).replace(/\+/g, ' ') : ''}
                                                 onBlur={() => this.handleBlur(video.id)}
-                                                onFocus={() => this.setState({ title: decodeURIComponent(video.note).replace(/\+/g, ' '), editing: video.id })}
+                                                onFocus={() => this.setState({ title: !!video.note ? decodeURIComponent(video.note).replace(/\+/g, ' ') : '', editing: video.id })}
                                                 onChange={e => this.setState({ title: e.target.value })}
                                             />
                                         </CardContent>
