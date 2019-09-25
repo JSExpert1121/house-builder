@@ -38,7 +38,6 @@ export default {
 		const formData = new FormData();
 		formData.append('file', file);
 		formData.append('note', `${city}__${type}__${number}`);
-		formData.append('type', 'LICENSE');
 		return Axios.post(CONT_API_PATH + id + '/files/upload/document', formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
