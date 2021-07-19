@@ -14,7 +14,9 @@ export default {
 	).then(res => res.data),
 	delete: id => Axios.delete(PROP_API_PATH + id).then(res => res.data),
 	update: (id, proposal) => Axios.put(PROP_API_PATH + id, proposal, {
-		headers: { 'Content-Type': 'application/json' },
+		headers: {
+			'Content-Type': 'application/json'
+		},
 	}).then(res => res.data),
 
 	getDetail: id => Axios.get(PROP_API_PATH + id + '/temCatOptionDetail').then(res => res.data),
@@ -27,7 +29,9 @@ export default {
 		});
 
 		return Axios.post(PROP_API_PATH + id + '/files/upload/multiple', formData, {
-			headers: { 'Content-Type': 'multipart/form-data' },
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			},
 		}).then(response => response.data);
 	},
 	deleteFile: (id, name) => Axios.delete(PROP_API_PATH + id + '/files/' + name).then(res => res.data),
@@ -41,7 +45,10 @@ export default {
 	getOption: id => Axios.get(PROP_API_PATH + 'options/' + id).then(res => res.data),
 
 	getMessages: (id, page, size) => Axios.get(MSG_API_PATH + '/proposals/' + id, {
-		params: { page, size }
+		params: {
+			page,
+			size
+		}
 	}).then(res => res.data),
 	addMessage: (id, message, type) => Axios.post(
 		MSG_API_PATH + '/proposals/' + id + (type === 's_cont') ? '/togencon' : 'tosubcon',
@@ -55,9 +62,10 @@ export default {
 
 		return Axios.post(
 			MSG_API_PATH + msgId + '/files/upload/multiple',
-			formData,
-			{
-				headers: { 'Content-Type': 'multipart/form-data' }
+			formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
 			}
 		).then(res => res.data);
 	}
